@@ -91,7 +91,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         //Create session table
         String CREATE_SESSION_TABLE =
                 "CREATE TABLE if not exists " + TABLE_SESSION + " (" +
-                        KEY_ROWID_SESSION + " integer PRIMARY KEY autoincrement, " +
+                        KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
                         KEY_BELONGSTO + " INTEGER, " +
                         KEY_NAME + " TEXT NOT NULL, " +
                         KEY_INFO + " TEXT);";

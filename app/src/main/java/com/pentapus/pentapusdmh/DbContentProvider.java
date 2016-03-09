@@ -34,11 +34,11 @@ public class DbContentProvider extends ContentProvider{
     // authority is the symbolic name of your provider
     // To avoid conflicts with other providers, you should use
     // Internet domain ownership (in reverse) as the basis of your provider authority.
-    private static final String AUTHORITY = "com.pentapus.contentprovider";
+    private static final String AUTHORITY = "com.pentapus.pentapusdmh.contentprovider";
 
     // create content URIs from the authority by appending path to database table
     public static final Uri CONTENT_URI_CAMPAIGN =
-            Uri.parse("content://" + AUTHORITY + "/campaigns");
+            Uri.parse("content://" + AUTHORITY + "/campaign");
     public static final Uri CONTENT_URI_SESSION =
             Uri.parse("content://" + AUTHORITY + "/session");
     public static final Uri CONTENT_URI_ENCOUNTER =
@@ -98,14 +98,15 @@ public class DbContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri _uri = null;
+        long KEY_ROWID_SESSION;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
         int uriType = uriMatcher.match(uri);
-        switch (uriMatcher.match(uri)) {
+        switch (uriType) {
             case SINGLE_CAMPAIGN:
                 //do nothing
                 break;
             case ALL_SESSIONS:
-                long KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_SESSION, "", values);
+                KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_SESSION, null, values);
                 //if added successfully
                 if(KEY_ROWID_SESSION > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_SESSION, KEY_ROWID_SESSION);
@@ -114,18 +115,27 @@ public class DbContentProvider extends ContentProvider{
                 }
                 break;
             case SINGLE_SESSION:
-                /*
-                long KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_SESSION, "", values);
+
+                KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_SESSION, null, values);
                 //if added successfully
                 if(KEY_ROWID_SESSION > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_SESSION, KEY_ROWID_SESSION);
                     //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
-                */
+
+                break;
+            case ALL_ENCOUNTERS:
+                KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_ENCOUNTER, null, values);
+                //if added successfully
+                if(KEY_ROWID_SESSION > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTER, KEY_ROWID_SESSION);
+                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
                 break;
             case SINGLE_ENCOUNTER:
-                long KEY_ROWID_ENCOUNTER = db.insert(dbHandler.TABLE_ENCOUNTER, "", values);
+                long KEY_ROWID_ENCOUNTER = db.insert(DataBaseHandler.TABLE_ENCOUNTER, "", values);
                 if(KEY_ROWID_ENCOUNTER > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTER, KEY_ROWID_ENCOUNTER);
                     getContext().getContentResolver().notifyChange(_uri, null);
@@ -152,13 +162,6 @@ public class DbContentProvider extends ContentProvider{
                     e.printStackTrace();
                 }
         }
-        long KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_SESSION, "", values);
-        //if added successfully
-        if(KEY_ROWID_SESSION > 0){
-            _uri = ContentUris.withAppendedId(CONTENT_URI_SESSION, KEY_ROWID_SESSION);
-            //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
-            getContext().getContentResolver().notifyChange(_uri, null);
-        }
         return _uri;
     }
 
@@ -172,10 +175,16 @@ public class DbContentProvider extends ContentProvider{
             case SINGLE_CAMPAIGN:
                 //do nothing
                 break;
+            case ALL_SESSIONS:
+                queryBuilder.setTables(DataBaseHandler.TABLE_SESSION);
+                break;
             case SINGLE_SESSION:
                 queryBuilder.setTables(DataBaseHandler.TABLE_SESSION);
                 id = uri.getPathSegments().get(1);
                 queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
+                break;
+            case ALL_ENCOUNTERS:
+                queryBuilder.setTables(DataBaseHandler.TABLE_ENCOUNTER);
                 break;
             case SINGLE_ENCOUNTER:
                 queryBuilder.setTables(DataBaseHandler.TABLE_ENCOUNTER);

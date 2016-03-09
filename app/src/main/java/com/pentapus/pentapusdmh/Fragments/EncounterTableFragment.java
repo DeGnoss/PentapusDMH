@@ -22,12 +22,12 @@ import com.pentapus.pentapusdmh.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SessionTableFragment.OnFragmentInteractionListener} interface
+ * {@link EncounterTableFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SessionTableFragment#newInstance} factory method to
+ * Use the {@link EncounterTableFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SessionTableFragment extends Fragment implements
+public class EncounterTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,9 +39,9 @@ public class SessionTableFragment extends Fragment implements
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private SimpleCursorAdapter dataAdapterSessions;
+    private SimpleCursorAdapter dataAdapterEncounters;
 
-    public SessionTableFragment() {
+    public EncounterTableFragment() {
         // Required empty public constructor
     }
 
@@ -54,8 +54,8 @@ public class SessionTableFragment extends Fragment implements
      * @return A new instance of fragment SessionTableFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SessionTableFragment newInstance(String param1, String param2) {
-        SessionTableFragment fragment = new SessionTableFragment();
+    public static EncounterTableFragment newInstance(String param1, String param2) {
+        EncounterTableFragment fragment = new EncounterTableFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -75,7 +75,7 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
+        final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
         displayListView(tableView);
         // Inflate the layout for this fragment
         return tableView;
@@ -93,16 +93,16 @@ public class SessionTableFragment extends Fragment implements
                 R.id.info,
         };
 
-        dataAdapterSessions = new SimpleCursorAdapter(
+        dataAdapterEncounters = new SimpleCursorAdapter(
                 this.getContext(),
-                R.layout.session_info,
+                R.layout.encounter_info,
                 null,
                 columns,
                 to,
                 0);
 
-        ListView listView = (ListView) view.findViewById(R.id.listViewSessions);
-        listView.setAdapter(dataAdapterSessions);
+        ListView listView = (ListView) view.findViewById(R.id.listViewEncounters);
+        listView.setAdapter(dataAdapterEncounters);
         //Ensures a loader is initialized and active.
         getLoaderManager().initLoader(0, null, this);
 
@@ -146,14 +146,14 @@ public class SessionTableFragment extends Fragment implements
     }
 
     @Override
-    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        dataAdapterSessions.swapCursor(data);
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        dataAdapterEncounters.swapCursor(data);
 
     }
 
     @Override
-    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-        dataAdapterSessions.swapCursor(null);
+    public void onLoaderReset(Loader<Cursor> loader) {
+        dataAdapterEncounters.swapCursor(null);
     }
 
     /**
