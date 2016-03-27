@@ -98,7 +98,7 @@ public class DbContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri _uri = null;
-        long KEY_ROWID_SESSION;
+        long KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
         int uriType = uriMatcher.match(uri);
         switch (uriType) {
@@ -115,7 +115,6 @@ public class DbContentProvider extends ContentProvider{
                 }
                 break;
             case SINGLE_SESSION:
-
                 KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_SESSION, null, values);
                 //if added successfully
                 if(KEY_ROWID_SESSION > 0){
@@ -126,16 +125,16 @@ public class DbContentProvider extends ContentProvider{
 
                 break;
             case ALL_ENCOUNTERS:
-                KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_ENCOUNTER, null, values);
+                KEY_ROWID_ENCOUNTER = db.insert(DataBaseHandler.TABLE_ENCOUNTER, null, values);
                 //if added successfully
-                if(KEY_ROWID_SESSION > 0){
-                    _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTER, KEY_ROWID_SESSION);
+                if(KEY_ROWID_ENCOUNTER > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTER, KEY_ROWID_ENCOUNTER);
                     //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
             case SINGLE_ENCOUNTER:
-                long KEY_ROWID_ENCOUNTER = db.insert(DataBaseHandler.TABLE_ENCOUNTER, "", values);
+                KEY_ROWID_ENCOUNTER = db.insert(DataBaseHandler.TABLE_ENCOUNTER, null, values);
                 if(KEY_ROWID_ENCOUNTER > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTER, KEY_ROWID_ENCOUNTER);
                     getContext().getContentResolver().notifyChange(_uri, null);

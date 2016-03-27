@@ -31,6 +31,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String KEY_NAME = "name";
     public static final String KEY_INFO = "info";
     private static final String KEY_BELONGSTO = "belongsto";
+    public static final String KEY_CAMPAIGNID = "campaignid";
+    public static final String KEY_SESSIONID = "sessionid";
 
     //Session Table
     public static final String KEY_ROWID_SESSION = "_id_session";
@@ -92,6 +94,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String CREATE_SESSION_TABLE =
                 "CREATE TABLE if not exists " + TABLE_SESSION + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
+                        KEY_CAMPAIGNID + " INTEGER, " +
                         KEY_BELONGSTO + " INTEGER, " +
                         KEY_NAME + " TEXT NOT NULL, " +
                         KEY_INFO + " TEXT);";
@@ -114,6 +117,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String CREATE_NPC_TABLE =
                 "CREATE TABLE if not exists " + TABLE_NPC + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
+                        KEY_SESSIONID + " INTEGER, " +
                         KEY_BELONGSTO + " INTEGER, " +
                         KEY_NAME + " TEXT NOT NULL, " +
                         KEY_INFO + " TEXT, " +
@@ -125,6 +129,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String CREATE_PC_TABLE =
                 "CREATE TABLE if not exists " + TABLE_PC + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
+                        KEY_CAMPAIGNID + " INTEGER, " +
                         KEY_BELONGSTO + " INTEGER, " +
                         KEY_NAME + " TEXT NOT NULL, " +
                         KEY_CLASS + " TEXT NOT NULL, " +

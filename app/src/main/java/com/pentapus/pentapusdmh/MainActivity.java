@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.pentapus.pentapusdmh.Fragments.EncounterEditFragment;
 import com.pentapus.pentapusdmh.Fragments.SessionEditFragment;
 import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
 
@@ -37,17 +38,29 @@ public class MainActivity extends AppCompatActivity implements SessionTableFragm
         //FragmentEdit fedit = new FragmentEdit();
         SessionTableFragment ftable = new SessionTableFragment();
         //ft.replace(R.id.FrameBottom, fedit);
-        ft.replace(R.id.FrameTop, ftable);
+        ft.replace(R.id.FrameTop, ftable, "F_SESSION");
         ft.commit();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("mode", "add");
-                addSession(bundle);
+                if(getSupportFragmentManager().findFragmentByTag("F_SESSION").isVisible()){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("mode", "add");
+                    addSession(bundle);
+                }
+                else if(getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER").isVisible()){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("mode", "add");
+                    addEncounter(bundle);
+                }
+                else{
+
+                }
             }
+
         });
     }
 
@@ -58,10 +71,18 @@ public class MainActivity extends AppCompatActivity implements SessionTableFragm
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.FrameTop, fragment);
-        //ft.remove(getSupportFragmentManager().findFragmentById(R.id.FrameBottom));
         ft.commit();
     }
 
+    private void addEncounter(Bundle bundle) {
+        Fragment fragment;
+        fragment = new EncounterEditFragment();
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.FrameTop, fragment);
+        ft.commit();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

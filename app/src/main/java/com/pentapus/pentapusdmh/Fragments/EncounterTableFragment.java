@@ -29,6 +29,9 @@ import com.pentapus.pentapusdmh.R;
  */
 public class EncounterTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>{
+
+    private String sessionId;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -76,12 +79,20 @@ public class EncounterTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
+        // insert a record
+        if (this.getArguments() != null){
+            sessionId = getArguments().getString("sessionId");
+        }
         displayListView(tableView);
         // Inflate the layout for this fragment
         return tableView;
     }
 
     private void displayListView(View view) {
+
+
+
+
 
         String[] columns = new String[] {
                 DataBaseHandler.KEY_NAME,
@@ -119,12 +130,6 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -140,8 +145,10 @@ public class EncounterTableFragment extends Fragment implements
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
+        String selectionClause = DataBaseHandler.KEY_SESSIONID;
+        String[] selectionArgs = { "1" };
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_SESSION, projection, null, null, null);
+                DbContentProvider.CONTENT_URI_ENCOUNTER, projection, null, null, null);
         return cursorLoader;
     }
 

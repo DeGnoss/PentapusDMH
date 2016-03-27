@@ -22,12 +22,12 @@ import com.pentapus.pentapusdmh.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SessionEditFragment.OnFragmentInteractionListener} interface
+ * {@link PcEditFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SessionEditFragment#newInstance} factory method to
+ * Use the {@link PcEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SessionEditFragment extends Fragment {
+public class PcEditFragment extends Fragment {
 
     Button addchar_btn;
     EditText name_tf, info_tf;
@@ -45,7 +45,7 @@ public class SessionEditFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public SessionEditFragment() {
+    public PcEditFragment() {
         // Required empty public constructor
     }
 
@@ -58,8 +58,8 @@ public class SessionEditFragment extends Fragment {
      * @return A new instance of fragment SessionEditFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SessionEditFragment newInstance(String param1, String param2) {
-        SessionEditFragment fragment = new SessionEditFragment();
+    public static PcEditFragment newInstance(String param1, String param2) {
+        PcEditFragment fragment = new PcEditFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -82,7 +82,7 @@ public class SessionEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View charEditView = inflater.inflate(R.layout.fragment_session_edit, container, false);
+        final View charEditView = inflater.inflate(R.layout.fragment_pc_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
 

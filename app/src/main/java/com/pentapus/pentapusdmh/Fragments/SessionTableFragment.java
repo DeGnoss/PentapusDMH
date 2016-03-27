@@ -5,7 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -13,6 +16,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.pentapus.pentapusdmh.DataBaseHandler;
@@ -70,6 +74,8 @@ public class SessionTableFragment extends Fragment implements
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.show();
     }
 
     @Override
@@ -106,7 +112,33 @@ public class SessionTableFragment extends Fragment implements
         //Ensures a loader is initialized and active.
         getLoaderManager().initLoader(0, null, this);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> listView, View view,
+                                    int position, long id) {
+                // Get the cursor, positioned to the corresponding row in the result set
+                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+                String sessionId =
+                        cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
 
+                Bundle bundle = new Bundle();
+                bundle.putString("sessionId", sessionId);
+                addEncounter(bundle);
+            }
+        });
+
+
+    }
+
+
+    private void addEncounter(Bundle bundle) {
+        Fragment fragment;
+        fragment = new EncounterTableFragment();
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.FrameTop, fragment, "F_ENCOUNTER");
+        ft.commit();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -119,12 +151,6 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override

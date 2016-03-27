@@ -22,12 +22,12 @@ import com.pentapus.pentapusdmh.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SessionEditFragment.OnFragmentInteractionListener} interface
+ * {@link EncounterEditFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SessionEditFragment#newInstance} factory method to
+ * Use the {@link EncounterEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SessionEditFragment extends Fragment {
+public class EncounterEditFragment extends Fragment {
 
     Button addchar_btn;
     EditText name_tf, info_tf;
@@ -45,7 +45,7 @@ public class SessionEditFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public SessionEditFragment() {
+    public EncounterEditFragment() {
         // Required empty public constructor
     }
 
@@ -55,11 +55,11 @@ public class SessionEditFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SessionEditFragment.
+     * @return A new instance of fragment EncounterEditFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SessionEditFragment newInstance(String param1, String param2) {
-        SessionEditFragment fragment = new SessionEditFragment();
+    public static EncounterEditFragment newInstance(String param1, String param2) {
+        EncounterEditFragment fragment = new EncounterEditFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -82,7 +82,7 @@ public class SessionEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View charEditView = inflater.inflate(R.layout.fragment_session_edit, container, false);
+        final View charEditView = inflater.inflate(R.layout.fragment_encounter_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
 
@@ -111,7 +111,7 @@ public class SessionEditFragment extends Fragment {
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO};
         id = getArguments().getString("rowId");
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
         if (cursor != null) {
@@ -134,13 +134,12 @@ public class SessionEditFragment extends Fragment {
         // insert a record
         if(mode.trim().equalsIgnoreCase("add")){
             getContext();
-            ContentResolver test = getContext().getContentResolver();
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_SESSION, values);
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
         }
         // update a record
         else {
             id = getArguments().getString("rowId");
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
             getContext().getContentResolver().update(uri, values, null, null);
         }
         Bundle bundle = new Bundle();
