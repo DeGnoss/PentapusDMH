@@ -1,12 +1,10 @@
 package com.pentapus.pentapusdmh.Fragments;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +30,7 @@ public class EncounterEditFragment extends Fragment {
     Button addchar_btn;
     EditText name_tf, info_tf;
     private String mode, id;
+    private int sessionId;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -74,8 +73,6 @@ public class EncounterEditFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.hide();
     }
 
     @Override
@@ -86,31 +83,31 @@ public class EncounterEditFragment extends Fragment {
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
 
-        if (this.getArguments() != null){
+        if (this.getArguments() != null) {
             mode = getArguments().getString("mode");
             //check wheter entry gets updated or added
-            if (mode.trim().equalsIgnoreCase("update")){
-                loadCharacterInfo(name_tf, info_tf);
+            sessionId = Integer.parseInt(getArguments().getString("sessionId"));
+            if (mode.trim().equalsIgnoreCase("update")) {
+                id = getArguments().getString("encounterId");
+                loadEncounterInfo(name_tf, info_tf, id);
             }
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                charButton(mode);
+                doneButton(mode);
             }
         });
         // Inflate the layout for this fragment
         return charEditView;
-
     }
 
-    private void loadCharacterInfo(EditText name, EditText info) {
+    private void loadEncounterInfo(EditText name, EditText info, String id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO};
-        id = getArguments().getString("rowId");
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
@@ -123,36 +120,33 @@ public class EncounterEditFragment extends Fragment {
         }
     }
 
-    public void charButton(String mode) {
+    public void doneButton(String mode) {
         // get values from the input text fields
         String myName = name_tf.getText().toString();
         String myInitiative = info_tf.getText().toString();
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
         values.put(DataBaseHandler.KEY_INFO, myInitiative);
+        values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
 
         // insert a record
-        if(mode.trim().equalsIgnoreCase("add")){
-            getContext();
+        if (mode.trim().equalsIgnoreCase("add")) {
             getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
         }
         // update a record
-        else {
-            id = getArguments().getString("rowId");
+        else if (mode.trim().equalsIgnoreCase("update")) {
             Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
             getContext().getContentResolver().update(uri, values, null, null);
         }
-        Bundle bundle = new Bundle();
-        bundle.putString("type", "npc");
-        mListener.charDone(bundle);
+        mListener.encounterDone();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             mListener = (OnFragmentInteractionListener) context;
-        }catch(ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
@@ -175,6 +169,6 @@ public class EncounterEditFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void charDone(Bundle bundle);
+        void encounterDone();
     }
 }

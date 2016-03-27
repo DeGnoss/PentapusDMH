@@ -58,12 +58,12 @@ public class DbContentProvider extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, "campaign/#", SINGLE_CAMPAIGN);
         uriMatcher.addURI(AUTHORITY, "session", ALL_SESSIONS);
         uriMatcher.addURI(AUTHORITY, "session/#", SINGLE_SESSION);
-        uriMatcher.addURI(AUTHORITY, "campaign", ALL_ENCOUNTERS);
-        uriMatcher.addURI(AUTHORITY, "campaign/#", SINGLE_ENCOUNTER);
-        uriMatcher.addURI(AUTHORITY, "campaign", ALL_NPCS);
-        uriMatcher.addURI(AUTHORITY, "campaign/#", SINGLE_NPC);
-        uriMatcher.addURI(AUTHORITY, "campaign", ALL_PCS);
-        uriMatcher.addURI(AUTHORITY, "campaign/#", SINGLE_PC);
+        uriMatcher.addURI(AUTHORITY, "encounter", ALL_ENCOUNTERS);
+        uriMatcher.addURI(AUTHORITY, "encounter/#", SINGLE_ENCOUNTER);
+        uriMatcher.addURI(AUTHORITY, "npc", ALL_NPCS);
+        uriMatcher.addURI(AUTHORITY, "npc/#", SINGLE_NPC);
+        uriMatcher.addURI(AUTHORITY, "pc", ALL_PCS);
+        uriMatcher.addURI(AUTHORITY, "pc/#", SINGLE_PC);
     }
 
 
@@ -98,8 +98,12 @@ public class DbContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri _uri = null;
-        long KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER;
+        long KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
+        //make sure sqlite pragma are turned on
+        if (!db.isReadOnly()) {
+            db.execSQL("PRAGMA foreign_keys = ON;");
+        }
         int uriType = uriMatcher.match(uri);
         switch (uriType) {
             case SINGLE_CAMPAIGN:
@@ -140,8 +144,17 @@ public class DbContentProvider extends ContentProvider{
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
+            case ALL_NPCS:
+                KEY_ROWID_NPC = db.insert(DataBaseHandler.TABLE_NPC, null, values);
+                //if added successfully
+                if(KEY_ROWID_NPC > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_NPC, KEY_ROWID_NPC);
+                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
             case SINGLE_NPC:
-                long KEY_ROWID_NPC = db.insert(dbHandler.TABLE_NPC, "", values);
+                KEY_ROWID_NPC = db.insert(dbHandler.TABLE_NPC, "", values);
                 if(KEY_ROWID_NPC > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_NPC, KEY_ROWID_NPC);
                     getContext().getContentResolver().notifyChange(_uri, null);
@@ -161,6 +174,7 @@ public class DbContentProvider extends ContentProvider{
                     e.printStackTrace();
                 }
         }
+        getContext().getContentResolver().notifyChange(_uri, null, false);
         return _uri;
     }
 
@@ -190,6 +204,9 @@ public class DbContentProvider extends ContentProvider{
                 id = uri.getPathSegments().get(1);
                 queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
                 break;
+            case ALL_NPCS:
+                queryBuilder.setTables(DataBaseHandler.TABLE_NPC);
+                break;
             case SINGLE_NPC:
                 queryBuilder.setTables(DataBaseHandler.TABLE_NPC);
                 id = uri.getPathSegments().get(1);
@@ -206,6 +223,7 @@ public class DbContentProvider extends ContentProvider{
         }
         Cursor cursor = queryBuilder.query(db, projection, selection,
                 selectionArgs, null, null, sortOrder);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 

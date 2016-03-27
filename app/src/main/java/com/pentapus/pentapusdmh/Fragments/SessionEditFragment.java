@@ -1,12 +1,10 @@
 package com.pentapus.pentapusdmh.Fragments;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,8 +72,6 @@ public class SessionEditFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.hide();
     }
 
     @Override
@@ -90,14 +86,15 @@ public class SessionEditFragment extends Fragment {
             mode = getArguments().getString("mode");
             //check wheter entry gets updated or added
             if (mode.trim().equalsIgnoreCase("update")){
-                loadCharacterInfo(name_tf, info_tf);
+                id = getArguments().getString("sessionId");
+                loadSessionInfo(name_tf, info_tf, id);
             }
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                charButton(mode);
+                doneButton(mode);
             }
         });
         // Inflate the layout for this fragment
@@ -105,12 +102,11 @@ public class SessionEditFragment extends Fragment {
 
     }
 
-    private void loadCharacterInfo(EditText name, EditText info) {
+    private void loadSessionInfo(EditText name, EditText info, String id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO};
-        id = getArguments().getString("rowId");
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
@@ -123,7 +119,7 @@ public class SessionEditFragment extends Fragment {
         }
     }
 
-    public void charButton(String mode) {
+    public void doneButton(String mode) {
         // get values from the input text fields
         String myName = name_tf.getText().toString();
         String myInitiative = info_tf.getText().toString();
@@ -133,19 +129,14 @@ public class SessionEditFragment extends Fragment {
 
         // insert a record
         if(mode.trim().equalsIgnoreCase("add")){
-            getContext();
-            ContentResolver test = getContext().getContentResolver();
             getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_SESSION, values);
         }
         // update a record
-        else {
-            id = getArguments().getString("rowId");
+        else if(mode.trim().equalsIgnoreCase("update")){
             Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
             getContext().getContentResolver().update(uri, values, null, null);
         }
-        Bundle bundle = new Bundle();
-        bundle.putString("type", "npc");
-        mListener.charDone(bundle);
+        mListener.sessionDone();
     }
 
     @Override
@@ -176,6 +167,6 @@ public class SessionEditFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void charDone(Bundle bundle);
+        void sessionDone();
     }
 }

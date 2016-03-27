@@ -30,7 +30,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String KEY_ROWID = "_id";
     public static final String KEY_NAME = "name";
     public static final String KEY_INFO = "info";
-    private static final String KEY_BELONGSTO = "belongsto";
+    public static final String KEY_BELONGSTO = "belongsto";
     public static final String KEY_CAMPAIGNID = "campaignid";
     public static final String KEY_SESSIONID = "sessionid";
 
@@ -76,6 +76,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
 
 
+
     public DataBaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -96,6 +97,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
                         KEY_CAMPAIGNID + " INTEGER, " +
                         KEY_BELONGSTO + " INTEGER, " +
+                        "FOREIGN KEY(" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE" +
                         KEY_NAME + " TEXT NOT NULL, " +
                         KEY_INFO + " TEXT);";
         db.execSQL(CREATE_SESSION_TABLE);
@@ -104,7 +106,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String CREATE_ENCOUNTER_TABLE =
                 "CREATE TABLE if not exists " + TABLE_ENCOUNTER + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
-                        KEY_BELONGSTO + " INTEGER, " +
+                        KEY_BELONGSTO + " INTEGER NOT NULL, " +
+                        "FOREIGN KEY(" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE" +
                         KEY_NAME + " TEXT NOT NULL, " +
                         KEY_INFO + " TEXT, " +
                         KEY_CR + " INTEGER, " +

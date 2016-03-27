@@ -2,7 +2,6 @@ package com.pentapus.pentapusdmh.Fragments;
 
 
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -10,8 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -29,13 +26,18 @@ import com.pentapus.pentapusdmh.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SessionTableFragment.OnFragmentInteractionListener} interface
+ * {@link EncounterFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SessionTableFragment#newInstance} factory method to
+ * Use the {@link EncounterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SessionTableFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+public class EncounterFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>{
+
+    private String encounterId;
+    private FloatingActionButton fab;
+    final CharSequence[] items = { "Edit", "Delete" };
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,12 +47,10 @@ public class SessionTableFragment extends Fragment implements
     private String mParam1;
     private String mParam2;
 
-    final CharSequence[] items = { "Edit", "Delete" };
-    FloatingActionButton fab;
     private OnFragmentInteractionListener mListener;
-    private SimpleCursorAdapter dataAdapterSessions;
+    private SimpleCursorAdapter dataAdapterEncounter;
 
-    public SessionTableFragment() {
+    public EncounterFragment() {
         // Required empty public constructor
     }
 
@@ -63,8 +63,8 @@ public class SessionTableFragment extends Fragment implements
      * @return A new instance of fragment SessionTableFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SessionTableFragment newInstance(String param1, String param2) {
-        SessionTableFragment fragment = new SessionTableFragment();
+    public static EncounterFragment newInstance(String param1, String param2) {
+        EncounterFragment fragment = new EncounterFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -84,61 +84,53 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
+        final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
+        // insert a record
+        if (this.getArguments() != null){
+            encounterId = getArguments().getString("encounterId");
+        }
         displayListView(tableView);
-        // Inflate the layout for this fragment
-        fab = (FloatingActionButton) tableView.findViewById(R.id.fabSession);
+        fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Bundle bundle = new Bundle();
                 bundle.putString("mode", "add");
-                mListener.addSession(bundle);
+                bundle.putString("encounterId", encounterId);
+                mListener.addNPC(bundle);
             }
         });
+        // Inflate the layout for this fragment
         return tableView;
+
     }
 
     private void displayListView(View view) {
 
-        String[] columns = new String[]{
+        String[] columns = new String[] {
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
 
-        int[] to = new int[]{
+        int[] to = new int[] {
                 R.id.name,
                 R.id.info,
         };
 
-        dataAdapterSessions = new SimpleCursorAdapter(
+        dataAdapterEncounter = new SimpleCursorAdapter(
                 this.getContext(),
-                R.layout.session_info,
+                R.layout.encounter_info,
                 null,
                 columns,
                 to,
                 0);
 
-        final ListView listView = (ListView) view.findViewById(R.id.listViewSessions);
-        listView.setAdapter(dataAdapterSessions);
+        final ListView listView = (ListView) view.findViewById(R.id.listViewEncounter);
+        listView.setAdapter(dataAdapterEncounter);
         //Ensures a loader is initialized and active.
         getLoaderManager().initLoader(0, null, this);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> listView, View view,
-                                    int position, long id) {
-                // Get the cursor, positioned to the corresponding row in the result set
-                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String sessionId =
-                        cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-                Bundle bundle = new Bundle();
-                bundle.putString("sessionId", sessionId);
-                loadEncounters(bundle);
-            }
-        });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -149,14 +141,15 @@ public class SessionTableFragment extends Fragment implements
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String sessionId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    String npcId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
                                     bundle.putString("mode", "update");
-                                    bundle.putString("sessionId", sessionId);
-                                    editSession(bundle);
+                                    bundle.putString("npcId", npcId);
+                                    bundle.putString("encounterId", encounterId);
+                                    editNPC(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     dialog.dismiss();
                                 } else {
@@ -167,28 +160,15 @@ public class SessionTableFragment extends Fragment implements
                 return true;
             }
         });
-
-
     }
 
-    private void editSession(Bundle bundle) {
+    private void editNPC(Bundle bundle) {
         Fragment fragment;
-        fragment = new SessionEditFragment();
+        fragment = new NPCEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_SESSION")
-                .addToBackStack("FE_SESSION")
-                .commit();
-    }
-
-
-    private void loadEncounters(Bundle bundle) {
-        Fragment fragment;
-        fragment = new EncounterTableFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FT_ENCOUNTER")
-                .addToBackStack("FT_ENCOUNTER")
+                .replace(R.id.FrameTop, fragment, "FE_NPC")
+                .addToBackStack("FE_NPC")
                 .commit();
     }
 
@@ -216,20 +196,22 @@ public class SessionTableFragment extends Fragment implements
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
+        String[] selectionArgs = new String[]{ encounterId };
+        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_SESSION, projection, null, null, null);
+                DbContentProvider.CONTENT_URI_NPC, projection, selection, selectionArgs, null);
         return cursorLoader;
     }
 
     @Override
-    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        dataAdapterSessions.swapCursor(data);
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        dataAdapterEncounter.swapCursor(data);
 
     }
 
     @Override
-    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-        dataAdapterSessions.swapCursor(null);
+    public void onLoaderReset(Loader<Cursor> loader) {
+        dataAdapterEncounter.swapCursor(null);
     }
 
     /**
@@ -243,6 +225,6 @@ public class SessionTableFragment extends Fragment implements
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void addSession(Bundle bundle);
+        void addNPC(Bundle bundle);
     }
 }

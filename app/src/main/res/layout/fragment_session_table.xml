@@ -9,6 +9,16 @@
         android:layout_width="wrap_content"
         android:layout_height="470dp"
         android:id="@+id/listViewSessions"
-        android:layout_gravity="center|top" />
+        android:layout_gravity="center|top"
+        android:paddingBottom="65sp"
+        android:clipToPadding="false"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabSession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_input_add" />
 
 </FrameLayout>
