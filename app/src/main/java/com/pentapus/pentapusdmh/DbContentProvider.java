@@ -98,16 +98,28 @@ public class DbContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri _uri = null;
-        long KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC;
+        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
-        //make sure sqlite pragma are turned on
-        if (!db.isReadOnly()) {
-            db.execSQL("PRAGMA foreign_keys = ON;");
-        }
         int uriType = uriMatcher.match(uri);
         switch (uriType) {
+            case ALL_CAMPAIGNS:
+                KEY_ROWID_CAMPAIGN = db.insert(DataBaseHandler.TABLE_CAMPAIGN, null, values);
+                //if added successfully
+                if(KEY_ROWID_CAMPAIGN > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_CAMPAIGN, KEY_ROWID_CAMPAIGN);
+                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
             case SINGLE_CAMPAIGN:
-                //do nothing
+                KEY_ROWID_CAMPAIGN = db.insert(DataBaseHandler.TABLE_CAMPAIGN, null, values);
+                //if added successfully
+                if(KEY_ROWID_CAMPAIGN > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_CAMPAIGN, KEY_ROWID_CAMPAIGN);
+                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+
                 break;
             case ALL_SESSIONS:
                 KEY_ROWID_SESSION = db.insert(DataBaseHandler.TABLE_SESSION, null, values);
@@ -185,8 +197,13 @@ public class DbContentProvider extends ContentProvider{
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
         String id = null;
         switch (uriMatcher.match(uri)) {
+            case ALL_CAMPAIGNS:
+                queryBuilder.setTables(DataBaseHandler.TABLE_CAMPAIGN);
+                break;
             case SINGLE_CAMPAIGN:
-                //do nothing
+                queryBuilder.setTables(DataBaseHandler.TABLE_CAMPAIGN);
+                id = uri.getPathSegments().get(1);
+                queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
                 break;
             case ALL_SESSIONS:
                 queryBuilder.setTables(DataBaseHandler.TABLE_SESSION);
@@ -235,8 +252,12 @@ public class DbContentProvider extends ContentProvider{
         int deleteCount = 0;
         switch (uriMatcher.match(uri)) {
             case SINGLE_CAMPAIGN:
-                //do nothing
-                break;
+                id = uri.getPathSegments().get(1);
+                selection = DataBaseHandler.KEY_ROWID + "=" + id
+                        + (!TextUtils.isEmpty(selection) ?
+                        " AND (" + selection + ')' : "");
+                deleteCount = db.delete(DataBaseHandler.TABLE_CAMPAIGN, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
             case SINGLE_SESSION:
                 id = uri.getPathSegments().get(1);
                 selection = DataBaseHandler.KEY_ROWID + "=" + id
@@ -282,7 +303,12 @@ public class DbContentProvider extends ContentProvider{
         SQLiteDatabase db = dbHandler.getWritableDatabase();
         switch (uriMatcher.match(uri)) {
             case SINGLE_CAMPAIGN:
-                //do nothing
+                id = uri.getPathSegments().get(1);
+                selection = DataBaseHandler.KEY_ROWID + "=" + id
+                        + (!TextUtils.isEmpty(selection) ?
+                        " AND (" + selection + ')' : "");
+                updateCount = db.update(DataBaseHandler.TABLE_CAMPAIGN, values, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
                 break;
             case SINGLE_SESSION:
                 id = uri.getPathSegments().get(1);

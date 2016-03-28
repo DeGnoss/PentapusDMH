@@ -17,19 +17,13 @@ import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SessionEditFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SessionEditFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SessionEditFragment extends Fragment {
 
     Button addchar_btn;
     EditText name_tf, info_tf;
     private String mode, id;
+    private static int campaignId;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -40,8 +34,6 @@ public class SessionEditFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     public SessionEditFragment() {
         // Required empty public constructor
@@ -84,6 +76,7 @@ public class SessionEditFragment extends Fragment {
 
         if (this.getArguments() != null){
             mode = getArguments().getString("mode");
+            campaignId = Integer.parseInt(getArguments().getString("campaignId"));
             //check wheter entry gets updated or added
             if (mode.trim().equalsIgnoreCase("update")){
                 id = getArguments().getString("sessionId");
@@ -126,6 +119,7 @@ public class SessionEditFragment extends Fragment {
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
         values.put(DataBaseHandler.KEY_INFO, myInitiative);
+        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
 
         // insert a record
         if(mode.trim().equalsIgnoreCase("add")){
@@ -136,37 +130,16 @@ public class SessionEditFragment extends Fragment {
             Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
             getContext().getContentResolver().update(uri, values, null, null);
         }
-        mListener.sessionDone();
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            mListener = (OnFragmentInteractionListener) context;
-        }catch(ClassCastException e){
-            throw new ClassCastException(context.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void sessionDone();
     }
 }

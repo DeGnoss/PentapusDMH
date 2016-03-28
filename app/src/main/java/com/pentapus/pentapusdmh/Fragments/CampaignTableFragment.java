@@ -2,6 +2,7 @@ package com.pentapus.pentapusdmh.Fragments;
 
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -13,7 +14,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +25,7 @@ import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
-
-public class SessionTableFragment extends Fragment implements
+public class CampaignTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,10 +38,9 @@ public class SessionTableFragment extends Fragment implements
 
     final CharSequence[] items = {"Edit", "Delete"};
     FloatingActionButton fab;
-    private SimpleCursorAdapter dataAdapterSessions;
-    private static int campaignId;
+    private SimpleCursorAdapter dataAdapterCampaigns;
 
-    public SessionTableFragment() {
+    public CampaignTableFragment() {
         // Required empty public constructor
     }
 
@@ -55,8 +53,8 @@ public class SessionTableFragment extends Fragment implements
      * @return A new instance of fragment SessionTableFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SessionTableFragment newInstance(String param1, String param2) {
-        SessionTableFragment fragment = new SessionTableFragment();
+    public static CampaignTableFragment newInstance(String param1, String param2) {
+        CampaignTableFragment fragment = new CampaignTableFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,7 +65,6 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("oncreate", ("campaignId = " + campaignId));
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -77,44 +74,24 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
-        campaignId = SharedPrefsHelper.loadCampaign(getContext());
-        Log.d("oncreateview", ("campaignId = " + campaignId));
-        if (campaignId <= 0) {
-            new AlertDialog.Builder(getContext()).setTitle("No Campaign Found")
-                    .setCancelable(false)
-                    .setMessage("Create a campaign first.")
-                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            CampaignTableFragment ftable = new CampaignTableFragment();
-                            getActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
-                                    .addToBackStack("FT_CAMPAIGN")
-                                    .commit();
-                        }
-                    })
-                    .show();
-        } else {
-            displayListView(tableView);
-            Log.d("displaylistview after", ("campaignId = " + campaignId));
-            // Inflate the layout for this fragment
-            fab = (FloatingActionButton) tableView.findViewById(R.id.fabSession);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("mode", "add");
-                    bundle.putString("campaignId", String.valueOf(campaignId));
-                    addSession(bundle);
-                }
-            });
-        }
+        final View tableView = inflater.inflate(R.layout.fragment_campaign_table, container, false);
+        displayListView(tableView);
+        // Inflate the layout for this fragment
+        fab = (FloatingActionButton) tableView.findViewById(R.id.fabCampaign);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle bundle = new Bundle();
+                bundle.putString("mode", "add");
+                addCampaign(bundle);
+            }
+        });
         return tableView;
     }
 
     private void displayListView(View view) {
-        Log.d("displaylistview start", ("campaignId = " + campaignId));
+
         String[] columns = new String[]{
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
@@ -125,7 +102,7 @@ public class SessionTableFragment extends Fragment implements
                 R.id.info,
         };
 
-        dataAdapterSessions = new SimpleCursorAdapter(
+        dataAdapterCampaigns = new SimpleCursorAdapter(
                 this.getContext(),
                 R.layout.session_info,
                 null,
@@ -133,13 +110,10 @@ public class SessionTableFragment extends Fragment implements
                 to,
                 0);
 
-        //dataAdapterSessions.changeCursor(null);
-        //dataAdapterSessions.notifyDataSetChanged();
-        final ListView listView = (ListView) view.findViewById(R.id.listViewSessions);
-        listView.setAdapter(dataAdapterSessions);
+        final ListView listView = (ListView) view.findViewById(R.id.listViewCampaigns);
+        listView.setAdapter(dataAdapterCampaigns);
         //Ensures a loader is initialized and active.
         getLoaderManager().initLoader(0, null, this);
-        //getLoaderManager().restartLoader(0, null, this);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -147,12 +121,9 @@ public class SessionTableFragment extends Fragment implements
                                     int position, long id) {
                 // Get the cursor, positioned to the corresponding row in the result set
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String sessionId =
+                String campaignId =
                         cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-                Bundle bundle = new Bundle();
-                bundle.putString("sessionId", sessionId);
-                loadEncounters(bundle);
+                loadCampaign(campaignId);
             }
         });
 
@@ -167,15 +138,14 @@ public class SessionTableFragment extends Fragment implements
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String sessionId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    String campaignId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
                                     bundle.putString("mode", "update");
-                                    bundle.putString("sessionId", sessionId);
-                                    bundle.putString("campaignId", String.valueOf(campaignId));
-                                    editSession(bundle);
+                                    bundle.putString("campaignId", campaignId);
+                                    editCampaign(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + id);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     dialog.dismiss();
                                 } else {
@@ -190,36 +160,20 @@ public class SessionTableFragment extends Fragment implements
 
     }
 
-
-    private void addSession(Bundle bundle) {
+    private void editCampaign(Bundle bundle) {
         Fragment fragment;
-        fragment = new SessionEditFragment();
+        fragment = new CampaignEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_SESSION")
-                .addToBackStack("FE_SESSION")
-                .commit();
-    }
-
-    private void editSession(Bundle bundle) {
-        Fragment fragment;
-        fragment = new SessionEditFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_SESSION")
-                .addToBackStack("FE_SESSION")
+                .replace(R.id.FrameTop, fragment, "FE_CAMPAIGN")
+                .addToBackStack("FE_CAMPAIGN")
                 .commit();
     }
 
 
-    private void loadEncounters(Bundle bundle) {
-        Fragment fragment;
-        fragment = new EncounterTableFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FT_ENCOUNTER")
-                .addToBackStack("FT_ENCOUNTER")
-                .commit();
+    private void loadCampaign(String campaignId) {
+        SharedPrefsHelper.saveCampaign(getContext(), Integer.parseInt(campaignId));
+        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -234,28 +188,35 @@ public class SessionTableFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d("Loader", ("campaignId = " + campaignId));
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
-        String[] selectionArgs = new String[]{String.valueOf(campaignId)};
-        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_SESSION, projection, selection, selectionArgs, null);
-        Log.d("Loader", selectionArgs[0]);
+                DbContentProvider.CONTENT_URI_CAMPAIGN, projection, null, null, null);
         return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        dataAdapterSessions.swapCursor(data);
-        dataAdapterSessions.notifyDataSetChanged();
+        dataAdapterCampaigns.swapCursor(data);
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        dataAdapterSessions.swapCursor(null);
+        dataAdapterCampaigns.swapCursor(null);
+    }
+
+
+    public void addCampaign(Bundle bundle) {
+        Fragment fragment;
+        fragment = new CampaignEditFragment();
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.FrameTop, fragment, "FE_CAMPAIGN")
+                .addToBackStack("FE_CAMPAIGN")
+                .commit();
     }
 }

@@ -7,4 +7,5 @@
     <string name="sDone">Done</string>
     <string name="sName">Name</string>
     <string name="sDetails">Details</string>
+    <string name="campaign_settings">Manage Campaigns</string>
 </resources>

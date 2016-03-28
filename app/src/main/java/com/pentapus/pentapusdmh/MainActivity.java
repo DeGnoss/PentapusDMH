@@ -1,33 +1,17 @@
 package com.pentapus.pentapusdmh;
 
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
-import com.pentapus.pentapusdmh.Fragments.EncounterEditFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterTableFragment;
-import com.pentapus.pentapusdmh.Fragments.NPCEditFragment;
-import com.pentapus.pentapusdmh.Fragments.SessionEditFragment;
+import com.pentapus.pentapusdmh.Fragments.CampaignTableFragment;
 import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
 
-public class MainActivity extends AppCompatActivity implements SessionTableFragment.OnFragmentInteractionListener, SessionEditFragment.OnFragmentInteractionListener, EncounterTableFragment.OnFragmentInteractionListener, EncounterEditFragment.OnFragmentInteractionListener, EncounterFragment.OnFragmentInteractionListener, NPCEditFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
 
     @Override
@@ -40,32 +24,6 @@ public class MainActivity extends AppCompatActivity implements SessionTableFragm
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FrameTop, ftable, "FT_SESSION")
                 .commit();
-
-
-        // FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-      /*  fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
-                String tag = currentFragment.getTag();
-                Bundle bundle = new Bundle();
-                switch (tag) {
-                    case "FT_SESSION":
-                        bundle.putString("mode", "add");
-                        addSession(bundle);
-                        break;
-                    case "FT_ENCOUNTER":
-                        bundle.putString("mode", "add");
-                        addEncounter(bundle);
-                        break;
-                    default:
-                        Log.d("TAG", "Unhandled FAB fragment tag " + tag);
-                        break;
-                }
-            }
-
-        });*/
     }
 
 
@@ -86,6 +44,13 @@ public class MainActivity extends AppCompatActivity implements SessionTableFragm
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if(id == R.id.campaign_settings){
+            CampaignTableFragment ftable = new CampaignTableFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
+                    .addToBackStack("FT_CAMPAIGN")
+                    .commit();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -103,52 +68,4 @@ public class MainActivity extends AppCompatActivity implements SessionTableFragm
         }
     }
 
-    @Override
-    public void addSession(Bundle bundle) {
-        Fragment fragment;
-        fragment = new SessionEditFragment();
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_SESSION")
-                .addToBackStack("FE_SESSION")
-                .commit();
-    }
-
-    @Override
-    public void addEncounter(Bundle bundle) {
-        Fragment fragment;
-        fragment = new EncounterEditFragment();
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_ENCOUNTER")
-                .addToBackStack("FE_ENCOUNTER")
-                .commit();
-    }
-
-    @Override
-    public void addNPC(Bundle bundle) {
-        Fragment fragment;
-        fragment = new NPCEditFragment();
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_NPC")
-                .addToBackStack("FE_NPC")
-                .commit();
-    }
-
-
-    @Override
-    public void sessionDone() {
-        getSupportFragmentManager().popBackStack();
-    }
-
-    @Override
-    public void encounterDone() {
-        getSupportFragmentManager().popBackStack();
-    }
-
-    @Override
-    public void npcDone() {
-        getSupportFragmentManager().popBackStack();
-    }
 }

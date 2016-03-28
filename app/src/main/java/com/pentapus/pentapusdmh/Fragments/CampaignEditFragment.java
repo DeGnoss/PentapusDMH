@@ -17,12 +17,11 @@ import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
 
-public class EncounterEditFragment extends Fragment {
+public class CampaignEditFragment extends Fragment {
 
     Button addchar_btn;
     EditText name_tf, info_tf;
     private String mode, id;
-    private int sessionId;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -34,8 +33,7 @@ public class EncounterEditFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-
-    public EncounterEditFragment() {
+    public CampaignEditFragment() {
         // Required empty public constructor
     }
 
@@ -45,11 +43,11 @@ public class EncounterEditFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment EncounterEditFragment.
+     * @return A new instance of fragment SessionEditFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EncounterEditFragment newInstance(String param1, String param2) {
-        EncounterEditFragment fragment = new EncounterEditFragment();
+    public static CampaignEditFragment newInstance(String param1, String param2) {
+        CampaignEditFragment fragment = new CampaignEditFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,17 +68,16 @@ public class EncounterEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View charEditView = inflater.inflate(R.layout.fragment_encounter_edit, container, false);
+        final View charEditView = inflater.inflate(R.layout.fragment_campaign_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
 
-        if (this.getArguments() != null) {
+        if (this.getArguments() != null){
             mode = getArguments().getString("mode");
             //check wheter entry gets updated or added
-            sessionId = Integer.parseInt(getArguments().getString("sessionId"));
-            if (mode.trim().equalsIgnoreCase("update")) {
-                id = getArguments().getString("encounterId");
-                loadEncounterInfo(name_tf, info_tf, id);
+            if (mode.trim().equalsIgnoreCase("update")){
+                id = getArguments().getString("campaignId");
+                loadSessionInfo(name_tf, info_tf, id);
             }
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
@@ -92,14 +89,15 @@ public class EncounterEditFragment extends Fragment {
         });
         // Inflate the layout for this fragment
         return charEditView;
+
     }
 
-    private void loadEncounterInfo(EditText name, EditText info, String id) {
+    private void loadSessionInfo(EditText name, EditText info, String id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO};
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
         if (cursor != null) {
@@ -118,15 +116,14 @@ public class EncounterEditFragment extends Fragment {
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
         values.put(DataBaseHandler.KEY_INFO, myInitiative);
-        values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
 
         // insert a record
-        if (mode.trim().equalsIgnoreCase("add")) {
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
+        if(mode.trim().equalsIgnoreCase("add")){
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_CAMPAIGN, values);
         }
         // update a record
-        else if (mode.trim().equalsIgnoreCase("update")) {
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
+        else if(mode.trim().equalsIgnoreCase("update")){
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + id);
             getContext().getContentResolver().update(uri, values, null, null);
         }
         getActivity().getSupportFragmentManager().popBackStack();

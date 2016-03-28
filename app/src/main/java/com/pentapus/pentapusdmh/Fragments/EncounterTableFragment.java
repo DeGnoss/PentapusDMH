@@ -23,20 +23,13 @@ import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EncounterTableFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link EncounterTableFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class EncounterTableFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private String sessionId;
     private FloatingActionButton fab;
-    final CharSequence[] items = { "Edit", "Delete" };
+    final CharSequence[] items = {"Edit", "Delete"};
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,7 +40,6 @@ public class EncounterTableFragment extends Fragment implements
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
     private SimpleCursorAdapter dataAdapterEncounters;
 
     public EncounterTableFragment() {
@@ -86,7 +78,7 @@ public class EncounterTableFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
         // insert a record
-        if (this.getArguments() != null){
+        if (this.getArguments() != null) {
             sessionId = getArguments().getString("sessionId");
         }
         displayListView(tableView);
@@ -98,7 +90,7 @@ public class EncounterTableFragment extends Fragment implements
                 Bundle bundle = new Bundle();
                 bundle.putString("mode", "add");
                 bundle.putString("sessionId", sessionId);
-                mListener.addEncounter(bundle);
+                addEncounter(bundle);
             }
         });
         // Inflate the layout for this fragment
@@ -108,12 +100,12 @@ public class EncounterTableFragment extends Fragment implements
 
     private void displayListView(View view) {
 
-        String[] columns = new String[] {
+        String[] columns = new String[]{
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
 
-        int[] to = new int[] {
+        int[] to = new int[]{
                 R.id.name,
                 R.id.info,
         };
@@ -150,7 +142,9 @@ public class EncounterTableFragment extends Fragment implements
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
-                new AlertDialog.Builder(getContext()).setTitle("Student Record")
+                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+                new AlertDialog.Builder(getContext()).setTitle(title)
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
@@ -174,6 +168,16 @@ public class EncounterTableFragment extends Fragment implements
                 return true;
             }
         });
+    }
+
+    private void addEncounter(Bundle bundle) {
+        Fragment fragment;
+        fragment = new EncounterEditFragment();
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.FrameTop, fragment, "FE_ENCOUNTER")
+                .addToBackStack("FE_ENCOUNTER")
+                .commit();
     }
 
     private void editEncounter(Bundle bundle) {
@@ -200,18 +204,11 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            mListener = (OnFragmentInteractionListener) context;
-        }catch(ClassCastException e){
-            throw new ClassCastException(context.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -221,7 +218,7 @@ public class EncounterTableFragment extends Fragment implements
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
-        String[] selectionArgs = new String[]{ sessionId };
+        String[] selectionArgs = new String[]{sessionId};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_ENCOUNTER, projection, selection, selectionArgs, null);
@@ -239,17 +236,5 @@ public class EncounterTableFragment extends Fragment implements
         dataAdapterEncounters.swapCursor(null);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void addEncounter(Bundle bundle);
-    }
+
 }

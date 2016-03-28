@@ -31,12 +31,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String KEY_NAME = "name";
     public static final String KEY_INFO = "info";
     public static final String KEY_BELONGSTO = "belongsto";
-    public static final String KEY_CAMPAIGNID = "campaignid";
-    public static final String KEY_SESSIONID = "sessionid";
-
-    //Session Table
-    public static final String KEY_ROWID_SESSION = "_id_session";
-
 
     //Encounter & NPC Table
     private static final String KEY_CR = "cr";
@@ -87,7 +81,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String CREATE_CAMPAIGN_TABLE =
                 "CREATE TABLE if not exists " + TABLE_CAMPAIGN + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
-                        KEY_NAME + " TEXT NOT NULL, " +
+                        KEY_NAME + " TEXT, " +
                         KEY_INFO + " TEXT);";
         db.execSQL(CREATE_CAMPAIGN_TABLE);
 
@@ -95,46 +89,43 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String CREATE_SESSION_TABLE =
                 "CREATE TABLE if not exists " + TABLE_SESSION + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
-                        KEY_CAMPAIGNID + " INTEGER, " +
-                        KEY_BELONGSTO + " INTEGER, " +
-                        "FOREIGN KEY(" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE" +
-                        KEY_NAME + " TEXT NOT NULL, " +
-                        KEY_INFO + " TEXT);";
+                        KEY_NAME + " TEXT, " +
+                        KEY_INFO + " TEXT, " +
+                        KEY_BELONGSTO + " integer NOT NULL, " +
+                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_SESSION_TABLE);
 
         //Create encounter table
         String CREATE_ENCOUNTER_TABLE =
                 "CREATE TABLE if not exists " + TABLE_ENCOUNTER + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
-                        KEY_BELONGSTO + " INTEGER NOT NULL, " +
-                        "FOREIGN KEY(" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE" +
-                        KEY_NAME + " TEXT NOT NULL, " +
+                        KEY_NAME + " TEXT, " +
                         KEY_INFO + " TEXT, " +
                         KEY_CR + " INTEGER, " +
                         KEY_XP + " DOUBLE, " +
                         KEY_HP + " INTEGER, " +
-                        KEY_AC + " INTEGER);";
+                        KEY_AC + " INTEGER, " +
+                        KEY_BELONGSTO + " integer NOT NULL, " +
+                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_SESSION + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_ENCOUNTER_TABLE);
 
         //Create NPC table
         String CREATE_NPC_TABLE =
                 "CREATE TABLE if not exists " + TABLE_NPC + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
-                        KEY_SESSIONID + " INTEGER, " +
-                        KEY_BELONGSTO + " INTEGER, " +
-                        KEY_NAME + " TEXT NOT NULL, " +
+                        KEY_NAME + " TEXT, " +
                         KEY_INFO + " TEXT, " +
                         KEY_CR + " INTEGER, " +
-                        KEY_XP + " DOUBLE);";
+                        KEY_XP + " DOUBLE, " +
+                        KEY_BELONGSTO + " integer NOT NULL, " +
+                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_NPC_TABLE);
 
         //Create PC table
         String CREATE_PC_TABLE =
                 "CREATE TABLE if not exists " + TABLE_PC + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
-                        KEY_CAMPAIGNID + " INTEGER, " +
-                        KEY_BELONGSTO + " INTEGER, " +
-                        KEY_NAME + " TEXT NOT NULL, " +
+                        KEY_NAME + " TEXT, " +
                         KEY_CLASS + " TEXT NOT NULL, " +
                         KEY_LEVEL + " INTEGER, " +
                         KEY_PLAYER + " TEXT NOT NULL, " +
@@ -161,11 +152,19 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_STUNNED + " INTEGER, " +
                         KEY_UNCONSCIOUS + " INTEGER, " +
                         KEY_CUSTOM + " INTEGER, " +
-                        KEY_INFO + " TEXT);";
+                        KEY_INFO + " TEXT, " +
+                        KEY_BELONGSTO + " integer NOT NULL, " +
+                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_PC_TABLE);
 
 
 
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        db.setForeignKeyConstraintsEnabled(true);
+        //db.execSQL(" PRAGMA foreign_keys = ON ");
     }
 
     @Override
