@@ -98,7 +98,7 @@ public class DbContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri _uri = null;
-        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC;
+        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC, KEY_ROWID_PC;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
         int uriType = uriMatcher.match(uri);
         switch (uriType) {
@@ -166,14 +166,23 @@ public class DbContentProvider extends ContentProvider{
                 }
                 break;
             case SINGLE_NPC:
-                KEY_ROWID_NPC = db.insert(dbHandler.TABLE_NPC, "", values);
+                KEY_ROWID_NPC = db.insert(DataBaseHandler.TABLE_NPC, "", values);
                 if(KEY_ROWID_NPC > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_NPC, KEY_ROWID_NPC);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
+            case ALL_PCS:
+                KEY_ROWID_PC = db.insert(DataBaseHandler.TABLE_PC, null, values);
+                //if added successfully
+                if(KEY_ROWID_PC > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_PC, KEY_ROWID_PC);
+                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
             case SINGLE_PC:
-                long KEY_ROWID_PC = db.insert(dbHandler.TABLE_PC, "", values);
+                KEY_ROWID_PC = db.insert(DataBaseHandler.TABLE_PC, "", values);
                 if(KEY_ROWID_PC > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_PC, KEY_ROWID_PC);
                     getContext().getContentResolver().notifyChange(_uri, null);
@@ -228,6 +237,9 @@ public class DbContentProvider extends ContentProvider{
                 queryBuilder.setTables(DataBaseHandler.TABLE_NPC);
                 id = uri.getPathSegments().get(1);
                 queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
+                break;
+            case ALL_PCS:
+                queryBuilder.setTables(DataBaseHandler.TABLE_PC);
                 break;
             case SINGLE_PC:
                 queryBuilder.setTables(DataBaseHandler.TABLE_PC);

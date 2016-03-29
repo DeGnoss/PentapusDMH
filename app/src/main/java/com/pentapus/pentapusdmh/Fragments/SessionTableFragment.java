@@ -138,8 +138,11 @@ public class SessionTableFragment extends Fragment implements
         final ListView listView = (ListView) view.findViewById(R.id.listViewSessions);
         listView.setAdapter(dataAdapterSessions);
         //Ensures a loader is initialized and active.
-        getLoaderManager().initLoader(0, null, this);
-        //getLoaderManager().restartLoader(0, null, this);
+        if(getLoaderManager().getLoader(0) == null){
+            getLoaderManager().initLoader(0, null, this);
+        } else{
+            getLoaderManager().restartLoader(0, null, this);
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

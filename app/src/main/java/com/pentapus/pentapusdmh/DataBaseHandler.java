@@ -126,9 +126,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 "CREATE TABLE if not exists " + TABLE_PC + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
                         KEY_NAME + " TEXT, " +
-                        KEY_CLASS + " TEXT NOT NULL, " +
+                        KEY_CLASS + " TEXT, " +
                         KEY_LEVEL + " INTEGER, " +
-                        KEY_PLAYER + " TEXT NOT NULL, " +
+                        KEY_PLAYER + " TEXT, " +
                         KEY_HP + " INTEGER, " +
                         KEY_AC + " INTEGER, " +
                         KEY_STRENGTH + " INTEGER, " +

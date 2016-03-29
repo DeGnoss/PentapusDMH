@@ -2,7 +2,6 @@ package com.pentapus.pentapusdmh.Fragments;
 
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -23,10 +22,14 @@ import android.widget.ListView;
 import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
-public class CampaignTableFragment extends Fragment implements
+public class PcTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    private String campaignId;
+    private FloatingActionButton fab;
+    final CharSequence[] items = {"Edit", "Delete"};
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,11 +39,9 @@ public class CampaignTableFragment extends Fragment implements
     private String mParam1;
     private String mParam2;
 
-    final CharSequence[] items = {"Edit", "Delete", "Player Characters"};
-    FloatingActionButton fab;
-    private SimpleCursorAdapter dataAdapterCampaigns;
+    private SimpleCursorAdapter dataAdapterPc;
 
-    public CampaignTableFragment() {
+    public PcTableFragment() {
         // Required empty public constructor
     }
 
@@ -53,8 +54,8 @@ public class CampaignTableFragment extends Fragment implements
      * @return A new instance of fragment SessionTableFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CampaignTableFragment newInstance(String param1, String param2) {
-        CampaignTableFragment fragment = new CampaignTableFragment();
+    public static PcTableFragment newInstance(String param1, String param2) {
+        PcTableFragment fragment = new PcTableFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -74,20 +75,26 @@ public class CampaignTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View tableView = inflater.inflate(R.layout.fragment_campaign_table, container, false);
+        final View tableView = inflater.inflate(R.layout.fragment_pc_table, container, false);
+        // insert a record
+        if (this.getArguments() != null) {
+            campaignId = getArguments().getString("campaignId");
+        }
         displayListView(tableView);
-        // Inflate the layout for this fragment
-        fab = (FloatingActionButton) tableView.findViewById(R.id.fabCampaign);
+        fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Bundle bundle = new Bundle();
                 bundle.putString("mode", "add");
-                addCampaign(bundle);
+                bundle.putString("campaignId", campaignId);
+                addPC(bundle);
             }
         });
+        // Inflate the layout for this fragment
         return tableView;
+
     }
 
     private void displayListView(View view) {
@@ -102,30 +109,19 @@ public class CampaignTableFragment extends Fragment implements
                 R.id.info,
         };
 
-        dataAdapterCampaigns = new SimpleCursorAdapter(
+        dataAdapterPc = new SimpleCursorAdapter(
                 this.getContext(),
-                R.layout.session_info,
+                R.layout.encounter_info,
                 null,
                 columns,
                 to,
                 0);
 
-        final ListView listView = (ListView) view.findViewById(R.id.listViewCampaigns);
-        listView.setAdapter(dataAdapterCampaigns);
+        final ListView listView = (ListView) view.findViewById(R.id.listViewPc);
+        listView.setAdapter(dataAdapterPc);
         //Ensures a loader is initialized and active.
         getLoaderManager().initLoader(0, null, this);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> listView, View view,
-                                    int position, long id) {
-                // Get the cursor, positioned to the corresponding row in the result set
-                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String campaignId =
-                        cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                loadCampaign(campaignId);
-            }
-        });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -138,24 +134,17 @@ public class CampaignTableFragment extends Fragment implements
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String campaignId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    String pcId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
                                     bundle.putString("mode", "update");
+                                    bundle.putString("pcId", pcId);
                                     bundle.putString("campaignId", campaignId);
-                                    editCampaign(bundle);
+                                    editPC(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + id);
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     dialog.dismiss();
-                                } else if (item == 2) {
-                                    Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String campaignId =
-                                            cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("campaignId", campaignId);
-                                    loadPCs(bundle);
                                 } else {
                                     dialog.dismiss();
                                 }
@@ -164,34 +153,26 @@ public class CampaignTableFragment extends Fragment implements
                 return true;
             }
         });
-
-
     }
 
-    private void loadPCs(Bundle bundle) {
+    private void addPC(Bundle bundle) {
         Fragment fragment;
-        fragment = new PcTableFragment();
+        fragment = new PcEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FT_PC")
-                .addToBackStack("FT_PC")
+                .replace(R.id.FrameTop, fragment, "FE_PC")
+                .addToBackStack("FE_PC")
                 .commit();
     }
 
-    private void editCampaign(Bundle bundle) {
+    private void editPC(Bundle bundle) {
         Fragment fragment;
-        fragment = new CampaignEditFragment();
+        fragment = new PcEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_CAMPAIGN")
-                .addToBackStack("FE_CAMPAIGN")
+                .replace(R.id.FrameTop, fragment, "FE_PC")
+                .addToBackStack("FE_PC")
                 .commit();
-    }
-
-
-    private void loadCampaign(String campaignId) {
-        SharedPrefsHelper.saveCampaign(getContext(), Integer.parseInt(campaignId));
-        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -211,30 +192,21 @@ public class CampaignTableFragment extends Fragment implements
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
+        String[] selectionArgs = new String[]{campaignId};
+        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_CAMPAIGN, projection, null, null, null);
+                DbContentProvider.CONTENT_URI_PC, projection, selection, selectionArgs, null);
         return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        dataAdapterCampaigns.swapCursor(data);
+        dataAdapterPc.swapCursor(data);
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        dataAdapterCampaigns.swapCursor(null);
-    }
-
-
-    public void addCampaign(Bundle bundle) {
-        Fragment fragment;
-        fragment = new CampaignEditFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_CAMPAIGN")
-                .addToBackStack("FE_CAMPAIGN")
-                .commit();
+        dataAdapterPc.swapCursor(null);
     }
 }

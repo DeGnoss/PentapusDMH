@@ -19,19 +19,13 @@ import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PcEditFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PcEditFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class PcEditFragment extends Fragment {
 
     Button addchar_btn;
     EditText name_tf, info_tf;
     private String mode, id;
+    private int campaignId;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -42,8 +36,6 @@ public class PcEditFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     public PcEditFragment() {
         // Required empty public constructor
@@ -86,16 +78,18 @@ public class PcEditFragment extends Fragment {
 
         if (this.getArguments() != null){
             mode = getArguments().getString("mode");
+            campaignId = Integer.parseInt(getArguments().getString("campaignId"));
             //check wheter entry gets updated or added
             if (mode.trim().equalsIgnoreCase("update")){
-                loadCharacterInfo(name_tf, info_tf);
+                id = getArguments().getString("pcId");
+                loadCharacterInfo(name_tf, info_tf, id);
             }
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                charButton(mode);
+                doneButton(mode);
             }
         });
         // Inflate the layout for this fragment
@@ -103,13 +97,12 @@ public class PcEditFragment extends Fragment {
 
     }
 
-    private void loadCharacterInfo(EditText name, EditText info) {
+    private void loadCharacterInfo(EditText name, EditText info, String id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO};
-        id = getArguments().getString("rowId");
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
         if (cursor != null) {
@@ -121,59 +114,38 @@ public class PcEditFragment extends Fragment {
         }
     }
 
-    public void charButton(String mode) {
+    public void doneButton(String mode) {
         // get values from the input text fields
         String myName = name_tf.getText().toString();
         String myInitiative = info_tf.getText().toString();
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
         values.put(DataBaseHandler.KEY_INFO, myInitiative);
+        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
 
         // insert a record
         if(mode.trim().equalsIgnoreCase("add")){
             getContext();
-            ContentResolver test = getContext().getContentResolver();
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_SESSION, values);
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_PC, values);
         }
         // update a record
         else {
-            id = getArguments().getString("rowId");
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
+            id = getArguments().getString("pcId");
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
             getContext().getContentResolver().update(uri, values, null, null);
         }
         Bundle bundle = new Bundle();
-        bundle.putString("type", "npc");
-        mListener.charDone(bundle);
+        bundle.putString("type", "pc");
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            mListener = (OnFragmentInteractionListener) context;
-        }catch(ClassCastException e){
-            throw new ClassCastException(context.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void charDone(Bundle bundle);
     }
 }
