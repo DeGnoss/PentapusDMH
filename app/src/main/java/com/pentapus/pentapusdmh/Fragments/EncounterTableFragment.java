@@ -22,6 +22,7 @@ import android.widget.ListView;
 import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
 
 public class EncounterTableFragment extends Fragment implements
@@ -134,7 +135,7 @@ public class EncounterTableFragment extends Fragment implements
 
                 Bundle bundle = new Bundle();
                 bundle.putString("encounterId", encounterId);
-                loadNPC(bundle);
+                loadNPC(bundle, encounterId);
             }
         });
 
@@ -190,7 +191,8 @@ public class EncounterTableFragment extends Fragment implements
                 .commit();
     }
 
-    private void loadNPC(Bundle bundle) {
+    private void loadNPC(Bundle bundle, String encounterId) {
+        SharedPrefsHelper.saveEncounter(getContext(), Integer.parseInt(encounterId));
         Fragment fragment;
         fragment = new EncounterFragment();
         fragment.setArguments(bundle);

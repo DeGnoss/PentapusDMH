@@ -15,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -72,6 +73,7 @@ public class SessionTableFragment extends Fragment implements
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -224,6 +226,13 @@ public class SessionTableFragment extends Fragment implements
                 .addToBackStack("FT_ENCOUNTER")
                 .commit();
     }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu){
+        menu.findItem(R.id.play_mode).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
 
     @Override
     public void onAttach(Context context) {

@@ -22,6 +22,15 @@
         android:selectAllOnFocus="true"
         android:id="@+id/etInfo" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etInfo"
+        android:hint="@string/initiative"
+        android:selectAllOnFocus="true"
+        android:inputType="numberSigned"
+        android:id="@+id/etInit" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

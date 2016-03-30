@@ -95,6 +95,7 @@ public class SessionEditFragment extends Fragment {
 
     }
 
+
     private void loadSessionInfo(EditText name, EditText info, String id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,

@@ -35,6 +35,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     //Encounter & NPC Table
     private static final String KEY_CR = "cr";
     private static final String KEY_XP = "xp";
+    public static final String KEY_INITIATIVEBONUS = "init";
+
 
     //PC & NPC Table
     private static final String KEY_HP = "hp";
@@ -117,6 +119,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_INFO + " TEXT, " +
                         KEY_CR + " INTEGER, " +
                         KEY_XP + " DOUBLE, " +
+                        KEY_INITIATIVEBONUS + " INTEGER, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_NPC_TABLE);
@@ -153,6 +156,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_UNCONSCIOUS + " INTEGER, " +
                         KEY_CUSTOM + " INTEGER, " +
                         KEY_INFO + " TEXT, " +
+                        KEY_INITIATIVEBONUS + " INTEGER, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_PC_TABLE);

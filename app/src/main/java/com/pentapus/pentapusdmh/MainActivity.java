@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.pentapus.pentapusdmh.Fragments.CampaignTableFragment;
 import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
+import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
                     .addToBackStack("FT_CAMPAIGN")
+                    .commit();
+            return true;
+        }else if(id == R.id.play_mode){
+            TrackerFragment ftable = new TrackerFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.FrameTop, ftable, "F_TRACKER")
+                    .addToBackStack("F_TRACKER")
                     .commit();
             return true;
         }

@@ -20,7 +20,7 @@ import com.pentapus.pentapusdmh.R;
 public class NPCEditFragment extends Fragment {
 
     Button addchar_btn;
-    EditText name_tf, info_tf;
+    EditText name_tf, info_tf, init_tf;
     private String mode, id;
     private int encounterId;
 
@@ -72,6 +72,7 @@ public class NPCEditFragment extends Fragment {
         final View charEditView = inflater.inflate(R.layout.fragment_npc_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
+        init_tf = (EditText) charEditView.findViewById(R.id.etInit);
 
         if (this.getArguments() != null){
             mode = getArguments().getString("mode");
@@ -79,7 +80,7 @@ public class NPCEditFragment extends Fragment {
             //check wheter entry gets updated or added
             if (mode.trim().equalsIgnoreCase("update")){
                 id = getArguments().getString("npcId");
-                loadNPCInfo(name_tf, info_tf, id);
+                loadNPCInfo(name_tf, info_tf, init_tf, id);
             }
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
@@ -93,30 +94,35 @@ public class NPCEditFragment extends Fragment {
         return charEditView;
     }
 
-    private void loadNPCInfo(EditText name, EditText info, String id) {
+    private void loadNPCInfo(EditText name, EditText info, EditText init, String id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO};
+                DataBaseHandler.KEY_INFO,
+                DataBaseHandler.KEY_INITIATIVEBONUS};
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
         if (cursor != null) {
             cursor.moveToFirst();
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-            String myInitiative = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
+            String myInfo = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
+            String myInitiative = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
             name.setText(myName, TextView.BufferType.EDITABLE);
-            info.setText(myInitiative, TextView.BufferType.EDITABLE);
+            info.setText(myInfo, TextView.BufferType.EDITABLE);
+            init.setText(myInitiative, TextView.BufferType.EDITABLE);
         }
     }
 
     public void doneButton(String mode) {
         // get values from the input text fields
         String myName = name_tf.getText().toString();
-        String myInitiative = info_tf.getText().toString();
+        String myInfo = info_tf.getText().toString();
+        String myInitiative = init_tf.getText().toString();
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
-        values.put(DataBaseHandler.KEY_INFO, myInitiative);
+        values.put(DataBaseHandler.KEY_INFO, myInfo);
+        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
 
         // insert a record

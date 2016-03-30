@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,14 +15,17 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.commonsware.cwac.merge.MergeAdapter;
 import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
 public class EncounterFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -39,7 +43,9 @@ public class EncounterFragment extends Fragment implements
     private String mParam1;
     private String mParam2;
 
-    private SimpleCursorAdapter dataAdapterEncounter;
+    private SimpleCursorAdapter dataAdapterNPC, dataAdapterPC;
+    private static int campaignId;
+    private MergeAdapter mergeAdapter;
 
     public EncounterFragment() {
         // Required empty public constructor
@@ -70,6 +76,7 @@ public class EncounterFragment extends Fragment implements
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -77,6 +84,7 @@ public class EncounterFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
         // insert a record
+        campaignId = SharedPrefsHelper.loadCampaign(getContext());
         if (this.getArguments() != null) {
             encounterId = getArguments().getString("encounterId");
         }
@@ -99,6 +107,8 @@ public class EncounterFragment extends Fragment implements
 
     private void displayListView(View view) {
 
+        mergeAdapter = new MergeAdapter();
+
         String[] columns = new String[]{
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
@@ -109,7 +119,7 @@ public class EncounterFragment extends Fragment implements
                 R.id.info,
         };
 
-        dataAdapterEncounter = new SimpleCursorAdapter(
+        dataAdapterNPC = new SimpleCursorAdapter(
                 this.getContext(),
                 R.layout.encounter_info,
                 null,
@@ -117,10 +127,23 @@ public class EncounterFragment extends Fragment implements
                 to,
                 0);
 
+        dataAdapterPC = new SimpleCursorAdapter(
+                this.getContext(),
+                R.layout.encounter_info,
+                null,
+                columns,
+                to,
+                0);
+
+        mergeAdapter.addAdapter(dataAdapterNPC);
+        mergeAdapter.addAdapter(dataAdapterPC);
+
+
         final ListView listView = (ListView) view.findViewById(R.id.listViewEncounter);
-        listView.setAdapter(dataAdapterEncounter);
+        listView.setAdapter(mergeAdapter);
         //Ensures a loader is initialized and active.
         getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
 
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -176,6 +199,12 @@ public class EncounterFragment extends Fragment implements
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu){
+        menu.findItem(R.id.play_mode).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
@@ -192,21 +221,46 @@ public class EncounterFragment extends Fragment implements
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
-        String[] selectionArgs = new String[]{encounterId};
-        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-        CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_NPC, projection, selection, selectionArgs, null);
-        return cursorLoader;
+        if (id == 0) {
+            String[] selectionArgs = new String[]{encounterId};
+            String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+            return new CursorLoader(this.getContext(),
+                    DbContentProvider.CONTENT_URI_NPC, projection, selection, selectionArgs, null);
+        } else {
+            String[] selectionArgs = new String[]{String.valueOf(campaignId)};
+            String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+            return new CursorLoader(this.getContext(),
+                    DbContentProvider.CONTENT_URI_PC, projection, selection, selectionArgs, null);
+        }
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        dataAdapterEncounter.swapCursor(data);
+        switch (loader.getId()) {
+            case 0:
+                dataAdapterNPC.swapCursor(data);
+                break;
+            case 1:
+                dataAdapterPC.swapCursor(data);
+                break;
+            default:
+                break;
+        }
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        dataAdapterEncounter.swapCursor(null);
+        switch (loader.getId()) {
+            case 0:
+                dataAdapterNPC.swapCursor(null);
+                break;
+            case 1:
+                dataAdapterPC.swapCursor(null);
+                break;
+            default:
+                break;
+        }
     }
 }

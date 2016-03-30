@@ -22,4 +22,16 @@ public class SharedPrefsHelper {
         sp = context.getApplicationContext().getSharedPreferences(settings, 0);
         return sp.getInt("campaign", 0); //0 is the default value
     }
+
+    public static void saveEncounter(Context context, int value){
+        sp = context.getApplicationContext().getSharedPreferences(settings, 0);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("encounter" ,value);
+        editor.commit();
+    }
+    public static int loadEncounter(Context context){
+        sp = context.getApplicationContext().getSharedPreferences(settings, 0);
+        return sp.getInt("encounter", 0); //0 is the default value
+    }
+
 }
