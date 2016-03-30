@@ -13,6 +13,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,10 +27,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.pentapus.pentapusdmh.CharacterAdapter;
+import com.pentapus.pentapusdmh.CharacterInfoCard;
 import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.SharedPrefsHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrackerFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -41,9 +49,13 @@ public class TrackerFragment extends Fragment implements
     private String mParam1;
     private String mParam2;
 
-    private SimpleCursorAdapter dataAdapterNPC, dataAdapterPC;
+    private CharacterAdapter chars;
     private static int campaignId, encounterId;
     private MergeAdapter mergeAdapter;
+    private ArrayList<String> names;
+    private ArrayList<Integer> initiative;
+
+
 
     public TrackerFragment() {
         // Required empty public constructor
@@ -70,19 +82,34 @@ public class TrackerFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        names = new ArrayList<String>();
+        initiative = new ArrayList<Integer>();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_tracker, container, false);
+        final RecyclerView mRecyclerView = (RecyclerView) tableView.findViewById(R.id.listViewEncounter);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(llm);
         // insert a record
         campaignId = SharedPrefsHelper.loadCampaign(getContext());
         encounterId = SharedPrefsHelper.loadEncounter(getContext());
+
+        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
+        chars = new CharacterAdapter();
+        mRecyclerView.setAdapter(chars);
+        //Log.d("Name:", names.get(0));
+
         Button next = (Button) tableView.findViewById(R.id.bNext);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,87 +117,26 @@ public class TrackerFragment extends Fragment implements
 
             }
         });
-
-        displayListView(tableView);
         // Inflate the layout for this fragment
         return tableView;
 
     }
 
-    private void displayListView(View view) {
-
-        mergeAdapter = new MergeAdapter();
-
-        String[] columns = new String[]{
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INITIATIVEBONUS
-        };
-
-        int[] to = new int[]{
-                R.id.name,
-                R.id.initiative,
-        };
-
-        dataAdapterNPC = new SimpleCursorAdapter(
-                this.getContext(),
-                R.layout.char_info,
-                null,
-                columns,
-                to,
-                0);
-
-        dataAdapterPC = new SimpleCursorAdapter(
-                this.getContext(),
-                R.layout.char_info,
-                null,
-                columns,
-                to,
-                0);
-
-        Log.d("Testaufruf", "woooooot");
-
-        dataAdapterNPC.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                Log.d("ColumnIndex:", String.valueOf(columnIndex));
-                if(columnIndex == 2){
-                    int init = cursor.getInt(columnIndex);
-                    int rand = (int) Math.round((20*Math.random())+1);
-                    Log.d("Random1", "init:" + String.valueOf(init) + "  rand:" + String.valueOf(rand));
-                    init = (init + rand);
-                    String s = String.valueOf(init);
-                    TextView tv = (TextView) view;
-                    tv.setText(s);
-                    return true;
-                }
-                return false;
-            }
-        });
-/*
-        dataAdapterPC.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                if(columnIndex == 2){
-                    int init = cursor.getInt(columnIndex);
-                    int rand = (int) Math.round((20 * Math.random())+1);
-                    Log.d("Random2", "init:" + String.valueOf(init) + "  rand:" + String.valueOf(rand));
-                    init = (init + rand);
-                    String s = String.valueOf(init);
-                    TextView tv = (TextView) view;
-                    tv.setText(s);
-                    return true;
-                }
-                return false;
-            }
-        }); */
-
-        mergeAdapter.addAdapter(dataAdapterNPC);
-        mergeAdapter.addAdapter(dataAdapterPC);
 
 
-        final ListView listView = (ListView) view.findViewById(R.id.listViewEncounter);
-        listView.setAdapter(mergeAdapter);
-        //Ensures a loader is initialized and active.
-        getLoaderManager().initLoader(0, null, this);
-        getLoaderManager().initLoader(1, null, this);
+    private void createList(ArrayList<String> names, ArrayList<Integer> initiative){
+        for(int i=0; i<names.size(); i++){
+            initiative.add(i, d20()+initiative.get(i));
+            CharacterInfoCard ci = new CharacterInfoCard();
+            ci.name = names.get(i);
+            ci.initiative = String.valueOf(initiative.get(i));
+            chars.addListItem(ci);
+            chars.notifyItemInserted(i);
+        }
+    }
+
+    private Integer d20() {
+        return (int) Math.round(20*Math.random())+1;
     }
 
     @Override
@@ -207,32 +173,55 @@ public class TrackerFragment extends Fragment implements
             return new CursorLoader(this.getContext(),
                     DbContentProvider.CONTENT_URI_PC, projection, selection, selectionArgs, null);
         }
-
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
             case 0:
-                dataAdapterNPC.swapCursor(data);
+                while (data.moveToNext()) {
+                    String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
+                    int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
+                    initiative = initiative+d20();
+                    CharacterInfoCard ci = new CharacterInfoCard();
+                    ci.name = names;
+                    ci.initiative = String.valueOf(initiative);
+                    chars.addListItem(ci);
+                    //names.add(data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME)));
+                    //initiative.add(data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS)));
+
+                }
                 break;
             case 1:
-                dataAdapterPC.swapCursor(data);
+                while (data.moveToNext()) {
+                    String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
+                    int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
+                    initiative = initiative + d20();
+                    CharacterInfoCard ci = new CharacterInfoCard();
+                    ci.name = names;
+                    ci.initiative = String.valueOf(initiative);
+                    chars.addListItem(ci);
+                }
                 break;
             default:
                 break;
         }
-
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                chars.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         switch (loader.getId()) {
             case 0:
-                dataAdapterNPC.swapCursor(null);
+                //dataAdapterNPC.swapCursor(null);
                 break;
             case 1:
-                dataAdapterPC.swapCursor(null);
+                //dataAdapterPC.swapCursor(null);
                 break;
             default:
                 break;
