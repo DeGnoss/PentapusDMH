@@ -50,6 +50,10 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         characterList = sortList(characterList);
     }
 
+    public void moveToBottom(){
+        characterList.add(characterList.remove(0));
+    }
+
     private List<CharacterInfoCard> sortList(List<CharacterInfoCard> list){
         Collections.sort(list, new Comparator<CharacterInfoCard>() {
             public int compare(CharacterInfoCard lhs, CharacterInfoCard rhs) {

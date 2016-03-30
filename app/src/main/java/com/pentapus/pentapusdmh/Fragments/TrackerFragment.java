@@ -114,7 +114,8 @@ public class TrackerFragment extends Fragment implements
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                chars.moveToBottom();
+                chars.notifyDataSetChanged();
             }
         });
         // Inflate the layout for this fragment
