@@ -1,41 +1,32 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.pentapus.pentapusdmh.CharacterAdapter;
-import com.pentapus.pentapusdmh.CharacterInfoCard;
+import com.pentapus.pentapusdmh.TrackerAdapter;
+import com.pentapus.pentapusdmh.TrackerInfoCard;
 import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
+import com.pentapus.pentapusdmh.DiceHelper;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TrackerFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -49,7 +40,7 @@ public class TrackerFragment extends Fragment implements
     private String mParam1;
     private String mParam2;
 
-    private CharacterAdapter chars;
+    private TrackerAdapter chars;
     private static int campaignId, encounterId;
     private MergeAdapter mergeAdapter;
     private ArrayList<String> names;
@@ -101,12 +92,14 @@ public class TrackerFragment extends Fragment implements
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
         // insert a record
-        campaignId = SharedPrefsHelper.loadCampaign(getContext());
-        encounterId = SharedPrefsHelper.loadEncounter(getContext());
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
+
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
+        encounterId = SharedPrefsHelper.loadEncounterId(getContext());
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
-        chars = new CharacterAdapter();
+        chars = new TrackerAdapter();
         mRecyclerView.setAdapter(chars);
         //Log.d("Name:", names.get(0));
 
@@ -127,8 +120,8 @@ public class TrackerFragment extends Fragment implements
 
     private void createList(ArrayList<String> names, ArrayList<Integer> initiative){
         for(int i=0; i<names.size(); i++){
-            initiative.add(i, d20()+initiative.get(i));
-            CharacterInfoCard ci = new CharacterInfoCard();
+            initiative.add(i, initiative.get(i));
+            TrackerInfoCard ci = new TrackerInfoCard();
             ci.name = names.get(i);
             ci.initiative = String.valueOf(initiative.get(i));
             chars.addListItem(ci);
@@ -136,9 +129,8 @@ public class TrackerFragment extends Fragment implements
         }
     }
 
-    private Integer d20() {
-        return (int) Math.round(20*Math.random())+1;
-    }
+
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu){
@@ -183,10 +175,12 @@ public class TrackerFragment extends Fragment implements
                 while (data.moveToNext()) {
                     String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
                     int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
-                    initiative = initiative+d20();
-                    CharacterInfoCard ci = new CharacterInfoCard();
+                    int initiativeMod = initiative;
+                    initiative = initiative+ DiceHelper.d20();
+                    TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
                     ci.initiative = String.valueOf(initiative);
+                    ci.initiativeMod = String.valueOf(initiativeMod);
                     chars.addListItem(ci);
                     //names.add(data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME)));
                     //initiative.add(data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS)));
@@ -197,10 +191,12 @@ public class TrackerFragment extends Fragment implements
                 while (data.moveToNext()) {
                     String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
                     int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
-                    initiative = initiative + d20();
-                    CharacterInfoCard ci = new CharacterInfoCard();
+                    int initiativeMod = initiative;
+                    initiative = initiative + DiceHelper.d20();
+                    TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
                     ci.initiative = String.valueOf(initiative);
+                    ci.initiativeMod = String.valueOf(initiativeMod);
                     chars.addListItem(ci);
                 }
                 break;

@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,12 @@ import android.widget.ListView;
 import com.pentapus.pentapusdmh.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
 public class PcTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private String campaignId;
+    private String campaignId, campaignName;
     private FloatingActionButton fab;
     final CharSequence[] items = {"Edit", "Delete"};
 
@@ -79,7 +81,9 @@ public class PcTableFragment extends Fragment implements
         // insert a record
         if (this.getArguments() != null) {
             campaignId = getArguments().getString("campaignId");
+            campaignName = getArguments().getString("campaignName");
         }
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
         displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);
         fab.setOnClickListener(new View.OnClickListener() {

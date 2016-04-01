@@ -14,6 +14,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,7 @@ public class CampaignTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.campaignsFragmentTitle);
         final View tableView = inflater.inflate(R.layout.fragment_campaign_table, container, false);
         displayListView(tableView);
         // Inflate the layout for this fragment
@@ -123,7 +125,9 @@ public class CampaignTableFragment extends Fragment implements
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                 String campaignId =
                         cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                loadCampaign(campaignId);
+                String campaignName =
+                        cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+                loadCampaign(campaignId, campaignName);
             }
         });
 
@@ -133,15 +137,18 @@ public class CampaignTableFragment extends Fragment implements
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+
                 new AlertDialog.Builder(getContext()).setTitle(title)
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                                     String campaignId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    String campaignName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
                                     Bundle bundle = new Bundle();
                                     bundle.putString("mode", "update");
                                     bundle.putString("campaignId", campaignId);
+                                    bundle.putString("campaignName", campaignName);
                                     editCampaign(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
@@ -152,9 +159,10 @@ public class CampaignTableFragment extends Fragment implements
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                                     String campaignId =
                                             cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
+                                    String campaignName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
                                     Bundle bundle = new Bundle();
                                     bundle.putString("campaignId", campaignId);
+                                    bundle.putString("campaignName", campaignName);
                                     loadPCs(bundle);
                                 } else {
                                     dialog.dismiss();
@@ -189,8 +197,8 @@ public class CampaignTableFragment extends Fragment implements
     }
 
 
-    private void loadCampaign(String campaignId) {
-        SharedPrefsHelper.saveCampaign(getContext(), Integer.parseInt(campaignId));
+    private void loadCampaign(String campaignId, String campaignName) {
+        SharedPrefsHelper.saveCampaign(getContext(), Integer.parseInt(campaignId), campaignName);
         getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 

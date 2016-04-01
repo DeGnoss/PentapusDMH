@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,8 +80,9 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext())+ " Sessions");
         final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
-        campaignId = SharedPrefsHelper.loadCampaign(getContext());
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         Log.d("oncreateview", ("campaignId = " + campaignId));
         if (campaignId <= 0) {
             new AlertDialog.Builder(getContext()).setTitle("No Campaign Found")
@@ -154,9 +156,12 @@ public class SessionTableFragment extends Fragment implements
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                 String sessionId =
                         cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                String sessionName=cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+
 
                 Bundle bundle = new Bundle();
                 bundle.putString("sessionId", sessionId);
+                bundle.putString("sessionName", sessionName);
                 loadEncounters(bundle);
             }
         });

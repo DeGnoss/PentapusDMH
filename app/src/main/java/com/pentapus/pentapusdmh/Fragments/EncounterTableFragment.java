@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ import com.pentapus.pentapusdmh.SharedPrefsHelper;
 public class EncounterTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private String sessionId;
+    private String sessionId, sessionName;
     private FloatingActionButton fab;
     final CharSequence[] items = {"Edit", "Delete"};
 
@@ -81,7 +82,9 @@ public class EncounterTableFragment extends Fragment implements
         // insert a record
         if (this.getArguments() != null) {
             sessionId = getArguments().getString("sessionId");
+            sessionName = getArguments().getString("sessionName");
         }
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
         displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -132,10 +135,12 @@ public class EncounterTableFragment extends Fragment implements
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                 String encounterId =
                         cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                String encounterName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
 
                 Bundle bundle = new Bundle();
                 bundle.putString("encounterId", encounterId);
-                loadNPC(bundle, encounterId);
+                bundle.putString("encounterName", encounterName);
+                loadNPC(bundle, encounterId, encounterName);
             }
         });
 
@@ -191,8 +196,8 @@ public class EncounterTableFragment extends Fragment implements
                 .commit();
     }
 
-    private void loadNPC(Bundle bundle, String encounterId) {
-        SharedPrefsHelper.saveEncounter(getContext(), Integer.parseInt(encounterId));
+    private void loadNPC(Bundle bundle, String encounterId, String encounterName) {
+        SharedPrefsHelper.saveEncounter(getContext(), Integer.parseInt(encounterId), encounterName);
         Fragment fragment;
         fragment = new EncounterFragment();
         fragment.setArguments(bundle);

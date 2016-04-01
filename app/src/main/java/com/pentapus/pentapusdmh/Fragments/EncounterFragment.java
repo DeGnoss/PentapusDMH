@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +13,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -30,7 +32,7 @@ import com.pentapus.pentapusdmh.SharedPrefsHelper;
 public class EncounterFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private String encounterId;
+    private String encounterId, encounterName;
     private FloatingActionButton fab;
     final CharSequence[] items = {"Edit", "Delete"};
 
@@ -84,10 +86,13 @@ public class EncounterFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
         // insert a record
-        campaignId = SharedPrefsHelper.loadCampaign(getContext());
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         if (this.getArguments() != null) {
             encounterId = getArguments().getString("encounterId");
+            encounterName = getArguments().getString("encounterName");
         }
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
+
         displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +153,7 @@ public class EncounterFragment extends Fragment implements
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
+
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
@@ -157,6 +163,8 @@ public class EncounterFragment extends Fragment implements
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+                                    listView.getAdapter();
+                                    Log.d("Adapter clicked:", listView.getAdapter().getItem(position).toString());
                                     String npcId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
                                     bundle.putString("mode", "update");
@@ -197,6 +205,30 @@ public class EncounterFragment extends Fragment implements
                 .addToBackStack("FE_NPC")
                 .commit();
     }
+
+    /**
+     * gets [section,item idx in section] for raw list position
+     *
+     * @param adapter
+     * @param position: raw position in {@link com.commonsware.cwac.merge.MergeAdapter}
+     * @return ArrayList<Integer>
+     */
+    public static Pair<Integer, Integer> getMergeAdapterPos(MergeAdapter adapter, int
+            position) {
+        int section = -1;
+        int sectionStart = -1;
+        for (int i = 0; i <= position; i++) {
+            if (!(adapter.getItem(i) instanceof Cursor)) {
+                sectionStart = i;
+                section++;
+            }
+        }
+        int correctedPos = position - sectionStart - 1;
+
+        return new Pair<Integer, Integer>(section, correctedPos);
+    }
+
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu){

@@ -14,14 +14,16 @@ import java.util.List;
 /**
  * Created by Koni on 30/3/16.
  */
-public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>{
-    private List<CharacterInfoCard> characterList = new ArrayList<>();
+public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder>{
+    private List<TrackerInfoCard> characterList = new ArrayList<>();
+    private static List<TrackerInfoCard> initiativeList = new ArrayList<>();
 
-    public CharacterAdapter(List<CharacterInfoCard> characterList) {
+
+    public TrackerAdapter(List<TrackerInfoCard> characterList) {
         this.characterList = characterList;
     }
 
-    public CharacterAdapter() {
+    public TrackerAdapter() {
     }
 
     @Override
@@ -31,7 +33,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
 
     @Override
     public void onBindViewHolder(CharacterViewHolder characterViewHolder, int position) {
-        CharacterInfoCard ci = characterList.get(position);
+        TrackerInfoCard ci = characterList.get(position);
         characterViewHolder.vName.setText(ci.name);
         characterViewHolder.vInitiative.setText(ci.initiative);
     }
@@ -45,8 +47,8 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         return new CharacterViewHolder(itemView);
     }
 
-    public void addListItem(CharacterInfoCard characterInfoCard){
-        characterList.add(characterInfoCard);
+    public void addListItem(TrackerInfoCard trackerInfoCard){
+        characterList.add(trackerInfoCard);
         characterList = sortList(characterList);
     }
 
@@ -54,17 +56,30 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         characterList.add(characterList.remove(0));
     }
 
-    private List<CharacterInfoCard> sortList(List<CharacterInfoCard> list){
-        Collections.sort(list, new Comparator<CharacterInfoCard>() {
-            public int compare(CharacterInfoCard lhs, CharacterInfoCard rhs) {
-                if(Integer.parseInt(lhs.initiative) >= Integer.parseInt(rhs.initiative)){
+    private List<TrackerInfoCard> sortList(List<TrackerInfoCard> list){
+        Collections.sort(list, new Comparator<TrackerInfoCard>() {
+            public int compare(TrackerInfoCard lhs, TrackerInfoCard rhs) {
+                if (Integer.parseInt(lhs.initiative) > Integer.parseInt(rhs.initiative)) {
                     return -1;
-                } else{
+                } else if (Integer.parseInt(lhs.initiative) == Integer.parseInt(rhs.initiative)) {
+                    return reCompare(lhs, rhs);
+                } else {
                     return 1;
                 }
             }
         });
         return list;
+    }
+
+    private int reCompare(TrackerInfoCard lhs, TrackerInfoCard rhs) {
+        if((Integer.parseInt(lhs.initiativeMod)+DiceHelper.d20()) > (Integer.parseInt(rhs.initiativeMod)+DiceHelper.d20())){
+            return -1;
+        } else if((Integer.parseInt(lhs.initiativeMod)+DiceHelper.d20()) == (Integer.parseInt(rhs.initiativeMod)+DiceHelper.d20())){
+            return reCompare(lhs, rhs);
+        }
+        else{
+            return 1;
+        }
     }
 
     public static class CharacterViewHolder extends RecyclerView.ViewHolder {
