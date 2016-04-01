@@ -13,12 +13,14 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 
 import com.commonsware.cwac.merge.MergeAdapter;
@@ -31,12 +33,13 @@ import com.pentapus.pentapusdmh.DiceHelper;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class TrackerFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener{
+        LoaderManager.LoaderCallbacks<Cursor>{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,6 +58,8 @@ public class TrackerFragment extends Fragment implements
 
     final int minValue = -5;
     final int maxValue = 5;
+    String[] nums = new String[10];
+
 
 
 
@@ -103,6 +108,10 @@ public class TrackerFragment extends Fragment implements
         mRecyclerView.setLayoutManager(llm);
         // insert a record
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
+
+        for(int i=0; i<nums.length; i++){
+            nums[i] = Integer.toString(i-(nums.length/2));
+        }
 
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         encounterId = SharedPrefsHelper.loadEncounterId(getContext());
@@ -153,7 +162,10 @@ public class TrackerFragment extends Fragment implements
         Button b1 = (Button) d.findViewById(R.id.button1);
         Button b2 = (Button) d.findViewById(R.id.button2);
         final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
-        np.setMinValue(0);
+
+
+        np.setDisplayedValues(nums);
+       /* np.setMinValue(0);
         np.setMaxValue(maxValue - minValue);
         np.setValue(maxValue);
         np.setFormatter(new NumberPicker.Formatter() {
@@ -162,7 +174,23 @@ public class TrackerFragment extends Fragment implements
                 return Integer.toString(index + minValue);
             }
         });
+
         np.setWrapSelectorWheel(false);
+        Field f = null;
+        try {
+            f = NumberPicker.class.getDeclaredField("mInputText");
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        f.setAccessible(true);
+        EditText inputText = null;
+        try {
+            inputText = (EditText)f.get(np);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        inputText.setFilters(new InputFilter[0]);
+
 
         //hack to make the numberpicker work correctly
         try {
@@ -172,7 +200,8 @@ public class TrackerFragment extends Fragment implements
         } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        np.setOnValueChangedListener(this);
+*/
+
         b1.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -297,10 +326,5 @@ public class TrackerFragment extends Fragment implements
             default:
                 break;
         }
-    }
-
-    @Override
-    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-
     }
 }
