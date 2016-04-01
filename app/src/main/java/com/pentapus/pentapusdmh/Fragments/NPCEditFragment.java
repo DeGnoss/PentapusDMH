@@ -20,7 +20,7 @@ import com.pentapus.pentapusdmh.R;
 public class NPCEditFragment extends Fragment {
 
     Button addchar_btn;
-    EditText name_tf, info_tf, init_tf;
+    EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf;
     private String mode, id;
     private int encounterId;
 
@@ -73,6 +73,9 @@ public class NPCEditFragment extends Fragment {
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
         init_tf = (EditText) charEditView.findViewById(R.id.etInit);
+        maxHp_tf = (EditText) charEditView.findViewById(R.id.etHpMax);
+        ac_tf = (EditText) charEditView.findViewById(R.id.etAc);
+
 
         if (this.getArguments() != null){
             mode = getArguments().getString("mode");
@@ -80,7 +83,7 @@ public class NPCEditFragment extends Fragment {
             //check wheter entry gets updated or added
             if (mode.trim().equalsIgnoreCase("update")){
                 id = getArguments().getString("npcId");
-                loadNPCInfo(name_tf, info_tf, init_tf, id);
+                loadNPCInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, id);
             }
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
@@ -94,12 +97,14 @@ public class NPCEditFragment extends Fragment {
         return charEditView;
     }
 
-    private void loadNPCInfo(EditText name, EditText info, EditText init, String id) {
+    private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, String id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO,
-                DataBaseHandler.KEY_INITIATIVEBONUS};
+                DataBaseHandler.KEY_INITIATIVEBONUS,
+                DataBaseHandler.KEY_MAXHP,
+                DataBaseHandler.KEY_AC};
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
@@ -108,9 +113,13 @@ public class NPCEditFragment extends Fragment {
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
             String myInfo = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
             String myInitiative = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
+            String myMaxHp = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
+            String myAc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
             name.setText(myName, TextView.BufferType.EDITABLE);
             info.setText(myInfo, TextView.BufferType.EDITABLE);
             init.setText(myInitiative, TextView.BufferType.EDITABLE);
+            maxHp.setText(myMaxHp, TextView.BufferType.EDITABLE);
+            ac.setText(myAc, TextView.BufferType.EDITABLE);
         }
     }
 
@@ -119,10 +128,14 @@ public class NPCEditFragment extends Fragment {
         String myName = name_tf.getText().toString();
         String myInfo = info_tf.getText().toString();
         String myInitiative = init_tf.getText().toString();
+        String myMaxHp = maxHp_tf.getText().toString();
+        String myAc = ac_tf.getText().toString();
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
         values.put(DataBaseHandler.KEY_INFO, myInfo);
         values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
+        values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
+        values.put(DataBaseHandler.KEY_AC, myAc);
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
 
         // insert a record

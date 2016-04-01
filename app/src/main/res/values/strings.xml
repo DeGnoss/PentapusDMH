@@ -14,4 +14,6 @@
     <string name="sessionsFragmentTitle">Sessions</string>
     <string name="campaignsFragmentTitle">Campaigns</string>
     <string name="encounterFragmentTitle">Encounters</string>
+    <string name="maxHp">Max Hp</string>
+    <string name="ac">AC</string>
 </resources>

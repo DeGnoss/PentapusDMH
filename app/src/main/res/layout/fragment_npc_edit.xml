@@ -31,6 +31,24 @@
         android:inputType="numberSigned"
         android:id="@+id/etInit" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etInit"
+        android:hint="@string/maxHp"
+        android:selectAllOnFocus="true"
+        android:inputType="number"
+        android:id="@+id/etHpMax" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etHpMax"
+        android:hint="@string/ac"
+        android:selectAllOnFocus="true"
+        android:inputType="number"
+        android:id="@+id/etAc" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

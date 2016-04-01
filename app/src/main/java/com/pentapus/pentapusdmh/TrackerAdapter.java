@@ -1,10 +1,16 @@
 package com.pentapus.pentapusdmh;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +22,6 @@ import java.util.List;
  */
 public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder>{
     private List<TrackerInfoCard> characterList = new ArrayList<>();
-    private static List<TrackerInfoCard> initiativeList = new ArrayList<>();
 
 
     public TrackerAdapter(List<TrackerInfoCard> characterList) {
@@ -36,6 +41,8 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         TrackerInfoCard ci = characterList.get(position);
         characterViewHolder.vName.setText(ci.name);
         characterViewHolder.vInitiative.setText(ci.initiative);
+        characterViewHolder.vAc.setText(ci.ac);
+        characterViewHolder.vHp.setText(ci.maxHp);
     }
 
     @Override
@@ -82,14 +89,29 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         }
     }
 
+    public void setHp(int id, int hpDiff){
+        if(Integer.parseInt(characterList.get(id).maxHp) !=0){
+            characterList.get(id).maxHp = String.valueOf(Integer.parseInt(characterList.get(id).maxHp) + hpDiff);
+            notifyItemChanged(id);
+        }
+    }
+
+
+
+
     public static class CharacterViewHolder extends RecyclerView.ViewHolder {
         protected TextView vName;
         protected TextView vInitiative;
+        protected TextView vAc;
+        protected TextView vHp;
+
 
         public CharacterViewHolder(View v) {
             super(v);
             vName =  (TextView) v.findViewById(R.id.name);
             vInitiative = (TextView)  v.findViewById(R.id.initiative);
+            vAc = (TextView) v.findViewById(R.id.acV);
+            vHp = (TextView) v.findViewById(R.id.hpV);
         }
     }
 

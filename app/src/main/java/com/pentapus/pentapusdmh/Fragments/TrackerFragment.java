@@ -1,6 +1,8 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
+import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,13 +13,16 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.NumberPicker;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.pentapus.pentapusdmh.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.TrackerAdapter;
 import com.pentapus.pentapusdmh.TrackerInfoCard;
 import com.pentapus.pentapusdmh.DataBaseHandler;
@@ -26,10 +31,12 @@ import com.pentapus.pentapusdmh.DiceHelper;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class TrackerFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,6 +52,9 @@ public class TrackerFragment extends Fragment implements
     private MergeAdapter mergeAdapter;
     private ArrayList<String> names;
     private ArrayList<Integer> initiative;
+
+    final int minValue = -5;
+    final int maxValue = 5;
 
 
 
@@ -111,22 +121,73 @@ public class TrackerFragment extends Fragment implements
                 chars.notifyDataSetChanged();
             }
         });
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        //TrackerInfoCard current = chars.getList().get(position);
+                        onClick(position);
+                    }
+                })
+        );
+
         // Inflate the layout for this fragment
         return tableView;
 
     }
 
 
+    public void onClick(int id){
+        show(getContext(), id);
+        //Log.d("Current Hp: ", String.valueOf(characterList.get(id).maxHp));
+        //characterList.get(id).maxHp = String.valueOf(10);
+    }
 
-    private void createList(ArrayList<String> names, ArrayList<Integer> initiative){
-        for(int i=0; i<names.size(); i++){
-            initiative.add(i, initiative.get(i));
-            TrackerInfoCard ci = new TrackerInfoCard();
-            ci.name = names.get(i);
-            ci.initiative = String.valueOf(initiative.get(i));
-            chars.addListItem(ci);
-            chars.notifyItemInserted(i);
+    public void show(Context context, final int id)
+    {
+
+        final Dialog d = new Dialog(context);
+        d.setTitle("NumberPicker");
+        d.setContentView(R.layout.dialog_modify);
+        Button b1 = (Button) d.findViewById(R.id.button1);
+        Button b2 = (Button) d.findViewById(R.id.button2);
+        final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
+        np.setMinValue(0);
+        np.setMaxValue(maxValue - minValue);
+        np.setValue(maxValue);
+        np.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int index) {
+                return Integer.toString(index + minValue);
+            }
+        });
+        np.setWrapSelectorWheel(false);
+
+        //hack to make the numberpicker work correctly
+        try {
+            Method method = np.getClass().getDeclaredMethod("changeValueByOne", boolean.class);
+            method.setAccessible(true);
+            method.invoke(np, true);
+        } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
         }
+        np.setOnValueChangedListener(this);
+        b1.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                chars.setHp(id, np.getValue()+minValue);
+                d.dismiss();
+            }
+        });
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.dismiss();
+            }
+        });
+        d.show();
     }
 
 
@@ -150,17 +211,24 @@ public class TrackerFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection = {
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INITIATIVEBONUS
-        };
         if (id == 0) {
+            String[] projection = {
+                    DataBaseHandler.KEY_ROWID,
+                    DataBaseHandler.KEY_NAME,
+                    DataBaseHandler.KEY_INITIATIVEBONUS,
+                    DataBaseHandler.KEY_AC,
+                    DataBaseHandler.KEY_MAXHP
+            };
             String[] selectionArgs = new String[]{String.valueOf(encounterId)};
             String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
             return new CursorLoader(this.getContext(),
                     DbContentProvider.CONTENT_URI_NPC, projection, selection, selectionArgs, null);
         } else {
+            String[] projection = {
+                    DataBaseHandler.KEY_ROWID,
+                    DataBaseHandler.KEY_NAME,
+                    DataBaseHandler.KEY_INITIATIVEBONUS,
+            };
             String[] selectionArgs = new String[]{String.valueOf(campaignId)};
             String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
             return new CursorLoader(this.getContext(),
@@ -171,22 +239,28 @@ public class TrackerFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
+            //case NPC
             case 0:
                 while (data.moveToNext()) {
                     String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
                     int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int initiativeMod = initiative;
+                    int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
+                    int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
                     initiative = initiative+ DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
                     ci.initiative = String.valueOf(initiative);
                     ci.initiativeMod = String.valueOf(initiativeMod);
+                    ci.ac = String.valueOf(ac);
+                    ci.maxHp = String.valueOf(maxHp);
                     chars.addListItem(ci);
                     //names.add(data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME)));
                     //initiative.add(data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS)));
 
                 }
                 break;
+            //case PC
             case 1:
                 while (data.moveToNext()) {
                     String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
@@ -223,5 +297,10 @@ public class TrackerFragment extends Fragment implements
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+
     }
 }
