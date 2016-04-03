@@ -1,29 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@color/colorDialog"
+    android:clickable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <com.ogaclejapan.arclayout.ArcLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:arc_origin="top|right"
+        app:arc_color="#00FFFFFF"
+        app:arc_radius="180dp"
+        app:arc_axisRadius="160dp"
+        app:arc_freeAngle="false"
+        app:arc_reverseAngle="false">
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="#FFFFFF"
+            android:background="#03A9F4"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="B"
+            android:textColor="#FFFFFF"
+            android:background="#00BCD4"
+            app:arc_origin="center"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            app:arc_origin="center"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            app:arc_origin="center"
+            />
+
+    </com.ogaclejapan.arclayout.ArcLayout>
+
+    <com.ogaclejapan.arclayout.ArcLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:arc_origin="top|left"
+        app:arc_color="#00FFFFFF"
+        app:arc_radius="180dp"
+        app:arc_axisRadius="160dp"
+        app:arc_freeAngle="false"
+        app:arc_reverseAngle="false">
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="#FFFFFF"
+            android:background="#03A9F4"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="B"
+            android:textColor="#FFFFFF"
+            android:background="#00BCD4"
+            app:arc_origin="center"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            app:arc_origin="center"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            app:arc_origin="center"
+            />
+
+    </com.ogaclejapan.arclayout.ArcLayout>
+
+    <com.ogaclejapan.arclayout.ArcLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:arc_origin="bottom|right"
+        app:arc_color="#00FFFFFF"
+        app:arc_radius="180dp"
+        app:arc_axisRadius="140dp"
+        app:arc_freeAngle="false"
+        app:arc_reverseAngle="false">
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="#FFFFFF"
+            android:background="#03A9F4"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="B"
+            android:textColor="#FFFFFF"
+            android:background="#00BCD4"
+            app:arc_origin="center"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            app:arc_origin="center"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            app:arc_origin="center"
+            />
+
+    </com.ogaclejapan.arclayout.ArcLayout>
+
+    <com.ogaclejapan.arclayout.ArcLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:arc_origin="bottom|left"
+        app:arc_color="#00FFFFFF"
+        app:arc_radius="180dp"
+        app:arc_axisRadius="140dp"
+        app:arc_freeAngle="false"
+        app:arc_reverseAngle="false">
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="#FFFFFF"
+            android:background="#03A9F4"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="B"
+            android:textColor="#FFFFFF"
+            android:background="#00BCD4"
+            app:arc_origin="center"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            app:arc_origin="center"
+            />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            app:arc_origin="center"
+            />
+
+    </com.ogaclejapan.arclayout.ArcLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <NumberPicker
         android:id="@+id/numberPicker1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
         />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/numberPicker1"
-        android:text="Cancel" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/numberPicker1"
-        android:layout_toEndOf="@id/button2"
+        android:layout_centerHorizontal="true"
         android:text="Ok" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

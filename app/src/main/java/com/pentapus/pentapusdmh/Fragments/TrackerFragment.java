@@ -1,8 +1,9 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
-import android.app.Dialog;
-import android.content.ClipData;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,17 +14,15 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.NumberPicker;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.pentapus.pentapusdmh.FullScreenDialog;
 import com.pentapus.pentapusdmh.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.TrackerAdapter;
 import com.pentapus.pentapusdmh.TrackerInfoCard;
@@ -33,13 +32,10 @@ import com.pentapus.pentapusdmh.DiceHelper;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.SharedPrefsHelper;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class TrackerFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor>, FullScreenDialog.DialogFragmentListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -140,7 +136,6 @@ public class TrackerFragment extends Fragment implements
                     }
                 })
         );
-
         // Inflate the layout for this fragment
         return tableView;
 
@@ -148,75 +143,33 @@ public class TrackerFragment extends Fragment implements
 
 
     public void onClick(int id){
-        show(getContext(), id);
+        showDialog(id);
+        chars.setSelected(id);
         //Log.d("Current Hp: ", String.valueOf(characterList.get(id).maxHp));
         //characterList.get(id).maxHp = String.valueOf(10);
     }
 
-    public void show(Context context, final int id)
-    {
 
-        final Dialog d = new Dialog(context);
-        d.setTitle("NumberPicker");
-        d.setContentView(R.layout.dialog_modify);
-        Button b1 = (Button) d.findViewById(R.id.button1);
-        Button b2 = (Button) d.findViewById(R.id.button2);
-        final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
-
-
-        np.setDisplayedValues(nums);
-       /* np.setMinValue(0);
-        np.setMaxValue(maxValue - minValue);
-        np.setValue(maxValue);
-        np.setFormatter(new NumberPicker.Formatter() {
-            @Override
-            public String format(int index) {
-                return Integer.toString(index + minValue);
-            }
-        });
-
-        np.setWrapSelectorWheel(false);
-        Field f = null;
-        try {
-            f = NumberPicker.class.getDeclaredField("mInputText");
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+    public void showDialog(int id) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FullScreenDialog newFragment = new FullScreenDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("id", String.valueOf(id));
+        newFragment.setArguments(bundle);
+        newFragment.setTargetFragment(this, 0);
+            // The device is smaller, so show the fragment fullscreen
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            // For a little polish, specify a transition animation
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            // To make it fullscreen, use the 'content' root view as the container
+            // for the fragment, which is always the root view for the activity
+            transaction.add(android.R.id.content, newFragment)
+                    .addToBackStack(null).commit();
         }
-        f.setAccessible(true);
-        EditText inputText = null;
-        try {
-            inputText = (EditText)f.get(np);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        inputText.setFilters(new InputFilter[0]);
 
-
-        //hack to make the numberpicker work correctly
-        try {
-            Method method = np.getClass().getDeclaredMethod("changeValueByOne", boolean.class);
-            method.setAccessible(true);
-            method.invoke(np, true);
-        } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-*/
-
-        b1.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                chars.setHp(id, np.getValue()+minValue);
-                d.dismiss();
-            }
-        });
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                d.dismiss();
-            }
-        });
-        d.show();
+    public void onDialogButtonClick(int id, int hpChange) {
+        Log.d("Dialog", "clicked");
+        chars.setHp(id, hpChange);
     }
 
 
@@ -283,6 +236,8 @@ public class TrackerFragment extends Fragment implements
                     ci.initiativeMod = String.valueOf(initiativeMod);
                     ci.ac = String.valueOf(ac);
                     ci.maxHp = String.valueOf(maxHp);
+                    ci.type = "npc";
+                    ci.dead = false;
                     chars.addListItem(ci);
                     //names.add(data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME)));
                     //initiative.add(data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS)));
@@ -300,6 +255,8 @@ public class TrackerFragment extends Fragment implements
                     ci.name = names;
                     ci.initiative = String.valueOf(initiative);
                     ci.initiativeMod = String.valueOf(initiativeMod);
+                    ci.type = "pc";
+                    ci.dead = false;
                     chars.addListItem(ci);
                 }
                 break;
@@ -326,5 +283,11 @@ public class TrackerFragment extends Fragment implements
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onDialogFragmentDone(int id, int hpDiff) {
+        Log.d("Dialog", "clicked");
+        chars.setHp(id, hpDiff);
     }
 }

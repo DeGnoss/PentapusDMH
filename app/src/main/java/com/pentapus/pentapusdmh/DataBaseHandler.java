@@ -1,12 +1,8 @@
 package com.pentapus.pentapusdmh;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.pentapus.pentapusdmh.TableClasses.Session;
 
 /**
  * Created by Koni on 27.02.2016.
