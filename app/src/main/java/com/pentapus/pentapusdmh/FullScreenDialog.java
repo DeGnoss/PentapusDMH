@@ -28,14 +28,13 @@ import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 public class FullScreenDialog extends DialogFragment{
 
     private int id;
-    private boolean[] statuses = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
-    private boolean[] oldStatuses = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+    private boolean[] statuses = new boolean[15];
+    private boolean[] oldStatuses = new boolean[15];
     private boolean statusesChanged;
 
 
 
     public interface DialogFragmentListener {
-        //public void onDialogFragmentDone(int id, int hpDiff, boolean blinded, boolean charmed, boolean deafened);
         public void onDialogFragmentDone(int id, int hpDiff, boolean[] statuses);
     }
 
@@ -61,7 +60,6 @@ public class FullScreenDialog extends DialogFragment{
 
         if (this.getArguments() != null) {
             id = getArguments().getInt("id");
-            //oldblinded = getArguments().getBoolean("blinded");
             oldStatuses = getArguments().getBooleanArray("statuses");
         }
 
@@ -97,6 +95,7 @@ public class FullScreenDialog extends DialogFragment{
                 newFragment.setArguments(bundle);
                 Fragment old = fm.findFragmentByTag("F_DIALOG_HP");
                 if (old != null) {
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(android.R.id.content, newFragment, "F_DIALOG_STATUS")
                             .addToBackStack(null).commit();
                 }
@@ -133,17 +132,9 @@ public class FullScreenDialog extends DialogFragment{
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         View view = (View) inflater.inflate(R.layout.dialog_modify, null);
-        //initialize the numberpicker
-
-        //initialize the button
-
-
         final Dialog d = new Dialog(getActivity());
         d.setTitle("NumberPicker");
         d.setContentView(view);
-        //Button b2 = (Button) d.findViewById(R.id.button2);
-        //d.show();
-
         return dialog;
     }
 

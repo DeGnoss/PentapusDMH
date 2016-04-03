@@ -9,7 +9,7 @@
         android:layout_height="470dp"
         android:id="@+id/listViewEncounter"
         android:layout_gravity="center|top"
-        android:paddingBottom="65sp" />
+        android:paddingBottom="65dp" />
 
     <Button
         android:layout_width="wrap_content"

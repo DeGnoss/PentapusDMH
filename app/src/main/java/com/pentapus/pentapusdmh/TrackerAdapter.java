@@ -74,7 +74,6 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         if(characterList.get(position).isCharmed()){
             characterViewHolder.vImageView2.setVisibility(View.VISIBLE);
             characterViewHolder.vImageView2.setLayoutParams(getLayoutParams());
-
         }else{
             characterViewHolder.vImageView2.setVisibility(View.GONE);
         }
@@ -174,7 +173,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
 
     public void moveToBottom(){
         characterList.add(characterList.remove(0));
-        if(characterList.get(0).dead && characterList.get(0).type.equals("pc")){
+        if(characterList.get(0).dead && characterList.get(0).type.equals("npc")){
             moveToBottom();
         }
     }
@@ -218,13 +217,6 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         }
     }
 
-    /*public void setStatus(int id, boolean blinded, boolean charmed, boolean deafened){
-        characterList.get(id).setBlinded(blinded);
-        characterList.get(id).setCharmed(charmed);
-        characterList.get(id).setDeafened(deafened);
-        notifyItemChanged(id);
-    } */
-
     public void setStatuses(int id, boolean[] statuses){
         characterList.get(id).setStatuses(statuses);
         notifyItemChanged(id);
@@ -248,8 +240,12 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
 
     public GridLayout.LayoutParams getLayoutParams() {
         GridLayout.LayoutParams gridLayoutParams = new GridLayout.LayoutParams();
-        gridLayoutParams.height = 50;
-        gridLayoutParams.width = 50;
+        //gridLayoutParams.height = 50;
+
+        gridLayoutParams.height = (int) context.getResources().getDimension(R.dimen.image_status_trackerfragment);
+        gridLayoutParams.width = (int) context.getResources().getDimension(R.dimen.image_status_trackerfragment);
+
+        //gridLayoutParams.width = 50;
         if(layoutCounter<8){
             gridLayoutParams.columnSpec = GridLayout.spec(layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(0);
