@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,12 +27,19 @@ import java.util.List;
  */
 public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder>{
     private List<TrackerInfoCard> characterList = new ArrayList<>();
+    private Context context;
+    private int layoutCounter = 0;
+    private GridLayout.LayoutParams layoutParams;
 
-    public TrackerAdapter(List<TrackerInfoCard> characterList) {
+    public TrackerAdapter(Context context, List<TrackerInfoCard> characterList) {
         this.characterList = characterList;
+        this.context = context;
+        layoutCounter = 0;
     }
 
-    public TrackerAdapter() {
+    public TrackerAdapter(Context context) {
+        this.context = context;
+        layoutCounter = 0;
     }
 
     @Override
@@ -40,6 +49,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
 
     @Override
     public void onBindViewHolder(CharacterViewHolder characterViewHolder, int position) {
+        layoutCounter = 0;
         TrackerInfoCard ci = characterList.get(position);
         characterViewHolder.vName.setText(ci.name);
         characterViewHolder.vInitiative.setText(ci.initiative);
@@ -55,9 +65,97 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
             characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#99000000"));
         }
 
-       /* if (position == 0) {
-            characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#551976D2"));
-        } */
+        if(characterList.get(position).isBlinded()){
+            characterViewHolder.vImageView1.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView1.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView1.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isCharmed()){
+            characterViewHolder.vImageView2.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView2.setLayoutParams(getLayoutParams());
+
+        }else{
+            characterViewHolder.vImageView2.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isDeafened()){
+            characterViewHolder.vImageView3.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView3.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView3.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isFrightened()){
+            characterViewHolder.vImageView4.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView4.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView4.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isGrappled()){
+            characterViewHolder.vImageView5.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView5.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView5.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isIncapacitated()){
+            characterViewHolder.vImageView6.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView6.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView6.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isInvisible()){
+            characterViewHolder.vImageView7.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView7.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView7.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isParalyzed()){
+            characterViewHolder.vImageView8.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView8.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView8.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isPetrified()){
+            characterViewHolder.vImageView9.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView9.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView9.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isPoisoned()){
+            characterViewHolder.vImageView10.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView10.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView10.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isProne()){
+            characterViewHolder.vImageView11.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView11.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView11.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isRestrained()){
+            characterViewHolder.vImageView12.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView12.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView12.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isStunned()){
+            characterViewHolder.vImageView13.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView13.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView13.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isUnconscious()){
+            characterViewHolder.vImageView14.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView14.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView14.setVisibility(View.GONE);
+        }
+        if(characterList.get(position).isCustom()){
+            characterViewHolder.vImageView15.setVisibility(View.VISIBLE);
+            characterViewHolder.vImageView15.setLayoutParams(getLayoutParams());
+        }else{
+            characterViewHolder.vImageView15.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -76,7 +174,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
 
     public void moveToBottom(){
         characterList.add(characterList.remove(0));
-        if(characterList.get(0).dead && characterList.get(0).type != "pc"){
+        if(characterList.get(0).dead && characterList.get(0).type.equals("pc")){
             moveToBottom();
         }
     }
@@ -120,6 +218,18 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         }
     }
 
+    /*public void setStatus(int id, boolean blinded, boolean charmed, boolean deafened){
+        characterList.get(id).setBlinded(blinded);
+        characterList.get(id).setCharmed(charmed);
+        characterList.get(id).setDeafened(deafened);
+        notifyItemChanged(id);
+    } */
+
+    public void setStatuses(int id, boolean[] statuses){
+        characterList.get(id).setStatuses(statuses);
+        notifyItemChanged(id);
+    }
+
     public void setSelected(int pos) {
         try {
             if (characterList.size() > 1) {
@@ -132,7 +242,24 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         }
     }
 
+    public boolean[] getStatuses(int pos){
+        return characterList.get(pos).getStatuses();
+    }
 
+    public GridLayout.LayoutParams getLayoutParams() {
+        GridLayout.LayoutParams gridLayoutParams = new GridLayout.LayoutParams();
+        gridLayoutParams.height = 50;
+        gridLayoutParams.width = 50;
+        if(layoutCounter<8){
+            gridLayoutParams.columnSpec = GridLayout.spec(layoutCounter);
+            gridLayoutParams.rowSpec = GridLayout.spec(0);
+        } else{
+            gridLayoutParams.columnSpec = GridLayout.spec(15-layoutCounter);
+            gridLayoutParams.rowSpec = GridLayout.spec(1);
+        }
+        layoutCounter++;
+        return gridLayoutParams;
+    }
 
 
     public static class CharacterViewHolder extends RecyclerView.ViewHolder {
@@ -141,6 +268,8 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         protected TextView vAc;
         protected TextView vHp;
         protected  CardView cardViewTracker;
+        protected GridLayout vGridStatus;
+        protected ImageView vImageView1, vImageView2, vImageView3, vImageView4, vImageView5, vImageView6, vImageView7, vImageView8, vImageView9, vImageView10, vImageView11, vImageView12, vImageView13, vImageView14, vImageView15;
 
 
 
@@ -151,11 +280,22 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
             vAc = (TextView) v.findViewById(R.id.acV);
             vHp = (TextView) v.findViewById(R.id.hpV);
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_tracker);
-
-        }
-
-        public void setEnable(){
-
+            vGridStatus = (GridLayout) v.findViewById(R.id.gridStatus);
+            vImageView1 = (ImageView) v.findViewById(R.id.imageView1);
+            vImageView2 = (ImageView) v.findViewById(R.id.imageView2);
+            vImageView3 = (ImageView) v.findViewById(R.id.imageView3);
+            vImageView4 = (ImageView) v.findViewById(R.id.imageView4);
+            vImageView5 = (ImageView) v.findViewById(R.id.imageView5);
+            vImageView6 = (ImageView) v.findViewById(R.id.imageView6);
+            vImageView7 = (ImageView) v.findViewById(R.id.imageView7);
+            vImageView8 = (ImageView) v.findViewById(R.id.imageView8);
+            vImageView9 = (ImageView) v.findViewById(R.id.imageView9);
+            vImageView10 = (ImageView) v.findViewById(R.id.imageView10);
+            vImageView11 = (ImageView) v.findViewById(R.id.imageView11);
+            vImageView12 = (ImageView) v.findViewById(R.id.imageView12);
+            vImageView13 = (ImageView) v.findViewById(R.id.imageView13);
+            vImageView14 = (ImageView) v.findViewById(R.id.imageView14);
+            vImageView15 = (ImageView) v.findViewById(R.id.imageView15);
         }
     }
 

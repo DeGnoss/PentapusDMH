@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.pentapus.pentapusdmh.CustomRecyclerLayoutManager;
 import com.pentapus.pentapusdmh.FullScreenDialog;
 import com.pentapus.pentapusdmh.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.TrackerAdapter;
@@ -46,15 +47,12 @@ public class TrackerFragment extends Fragment implements
     private String mParam1;
     private String mParam2;
 
+    private CustomRecyclerLayoutManager llm;
     private TrackerAdapter chars;
     private static int campaignId, encounterId;
     private MergeAdapter mergeAdapter;
     private ArrayList<String> names;
     private ArrayList<Integer> initiative;
-
-    final int minValue = -5;
-    final int maxValue = 5;
-    String[] nums = new String[10];
 
 
 
@@ -99,22 +97,19 @@ public class TrackerFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_tracker, container, false);
         final RecyclerView mRecyclerView = (RecyclerView) tableView.findViewById(R.id.listViewEncounter);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm = new CustomRecyclerLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
         // insert a record
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
 
-        for(int i=0; i<nums.length; i++){
-            nums[i] = Integer.toString(i-(nums.length/2));
-        }
 
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         encounterId = SharedPrefsHelper.loadEncounterId(getContext());
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
-        chars = new TrackerAdapter();
+        chars = new TrackerAdapter(getContext());
         mRecyclerView.setAdapter(chars);
         //Log.d("Name:", names.get(0));
 
@@ -154,7 +149,9 @@ public class TrackerFragment extends Fragment implements
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FullScreenDialog newFragment = new FullScreenDialog();
         Bundle bundle = new Bundle();
-        bundle.putString("id", String.valueOf(id));
+        bundle.putInt("id", id);
+        //bundle.putBoolean("blinded", chars.getStatus(id));
+        bundle.putBooleanArray("statuses", chars.getStatuses(id));
         newFragment.setArguments(bundle);
         newFragment.setTargetFragment(this, 0);
             // The device is smaller, so show the fragment fullscreen
@@ -163,7 +160,7 @@ public class TrackerFragment extends Fragment implements
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             // To make it fullscreen, use the 'content' root view as the container
             // for the fragment, which is always the root view for the activity
-            transaction.add(android.R.id.content, newFragment)
+            transaction.add(android.R.id.content, newFragment, "F_DIALOG_HP")
                     .addToBackStack(null).commit();
         }
 
@@ -286,8 +283,9 @@ public class TrackerFragment extends Fragment implements
     }
 
     @Override
-    public void onDialogFragmentDone(int id, int hpDiff) {
-        Log.d("Dialog", "clicked");
+    public void onDialogFragmentDone(int id, int hpDiff, boolean[] statuses) {
         chars.setHp(id, hpDiff);
+        //chars.setStatus(id, blinded, charmed, deafened);
+        chars.setStatuses(id, statuses);
     }
 }

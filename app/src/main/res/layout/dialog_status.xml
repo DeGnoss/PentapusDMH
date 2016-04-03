@@ -1,21 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.pentapus.pentapusdmh.Fragments.SessionTableFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/colorDialog"
+    android:clickable="true">
+
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="470dp"
+        android:layout_height="530sp"
         android:id="@+id/listViewEncounter"
         android:layout_gravity="center|top"
-        android:paddingBottom="65sp" />
+        android:layout_marginTop="70sp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/next"
-        android:id="@+id/bNext"
+        android:text="Ok"
+        android:id="@+id/bDone"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

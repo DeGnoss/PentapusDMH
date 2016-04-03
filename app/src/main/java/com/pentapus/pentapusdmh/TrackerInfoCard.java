@@ -4,29 +4,115 @@ package com.pentapus.pentapusdmh;
  * Created by Koni on 30/3/16.
  */
 public class TrackerInfoCard {
-        public String name;
-        public String initiative;
-        public String initiativeMod;
-        public String maxHp;
-        public String ac;
-        public String type;
-        public boolean dead;
-        public boolean selected;
-        protected static final String NAME_PREFIX = "Name_";
-        protected static final String INITIATIVE_PREFIX = "Initiative_";
+    public String name;
+    public String initiative;
+    public String initiativeMod;
+    public String maxHp;
+    public String ac;
+    public String type;
+    public boolean[] statuses = new boolean[15];
+    public boolean dead;
+    public boolean selected;
+    protected static final String NAME_PREFIX = "Name_";
+    protected static final String INITIATIVE_PREFIX = "Initiative_";
 
 
-        public boolean isSelected() {
-                return selected;
-        }
-        public void setSelected(boolean selected) {
-                this.selected = selected;
-        }
 
-        public boolean isDead() {
-                return dead;
-        }
-        public void setDead(boolean selected) {
-                this.dead = dead;
-        }
+    public void setStatuses(boolean[] statuses){
+        this.statuses = statuses;
+    }
+
+    public boolean[] getStatuses(){
+        return statuses;
+    }
+
+
+    public boolean isBlinded() {
+        return statuses[0];
+    }
+
+    public boolean isCharmed() {
+        return statuses[1];
+    }
+
+
+    public boolean isDeafened() {
+        return statuses[2];
+    }
+
+
+    public boolean isFrightened() {
+        return statuses[3];
+    }
+
+
+    public boolean isGrappled() {
+        return statuses[4];
+    }
+
+
+    public boolean isIncapacitated() {
+        return statuses[5];
+    }
+
+
+    public boolean isInvisible() {
+        return statuses[6];
+    }
+
+
+    public boolean isParalyzed() {
+        return statuses[7];
+    }
+
+
+    public boolean isPetrified() {
+        return statuses[8];
+    }
+
+
+    public boolean isPoisoned() {
+        return statuses[9];
+    }
+
+
+    public boolean isProne() {
+        return statuses[10];
+    }
+
+
+    public boolean isRestrained() {
+        return statuses[11];
+    }
+
+
+    public boolean isStunned() {
+        return statuses[12];
+    }
+
+
+    public boolean isUnconscious() {
+        return statuses[13];
+    }
+
+
+    public boolean isCustom() {
+        return statuses[14];
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean selected) {
+        this.dead = dead;
+    }
 }
