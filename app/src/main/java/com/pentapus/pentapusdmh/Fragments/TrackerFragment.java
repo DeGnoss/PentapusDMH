@@ -1,7 +1,6 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
@@ -23,7 +22,7 @@ import android.widget.Button;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.pentapus.pentapusdmh.CustomRecyclerLayoutManager;
-import com.pentapus.pentapusdmh.FullScreenDialog;
+import com.pentapus.pentapusdmh.HpOverviewFragment;
 import com.pentapus.pentapusdmh.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.TrackerAdapter;
 import com.pentapus.pentapusdmh.TrackerInfoCard;
@@ -32,11 +31,12 @@ import com.pentapus.pentapusdmh.DbContentProvider;
 import com.pentapus.pentapusdmh.DiceHelper;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.ViewPagerDialogFragment;
 
 import java.util.ArrayList;
 
 public class TrackerFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, FullScreenDialog.DialogFragmentListener {
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -138,16 +138,35 @@ public class TrackerFragment extends Fragment implements
 
 
     public void onClick(int id){
-        showDialog(id);
+        //showDialog(id);
+        showViewPager(id);
         chars.setSelected(id);
         //Log.d("Current Hp: ", String.valueOf(characterList.get(id).maxHp));
         //characterList.get(id).maxHp = String.valueOf(10);
     }
 
 
+    public void showViewPager(int id){
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        ViewPagerDialogFragment newFragment = new ViewPagerDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        //bundle.putBoolean("blinded", chars.getStatus(id));
+        bundle.putBooleanArray("statuses", chars.getStatuses(id));
+        newFragment.setArguments(bundle);
+        newFragment.setTargetFragment(this, 0);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        transaction.add(android.R.id.content, newFragment, "F_DIALOG_PAGER")
+                .addToBackStack(null).commit();
+    }
+
     public void showDialog(int id) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FullScreenDialog newFragment = new FullScreenDialog();
+        HpOverviewFragment newFragment = new HpOverviewFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);
         //bundle.putBoolean("blinded", chars.getStatus(id));
@@ -281,11 +300,11 @@ public class TrackerFragment extends Fragment implements
                 break;
         }
     }
-
+/*
     @Override
     public void onDialogFragmentDone(int id, int hpDiff, boolean[] statuses) {
         chars.setHp(id, hpDiff);
         //chars.setStatus(id, blinded, charmed, deafened);
         chars.setStatuses(id, statuses);
-    }
+    }*/
 }

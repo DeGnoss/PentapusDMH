@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,12 +20,22 @@ import android.widget.TextView;
 /**
  * Created by Koni on 02.04.2016.
  */
-public class SavingThrowDialogFragment extends DialogFragment {
+public class SavingThrowDialogFragment extends Fragment {
+    private static final String ARG_PAGE = "ARG_PAGE";
+
     private StatusAdapter statusAdapter;
     private GridLayoutManager gridLayoutManager;
     private int id;
     private boolean blinded;
 
+
+    public static SavingThrowDialogFragment newInstance(int page) {
+        SavingThrowDialogFragment fragment = new SavingThrowDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_PAGE, page);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,33 +126,4 @@ public class SavingThrowDialogFragment extends DialogFragment {
     }
 
 
-
-
-    /** The system calls this only when creating the layout in a dialog. */
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // The only reason you might override this method when using onCreateView() is
-        // to modify any dialog characteristics. For example, the dialog includes a
-        // title by default, but your custom layout might not need it. So here you can
-        // remove the dialog title, but you must call the superclass to get the Dialog.
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        View view = (View)inflater.inflate(R.layout.dialog_savingthrow, null);
-        //initialize the numberpicker
-
-        //initialize the button
-
-
-
-        final Dialog d = new Dialog(getActivity());
-        d.setTitle("NumberPicker");
-        d.setContentView(view);
-        //Button b2 = (Button) d.findViewById(R.id.button2);
-        //d.show();
-
-        return dialog;
-    }
 }
