@@ -6,7 +6,7 @@ package com.pentapus.pentapusdmh;
 public class DiceHelper {
 
     public static Integer d20() {
-        return (int) Math.round(20*Math.random())+1;
+        return (int) Math.floor(20*Math.random())+1;
     }
 
 }

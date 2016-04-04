@@ -73,9 +73,9 @@ public class FullScreenDialog extends DialogFragment{
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(statusesChanged){
+                if (statusesChanged) {
                     mListener.onDialogFragmentDone(id, np.getValue(), statuses);
-                }else{
+                } else {
                     mListener.onDialogFragmentDone(id, np.getValue(), oldStatuses);
                 }
                 getActivity().getSupportFragmentManager().popBackStack();
@@ -97,6 +97,28 @@ public class FullScreenDialog extends DialogFragment{
                 if (old != null) {
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(android.R.id.content, newFragment, "F_DIALOG_STATUS")
+                            .addToBackStack(null).commit();
+                }
+
+
+            }
+        });
+
+        Button bSavingThrow = (Button) view.findViewById(R.id.buttonSavingThrow);
+        bSavingThrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SavingThrowDialogFragment newFragment = new SavingThrowDialogFragment();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                newFragment.setTargetFragment(FullScreenDialog.this, 0);
+                //Bundle bundle = new Bundle();
+               // bundle.putBooleanArray("statuses", oldStatuses);
+               // newFragment.setArguments(bundle);
+                Fragment old = fm.findFragmentByTag("F_DIALOG_HP");
+                if (old != null) {
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(android.R.id.content, newFragment, "F_DIALOG_SAVINGTHROW")
                             .addToBackStack(null).commit();
                 }
 

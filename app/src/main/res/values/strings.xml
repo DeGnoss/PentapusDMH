@@ -14,5 +14,6 @@
     <string name="maxHp">Max Hp</string>
     <string name="ac">AC</string>
     <string name="number_picker_result_value">Number: %1$s\nDecimal: %2$s\nIs negative: %3$b\nFull number: %4$s</string>
+    <string name="roll">Roll</string>
 
 </resources>
