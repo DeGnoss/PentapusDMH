@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.ViewpagerClasses;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -27,7 +27,7 @@ private Context context;
     public Fragment getItem(int position) {
         switch(position){
             case 0:
-                return SavingThrowDialogFragment.newInstance(position);
+                return SavingThrowFragment.newInstance(position);
             case 1:
                 return HpOverviewFragment.newInstance(position);
             case 2:

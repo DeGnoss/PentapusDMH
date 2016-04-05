@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.ViewpagerClasses;
 
 /**
  * Created by Koni on 03.04.2016.

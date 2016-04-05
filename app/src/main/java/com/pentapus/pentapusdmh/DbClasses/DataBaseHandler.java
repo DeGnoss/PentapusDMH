@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.DbClasses;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

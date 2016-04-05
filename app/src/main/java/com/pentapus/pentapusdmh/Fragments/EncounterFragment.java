@@ -24,10 +24,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.pentapus.pentapusdmh.DataBaseHandler;
-import com.pentapus.pentapusdmh.DbContentProvider;
+import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
+import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 public class EncounterFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {

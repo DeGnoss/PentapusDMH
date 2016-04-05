@@ -1,11 +1,9 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.ViewpagerClasses;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.NumberPicker;
+
+import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.RecyclerItemClickListener;
 
 /**
  * Created by Koni on 02.04.2016.
@@ -25,8 +24,6 @@ public class StatusFragment extends Fragment {
     private static final String ARG_PAGE = "ARG_PAGE";
     private GridLayoutManager gridLayoutManager;
     private int mPage;
-    private int id;
-    private boolean blinded;
 
 
     public static StatusFragment newInstance(int page) {
@@ -52,7 +49,7 @@ public class StatusFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = (View)inflater.inflate(R.layout.dialog_status, container, false);
+        View view = (View)inflater.inflate(R.layout.viewpager_status, container, false);
 
         final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.listViewEncounter);
         gridLayoutManager = new GridLayoutManager(getContext(), 3) {
@@ -107,5 +104,15 @@ public class StatusFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Get field from view
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /*if(requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            if(data != null) {
+               // blinded = data.getBooleanExtra("blinded", false);
+                statuses = data.getBooleanArrayExtra("statuses");
+                statusesChanged = data.getBooleanExtra("statusesChanged", false);
+            }
+        }*/
     }
 }

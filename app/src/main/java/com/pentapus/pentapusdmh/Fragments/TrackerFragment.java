@@ -1,6 +1,7 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
@@ -22,16 +23,16 @@ import android.widget.Button;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.pentapus.pentapusdmh.CustomRecyclerLayoutManager;
-import com.pentapus.pentapusdmh.HpOverviewFragment;
+import com.pentapus.pentapusdmh.ViewpagerClasses.HpOverviewFragment;
 import com.pentapus.pentapusdmh.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.TrackerAdapter;
 import com.pentapus.pentapusdmh.TrackerInfoCard;
-import com.pentapus.pentapusdmh.DataBaseHandler;
-import com.pentapus.pentapusdmh.DbContentProvider;
-import com.pentapus.pentapusdmh.DiceHelper;
+import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
+import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.SharedPrefsHelper;
-import com.pentapus.pentapusdmh.ViewPagerDialogFragment;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
 import java.util.ArrayList;
 
@@ -153,6 +154,7 @@ public class TrackerFragment extends Fragment implements
         bundle.putInt("id", id);
         //bundle.putBoolean("blinded", chars.getStatus(id));
         bundle.putBooleanArray("statuses", chars.getStatuses(id));
+        bundle.putInt("hp", chars.getHp(id));
         newFragment.setArguments(bundle);
         newFragment.setTargetFragment(this, 0);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -300,11 +302,13 @@ public class TrackerFragment extends Fragment implements
                 break;
         }
     }
-/*
+
     @Override
-    public void onDialogFragmentDone(int id, int hpDiff, boolean[] statuses) {
-        chars.setHp(id, hpDiff);
-        //chars.setStatus(id, blinded, charmed, deafened);
-        chars.setStatuses(id, statuses);
-    }*/
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 }

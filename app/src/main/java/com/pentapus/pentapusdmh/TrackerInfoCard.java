@@ -18,6 +18,25 @@ public class TrackerInfoCard {
 
 
 
+
+    public String getMaxHp() {
+        return maxHp;
+    }
+
+    public void setMaxHp(String maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    public String getAc() {
+        return ac;
+    }
+
+    public void setAc(String ac) {
+        this.ac = ac;
+    }
+
+
+
     public void setStatuses(boolean[] statuses){
         this.statuses = statuses;
     }

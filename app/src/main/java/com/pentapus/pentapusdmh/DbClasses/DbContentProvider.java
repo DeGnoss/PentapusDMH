@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.DbClasses;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 
 import java.sql.SQLException;
 

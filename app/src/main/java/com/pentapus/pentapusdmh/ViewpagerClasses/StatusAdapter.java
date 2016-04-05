@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.ViewpagerClasses;
 
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.pentapus.pentapusdmh.R;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,24 +68,6 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.StatusView
         }
         return statuses;
     }
-
-    public void setStatusBlinded(boolean selected){
-        statusList.get(0).setSelected(selected);
-        Log.d("StatusAdapter selected:", String.valueOf(selected));
-    }
-
-    public boolean getStatusBlinded(){
-        return statusList.get(0).isSelected();
-    }
-
-    public boolean getStatusCharmed(){
-        return statusList.get(1).isSelected();
-    }
-
-    public boolean getStatusDeafened(){
-        return statusList.get(2).isSelected();
-    }
-
 
     public static class StatusViewHolder extends RecyclerView.ViewHolder {
         protected TextView vStatusName;

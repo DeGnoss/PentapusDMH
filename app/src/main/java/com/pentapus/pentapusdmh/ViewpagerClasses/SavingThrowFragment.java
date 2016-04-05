@@ -1,26 +1,22 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.ViewpagerClasses;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
+import com.pentapus.pentapusdmh.R;
 
 /**
  * Created by Koni on 02.04.2016.
  */
-public class SavingThrowDialogFragment extends Fragment {
+public class SavingThrowFragment extends Fragment {
     private static final String ARG_PAGE = "ARG_PAGE";
 
     private StatusAdapter statusAdapter;
@@ -29,8 +25,8 @@ public class SavingThrowDialogFragment extends Fragment {
     private boolean blinded;
 
 
-    public static SavingThrowDialogFragment newInstance(int page) {
-        SavingThrowDialogFragment fragment = new SavingThrowDialogFragment();
+    public static SavingThrowFragment newInstance(int page) {
+        SavingThrowFragment fragment = new SavingThrowFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
         fragment.setArguments(args);
@@ -49,7 +45,7 @@ public class SavingThrowDialogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = (View)inflater.inflate(R.layout.dialog_savingthrow, container, false);
+        View view = (View)inflater.inflate(R.layout.viewpager_savingthrow, container, false);
 
         final TextView strengthMod = (TextView) view.findViewById(R.id.tvStrengthMod);
         final TextView dexMod = (TextView) view.findViewById(R.id.tvDexMod);
@@ -64,7 +60,7 @@ public class SavingThrowDialogFragment extends Fragment {
         bRollStrength.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int roll=DiceHelper.d20();
+                int roll= DiceHelper.d20();
                 strengthMod.setText("Modifier of 0 plus a roll of "+roll+" = "+roll);
             }
         });

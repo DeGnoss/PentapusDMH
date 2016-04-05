@@ -13,8 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.pentapus.pentapusdmh.DataBaseHandler;
-import com.pentapus.pentapusdmh.DbContentProvider;
+import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
+import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
 
 public class CampaignEditFragment extends Fragment {

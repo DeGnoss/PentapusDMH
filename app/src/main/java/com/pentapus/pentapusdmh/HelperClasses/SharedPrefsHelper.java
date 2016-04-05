@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.HelperClasses;
 
 import android.content.Context;
 import android.content.SharedPreferences;

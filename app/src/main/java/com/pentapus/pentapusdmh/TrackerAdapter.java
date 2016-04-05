@@ -1,21 +1,17 @@
 package com.pentapus.pentapusdmh;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -194,7 +190,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
     }
 
     private int reCompare(TrackerInfoCard lhs, TrackerInfoCard rhs) {
-        if((Integer.parseInt(lhs.initiativeMod)+DiceHelper.d20()) > (Integer.parseInt(rhs.initiativeMod)+DiceHelper.d20())){
+        if((Integer.parseInt(lhs.initiativeMod)+ DiceHelper.d20()) > (Integer.parseInt(rhs.initiativeMod)+DiceHelper.d20())){
             return -1;
         } else if((Integer.parseInt(lhs.initiativeMod)+DiceHelper.d20()) == (Integer.parseInt(rhs.initiativeMod)+DiceHelper.d20())){
             return reCompare(lhs, rhs);
@@ -232,6 +228,10 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public int getHp(int pos){
+        return Integer.parseInt(characterList.get(pos).getMaxHp());
     }
 
     public boolean[] getStatuses(int pos){

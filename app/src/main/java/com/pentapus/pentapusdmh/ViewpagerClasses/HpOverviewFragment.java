@@ -1,20 +1,16 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.ViewpagerClasses;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.NumberPicker;
+
+import com.pentapus.pentapusdmh.R;
 
 /**
  * Created by Koni on 02.04.2016.
@@ -61,7 +57,7 @@ public class HpOverviewFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = (View) inflater.inflate(R.layout.dialog_modify, container, false);
+        View view = (View) inflater.inflate(R.layout.viewpager_hpoverview, container, false);
 
 /*
         if (this.getArguments() != null) {
@@ -117,7 +113,7 @@ public class HpOverviewFragment extends Fragment{
         bSavingThrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SavingThrowDialogFragment newFragment = new SavingThrowDialogFragment();
+                SavingThrowFragment newFragment = new SavingThrowFragment();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 newFragment.setTargetFragment(HpOverviewFragment.this, 0);
