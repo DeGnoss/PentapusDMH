@@ -238,6 +238,14 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         return characterList.get(pos).getStatuses();
     }
 
+    public void setItem(int pos, TrackerInfoCard trackerInfoCard){
+        characterList.set(pos, trackerInfoCard);
+    }
+
+    public TrackerInfoCard getItem(int pos){
+        return characterList.get(pos);
+    }
+
     public GridLayout.LayoutParams getLayoutParams() {
         GridLayout.LayoutParams gridLayoutParams = new GridLayout.LayoutParams();
         //gridLayoutParams.height = 50;
