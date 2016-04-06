@@ -1,10 +1,13 @@
 package com.pentapus.pentapusdmh.ViewpagerClasses;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,8 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.RecyclerItemClickListener;
+import com.pentapus.pentapusdmh.TrackerActivityListener;
+import com.pentapus.pentapusdmh.TrackerInfoCard;
 
 /**
  * Created by Koni on 02.04.2016.
@@ -24,6 +30,8 @@ public class StatusFragment extends Fragment {
     private static final String ARG_PAGE = "ARG_PAGE";
     private GridLayoutManager gridLayoutManager;
     private int mPage;
+    private boolean[] statuses;
+    TrackerActivityListener mListener;
 
 
     public static StatusFragment newInstance(int page) {
@@ -40,6 +48,7 @@ public class StatusFragment extends Fragment {
         if (getArguments() != null) {
             mPage = getArguments().getInt(ARG_PAGE);
         }
+        statuses = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getmSaveTrackerInfoCard().getStatuses();
     }
 
 
@@ -61,31 +70,14 @@ public class StatusFragment extends Fragment {
         mRecyclerView.setLayoutManager(gridLayoutManager);
         statusAdapter = new StatusAdapter();
         if (this.getArguments() != null) {
-            //statusAdapter.setStatusBlinded(getArguments().getBoolean("blinded"));
-           // statusAdapter.setStatuses(getArguments().getBooleanArray("statuses"));
+            statusAdapter.setStatuses(statuses);
         }
         mRecyclerView.setAdapter(statusAdapter);
-
-
-        Button b1 = (Button) view.findViewById(R.id.bDone);
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Intent intent = new Intent();
-                //intent.putExtra("blinded", statusAdapter.getStatusBlinded());
-                intent.putExtra("statuses", statusAdapter.getStatuses());
-                intent.putExtra("statusesChanged", true);
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-                //mListener.onStatusEffectSelected(statusAdapter.getStatusBlinded(), statusAdapter.getStatusCharmed(), statusAdapter.getStatusDeafened());
-                getActivity().getSupportFragmentManager().popBackStack();*/
-            }
-        });
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        //TrackerInfoCard current = chars.getList().get(position);
                         onClick(position);
                     }
                 })
@@ -99,6 +91,12 @@ public class StatusFragment extends Fragment {
         statusAdapter.statusClicked(position);
     }
 
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        mListener = (TrackerActivityListener) context;
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -106,13 +104,8 @@ public class StatusFragment extends Fragment {
         // Get field from view
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /*if(requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            if(data != null) {
-               // blinded = data.getBooleanExtra("blinded", false);
-                statuses = data.getBooleanArrayExtra("statuses");
-                statusesChanged = data.getBooleanExtra("statusesChanged", false);
-            }
-        }*/
+    public void saveChanges(){
+        mListener.getTrackerInfoCard().setStatuses(statuses);
+        Log.d("Test", "test");
     }
 }

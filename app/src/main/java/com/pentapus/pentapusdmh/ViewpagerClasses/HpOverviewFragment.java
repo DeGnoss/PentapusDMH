@@ -46,6 +46,7 @@ public class HpOverviewFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
       //  mListener = (DialogFragmentListener) getTargetFragment();
     }
 
@@ -70,19 +71,6 @@ public class HpOverviewFragment extends Fragment{
         np.setMaxValue(999);
         np.setValue(0);
         np.setWrapSelectorWheel(false);
-
-        Button b1 = (Button) view.findViewById(R.id.button1);
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (statusesChanged) {
-                   // mListener.onDialogFragmentDone(id, np.getValue(), statuses);
-                } else {
-                  //  mListener.onDialogFragmentDone(id, np.getValue(), oldStatuses);
-                }
-               // getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
 
         /*
         Button bStatus = (Button) view.findViewById(R.id.buttonStatus);

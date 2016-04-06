@@ -20,4 +20,12 @@
         android:layout_height="0px"
         android:layout_weight="1" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        android:id="@+id/bDone"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="15dp"/>
+
 </LinearLayout>

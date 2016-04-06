@@ -7,8 +7,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.TrackerAdapter;
+import com.pentapus.pentapusdmh.TrackerInfoCard;
 
 /**
  * Created by Koni on 4/4/16.
@@ -21,6 +24,9 @@ public class ViewPagerDialogFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private AdjustFragmentPagerAdapter pagerAdapter;
+    private Button bDone;
+    private TrackerInfoCard mTempTrackerInfoCard;
 
 
 
@@ -28,7 +34,7 @@ public class ViewPagerDialogFragment extends Fragment {
         // Empty constructor required for DialogFragment
     }
 
-    public static ViewPagerDialogFragment newInstance(int page, String hotSpotJson) {
+    public static ViewPagerDialogFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
         ViewPagerDialogFragment fragment = new ViewPagerDialogFragment();
@@ -49,14 +55,27 @@ public class ViewPagerDialogFragment extends Fragment {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+
+        bDone = (Button) view.findViewById(R.id.bDone);
+        bDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveData();
+            }
+        });
+
+
         return view;
+    }
+
+    private void saveData() {
+        ((StatusFragment)pagerAdapter.getItem(2)).saveChanges();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        AdjustFragmentPagerAdapter pagerAdapter =
-                new AdjustFragmentPagerAdapter(getChildFragmentManager(), getContext());
+        pagerAdapter = new AdjustFragmentPagerAdapter(getChildFragmentManager(), getContext());
         viewPager.setAdapter(pagerAdapter);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);

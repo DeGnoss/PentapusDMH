@@ -54,6 +54,7 @@ public class TrackerFragment extends Fragment implements
     private MergeAdapter mergeAdapter;
     private ArrayList<String> names;
     private ArrayList<Integer> initiative;
+    private TrackerInfoCard mSaveTrackerInfoCard;
 
 
 
@@ -134,11 +135,11 @@ public class TrackerFragment extends Fragment implements
         );
         // Inflate the layout for this fragment
         return tableView;
-
     }
 
 
     public void onClick(int id){
+        mSaveTrackerInfoCard = chars.getItem(id);
         //showDialog(id);
         showViewPager(id);
         chars.setSelected(id);
@@ -190,8 +191,13 @@ public class TrackerFragment extends Fragment implements
         chars.setHp(id, hpChange);
     }
 
+    public TrackerInfoCard getmSaveTrackerInfoCard() {
+        return mSaveTrackerInfoCard;
+    }
 
-
+    public void setmSaveTrackerInfoCard(TrackerInfoCard mSaveTrackerInfoCard) {
+        this.mSaveTrackerInfoCard = mSaveTrackerInfoCard;
+    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu){

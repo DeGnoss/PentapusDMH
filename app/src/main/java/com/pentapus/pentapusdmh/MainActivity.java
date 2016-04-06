@@ -1,6 +1,7 @@
 package com.pentapus.pentapusdmh;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,8 +13,9 @@ import com.pentapus.pentapusdmh.Fragments.CampaignTableFragment;
 import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TrackerActivityListener{
 
+    private TrackerActivityListener mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,4 +79,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public TrackerInfoCard getTrackerInfoCard() {
+        Fragment test = ((TrackerFragment)getSupportFragmentManager().findFragmentByTag("F_TRACKER"));
+        return ((TrackerFragment)getSupportFragmentManager().findFragmentByTag("F_TRACKER")).getmSaveTrackerInfoCard();
+    }
 }

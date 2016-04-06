@@ -80,7 +80,6 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.StatusView
             vStatusName =  (TextView) v.findViewById(R.id.statusTextView);
             vStatusImage = (ImageView)  v.findViewById(R.id.statusImageView);
             vCardView = (CardView) v.findViewById(R.id.status_card);
-
         }
     }
 }
