@@ -144,6 +144,8 @@ public class EncounterFragment extends Fragment implements
         getLoaderManager().initLoader(1, null, this);
 
 
+
+        //TODO add cases to keep from crashing
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 
