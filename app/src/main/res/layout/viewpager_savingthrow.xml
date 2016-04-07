@@ -13,10 +13,10 @@
         android:id="@+id/cardStrength"
         card_view:contentPadding="10dp"
         card_view:cardCornerRadius="2dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="3dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -29,16 +29,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
                 android:id="@+id/tvStrength"
-                android:text="Strength Saving Throw"
+                android:text="Strength"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvStrength"
                 android:id="@+id/tvStrengthMod"
-                android:textSize="15sp"/>
+                android:textSize="13sp"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -46,10 +46,19 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:id="@+id/bRollStrength"
                 android:text="@string/roll" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/bRollStrength"
+                android:id="@+id/tvStrengthRes"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
 
         </RelativeLayout>
 
@@ -62,7 +71,7 @@
         android:layout_below="@id/cardStrength"
         card_view:contentPadding="10dp"
         card_view:cardCornerRadius="2dp"
-        android:layout_margin="5dp">
+        android:layout_margin="3dp">
 
 
         <RelativeLayout
@@ -76,16 +85,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
                 android:id="@+id/tvDex"
-                android:text="Dexterity Saving Throw"
+                android:text="Dexterity"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvDex"
                 android:id="@+id/tvDexMod"
-                android:textSize="15sp"/>
+                android:textSize="13sp"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -93,9 +102,19 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:id="@+id/bRollDex"
                 android:text="@string/roll" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/bRollDex"
+                android:id="@+id/tvDexRes"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
 
 
         </RelativeLayout>
@@ -109,7 +128,7 @@
         android:layout_below="@id/cardDex"
         card_view:contentPadding="10dp"
         card_view:cardCornerRadius="2dp"
-        android:layout_margin="5dp">
+        android:layout_margin="3dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -122,16 +141,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
                 android:id="@+id/tvConst"
-                android:text="Constitution Saving Throw"
+                android:text="Constitution"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvConst"
                 android:id="@+id/tvConstMod"
-                android:textSize="15sp"/>
+                android:textSize="13sp"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -139,9 +158,19 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:id="@+id/bRollConst"
                 android:text="@string/roll" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/bRollConst"
+                android:id="@+id/tvConstRes"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
 
 
         </RelativeLayout>
@@ -155,7 +184,7 @@
         android:layout_below="@id/cardConst"
         card_view:contentPadding="10dp"
         card_view:cardCornerRadius="2dp"
-        android:layout_margin="5dp">
+        android:layout_margin="3dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -168,16 +197,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
                 android:id="@+id/tvInt"
-                android:text="Intelligence Saving Throw"
+                android:text="Intelligence"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvInt"
                 android:id="@+id/tvIntMod"
-                android:textSize="15sp"/>
+                android:textSize="13sp"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -185,9 +214,19 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:id="@+id/bRollInt"
                 android:text="@string/roll" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/bRollInt"
+                android:id="@+id/tvIntRes"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
 
 
         </RelativeLayout>
@@ -201,7 +240,7 @@
         android:layout_below="@id/cardInt"
         card_view:contentPadding="10dp"
         card_view:cardCornerRadius="2dp"
-        android:layout_margin="5dp">
+        android:layout_margin="3dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -214,16 +253,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
                 android:id="@+id/tvWisdom"
-                android:text="Wisdom Saving Throw"
+                android:text="Wisdom"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvWisdom"
                 android:id="@+id/tvWisdomMod"
-                android:textSize="15sp"/>
+                android:textSize="13sp"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -231,9 +270,19 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:id="@+id/bRollWisdom"
                 android:text="@string/roll" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/bRollWisdom"
+                android:id="@+id/tvWisdomRes"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
 
 
         </RelativeLayout>
@@ -247,7 +296,7 @@
         android:layout_below="@id/cardWisdom"
         card_view:contentPadding="10dp"
         card_view:cardCornerRadius="2dp"
-        android:layout_margin="5dp">
+        android:layout_margin="3dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -259,16 +308,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:id="@+id/tvCharisma"
-                android:text="Charisma Saving Throw"
+                android:text="Charisma"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvCharisma"
                 android:id="@+id/tvCharismaMod"
-                android:textSize="15sp"/>
+                android:textSize="13sp"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -276,9 +325,19 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:id="@+id/bRollCharisma"
                 android:text="@string/roll" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/bRollCharisma"
+                android:id="@+id/tvCharismaRes"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
 
 
         </RelativeLayout>

@@ -53,6 +53,12 @@ public class SavingThrowFragment extends Fragment {
         final TextView intMod = (TextView) view.findViewById(R.id.tvIntMod);
         final TextView wisMod = (TextView) view.findViewById(R.id.tvWisdomMod);
         final TextView charMod = (TextView) view.findViewById(R.id.tvCharismaMod);
+        final TextView tvStrengthRes = (TextView) view.findViewById(R.id.tvStrengthRes);
+        final TextView tvDexRes = (TextView) view.findViewById(R.id.tvDexRes);
+        final TextView tvConstRes = (TextView) view.findViewById(R.id.tvConstRes);
+        final TextView tvIntRes = (TextView) view.findViewById(R.id.tvIntRes);
+        final TextView tvWisRes = (TextView) view.findViewById(R.id.tvWisdomRes);
+        final TextView tvCharRes = (TextView) view.findViewById(R.id.tvCharismaRes);
 
 
 
@@ -61,7 +67,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll= DiceHelper.d20();
-                strengthMod.setText("Modifier of 0 plus a roll of "+roll+" = "+roll);
+                strengthMod.setText("Modifier: 0  Roll: "+roll);
+                tvStrengthRes.setText(String.valueOf(roll));
             }
         });
         Button bRollDex = (Button) view.findViewById(R.id.bRollDex);
@@ -69,7 +76,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                dexMod.setText("Modifier of 0 plus a roll of "+roll+" = "+roll);
+                dexMod.setText("Modifier: 0  Roll: "+roll);
+                tvDexRes.setText(String.valueOf(roll));
             }
         });
         Button bRollConst = (Button) view.findViewById(R.id.bRollConst);
@@ -77,23 +85,26 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                constMod.setText("Modifier of 0 plus a roll of " + roll + " = " + roll);
+                constMod.setText("Modifier: 0  Roll: "+roll);
+                tvConstRes.setText(String.valueOf(roll));
             }
         });
-        Button bRollWisdom = (Button) view.findViewById(R.id.bRollWisdom);
+        Button bRollWisdom = (Button) view.findViewById(R.id.bRollInt);
         bRollWisdom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                intMod.setText("Modifier of 0 plus a roll of " + roll + " = " + roll);
+                intMod.setText("Modifier: 0  Roll: "+roll);
+                tvIntRes.setText(String.valueOf(roll));
             }
         });
-        Button bRollInt = (Button) view.findViewById(R.id.bRollInt);
+        Button bRollInt = (Button) view.findViewById(R.id.bRollWisdom);
         bRollInt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                wisMod.setText("Modifier of 0 plus a roll of "+roll+" = "+roll);
+                wisMod.setText("Modifier: 0  Roll: "+roll);
+                tvWisRes.setText(String.valueOf(roll));
             }
         });
         Button bRollCharisma = (Button) view.findViewById(R.id.bRollCharisma);
@@ -101,7 +112,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                charMod.setText("Modifier of 0 plus a roll of " + roll + " = " + roll);
+                charMod.setText("Modifier: 0  Roll: "+roll);
+                tvCharRes.setText(String.valueOf(roll));
             }
         });
 

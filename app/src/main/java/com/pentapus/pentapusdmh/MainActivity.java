@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
 
 
     @Override
-    public TrackerInfoCard getTrackerInfoCard() {
+    public Fragment getTrackerFragment() {
         Fragment test = ((TrackerFragment)getSupportFragmentManager().findFragmentByTag("F_TRACKER"));
-        return ((TrackerFragment)getSupportFragmentManager().findFragmentByTag("F_TRACKER")).getmSaveTrackerInfoCard();
+        return ((TrackerFragment)getSupportFragmentManager().findFragmentByTag("F_TRACKER"));
     }
 }

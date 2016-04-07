@@ -1,43 +1,35 @@
 package com.pentapus.pentapusdmh.ViewpagerClasses;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.TrackerActivityListener;
-import com.pentapus.pentapusdmh.TrackerInfoCard;
 
 /**
  * Created by Koni on 02.04.2016.
  */
 public class StatusFragment extends Fragment {
     private StatusAdapter statusAdapter;
-    private static final String ARG_PAGE = "ARG_PAGE";
     private GridLayoutManager gridLayoutManager;
-    private int mPage;
     private boolean[] statuses;
+    private int id;
     TrackerActivityListener mListener;
 
 
-    public static StatusFragment newInstance(int page) {
+    public static StatusFragment newInstance(int id) {
         StatusFragment fragment = new StatusFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt("id", id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,9 +38,9 @@ public class StatusFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mPage = getArguments().getInt(ARG_PAGE);
+            id = getArguments().getInt("id");
         }
-        statuses = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getmSaveTrackerInfoCard().getStatuses();
+        statuses = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getStatuses(id);
     }
 
 
@@ -69,9 +61,7 @@ public class StatusFragment extends Fragment {
         };
         mRecyclerView.setLayoutManager(gridLayoutManager);
         statusAdapter = new StatusAdapter();
-        if (this.getArguments() != null) {
-            statusAdapter.setStatuses(statuses);
-        }
+        statusAdapter.setStatuses(statuses);
         mRecyclerView.setAdapter(statusAdapter);
 
         mRecyclerView.addOnItemTouchListener(
@@ -87,7 +77,6 @@ public class StatusFragment extends Fragment {
     }
 
     private void onClick(int position) {
-        Log.d("Status clicked", String.valueOf(position));
         statusAdapter.statusClicked(position);
     }
 
@@ -105,7 +94,8 @@ public class StatusFragment extends Fragment {
     }
 
     public void saveChanges(){
-        mListener.getTrackerInfoCard().setStatuses(statuses);
-        Log.d("Test", "test");
+        statuses=statusAdapter.getStatuses();
+        ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().setStatuses(id, statuses);
+        //((TrackerFragment)mListener.getTrackerFragment()).getChars().setStatuses(id, statuses);
     }
 }

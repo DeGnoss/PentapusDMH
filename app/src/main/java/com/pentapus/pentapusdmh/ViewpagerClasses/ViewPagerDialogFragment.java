@@ -9,9 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.TrackerAdapter;
 import com.pentapus.pentapusdmh.TrackerInfoCard;
+
+import java.util.ArrayList;
 
 /**
  * Created by Koni on 4/4/16.
@@ -20,13 +23,11 @@ public class ViewPagerDialogFragment extends Fragment {
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
-    private int mPage;
-
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private AdjustFragmentPagerAdapter pagerAdapter;
     private Button bDone;
-    private TrackerInfoCard mTempTrackerInfoCard;
+    private int id;
 
 
 
@@ -34,9 +35,9 @@ public class ViewPagerDialogFragment extends Fragment {
         // Empty constructor required for DialogFragment
     }
 
-    public static ViewPagerDialogFragment newInstance(int page) {
+    public static ViewPagerDialogFragment newInstance(int id) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt("id", id);
         ViewPagerDialogFragment fragment = new ViewPagerDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -45,8 +46,10 @@ public class ViewPagerDialogFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
-    }
+            if (getArguments() != null) {
+                id = getArguments().getInt("id");
+            }
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class ViewPagerDialogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 saveData();
+                getFragmentManager().popBackStack();
+                ((TrackerFragment) getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().notifyDataSetChanged();
             }
         });
 
@@ -69,26 +74,19 @@ public class ViewPagerDialogFragment extends Fragment {
     }
 
     private void saveData() {
-        ((StatusFragment)pagerAdapter.getItem(2)).saveChanges();
+        ((HpOverviewFragment)pagerAdapter.getRegisteredFragment(1)).saveChanges();
+        ((StatusFragment)pagerAdapter.getRegisteredFragment(2)).saveChanges();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        pagerAdapter = new AdjustFragmentPagerAdapter(getChildFragmentManager(), getContext());
+        pagerAdapter = new AdjustFragmentPagerAdapter(getChildFragmentManager(), getContext(), id);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(1);
+        viewPager.setOffscreenPageLimit(3);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
 
-        // ..... More code here
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-       // getDialog().getWindow().setLayout(
-              //  RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-    }
-
-
 }

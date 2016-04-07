@@ -1,5 +1,6 @@
 package com.pentapus.pentapusdmh.ViewpagerClasses;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
@@ -9,36 +10,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
+import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
+import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
+import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.R;
+
+import java.lang.annotation.Target;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * Created by Koni on 02.04.2016.
  */
-public class HpOverviewFragment extends Fragment{
-
-    private static final String ARG_PAGE = "ARG_PAGE";
-
+public class HpOverviewFragment extends Fragment implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2{
 
     private int id;
-    private boolean[] statuses = new boolean[15];
-    private boolean[] oldStatuses = new boolean[15];
-    private boolean statusesChanged;
+    private Button bDamage;
+    private TextView tvDamage, tvIdentifier;
+    private int hpDiff;
+    private int hpCurrent;
+    private int hpMax;
 
 
-
-    /*public interface DialogFragmentListener {
-        public void onDialogFragmentDone(int id, int hpDiff, boolean[] statuses);
-    }*/
-
-    //DialogFragmentListener mListener;
-
-
-
-    public static HpOverviewFragment newInstance(int page) {
+    public static HpOverviewFragment newInstance(int id) {
         HpOverviewFragment fragment = new HpOverviewFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt("id", id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,8 +45,10 @@ public class HpOverviewFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-      //  mListener = (DialogFragmentListener) getTargetFragment();
+        if (getArguments() != null) {
+            id = getArguments().getInt("id");
+        }
+        hpCurrent = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getHp(id);
     }
 
 
@@ -58,86 +59,41 @@ public class HpOverviewFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = (View) inflater.inflate(R.layout.viewpager_hpoverview, container, false);
+        View view = inflater.inflate(R.layout.viewpager_hpoverview, container, false);
 
-/*
-        if (this.getArguments() != null) {
-            id = getArguments().getInt("id");
-            oldStatuses = getArguments().getBooleanArray("statuses");
-        }*/
+        tvDamage = (TextView) view.findViewById(R.id.tvNumber);
+        tvIdentifier = (TextView) view.findViewById(R.id.tvIdent);
+        bDamage = (Button) view.findViewById(R.id.buttonDamage);
 
-        final NumberPicker np = (NumberPicker) view.findViewById(R.id.numberPicker1);
-        np.setMinValue(0);
-        np.setMaxValue(999);
-        np.setValue(0);
-        np.setWrapSelectorWheel(false);
-
-        /*
-        Button bStatus = (Button) view.findViewById(R.id.buttonStatus);
-        bStatus.setOnClickListener(new View.OnClickListener() {
+        bDamage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StatusFragment newFragment = new StatusFragment();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                newFragment.setTargetFragment(HpOverviewFragment.this, 0);
-                Bundle bundle = new Bundle();
-                bundle.putBooleanArray("statuses", oldStatuses);
-                newFragment.setArguments(bundle);
-                Fragment old = fm.findFragmentByTag("F_DIALOG_HP");
-                if (old != null) {
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.replace(android.R.id.content, newFragment, "F_DIALOG_STATUS")
-                            .addToBackStack(null).commit();
-                }
-
-
+                NumberPickerBuilder npb = new NumberPickerBuilder()
+                        .setFragmentManager(getChildFragmentManager())
+                        .setStyleResId(R.style.BetterPickersDialogFragment)
+                        .setLabelText("Damage/Healing")
+                        .setDecimalVisibility(0)
+                        .setTargetFragment(HpOverviewFragment.this);
+                npb.show();
             }
-        });*/
+        });
 
 
-        /*
-        Button bSavingThrow = (Button) view.findViewById(R.id.buttonSavingThrow);
-        bSavingThrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SavingThrowFragment newFragment = new SavingThrowFragment();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                newFragment.setTargetFragment(HpOverviewFragment.this, 0);
-                //Bundle bundle = new Bundle();
-               // bundle.putBooleanArray("statuses", oldStatuses);
-               // newFragment.setArguments(bundle);
-                Fragment old = fm.findFragmentByTag("F_DIALOG_HP");
-                if (old != null) {
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.replace(android.R.id.content, newFragment, "F_DIALOG_SAVINGTHROW")
-                            .addToBackStack(null).commit();
-                }
-
-
-            }
-        });*/
-        // Inflate the layout to use as dialog or embedded fragment
         return view;
     }
 
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Get field from view
-
-
+    public void saveChanges(){
+        ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().setHp(id, hpDiff);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       /* if(requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            if(data != null) {
-               // blinded = data.getBooleanExtra("blinded", false);
-                statuses = data.getBooleanArrayExtra("statuses");
-                statusesChanged = data.getBooleanExtra("statusesChanged", false);
-            }
-        }*/
+    @Override
+    public void onDialogNumberSet(int reference, BigInteger number, double decimal, boolean isNegative, BigDecimal fullNumber) {
+        hpDiff = number.intValue();
+        tvDamage.setText(String.valueOf(Math.abs(number.intValue())));
+        if(isNegative){
+            tvIdentifier.setText("Healing");
+        }else{
+            tvIdentifier.setText("Damage");
+        }
     }
 }

@@ -6,12 +6,33 @@
     android:background="@android:color/transparent"
     android:clickable="true">
 
-
-    <NumberPicker
-        android:id="@+id/numberPicker1"
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Damage/Healing"
+        android:id="@+id/buttonDamage"
         android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFFFF"
+        android:textSize="50sp"
+        android:id="@+id/tvNumber"
+        android:layout_above="@+id/tvIdent"
+        android:layout_marginBottom="5dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFFFF"
+        android:textSize="30sp"
+        android:id="@+id/tvIdent"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/buttonDamage"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

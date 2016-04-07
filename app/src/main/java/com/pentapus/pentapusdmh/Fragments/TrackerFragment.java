@@ -167,25 +167,6 @@ public class TrackerFragment extends Fragment implements
                 .addToBackStack(null).commit();
     }
 
-    public void showDialog(int id) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        HpOverviewFragment newFragment = new HpOverviewFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
-        //bundle.putBoolean("blinded", chars.getStatus(id));
-        bundle.putBooleanArray("statuses", chars.getStatuses(id));
-        newFragment.setArguments(bundle);
-        newFragment.setTargetFragment(this, 0);
-            // The device is smaller, so show the fragment fullscreen
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            // For a little polish, specify a transition animation
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            // To make it fullscreen, use the 'content' root view as the container
-            // for the fragment, which is always the root view for the activity
-            transaction.add(android.R.id.content, newFragment, "F_DIALOG_HP")
-                    .addToBackStack(null).commit();
-        }
-
     public void onDialogButtonClick(int id, int hpChange) {
         Log.d("Dialog", "clicked");
         chars.setHp(id, hpChange);
@@ -195,8 +176,8 @@ public class TrackerFragment extends Fragment implements
         return mSaveTrackerInfoCard;
     }
 
-    public void setmSaveTrackerInfoCard(TrackerInfoCard mSaveTrackerInfoCard) {
-        this.mSaveTrackerInfoCard = mSaveTrackerInfoCard;
+    public TrackerAdapter getChars() {
+        return chars;
     }
 
     @Override

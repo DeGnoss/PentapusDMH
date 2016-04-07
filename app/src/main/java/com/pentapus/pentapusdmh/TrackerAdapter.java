@@ -53,12 +53,12 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         characterViewHolder.vHp.setText(ci.maxHp);
         if(!characterList.get(position).dead) {
             if (characterList.get(position).type.equals("npc")) {
-                characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#55D32F2F"));
+                characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#E0F2F1"));
             } else if (characterList.get(position).type.equals("pc")) {
-                characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#551976D2"));
+                characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#F0F4C3"));
             }
         }else{
-            characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#99000000"));
+            characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#70000000"));
         }
 
         if(characterList.get(position).isBlinded()){

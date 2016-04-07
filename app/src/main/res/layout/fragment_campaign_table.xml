@@ -10,7 +10,7 @@
         android:layout_height="470dp"
         android:id="@+id/listViewCampaigns"
         android:layout_gravity="center|top"
-        android:paddingBottom="65sp"
+        android:paddingBottom="65dp"
         android:clipToPadding="false"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -19,6 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_input_add" />
+        android:src="@drawable/ic_add_black" />
 
 </FrameLayout>
