@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
 public class SessionEditFragment extends Fragment {
@@ -22,7 +23,7 @@ public class SessionEditFragment extends Fragment {
     Button addchar_btn;
     EditText name_tf, info_tf;
     private String mode, id;
-    private static int campaignId;
+    private int campaignId;
 
 
 
@@ -60,15 +61,12 @@ public class SessionEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_session_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
@@ -76,7 +74,6 @@ public class SessionEditFragment extends Fragment {
 
         if (this.getArguments() != null){
             mode = getArguments().getString("mode");
-            campaignId = Integer.parseInt(getArguments().getString("campaignId"));
             //check wheter entry gets updated or added
             if (mode.trim().equalsIgnoreCase("update")){
                 id = getArguments().getString("sessionId");

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
 public class CampaignEditFragment extends Fragment {
@@ -67,6 +68,7 @@ public class CampaignEditFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        id=String.valueOf(SharedPrefsHelper.loadCampaignId(getContext()));
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_campaign_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
@@ -77,7 +79,7 @@ public class CampaignEditFragment extends Fragment {
             //check wheter entry gets updated or added
             if (mode.trim().equalsIgnoreCase("update")){
                 id = getArguments().getString("campaignId");
-                loadSessionInfo(name_tf, info_tf, id);
+                loadCampaignInfo(name_tf, info_tf, id);
             }
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
@@ -92,7 +94,7 @@ public class CampaignEditFragment extends Fragment {
 
     }
 
-    private void loadSessionInfo(EditText name, EditText info, String id) {
+    private void loadCampaignInfo(EditText name, EditText info, String id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,

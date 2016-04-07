@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:id="@+id/listViewCampaigns"
         android:layout_gravity="center|top"
+        android:layout_margin="10dp"
         android:scrollIndicators="top|bottom"
         android:requiresFadingEdge="vertical"
         android:paddingBottom="65dp"

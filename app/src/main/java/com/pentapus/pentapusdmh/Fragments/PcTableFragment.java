@@ -15,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,12 +23,14 @@ import android.widget.ListView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
 public class PcTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private String campaignId, campaignName;
+    private String campaignName;
+    private int campaignId;
     private FloatingActionButton fab;
     final CharSequence[] items = {"Edit", "Delete"};
 
@@ -67,10 +70,8 @@ public class PcTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
+        campaignName = SharedPrefsHelper.loadCampaignName(getContext());
     }
 
     @Override
@@ -78,10 +79,6 @@ public class PcTableFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_pc_table, container, false);
         // insert a record
-        if (this.getArguments() != null) {
-            campaignId = getArguments().getString("campaignId");
-            campaignName = getArguments().getString("campaignName");
-        }
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
         displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);
@@ -91,7 +88,7 @@ public class PcTableFragment extends Fragment implements
 
                 Bundle bundle = new Bundle();
                 bundle.putString("mode", "add");
-                bundle.putString("campaignId", campaignId);
+                bundle.putInt("campaignId", campaignId);
                 addPC(bundle);
             }
         });
@@ -141,7 +138,6 @@ public class PcTableFragment extends Fragment implements
                                     Bundle bundle = new Bundle();
                                     bundle.putString("mode", "update");
                                     bundle.putString("pcId", pcId);
-                                    bundle.putString("campaignId", campaignId);
                                     editPC(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
@@ -189,13 +185,19 @@ public class PcTableFragment extends Fragment implements
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu){
+        menu.findItem(R.id.campaign_settings).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
-        String[] selectionArgs = new String[]{campaignId};
+        String[] selectionArgs = new String[]{String.valueOf(campaignId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_PC, projection, selection, selectionArgs, null);

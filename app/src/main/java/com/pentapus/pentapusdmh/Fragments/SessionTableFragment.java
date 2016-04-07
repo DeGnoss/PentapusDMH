@@ -42,7 +42,7 @@ public class SessionTableFragment extends Fragment implements
     final CharSequence[] items = {"Edit", "Delete"};
     FloatingActionButton fab;
     private SimpleCursorAdapter dataAdapterSessions;
-    private static int campaignId;
+    private int campaignId;
 
     public SessionTableFragment() {
         // Required empty public constructor
@@ -69,21 +69,15 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("oncreate", ("campaignId = " + campaignId));
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext())+ " Sessions");
         final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
-        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        Log.d("oncreateview", ("campaignId = " + campaignId));
         if (campaignId <= 0) {
             new AlertDialog.Builder(getContext()).setTitle("No Campaign Found")
                     .setCancelable(false)
@@ -101,7 +95,6 @@ public class SessionTableFragment extends Fragment implements
                     .show();
         } else {
             displayListView(tableView);
-            Log.d("displaylistview after", ("campaignId = " + campaignId));
             // Inflate the layout for this fragment
             fab = (FloatingActionButton) tableView.findViewById(R.id.fabSession);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +102,6 @@ public class SessionTableFragment extends Fragment implements
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
                     bundle.putString("mode", "add");
-                    bundle.putString("campaignId", String.valueOf(campaignId));
                     addSession(bundle);
                 }
             });
@@ -118,7 +110,6 @@ public class SessionTableFragment extends Fragment implements
     }
 
     private void displayListView(View view) {
-        Log.d("displaylistview start", ("campaignId = " + campaignId));
         String[] columns = new String[]{
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
@@ -181,7 +172,6 @@ public class SessionTableFragment extends Fragment implements
                                     Bundle bundle = new Bundle();
                                     bundle.putString("mode", "update");
                                     bundle.putString("sessionId", sessionId);
-                                    bundle.putString("campaignId", String.valueOf(campaignId));
                                     editSession(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
@@ -234,6 +224,7 @@ public class SessionTableFragment extends Fragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu){
+        menu.findItem(R.id.campaign_settings).setVisible(true);
         menu.findItem(R.id.play_mode).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
@@ -251,7 +242,6 @@ public class SessionTableFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d("Loader", ("campaignId = " + campaignId));
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,

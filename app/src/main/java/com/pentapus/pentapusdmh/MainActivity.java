@@ -10,8 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.pentapus.pentapusdmh.Fragments.CampaignTableFragment;
+import com.pentapus.pentapusdmh.Fragments.PcTableFragment;
 import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 public class MainActivity extends AppCompatActivity implements TrackerActivityListener{
 
@@ -48,12 +50,25 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
         if (id == R.id.action_settings) {
             return true;
         }else if(id == R.id.campaign_settings){
-            CampaignTableFragment ftable = new CampaignTableFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
-                    .addToBackStack("FT_CAMPAIGN")
-                    .commit();
-            return true;
+            CampaignTableFragment myFragment = (CampaignTableFragment)getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN");
+            if(myFragment != null){
+                if(!myFragment.isVisible()){
+                    CampaignTableFragment ftable = new CampaignTableFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
+                            .addToBackStack("FT_CAMPAIGN")
+                            .commit();
+                }
+                return true;
+            } else{
+                    CampaignTableFragment ftable = new CampaignTableFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
+                            .addToBackStack("FT_CAMPAIGN")
+                            .commit();
+                return true;
+            }
+
         }else if(id == R.id.play_mode){
             TrackerFragment ftable = new TrackerFragment();
             getSupportFragmentManager().beginTransaction()
@@ -61,6 +76,12 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
                     .addToBackStack("F_TRACKER")
                     .commit();
             return true;
+        }else if(id == R.id.player_settings) {
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("campaignId", SharedPrefsHelper.loadCampaignId(this));
+            bundle.putString("campaignName", SharedPrefsHelper.loadCampaignName(this));
+            loadPCs(bundle);
         }
 
         return super.onOptionsItemSelected(item);
@@ -76,6 +97,16 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
             Log.i("MainActivity", "nothing on backstack, calling super");
             super.onBackPressed();
         }
+    }
+
+    private void loadPCs(Bundle bundle) {
+        Fragment fragment;
+        fragment = new PcTableFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.FrameTop, fragment, "FT_PC")
+                .addToBackStack("FT_PC")
+                .commit();
     }
 
 

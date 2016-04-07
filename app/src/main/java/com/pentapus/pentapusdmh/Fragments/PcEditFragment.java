@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
 
@@ -60,10 +61,7 @@ public class PcEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
     }
 
     @Override
@@ -77,7 +75,6 @@ public class PcEditFragment extends Fragment {
 
         if (this.getArguments() != null) {
             mode = getArguments().getString("mode");
-            campaignId = Integer.parseInt(getArguments().getString("campaignId"));
             //check wheter entry gets updated or added
             if (mode.trim().equalsIgnoreCase("update")) {
                 id = getArguments().getString("pcId");

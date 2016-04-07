@@ -16,6 +16,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -228,6 +229,14 @@ public class CampaignTableFragment extends Fragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         dataAdapterCampaigns.swapCursor(data);
 
+    }
+
+
+    //TODO menu item invisible
+    @Override
+    public void onPrepareOptionsMenu(Menu menu){
+        menu.findItem(R.id.campaign_settings).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
