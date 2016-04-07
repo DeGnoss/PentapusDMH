@@ -32,22 +32,22 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 public class EncounterFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private String encounterId, encounterName;
-    private FloatingActionButton fab;
-    final CharSequence[] items = {"Edit", "Delete"};
-
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ENCOUNTER_ID = "encounterId";
+    private static final String ENCOUNTER_NAME = "encounterName";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String MODE = "modeUpdate";
+    private static final String NPC_ID = "npcId";
+
+
+    private int encounterId;
+    private String encounterName;
 
     private SimpleCursorAdapter dataAdapterNPC, dataAdapterPC;
     private static int campaignId;
     private MergeAdapter mergeAdapter;
+    private FloatingActionButton fab;
+    final CharSequence[] items = {"Edit", "Delete"};
 
     public EncounterFragment() {
         // Required empty public constructor
@@ -57,16 +57,15 @@ public class EncounterFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param encounterName Parameter 1.
+     * @param encounterId Parameter 2.
      * @return A new instance of fragment SessionTableFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static EncounterFragment newInstance(String param1, String param2) {
+    public static EncounterFragment newInstance(String encounterName, int encounterId) {
         EncounterFragment fragment = new EncounterFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ENCOUNTER_NAME, encounterName);
+        args.putInt(ENCOUNTER_ID, encounterId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,9 +73,10 @@ public class EncounterFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            encounterId = getArguments().getInt("encounterId");
+            encounterName = getArguments().getString("encounterName");
         }
         setHasOptionsMenu(true);
     }
@@ -85,14 +85,7 @@ public class EncounterFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
-        // insert a record
-        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        if (this.getArguments() != null) {
-            encounterId = getArguments().getString("encounterId");
-            encounterName = getArguments().getString("encounterName");
-        }
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
-
         displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +93,8 @@ public class EncounterFragment extends Fragment implements
             public void onClick(View view) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("mode", "add");
-                bundle.putString("encounterId", encounterId);
+                bundle.putBoolean(MODE, false);
+                bundle.putInt(ENCOUNTER_ID, encounterId);
                 addNPC(bundle);
             }
         });
@@ -165,11 +158,11 @@ public class EncounterFragment extends Fragment implements
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                                     listView.getAdapter();
                                     Log.d("Adapter clicked:", listView.getAdapter().getItem(position).toString());
-                                    String npcId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("mode", "update");
-                                    bundle.putString("npcId", npcId);
-                                    bundle.putString("encounterId", encounterId);
+                                    bundle.putBoolean(MODE, true);
+                                    bundle.putInt(NPC_ID, npcId);
+                                    bundle.putInt(ENCOUNTER_ID, encounterId);
                                     editNPC(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
@@ -206,28 +199,6 @@ public class EncounterFragment extends Fragment implements
                 .commit();
     }
 
-    /**
-     * gets [section,item idx in section] for raw list position
-     *
-     * @param adapter
-     * @param position: raw position in {@link com.commonsware.cwac.merge.MergeAdapter}
-     * @return ArrayList<Integer>
-     */
-    public static Pair<Integer, Integer> getMergeAdapterPos(MergeAdapter adapter, int
-            position) {
-        int section = -1;
-        int sectionStart = -1;
-        for (int i = 0; i <= position; i++) {
-            if (!(adapter.getItem(i) instanceof Cursor)) {
-                sectionStart = i;
-                section++;
-            }
-        }
-        int correctedPos = position - sectionStart - 1;
-
-        return new Pair<Integer, Integer>(section, correctedPos);
-    }
-
 
 
     @Override
@@ -254,7 +225,7 @@ public class EncounterFragment extends Fragment implements
                 DataBaseHandler.KEY_INFO
         };
         if (id == 0) {
-            String[] selectionArgs = new String[]{encounterId};
+            String[] selectionArgs = new String[]{String.valueOf(encounterId)};
             String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
             return new CursorLoader(this.getContext(),
                     DbContentProvider.CONTENT_URI_NPC, projection, selection, selectionArgs, null);

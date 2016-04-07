@@ -19,20 +19,17 @@ import com.pentapus.pentapusdmh.R;
 
 public class NPCEditFragment extends Fragment {
 
-    Button addchar_btn;
-    EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf;
-    private String mode, id;
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String MODE = "modeUpdate";
+    private static final String NPC_ID = "npcId";
+    private static final String ENCOUNTER_ID = "encounterId";
+
+    private boolean modeUpdate;
+    private int npcId;
     private int encounterId;
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    Button addchar_btn;
+    EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf;
 
     public NPCEditFragment() {
         // Required empty public constructor
@@ -42,16 +39,17 @@ public class NPCEditFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param modeUpdate  Parameter 1.
+     * @param npcId       Parameter 2.
+     * @param encounterId Parameter 3.
      * @return A new instance of fragment EncounterEditFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static NPCEditFragment newInstance(String param1, String param2) {
+    public static NPCEditFragment newInstance(boolean modeUpdate, int npcId, int encounterId) {
         NPCEditFragment fragment = new NPCEditFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putBoolean(MODE, modeUpdate);
+        args.putInt(NPC_ID, npcId);
+        args.putInt(ENCOUNTER_ID, encounterId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,9 +57,13 @@ public class NPCEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (this.getArguments() != null) {
+            modeUpdate = getArguments().getBoolean(MODE);
+            encounterId = getArguments().getInt(ENCOUNTER_ID);
+            //check wheter entry gets updated or added
+            if (modeUpdate) {
+                npcId = getArguments().getInt(NPC_ID);
+            }
         }
     }
 
@@ -77,27 +79,21 @@ public class NPCEditFragment extends Fragment {
         ac_tf = (EditText) charEditView.findViewById(R.id.etAc);
 
 
-        if (this.getArguments() != null){
-            mode = getArguments().getString("mode");
-            encounterId = Integer.parseInt(getArguments().getString("encounterId"));
-            //check wheter entry gets updated or added
-            if (mode.trim().equalsIgnoreCase("update")){
-                id = getArguments().getString("npcId");
-                loadNPCInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, id);
-            }
+        if (modeUpdate) {
+            loadNPCInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, npcId);
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doneButton(mode);
+                doneButton(modeUpdate);
             }
         });
         // Inflate the layout for this fragment
         return charEditView;
     }
 
-    private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, String id) {
+    private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, int id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
@@ -123,7 +119,7 @@ public class NPCEditFragment extends Fragment {
         }
     }
 
-    public void doneButton(String mode) {
+    public void doneButton(boolean modeUpdate) {
         // get values from the input text fields
         String myName = name_tf.getText().toString();
         String myInfo = info_tf.getText().toString();
@@ -139,20 +135,17 @@ public class NPCEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
 
         // insert a record
-        if(mode.trim().equalsIgnoreCase("add")){
+        if (!modeUpdate) {
             getContext();
             getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_NPC, values);
         }
         // update a record
         else {
-            id = getArguments().getString("npcId");
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
-        Bundle bundle = new Bundle();
-        bundle.putString("type", "npc");
-            getActivity().getSupportFragmentManager().popBackStack();
-        }
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
 
     @Override
     public void onAttach(Context context) {

@@ -30,14 +30,12 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 public class SessionTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+    private static final String MODE = "modeUpdate";
+    private static final String SESSION_ID = "sessionId";
+    private static final String SESSION_NAME = "sessionName";
+
 
     final CharSequence[] items = {"Edit", "Delete"};
     FloatingActionButton fab;
@@ -52,18 +50,10 @@ public class SessionTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment SessionTableFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static SessionTableFragment newInstance(String param1, String param2) {
-        SessionTableFragment fragment = new SessionTableFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static SessionTableFragment newInstance() {
+        return new SessionTableFragment();
     }
 
     @Override
@@ -76,7 +66,7 @@ public class SessionTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext())+ " Sessions");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext()) + " Sessions");
         final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
         if (campaignId <= 0) {
             new AlertDialog.Builder(getContext()).setTitle("No Campaign Found")
@@ -101,7 +91,7 @@ public class SessionTableFragment extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("mode", "add");
+                    bundle.putBoolean(MODE, false);
                     addSession(bundle);
                 }
             });
@@ -128,14 +118,12 @@ public class SessionTableFragment extends Fragment implements
                 to,
                 0);
 
-        //dataAdapterSessions.changeCursor(null);
-        //dataAdapterSessions.notifyDataSetChanged();
         final ListView listView = (ListView) view.findViewById(R.id.listViewSessions);
         listView.setAdapter(dataAdapterSessions);
         //Ensures a loader is initialized and active.
-        if(getLoaderManager().getLoader(0) == null){
+        if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
-        } else{
+        } else {
             getLoaderManager().restartLoader(0, null, this);
         }
 
@@ -145,14 +133,13 @@ public class SessionTableFragment extends Fragment implements
                                     int position, long id) {
                 // Get the cursor, positioned to the corresponding row in the result set
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String sessionId =
-                        cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                String sessionName=cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-
+                int sessionId =
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                String sessionName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
 
                 Bundle bundle = new Bundle();
-                bundle.putString("sessionId", sessionId);
-                bundle.putString("sessionName", sessionName);
+                bundle.putInt(SESSION_ID, sessionId);
+                bundle.putString(SESSION_NAME, sessionName);
                 loadEncounters(bundle);
             }
         });
@@ -168,10 +155,10 @@ public class SessionTableFragment extends Fragment implements
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String sessionId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    int sessionId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("mode", "update");
-                                    bundle.putString("sessionId", sessionId);
+                                    bundle.putBoolean(MODE, true);
+                                    bundle.putInt(SESSION_ID, sessionId);
                                     editSession(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
@@ -223,7 +210,7 @@ public class SessionTableFragment extends Fragment implements
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu){
+    public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.campaign_settings).setVisible(true);
         menu.findItem(R.id.play_mode).setVisible(false);
         super.onPrepareOptionsMenu(menu);
@@ -251,7 +238,6 @@ public class SessionTableFragment extends Fragment implements
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_SESSION, projection, selection, selectionArgs, null);
-        Log.d("Loader", selectionArgs[0]);
         return cursorLoader;
     }
 

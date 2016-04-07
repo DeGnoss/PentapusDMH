@@ -19,20 +19,18 @@ import com.pentapus.pentapusdmh.R;
 
 public class EncounterEditFragment extends Fragment {
 
-    Button addchar_btn;
-    EditText name_tf, info_tf;
-    private String mode, id;
+
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String MODE = "modeUpdate";
+    private static final String ENCOUNTER_ID = "encounterId";
+    private static final String SESSION_ID = "sessionId";
+
+    private boolean modeUpdate;
+    private int encounterId;
     private int sessionId;
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    Button addchar_btn;
+    EditText name_tf, info_tf;
 
 
     public EncounterEditFragment() {
@@ -43,16 +41,17 @@ public class EncounterEditFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param mode        Parameter 1.
+     * @param encounterId Parameter 2.
+     * @param sessionId   Parameter 3.
      * @return A new instance of fragment EncounterEditFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static EncounterEditFragment newInstance(String param1, String param2) {
+    public static EncounterEditFragment newInstance(boolean mode, int encounterId, int sessionId) {
         EncounterEditFragment fragment = new EncounterEditFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putBoolean(MODE, mode);
+        args.putInt(ENCOUNTER_ID, encounterId);
+        args.putInt(SESSION_ID, sessionId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,8 +60,11 @@ public class EncounterEditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            modeUpdate = getArguments().getBoolean(MODE);
+            sessionId = getArguments().getInt(SESSION_ID);
+            if(modeUpdate){
+                encounterId = getArguments().getInt(ENCOUNTER_ID);
+            }
         }
     }
 
@@ -74,27 +76,22 @@ public class EncounterEditFragment extends Fragment {
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
 
-        if (this.getArguments() != null) {
-            mode = getArguments().getString("mode");
-            //check wheter entry gets updated or added
-            sessionId = Integer.parseInt(getArguments().getString("sessionId"));
-            if (mode.trim().equalsIgnoreCase("update")) {
-                id = getArguments().getString("encounterId");
-                loadEncounterInfo(name_tf, info_tf, id);
-            }
+        //check wheter entry gets updated or added
+        if (modeUpdate) {
+            loadEncounterInfo(name_tf, info_tf, encounterId);
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doneButton(mode);
+                doneButton(modeUpdate);
             }
         });
         // Inflate the layout for this fragment
         return charEditView;
     }
 
-    private void loadEncounterInfo(EditText name, EditText info, String id) {
+    private void loadEncounterInfo(EditText name, EditText info, int id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
@@ -111,7 +108,7 @@ public class EncounterEditFragment extends Fragment {
         }
     }
 
-    public void doneButton(String mode) {
+    public void doneButton(boolean mode) {
         // get values from the input text fields
         String myName = name_tf.getText().toString();
         String myInitiative = info_tf.getText().toString();
@@ -121,12 +118,12 @@ public class EncounterEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
 
         // insert a record
-        if (mode.trim().equalsIgnoreCase("add")) {
+        if (!mode) {
             getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
         }
         // update a record
-        else if (mode.trim().equalsIgnoreCase("update")) {
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
+        else {
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
         getActivity().getSupportFragmentManager().popBackStack();

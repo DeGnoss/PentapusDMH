@@ -29,20 +29,22 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 public class EncounterTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private String sessionId, sessionName;
-    private FloatingActionButton fab;
-    final CharSequence[] items = {"Edit", "Delete"};
-
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String SESSION_NAME = "sessionName";
+    private static final String SESSION_ID = "sessionId";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ENCOUNTER_NAME = "encounterName";
+    private static final String ENCOUNTER_ID = "encounterId";
+
+    private static final String MODE = "modeUpdate";
+
+
+    private int sessionId;
+    private String sessionName;
 
     private SimpleCursorAdapter dataAdapterEncounters;
+    private FloatingActionButton fab;
+    final CharSequence[] items = {"Edit", "Delete"};
 
     public EncounterTableFragment() {
         // Required empty public constructor
@@ -52,16 +54,15 @@ public class EncounterTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param sessionName Parameter 1.
+     * @param sessionId   Parameter 2.
      * @return A new instance of fragment SessionTableFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static EncounterTableFragment newInstance(String param1, String param2) {
+    public static EncounterTableFragment newInstance(String sessionName, int sessionId) {
         EncounterTableFragment fragment = new EncounterTableFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(SESSION_NAME, sessionName);
+        args.putInt(SESSION_ID, sessionId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,9 +70,9 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (this.getArguments() != null) {
+            sessionId = getArguments().getInt(SESSION_ID);
+            sessionName = getArguments().getString(SESSION_NAME);
         }
     }
 
@@ -80,11 +81,8 @@ public class EncounterTableFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
         // insert a record
-        if (this.getArguments() != null) {
-            sessionId = getArguments().getString("sessionId");
-            sessionName = getArguments().getString("sessionName");
-        }
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
         displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,8 +90,8 @@ public class EncounterTableFragment extends Fragment implements
             public void onClick(View view) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("mode", "add");
-                bundle.putString("sessionId", sessionId);
+                bundle.putBoolean(MODE, false);
+                bundle.putInt(SESSION_ID, sessionId);
                 addEncounter(bundle);
             }
         });
@@ -133,13 +131,13 @@ public class EncounterTableFragment extends Fragment implements
                                     int position, long id) {
                 // Get the cursor, positioned to the corresponding row in the result set
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String encounterId =
-                        cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                int encounterId =
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                 String encounterName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
 
                 Bundle bundle = new Bundle();
-                bundle.putString("encounterId", encounterId);
-                bundle.putString("encounterName", encounterName);
+                bundle.putInt(ENCOUNTER_ID, encounterId);
+                bundle.putString(ENCOUNTER_NAME, encounterName);
                 loadNPC(bundle, encounterId, encounterName);
             }
         });
@@ -155,11 +153,11 @@ public class EncounterTableFragment extends Fragment implements
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String encounterId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    int encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("mode", "update");
-                                    bundle.putString("encounterId", encounterId);
-                                    bundle.putString("sessionId", sessionId);
+                                    bundle.putBoolean(MODE, true);
+                                    bundle.putInt(ENCOUNTER_ID, encounterId);
+                                    bundle.putInt(SESSION_ID, sessionId);
                                     editEncounter(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
@@ -196,8 +194,8 @@ public class EncounterTableFragment extends Fragment implements
                 .commit();
     }
 
-    private void loadNPC(Bundle bundle, String encounterId, String encounterName) {
-        SharedPrefsHelper.saveEncounter(getContext(), Integer.parseInt(encounterId), encounterName);
+    private void loadNPC(Bundle bundle, int encounterId, String encounterName) {
+        SharedPrefsHelper.saveEncounter(getContext(), encounterId, encounterName);
         Fragment fragment;
         fragment = new EncounterFragment();
         fragment.setArguments(bundle);
@@ -225,7 +223,7 @@ public class EncounterTableFragment extends Fragment implements
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO
         };
-        String[] selectionArgs = new String[]{sessionId};
+        String[] selectionArgs = new String[]{String.valueOf(sessionId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_ENCOUNTER, projection, selection, selectionArgs, null);

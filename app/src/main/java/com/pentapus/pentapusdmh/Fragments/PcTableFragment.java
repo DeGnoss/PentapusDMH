@@ -29,21 +29,18 @@ import com.pentapus.pentapusdmh.R;
 public class PcTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private String campaignName;
-    private int campaignId;
-    private FloatingActionButton fab;
-    final CharSequence[] items = {"Edit", "Delete"};
-
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String CAMPAIGN_ID = "campaignId";
+    private static final String CAMPAIGN_NAME = "campaignName";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String MODE = "modeUpdate";
+
+    private int campaignId;
+    private String campaignName;
 
     private SimpleCursorAdapter dataAdapterPc;
+    private FloatingActionButton fab;
+    final CharSequence[] items = {"Edit", "Delete"};
 
     public PcTableFragment() {
         // Required empty public constructor
@@ -53,16 +50,15 @@ public class PcTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param campaignId   Parameter 1.
+     * @param campaignName Parameter 2.
      * @return A new instance of fragment SessionTableFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static PcTableFragment newInstance(String param1, String param2) {
+    public static PcTableFragment newInstance(int campaignId, String campaignName) {
         PcTableFragment fragment = new PcTableFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(CAMPAIGN_ID, campaignId);
+        args.putString(CAMPAIGN_NAME, campaignName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,8 +66,13 @@ public class PcTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        campaignName = SharedPrefsHelper.loadCampaignName(getContext());
+        if (getArguments() != null) {
+            campaignId = getArguments().getInt(CAMPAIGN_ID);
+            campaignName = getArguments().getString(CAMPAIGN_NAME);
+        } else {
+            campaignId = SharedPrefsHelper.loadCampaignId(getContext());
+            campaignName = SharedPrefsHelper.loadCampaignName(getContext());
+        }
     }
 
     @Override
@@ -79,7 +80,7 @@ public class PcTableFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_pc_table, container, false);
         // insert a record
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
         displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,8 +88,8 @@ public class PcTableFragment extends Fragment implements
             public void onClick(View view) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("mode", "add");
-                bundle.putInt("campaignId", campaignId);
+                bundle.putBoolean(MODE, false);
+                bundle.putInt(CAMPAIGN_ID, campaignId);
                 addPC(bundle);
             }
         });
@@ -134,10 +135,11 @@ public class PcTableFragment extends Fragment implements
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String pcId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    int pcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("mode", "update");
-                                    bundle.putString("pcId", pcId);
+                                    bundle.putBoolean(MODE, true);
+                                    bundle.putInt("pcId", pcId);
+                                    bundle.putInt(CAMPAIGN_ID, campaignId);
                                     editPC(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
@@ -185,7 +187,7 @@ public class PcTableFragment extends Fragment implements
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu){
+    public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.campaign_settings).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }

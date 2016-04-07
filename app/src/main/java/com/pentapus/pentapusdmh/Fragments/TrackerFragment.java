@@ -39,24 +39,14 @@ import java.util.ArrayList;
 public class TrackerFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ID = "id";
+    private static final String STATUSES = "statuses";
+    private static final String HP = "hp";
 
-    private CustomRecyclerLayoutManager llm;
+
     private TrackerAdapter chars;
     private static int campaignId, encounterId;
-    private MergeAdapter mergeAdapter;
-    private ArrayList<String> names;
-    private ArrayList<Integer> initiative;
-    private TrackerInfoCard mSaveTrackerInfoCard;
-
-
 
 
     public TrackerFragment() {
@@ -67,31 +57,20 @@ public class TrackerFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment SessionTableFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static TrackerFragment newInstance(String param1, String param2) {
-        TrackerFragment fragment = new TrackerFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static TrackerFragment newInstance() {
+        return new TrackerFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        names = new ArrayList<String>();
-        initiative = new ArrayList<Integer>();
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<Integer> initiative = new ArrayList<Integer>();
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
+        encounterId = SharedPrefsHelper.loadEncounterId(getContext());
     }
-
 
 
     @Override
@@ -99,15 +78,11 @@ public class TrackerFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_tracker, container, false);
         final RecyclerView mRecyclerView = (RecyclerView) tableView.findViewById(R.id.listViewEncounter);
-        llm = new CustomRecyclerLayoutManager(getContext());
+        CustomRecyclerLayoutManager llm = new CustomRecyclerLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
         // insert a record
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
-
-
-        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        encounterId = SharedPrefsHelper.loadEncounterId(getContext());
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
@@ -138,8 +113,8 @@ public class TrackerFragment extends Fragment implements
     }
 
 
-    public void onClick(int id){
-        mSaveTrackerInfoCard = chars.getItem(id);
+    public void onClick(int id) {
+        TrackerInfoCard mSaveTrackerInfoCard = chars.getItem(id);
         //showDialog(id);
         showViewPager(id);
         chars.setSelected(id);
@@ -148,14 +123,14 @@ public class TrackerFragment extends Fragment implements
     }
 
 
-    public void showViewPager(int id){
+    public void showViewPager(int id) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         ViewPagerDialogFragment newFragment = new ViewPagerDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
+        bundle.putInt(ID, id);
         //bundle.putBoolean("blinded", chars.getStatus(id));
-        bundle.putBooleanArray("statuses", chars.getStatuses(id));
-        bundle.putInt("hp", chars.getHp(id));
+        bundle.putBooleanArray(STATUSES, chars.getStatuses(id));
+        bundle.putInt(HP, chars.getHp(id));
         newFragment.setArguments(bundle);
         newFragment.setTargetFragment(this, 0);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -167,21 +142,22 @@ public class TrackerFragment extends Fragment implements
                 .addToBackStack(null).commit();
     }
 
+    /*
     public void onDialogButtonClick(int id, int hpChange) {
-        Log.d("Dialog", "clicked");
         chars.setHp(id, hpChange);
     }
 
     public TrackerInfoCard getmSaveTrackerInfoCard() {
         return mSaveTrackerInfoCard;
     }
+    */
 
     public TrackerAdapter getChars() {
         return chars;
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu){
+    public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.play_mode).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
@@ -234,7 +210,7 @@ public class TrackerFragment extends Fragment implements
                     int initiativeMod = initiative;
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
-                    initiative = initiative+ DiceHelper.d20();
+                    initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
                     ci.initiative = String.valueOf(initiative);
@@ -244,9 +220,6 @@ public class TrackerFragment extends Fragment implements
                     ci.type = "npc";
                     ci.dead = false;
                     chars.addListItem(ci);
-                    //names.add(data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME)));
-                    //initiative.add(data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS)));
-
                 }
                 break;
             //case PC

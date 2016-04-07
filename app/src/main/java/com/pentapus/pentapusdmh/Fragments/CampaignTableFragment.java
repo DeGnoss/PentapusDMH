@@ -29,14 +29,10 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 public class CampaignTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String MODE = "modeUpdate";
+    private static final String CAMPAIGN_ID = "campaignId";
+
 
     final CharSequence[] items = {"Edit", "Delete", "Player Characters"};
     FloatingActionButton fab;
@@ -50,33 +46,21 @@ public class CampaignTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment SessionTableFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static CampaignTableFragment newInstance(String param1, String param2) {
-        CampaignTableFragment fragment = new CampaignTableFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static CampaignTableFragment newInstance() {
+        return new CampaignTableFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.campaignsFragmentTitle);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.campaignsFragmentTitle);
         final View tableView = inflater.inflate(R.layout.fragment_campaign_table, container, false);
         displayListView(tableView);
         // Inflate the layout for this fragment
@@ -86,7 +70,7 @@ public class CampaignTableFragment extends Fragment implements
             public void onClick(View view) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("mode", "add");
+                bundle.putBoolean(MODE, false);
                 addCampaign(bundle);
             }
         });
@@ -124,8 +108,8 @@ public class CampaignTableFragment extends Fragment implements
                                     int position, long id) {
                 // Get the cursor, positioned to the corresponding row in the result set
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String campaignId =
-                        cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                int campaignId =
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                 String campaignName =
                         cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
                 loadCampaign(campaignId, campaignName);
@@ -144,12 +128,10 @@ public class CampaignTableFragment extends Fragment implements
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String campaignId = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    String campaignName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+                                    int campaignId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("mode", "update");
-                                    bundle.putString("campaignId", campaignId);
-                                    bundle.putString("campaignName", campaignName);
+                                    bundle.putBoolean(MODE, true);
+                                    bundle.putInt(CAMPAIGN_ID, campaignId);
                                     editCampaign(bundle);
                                     dialog.dismiss();
                                 } else if (item == 1) {
@@ -158,11 +140,11 @@ public class CampaignTableFragment extends Fragment implements
                                     dialog.dismiss();
                                 } else if (item == 2) {
                                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    String campaignId =
-                                            cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    int campaignId =
+                                            cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     String campaignName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("campaignId", campaignId);
+                                    bundle.putInt(CAMPAIGN_ID, campaignId);
                                     bundle.putString("campaignName", campaignName);
                                     loadPCs(bundle);
                                 } else {
@@ -198,8 +180,8 @@ public class CampaignTableFragment extends Fragment implements
     }
 
 
-    private void loadCampaign(String campaignId, String campaignName) {
-        SharedPrefsHelper.saveCampaign(getContext(), Integer.parseInt(campaignId), campaignName);
+    private void loadCampaign(int campaignId, String campaignName) {
+        SharedPrefsHelper.saveCampaign(getContext(), campaignId, campaignName);
         getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
@@ -234,7 +216,7 @@ public class CampaignTableFragment extends Fragment implements
 
     //TODO menu item invisible
     @Override
-    public void onPrepareOptionsMenu(Menu menu){
+    public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.campaign_settings).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }

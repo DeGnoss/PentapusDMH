@@ -21,20 +21,18 @@ import com.pentapus.pentapusdmh.R;
 
 public class PcEditFragment extends Fragment {
 
-    Button addchar_btn;
-    EditText name_tf, info_tf, init_tf;
-    private String mode, id;
+
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String MODE = "modeUpdate";
+    private static final String CAMPAIGN_ID = "campaignId";
+    private static final String PC_ID = "pcId";
+
+    private boolean modeUpdate;
+    private int pcId;
     private int campaignId;
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    Button addchar_btn;
+    EditText name_tf, info_tf, init_tf;
 
     public PcEditFragment() {
         // Required empty public constructor
@@ -44,16 +42,16 @@ public class PcEditFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param modeUpdate Parameter 1.
+     * @param pcId       Parameter 2.
      * @return A new instance of fragment SessionEditFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static PcEditFragment newInstance(String param1, String param2) {
+    public static PcEditFragment newInstance(boolean modeUpdate, int pcId, int campaignId) {
         PcEditFragment fragment = new PcEditFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putBoolean(MODE, modeUpdate);
+        args.putInt(PC_ID, pcId);
+        args.putInt(CAMPAIGN_ID, campaignId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,7 +59,14 @@ public class PcEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
+        if (this.getArguments() != null) {
+            modeUpdate = getArguments().getBoolean(MODE);
+            campaignId = getArguments().getInt(CAMPAIGN_ID);
+            //check whether entry gets updated or added
+            if (modeUpdate) {
+                pcId = getArguments().getInt(PC_ID);
+            }
+        }
     }
 
     @Override
@@ -73,19 +78,14 @@ public class PcEditFragment extends Fragment {
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
         init_tf = (EditText) charEditView.findViewById(R.id.etInit);
 
-        if (this.getArguments() != null) {
-            mode = getArguments().getString("mode");
-            //check wheter entry gets updated or added
-            if (mode.trim().equalsIgnoreCase("update")) {
-                id = getArguments().getString("pcId");
-                loadCharacterInfo(name_tf, info_tf, init_tf, id);
-            }
+        if (modeUpdate) {
+            loadCharacterInfo(name_tf, info_tf, init_tf, pcId);
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doneButton(mode);
+                doneButton(modeUpdate);
             }
         });
         // Inflate the layout for this fragment
@@ -93,7 +93,7 @@ public class PcEditFragment extends Fragment {
 
     }
 
-    private void loadCharacterInfo(EditText name, EditText info, EditText init, String id) {
+    private void loadCharacterInfo(EditText name, EditText info, EditText init, int id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
@@ -113,7 +113,7 @@ public class PcEditFragment extends Fragment {
         }
     }
 
-    public void doneButton(String mode) {
+    public void doneButton(boolean mode) {
         // get values from the input text fields
         String myName = name_tf.getText().toString();
         String myInitiative = init_tf.getText().toString();
@@ -125,18 +125,17 @@ public class PcEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
 
         // insert a record
-        if (mode.trim().equalsIgnoreCase("add")) {
+        if (!mode) {
             getContext();
             getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_PC, values);
         }
         // update a record
         else {
-            id = getArguments().getString("pcId");
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + pcId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
-        Bundle bundle = new Bundle();
-        bundle.putString("type", "pc");
+        // Bundle bundle = new Bundle();
+        //bundle.putString("type", "pc");
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
