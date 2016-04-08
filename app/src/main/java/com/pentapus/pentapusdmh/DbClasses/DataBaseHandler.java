@@ -138,6 +138,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_LEVEL + " INTEGER, " +
                         KEY_PLAYER + " TEXT, " +
                         KEY_HP + " INTEGER, " +
+                        KEY_MAXHP + " INTEGER, " +
                         KEY_AC + " INTEGER, " +
                         KEY_STRENGTH + " INTEGER, " +
                         KEY_DEXTERITY + " INTEGER, " +

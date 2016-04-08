@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.RecyclerItemClickListener;
-import com.pentapus.pentapusdmh.TrackerActivityListener;
 
 /**
  * Created by Koni on 02.04.2016.
@@ -23,7 +22,6 @@ public class StatusFragment extends Fragment {
     private GridLayoutManager gridLayoutManager;
     private boolean[] statuses;
     private int id;
-    TrackerActivityListener mListener;
 
 
     public static StatusFragment newInstance(int id) {
@@ -83,7 +81,6 @@ public class StatusFragment extends Fragment {
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-        mListener = (TrackerActivityListener) context;
     }
 
 

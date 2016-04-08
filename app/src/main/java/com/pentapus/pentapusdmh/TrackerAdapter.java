@@ -50,7 +50,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         characterViewHolder.vName.setText(ci.name);
         characterViewHolder.vInitiative.setText(ci.initiative);
         characterViewHolder.vAc.setText(ci.ac);
-        characterViewHolder.vHp.setText(ci.maxHp);
+        characterViewHolder.vHp.setText(String.valueOf(ci.hp));
         if(!characterList.get(position).dead) {
             if (characterList.get(position).type.equals("npc")) {
                 characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#E0F2F1"));
@@ -201,16 +201,14 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
     }
 
     public void setHp(int id, int hpDiff){
-        if(!(characterList.get(id).type).equals("pc")){
-            characterList.get(id).maxHp = String.valueOf(Integer.parseInt(characterList.get(id).maxHp) - hpDiff);
-            if((Integer.parseInt(characterList.get(id).maxHp)) == 0){
+            characterList.get(id).hp = characterList.get(id).hp - hpDiff;
+            if(characterList.get(id).hp == 0){
                 characterList.get(id).dead = true;
-            } else if((Integer.parseInt(characterList.get(id).maxHp)) < 0){
+            } else if(characterList.get(id).hp < 0){
                 characterList.get(id).dead = true;
-                characterList.get(id).maxHp = "0";
+                characterList.get(id).hp = 0;
             }
             notifyItemChanged(id);
-        }
     }
 
     public void setStatuses(int id, boolean[] statuses){
@@ -231,7 +229,12 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
     }
 
     public int getHp(int pos){
-        return Integer.parseInt(characterList.get(pos).getMaxHp());
+        if(characterList.get(pos).hp!=0){
+            return characterList.get(pos).getHp();
+        }else{
+            return 0;
+        }
+
     }
 
     public int[] getAbilities(int pos){

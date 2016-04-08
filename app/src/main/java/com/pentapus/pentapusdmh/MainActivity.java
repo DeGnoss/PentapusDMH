@@ -27,9 +27,7 @@ import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
-public class MainActivity extends AppCompatActivity implements TrackerActivityListener{
-
-    private TrackerActivityListener mListener;
+public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
                 String[] projection;
                 Cursor pasteCursor;
                 int campaignId;
+                Log.d("MainActivity", uriMimeType);
                 switch(uriMimeType){
                     case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.npc":
                         int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
@@ -124,7 +123,14 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
                                 DataBaseHandler.KEY_INFO,
                                 DataBaseHandler.KEY_INITIATIVEBONUS,
                                 DataBaseHandler.KEY_MAXHP,
-                                DataBaseHandler.KEY_AC};
+                                DataBaseHandler.KEY_AC,
+                                DataBaseHandler.KEY_STRENGTH,
+                                DataBaseHandler.KEY_DEXTERITY,
+                                DataBaseHandler.KEY_CONSTITUTION,
+                                DataBaseHandler.KEY_INTELLIGENCE,
+                                DataBaseHandler.KEY_WISDOM,
+                                DataBaseHandler.KEY_CHARISMA
+                        };
                         pasteCursor = cr.query(pasteUri, projection, null, null, null);
                         if(pasteCursor != null){
                             pasteCursor.moveToFirst();
@@ -134,6 +140,12 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
                             values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
                             values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
                             values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                            values.put(DataBaseHandler.KEY_STRENGTH, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
+                            values.put(DataBaseHandler.KEY_DEXTERITY, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
+                            values.put(DataBaseHandler.KEY_CONSTITUTION, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
+                            values.put(DataBaseHandler.KEY_INTELLIGENCE, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
+                            values.put(DataBaseHandler.KEY_WISDOM, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
+                            values.put(DataBaseHandler.KEY_CHARISMA, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
                             values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
                             cr.insert(DbContentProvider.CONTENT_URI_NPC, values);
                             pasteCursor.close();
@@ -178,17 +190,26 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
                         projection = new String[]{
                                 DataBaseHandler.KEY_ROWID,
                                 DataBaseHandler.KEY_NAME,
-                                DataBaseHandler.KEY_INFO};
+                                DataBaseHandler.KEY_INFO,
+                                DataBaseHandler.KEY_INITIATIVEBONUS,
+                                DataBaseHandler.KEY_MAXHP,
+                                DataBaseHandler.KEY_AC
+                        };
                         pasteCursor = cr.query(pasteUri, projection, null, null, null);
                         if(pasteCursor != null){
                             pasteCursor.moveToFirst();
                             ContentValues values = new ContentValues();
                             values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
                             values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                            values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+                            values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+                            values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
                             values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
                             cr.insert(DbContentProvider.CONTENT_URI_PC, values);
                             pasteCursor.close();
                         }
+                        break;
+                    default:
                         break;
                 }
 
@@ -216,12 +237,5 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
                 .replace(R.id.FrameTop, fragment, "FT_PC")
                 .addToBackStack("FT_PC")
                 .commit();
-    }
-
-
-    @Override
-    public Fragment getTrackerFragment() {
-        Fragment test = ((TrackerFragment)getSupportFragmentManager().findFragmentByTag("F_TRACKER"));
-        return ((TrackerFragment)getSupportFragmentManager().findFragmentByTag("F_TRACKER"));
     }
 }

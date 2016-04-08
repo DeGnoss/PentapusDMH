@@ -67,8 +67,6 @@ public class TrackerFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArrayList<String> names = new ArrayList<String>();
-        ArrayList<Integer> initiative = new ArrayList<Integer>();
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         encounterId = SharedPrefsHelper.loadEncounterId(getContext());
     }
@@ -82,14 +80,12 @@ public class TrackerFragment extends Fragment implements
         CustomRecyclerLayoutManager llm = new CustomRecyclerLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
-        // insert a record
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
         chars = new TrackerAdapter(getContext());
         mRecyclerView.setAdapter(chars);
-        //Log.d("Name:", names.get(0));
 
         Button next = (Button) tableView.findViewById(R.id.bNext);
         next.setOnClickListener(new View.OnClickListener() {
@@ -116,11 +112,8 @@ public class TrackerFragment extends Fragment implements
 
     public void onClick(int id) {
         TrackerInfoCard mSaveTrackerInfoCard = chars.getItem(id);
-        //showDialog(id);
         showViewPager(id);
         chars.setSelected(id);
-        //Log.d("Current Hp: ", String.valueOf(characterList.get(id).maxHp));
-        //characterList.get(id).maxHp = String.valueOf(10);
     }
 
 
@@ -129,9 +122,6 @@ public class TrackerFragment extends Fragment implements
         ViewPagerDialogFragment newFragment = new ViewPagerDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ID, id);
-        //bundle.putBoolean("blinded", chars.getStatus(id));
-        bundle.putBooleanArray(STATUSES, chars.getStatuses(id));
-        bundle.putInt(HP, chars.getHp(id));
         bundle.putIntArray(ABILITIES, chars.getAbilities(id));
         newFragment.setArguments(bundle);
         newFragment.setTargetFragment(this, 0);
@@ -143,16 +133,6 @@ public class TrackerFragment extends Fragment implements
         transaction.add(android.R.id.content, newFragment, "F_DIALOG_PAGER")
                 .addToBackStack(null).commit();
     }
-
-    /*
-    public void onDialogButtonClick(int id, int hpChange) {
-        chars.setHp(id, hpChange);
-    }
-
-    public TrackerInfoCard getmSaveTrackerInfoCard() {
-        return mSaveTrackerInfoCard;
-    }
-    */
 
     public TrackerAdapter getChars() {
         return chars;
@@ -199,6 +179,8 @@ public class TrackerFragment extends Fragment implements
                     DataBaseHandler.KEY_ROWID,
                     DataBaseHandler.KEY_NAME,
                     DataBaseHandler.KEY_INITIATIVEBONUS,
+                    DataBaseHandler.KEY_AC,
+                    DataBaseHandler.KEY_MAXHP
             };
             String[] selectionArgs = new String[]{String.valueOf(campaignId)};
             String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
@@ -232,6 +214,7 @@ public class TrackerFragment extends Fragment implements
                     ci.initiativeMod = String.valueOf(initiativeMod);
                     ci.ac = String.valueOf(ac);
                     ci.maxHp = String.valueOf(maxHp);
+                    ci.hp = maxHp;
                     ci.type = "npc";
                     ci.dead = false;
                     ci.strength = strength;
@@ -249,11 +232,16 @@ public class TrackerFragment extends Fragment implements
                     String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
                     int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int initiativeMod = initiative;
+                    int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
+                    int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
                     ci.initiative = String.valueOf(initiative);
                     ci.initiativeMod = String.valueOf(initiativeMod);
+                    ci.ac = String.valueOf(ac);
+                    ci.maxHp = String.valueOf(maxHp);
+                    ci.hp = maxHp;
                     ci.type = "pc";
                     ci.dead = false;
                     chars.addListItem(ci);

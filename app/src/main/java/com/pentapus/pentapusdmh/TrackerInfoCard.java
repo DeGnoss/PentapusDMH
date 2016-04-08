@@ -10,13 +10,22 @@ public class TrackerInfoCard {
     public String maxHp;
     public String ac;
     public String type;
-    public int strength, dexterity, constitution, intelligence, wisdom, charisma;
+    public int hp;
+    public int strength = 0, dexterity = 0, constitution = 0, intelligence = 0, wisdom = 0, charisma = 0;
     public boolean[] statuses = new boolean[15];
     public boolean dead;
     public boolean selected;
     protected static final String NAME_PREFIX = "Name_";
     protected static final String INITIATIVE_PREFIX = "Initiative_";
 
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
 
     public int getStrength() {
         return strength;
