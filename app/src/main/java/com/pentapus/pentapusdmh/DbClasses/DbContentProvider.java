@@ -32,6 +32,7 @@ public class DbContentProvider extends ContentProvider{
     private static final int SINGLE_NPC = 8;
     private static final int ALL_PCS = 9;
     private static final int SINGLE_PC = 10;
+    private static final int COPY = 11;
 
     // authority is the symbolic name of your provider
     // To avoid conflicts with other providers, you should use
@@ -49,6 +50,8 @@ public class DbContentProvider extends ContentProvider{
             Uri.parse("content://" + AUTHORITY + "/npc");
     public static final Uri CONTENT_URI_PC =
             Uri.parse("content://" + AUTHORITY + "/pc");
+    public static final Uri CONTENT_URI_COPY =
+            Uri.parse("content://" + AUTHORITY + "/copy");
 
     // a content URI pattern matches content URIs using wildcard characters:
     // *: Matches a string of any valid characters of any length.
@@ -66,6 +69,7 @@ public class DbContentProvider extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, "npc/#", SINGLE_NPC);
         uriMatcher.addURI(AUTHORITY, "pc", ALL_PCS);
         uriMatcher.addURI(AUTHORITY, "pc/#", SINGLE_PC);
+        uriMatcher.addURI(AUTHORITY, "copy/#", COPY);
     }
 
 
@@ -90,6 +94,8 @@ public class DbContentProvider extends ContentProvider{
                 return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.npc";
             case SINGLE_PC:
                 return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.pc";
+            case COPY:
+                return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.copy";
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }

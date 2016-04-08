@@ -2,6 +2,8 @@ package com.pentapus.pentapusdmh.Fragments;
 
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -146,7 +148,13 @@ public class PcTableFragment extends Fragment implements
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     dialog.dismiss();
-                                } else {
+                                }else if (item == 2) {
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
+                                    ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "PC", uri));
+                                    dialog.dismiss();
+                                }
+                                else {
                                     dialog.dismiss();
                                 }
                             }
@@ -174,6 +182,10 @@ public class PcTableFragment extends Fragment implements
                 .replace(R.id.FrameTop, fragment, "FE_PC")
                 .addToBackStack("FE_PC")
                 .commit();
+    }
+
+    public int getCampaignId() {
+        return campaignId;
     }
 
     @Override

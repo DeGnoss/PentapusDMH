@@ -29,7 +29,7 @@ public class NPCEditFragment extends Fragment {
     private int encounterId;
 
     Button addchar_btn;
-    EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf;
+    EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar;
 
     public NPCEditFragment() {
         // Required empty public constructor
@@ -77,10 +77,16 @@ public class NPCEditFragment extends Fragment {
         init_tf = (EditText) charEditView.findViewById(R.id.etInit);
         maxHp_tf = (EditText) charEditView.findViewById(R.id.etHpMax);
         ac_tf = (EditText) charEditView.findViewById(R.id.etAc);
+        etStrength = (EditText) charEditView.findViewById(R.id.etStrength);
+        etDex = (EditText) charEditView.findViewById(R.id.etDex);
+        etConst = (EditText) charEditView.findViewById(R.id.etConst);
+        etInt  = (EditText) charEditView.findViewById(R.id.etInt);
+        etWis = (EditText) charEditView.findViewById(R.id.etWis);
+        etChar = (EditText) charEditView.findViewById(R.id.etChar);
 
 
         if (modeUpdate) {
-            loadNPCInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, npcId);
+            loadNPCInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar, npcId);
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
@@ -93,14 +99,20 @@ public class NPCEditFragment extends Fragment {
         return charEditView;
     }
 
-    private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, int id) {
+    private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, EditText strength, EditText dex, EditText constit, EditText intelligence, EditText wis, EditText charisma, int id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO,
                 DataBaseHandler.KEY_INITIATIVEBONUS,
                 DataBaseHandler.KEY_MAXHP,
-                DataBaseHandler.KEY_AC};
+                DataBaseHandler.KEY_AC,
+                DataBaseHandler.KEY_STRENGTH,
+                DataBaseHandler.KEY_DEXTERITY,
+                DataBaseHandler.KEY_CONSTITUTION,
+                DataBaseHandler.KEY_INTELLIGENCE,
+                DataBaseHandler.KEY_WISDOM,
+                DataBaseHandler.KEY_CHARISMA};
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
@@ -111,11 +123,25 @@ public class NPCEditFragment extends Fragment {
             String myInitiative = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
             String myMaxHp = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
             String myAc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
+            String myStrength = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH));
+            String myDexterity = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY));
+            String myConstitution = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION));
+            String myIntelligence = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE));
+            String myWisdom = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
+            String myCharisma = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
+
             name.setText(myName, TextView.BufferType.EDITABLE);
             info.setText(myInfo, TextView.BufferType.EDITABLE);
             init.setText(myInitiative, TextView.BufferType.EDITABLE);
             maxHp.setText(myMaxHp, TextView.BufferType.EDITABLE);
             ac.setText(myAc, TextView.BufferType.EDITABLE);
+            strength.setText(myStrength, TextView.BufferType.EDITABLE);
+            dex.setText(myDexterity, TextView.BufferType.EDITABLE);
+            constit.setText(myConstitution, TextView.BufferType.EDITABLE);
+            intelligence.setText(myIntelligence, TextView.BufferType.EDITABLE);
+            wis.setText(myWisdom, TextView.BufferType.EDITABLE);
+            charisma.setText(myCharisma, TextView.BufferType.EDITABLE);
+
         }
     }
 
@@ -126,12 +152,24 @@ public class NPCEditFragment extends Fragment {
         String myInitiative = init_tf.getText().toString();
         String myMaxHp = maxHp_tf.getText().toString();
         String myAc = ac_tf.getText().toString();
+        String myStrength = etStrength.getText().toString();
+        String myDexterity = etDex.getText().toString();
+        String myConstitution = etConst.getText().toString();
+        String myIntelligence = etInt.getText().toString();
+        String myWisdom = etWis.getText().toString();
+        String myCharisma = etChar.getText().toString();
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
         values.put(DataBaseHandler.KEY_INFO, myInfo);
         values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
         values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
         values.put(DataBaseHandler.KEY_AC, myAc);
+        values.put(DataBaseHandler.KEY_STRENGTH, myStrength);
+        values.put(DataBaseHandler.KEY_DEXTERITY, myDexterity);
+        values.put(DataBaseHandler.KEY_CONSTITUTION, myConstitution);
+        values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
+        values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
+        values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
 
         // insert a record

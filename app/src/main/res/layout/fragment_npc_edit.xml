@@ -48,6 +48,60 @@
         android:inputType="number"
         android:id="@+id/etAc" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etAc"
+        android:hint="Strength ST mod"
+        android:selectAllOnFocus="true"
+        android:inputType="number"
+        android:id="@+id/etStrength" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etStrength"
+        android:hint="Dexterity ST mod"
+        android:selectAllOnFocus="true"
+        android:inputType="number"
+        android:id="@+id/etDex" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etDex"
+        android:hint="Constitution ST mod"
+        android:selectAllOnFocus="true"
+        android:inputType="number"
+        android:id="@+id/etConst" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etConst"
+        android:hint="Intelligence ST mod"
+        android:selectAllOnFocus="true"
+        android:inputType="number"
+        android:id="@+id/etInt" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etInt"
+        android:hint="Wisdom ST mod"
+        android:selectAllOnFocus="true"
+        android:inputType="number"
+        android:id="@+id/etWis" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etWis"
+        android:hint="Charisma ST mod"
+        android:selectAllOnFocus="true"
+        android:inputType="number"
+        android:id="@+id/etChar" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

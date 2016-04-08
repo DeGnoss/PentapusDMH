@@ -44,12 +44,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     private static final String KEY_LEVEL = "level";
     private static final String KEY_PLAYER = "player";
     //Stats
-    private static final String KEY_STRENGTH = "strength";
-    private static final String KEY_DEXTERITY = "dexterity";
-    private static final String KEY_CONSTITUTION = "constitution";
-    private static final String KEY_INTELLIGENCE = "intelligence";
-    private static final String KEY_WISDOM = "wisdom";
-    private static final String KEY_CHARISMA = "charisma";
+    public static final String KEY_STRENGTH = "strength";
+    public static final String KEY_DEXTERITY = "dexterity";
+    public static final String KEY_CONSTITUTION = "constitution";
+    public static final String KEY_INTELLIGENCE = "intelligence";
+    public static final String KEY_WISDOM = "wisdom";
+    public static final String KEY_CHARISMA = "charisma";
     //Status effects
     private static final String KEY_BLINDED = "blinded";
     private static final String KEY_CHARMED = "charmed";
@@ -118,6 +118,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_AC + " INTEGER, " +
                         KEY_CR + " INTEGER, " +
                         KEY_XP + " DOUBLE, " +
+                        KEY_STRENGTH + " INTEGER, " +
+                        KEY_DEXTERITY + " INTEGER, " +
+                        KEY_CONSTITUTION + " INTEGER, " +
+                        KEY_INTELLIGENCE + " INTEGER, " +
+                        KEY_WISDOM + " INTEGER, " +
+                        KEY_CHARISMA + " INTEGER, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";

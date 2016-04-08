@@ -1,15 +1,27 @@
 package com.pentapus.pentapusdmh;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
+import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.CampaignTableFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterTableFragment;
 import com.pentapus.pentapusdmh.Fragments.PcTableFragment;
 import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
@@ -82,9 +94,106 @@ public class MainActivity extends AppCompatActivity implements TrackerActivityLi
             bundle.putInt("campaignId", SharedPrefsHelper.loadCampaignId(this));
             bundle.putString("campaignName", SharedPrefsHelper.loadCampaignName(this));
             loadPCs(bundle);
+        }else if(id == R.id.menu_paste){
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+            Uri pasteUri = itemPaste.getUri();
+            pasteEntry(pasteUri);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void pasteEntry(Uri pasteUri) {
+        // If the clipboard contains a URI reference
+        if (pasteUri != null) {
+            Log.d("Paste", pasteUri.toString());
+            // Is this a content URI?
+            ContentResolver cr = getContentResolver();
+            String uriMimeType = cr.getType(pasteUri);
+            if(uriMimeType != null){
+                String[] projection;
+                Cursor pasteCursor;
+                int campaignId;
+                switch(uriMimeType){
+                    case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.npc":
+                        int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
+                        projection = new String[]{
+                                DataBaseHandler.KEY_ROWID,
+                                DataBaseHandler.KEY_NAME,
+                                DataBaseHandler.KEY_INFO,
+                                DataBaseHandler.KEY_INITIATIVEBONUS,
+                                DataBaseHandler.KEY_MAXHP,
+                                DataBaseHandler.KEY_AC};
+                        pasteCursor = cr.query(pasteUri, projection, null, null, null);
+                        if(pasteCursor != null){
+                            pasteCursor.moveToFirst();
+                            ContentValues values = new ContentValues();
+                            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                            values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+                            values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+                            values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                            values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
+                            cr.insert(DbContentProvider.CONTENT_URI_NPC, values);
+                            pasteCursor.close();
+                        }
+                        break;
+                    case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.encounter":
+                        int sessionId = ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).getSessionId();
+                        projection = new String[]{
+                                DataBaseHandler.KEY_ROWID,
+                                DataBaseHandler.KEY_NAME,
+                                DataBaseHandler.KEY_INFO};
+                        pasteCursor = cr.query(pasteUri, projection, null, null, null);
+                        if(pasteCursor != null){
+                            pasteCursor.moveToFirst();
+                            ContentValues values = new ContentValues();
+                            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                            values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
+                            cr.insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
+                            pasteCursor.close();
+                        }
+                        break;
+                    case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.session":
+                        campaignId = ((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).getCampaignId();
+                        projection = new String[]{
+                                DataBaseHandler.KEY_ROWID,
+                                DataBaseHandler.KEY_NAME,
+                                DataBaseHandler.KEY_INFO};
+                        pasteCursor = cr.query(pasteUri, projection, null, null, null);
+                        if(pasteCursor != null){
+                            pasteCursor.moveToFirst();
+                            ContentValues values = new ContentValues();
+                            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                            values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+                            cr.insert(DbContentProvider.CONTENT_URI_SESSION, values);
+                            pasteCursor.close();
+                        }
+                        break;
+                    case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.pc":
+                        campaignId = ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).getCampaignId();
+                        projection = new String[]{
+                                DataBaseHandler.KEY_ROWID,
+                                DataBaseHandler.KEY_NAME,
+                                DataBaseHandler.KEY_INFO};
+                        pasteCursor = cr.query(pasteUri, projection, null, null, null);
+                        if(pasteCursor != null){
+                            pasteCursor.moveToFirst();
+                            ContentValues values = new ContentValues();
+                            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                            values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+                            cr.insert(DbContentProvider.CONTENT_URI_PC, values);
+                            pasteCursor.close();
+                        }
+                        break;
+                }
+
+            }
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@
 
         <provider android:name=".DbClasses.DbContentProvider" android:exported="true"
             android:readPermission="true" android:writePermission="true"
+            android:grantUriPermissions="true"
             android:authorities="com.pentapus.pentapusdmh.contentprovider" />
 
     </application>

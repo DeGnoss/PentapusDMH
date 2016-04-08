@@ -2,6 +2,8 @@ package com.pentapus.pentapusdmh.Fragments;
 
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -44,7 +46,7 @@ public class EncounterTableFragment extends Fragment implements
 
     private SimpleCursorAdapter dataAdapterEncounters;
     private FloatingActionButton fab;
-    final CharSequence[] items = {"Edit", "Delete"};
+    final CharSequence[] items = {"Edit", "Delete", "Copy"};
 
     public EncounterTableFragment() {
         // Required empty public constructor
@@ -164,7 +166,12 @@ public class EncounterTableFragment extends Fragment implements
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     dialog.dismiss();
-                                } else {
+                                }else if (item == 2) {
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
+                                    ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "ENCOUNTER", uri));
+                                    dialog.dismiss();
+                                }else {
                                     dialog.dismiss();
                                 }
                             }
@@ -205,6 +212,9 @@ public class EncounterTableFragment extends Fragment implements
                 .commit();
     }
 
+    public int getSessionId() {
+        return sessionId;
+    }
 
     @Override
     public void onAttach(Context context) {

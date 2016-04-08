@@ -43,6 +43,7 @@ public class TrackerFragment extends Fragment implements
     private static final String ID = "id";
     private static final String STATUSES = "statuses";
     private static final String HP = "hp";
+    private static final String ABILITIES = "abilities";
 
 
     private TrackerAdapter chars;
@@ -131,6 +132,7 @@ public class TrackerFragment extends Fragment implements
         //bundle.putBoolean("blinded", chars.getStatus(id));
         bundle.putBooleanArray(STATUSES, chars.getStatuses(id));
         bundle.putInt(HP, chars.getHp(id));
+        bundle.putIntArray(ABILITIES, chars.getAbilities(id));
         newFragment.setArguments(bundle);
         newFragment.setTargetFragment(this, 0);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -180,7 +182,13 @@ public class TrackerFragment extends Fragment implements
                     DataBaseHandler.KEY_NAME,
                     DataBaseHandler.KEY_INITIATIVEBONUS,
                     DataBaseHandler.KEY_AC,
-                    DataBaseHandler.KEY_MAXHP
+                    DataBaseHandler.KEY_MAXHP,
+                    DataBaseHandler.KEY_STRENGTH,
+                    DataBaseHandler.KEY_DEXTERITY,
+                    DataBaseHandler.KEY_CONSTITUTION,
+                    DataBaseHandler.KEY_INTELLIGENCE,
+                    DataBaseHandler.KEY_WISDOM,
+                    DataBaseHandler.KEY_CHARISMA
             };
             String[] selectionArgs = new String[]{String.valueOf(encounterId)};
             String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
@@ -210,6 +218,13 @@ public class TrackerFragment extends Fragment implements
                     int initiativeMod = initiative;
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
+                    int strength = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_STRENGTH));
+                    int dexterity = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_DEXTERITY));
+                    int constitution = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_CONSTITUTION));
+                    int intelligence = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INTELLIGENCE));
+                    int wisdom = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_WISDOM));
+                    int charisma = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_CHARISMA));
+
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
@@ -219,6 +234,12 @@ public class TrackerFragment extends Fragment implements
                     ci.maxHp = String.valueOf(maxHp);
                     ci.type = "npc";
                     ci.dead = false;
+                    ci.strength = strength;
+                    ci.dexterity = dexterity;
+                    ci.constitution = constitution;
+                    ci.intelligence = intelligence;
+                    ci.wisdom = wisdom;
+                    ci.charisma = charisma;
                     chars.addListItem(ci);
                 }
                 break;

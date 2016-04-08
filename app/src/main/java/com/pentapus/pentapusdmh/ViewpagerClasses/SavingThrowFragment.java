@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.R;
 
@@ -22,8 +23,7 @@ public class SavingThrowFragment extends Fragment {
     private StatusAdapter statusAdapter;
     private GridLayoutManager gridLayoutManager;
     private int id;
-    private boolean blinded;
-
+    private int[] abilities;
 
     public static SavingThrowFragment newInstance(int page) {
         SavingThrowFragment fragment = new SavingThrowFragment();
@@ -36,6 +36,8 @@ public class SavingThrowFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        abilities = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getAbilities(id);
+
     }
 
 
@@ -67,8 +69,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll= DiceHelper.d20();
-                strengthMod.setText("Modifier: 0  Roll: "+roll);
-                tvStrengthRes.setText(String.valueOf(roll));
+                strengthMod.setText("Modifier: " + abilities[0] + "   Roll: "+roll);
+                tvStrengthRes.setText(String.valueOf(roll+abilities[0]));
             }
         });
         Button bRollDex = (Button) view.findViewById(R.id.bRollDex);
@@ -76,8 +78,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                dexMod.setText("Modifier: 0  Roll: "+roll);
-                tvDexRes.setText(String.valueOf(roll));
+                dexMod.setText("Modifier: " + abilities[1] + "   Roll: "+roll);
+                tvDexRes.setText(String.valueOf(roll+abilities[1]));
             }
         });
         Button bRollConst = (Button) view.findViewById(R.id.bRollConst);
@@ -85,8 +87,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                constMod.setText("Modifier: 0  Roll: "+roll);
-                tvConstRes.setText(String.valueOf(roll));
+                constMod.setText("Modifier: " + abilities[2] + "   Roll: "+roll);
+                tvConstRes.setText(String.valueOf(roll+abilities[2]));
             }
         });
         Button bRollWisdom = (Button) view.findViewById(R.id.bRollInt);
@@ -94,8 +96,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                intMod.setText("Modifier: 0  Roll: "+roll);
-                tvIntRes.setText(String.valueOf(roll));
+                intMod.setText("Modifier: " + abilities[3] + "   Roll: "+roll);
+                tvIntRes.setText(String.valueOf(roll+abilities[3]));
             }
         });
         Button bRollInt = (Button) view.findViewById(R.id.bRollWisdom);
@@ -103,8 +105,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                wisMod.setText("Modifier: 0  Roll: "+roll);
-                tvWisRes.setText(String.valueOf(roll));
+                wisMod.setText("Modifier: " + abilities[4] + "   Roll: "+roll);
+                tvWisRes.setText(String.valueOf(roll+abilities[4]));
             }
         });
         Button bRollCharisma = (Button) view.findViewById(R.id.bRollCharisma);
@@ -112,8 +114,8 @@ public class SavingThrowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int roll=DiceHelper.d20();
-                charMod.setText("Modifier: 0  Roll: "+roll);
-                tvCharRes.setText(String.valueOf(roll));
+                charMod.setText("Modifier: " + abilities[5] + "   Roll: "+roll);
+                tvCharRes.setText(String.valueOf(roll+abilities[5]));
             }
         });
 

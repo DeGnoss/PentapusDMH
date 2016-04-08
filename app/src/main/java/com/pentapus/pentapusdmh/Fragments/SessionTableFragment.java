@@ -2,6 +2,8 @@ package com.pentapus.pentapusdmh.Fragments;
 
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -37,7 +39,7 @@ public class SessionTableFragment extends Fragment implements
     private static final String SESSION_NAME = "sessionName";
 
 
-    final CharSequence[] items = {"Edit", "Delete"};
+    final CharSequence[] items = {"Edit", "Delete", "Copy"};
     FloatingActionButton fab;
     private SimpleCursorAdapter dataAdapterSessions;
     private int campaignId;
@@ -165,7 +167,13 @@ public class SessionTableFragment extends Fragment implements
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     dialog.dismiss();
-                                } else {
+                                }else if (item == 2) {
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
+                                    ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "SESSION", uri));
+                                    dialog.dismiss();
+                                }
+                                else {
                                     dialog.dismiss();
                                 }
                             }
@@ -207,6 +215,10 @@ public class SessionTableFragment extends Fragment implements
                 .replace(R.id.FrameTop, fragment, "FT_ENCOUNTER")
                 .addToBackStack("FT_ENCOUNTER")
                 .commit();
+    }
+
+    public int getCampaignId() {
+        return campaignId;
     }
 
     @Override

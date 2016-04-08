@@ -234,6 +234,17 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         return Integer.parseInt(characterList.get(pos).getMaxHp());
     }
 
+    public int[] getAbilities(int pos){
+        int[] abilities = new int[6];
+        abilities[0] = characterList.get(pos).getStrength();
+        abilities[1] = characterList.get(pos).getDexterity();
+        abilities[2] = characterList.get(pos).getConstitution();
+        abilities[3] = characterList.get(pos).getIntelligence();
+        abilities[4] = characterList.get(pos).getWisdom();
+        abilities[5] = characterList.get(pos).getCharisma();
+        return abilities;
+    }
+
     public boolean[] getStatuses(int pos){
         return characterList.get(pos).getStatuses();
     }

@@ -10,6 +10,7 @@ public class TrackerInfoCard {
     public String maxHp;
     public String ac;
     public String type;
+    public int strength, dexterity, constitution, intelligence, wisdom, charisma;
     public boolean[] statuses = new boolean[15];
     public boolean dead;
     public boolean selected;
@@ -17,7 +18,29 @@ public class TrackerInfoCard {
     protected static final String INITIATIVE_PREFIX = "Initiative_";
 
 
+    public int getStrength() {
+        return strength;
+    }
 
+    public int getDexterity() {
+        return dexterity;
+    }
+
+    public int getConstitution() {
+        return constitution;
+    }
+
+    public int getIntelligence() {
+        return intelligence;
+    }
+
+    public int getWisdom() {
+        return wisdom;
+    }
+
+    public int getCharisma() {
+        return charisma;
+    }
 
     public String getMaxHp() {
         return maxHp;

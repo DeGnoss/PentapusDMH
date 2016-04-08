@@ -2,6 +2,8 @@ package com.pentapus.pentapusdmh.Fragments;
 
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,7 +50,7 @@ public class EncounterFragment extends Fragment implements
     private static int campaignId;
     private MergeAdapter mergeAdapter;
     private FloatingActionButton fab;
-    final CharSequence[] items = {"Edit", "Delete"};
+    final CharSequence[] items = {"Edit", "Delete", "Copy"};
 
     public EncounterFragment() {
         // Required empty public constructor
@@ -171,14 +174,26 @@ public class EncounterFragment extends Fragment implements
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     dialog.dismiss();
-                                } else {
-                                    dialog.dismiss();
+                                }else if (item == 2) {
+                                        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
+                                        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                        clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "NPC", uri));
+                                        dialog.dismiss();
+                                    } else
+
+                                    {
+                                        dialog.dismiss();
+                                    }
                                 }
-                            }
-                        }).show();
-                return true;
             }
-        });
+
+            ).
+
+            show();
+
+            return true;
+        }
+    });
     }
 
     private void addNPC(Bundle bundle) {
@@ -201,12 +216,27 @@ public class EncounterFragment extends Fragment implements
                 .commit();
     }
 
-
+    public int getEncounterId() {
+        return encounterId;
+    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu){
         menu.findItem(R.id.play_mode).setVisible(true);
         super.onPrepareOptionsMenu(menu);
+        ClipboardManager clipboard = (ClipboardManager)
+                getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+
+        MenuItem mPasteItem = menu.findItem(R.id.menu_paste);
+
+        // If the clipboard contains an item, enables the Paste option on the menu.
+        if (clipboard.hasPrimaryClip()) {
+            mPasteItem.setEnabled(true);
+        } else {
+            // If the clipboard is empty, disables the menu's Paste option.
+            mPasteItem.setEnabled(false);
+        }
     }
 
     @Override
