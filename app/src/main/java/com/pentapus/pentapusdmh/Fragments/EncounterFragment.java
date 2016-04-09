@@ -232,10 +232,10 @@ public class EncounterFragment extends Fragment implements
 
         // If the clipboard contains an item, enables the Paste option on the menu.
         if (clipboard.hasPrimaryClip()) {
-            mPasteItem.setEnabled(true);
+            mPasteItem.setVisible(true);
         } else {
             // If the clipboard is empty, disables the menu's Paste option.
-            mPasteItem.setEnabled(false);
+            mPasteItem.setVisible(false);
         }
     }
 
