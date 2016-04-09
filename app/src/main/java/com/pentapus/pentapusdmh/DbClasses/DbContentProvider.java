@@ -364,7 +364,6 @@ public class DbContentProvider extends ContentProvider{
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
-
         }
         return updateCount;
     }
