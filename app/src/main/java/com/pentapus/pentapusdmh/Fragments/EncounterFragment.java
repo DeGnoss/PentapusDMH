@@ -257,6 +257,7 @@ public class EncounterFragment extends Fragment implements
                 DataBaseHandler.KEY_INFO
         };
         if (id == 0) {
+
             String[] selectionArgs = new String[]{String.valueOf(encounterId)};
             String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
             return new CursorLoader(this.getContext(),

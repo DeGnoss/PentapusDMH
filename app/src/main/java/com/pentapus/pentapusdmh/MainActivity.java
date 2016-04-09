@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity{
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
             pasteEntry(pasteUri);
+
         }
 
         return super.onOptionsItemSelected(item);
