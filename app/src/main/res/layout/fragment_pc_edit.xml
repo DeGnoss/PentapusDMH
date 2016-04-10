@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etHpMax"
         android:hint="@string/ac"
+        android:layout_marginBottom="15dp"
         android:selectAllOnFocus="true"
         android:inputType="number"
         android:id="@+id/etAc" />
