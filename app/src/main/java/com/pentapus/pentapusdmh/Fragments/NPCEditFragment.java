@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
@@ -50,6 +51,8 @@ public class NPCEditFragment extends Fragment {
     private static final String ENCOUNTER_ID = "encounterId";
 
     private static int RESULT_LOAD_IMG = 1;
+
+    private Uri myFile;
 
     private boolean modeUpdate;
     private int npcId;
@@ -137,6 +140,7 @@ public class NPCEditFragment extends Fragment {
                 // Start the Intent
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMG); */
                 ivAvatar.setImageURI(null);
+                ivAvatar.setImageResource(R.drawable.knight);
                 Glide.clear(ivAvatar);
                 Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"));
             }
@@ -159,7 +163,8 @@ public class NPCEditFragment extends Fragment {
                 DataBaseHandler.KEY_CONSTITUTION,
                 DataBaseHandler.KEY_INTELLIGENCE,
                 DataBaseHandler.KEY_WISDOM,
-                DataBaseHandler.KEY_CHARISMA};
+                DataBaseHandler.KEY_CHARISMA,
+                DataBaseHandler.KEY_ICON};
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
@@ -176,6 +181,7 @@ public class NPCEditFragment extends Fragment {
             String myIntelligence = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE));
             String myWisdom = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
             String myCharisma = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
+            myFile = Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
 
             name.setText(myName, TextView.BufferType.EDITABLE);
             info.setText(myInfo, TextView.BufferType.EDITABLE);
@@ -188,6 +194,7 @@ public class NPCEditFragment extends Fragment {
             intelligence.setText(myIntelligence, TextView.BufferType.EDITABLE);
             wis.setText(myWisdom, TextView.BufferType.EDITABLE);
             charisma.setText(myCharisma, TextView.BufferType.EDITABLE);
+            ivAvatar.setImageURI(myFile);
 
         }
     }
@@ -217,6 +224,7 @@ public class NPCEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
         values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
         values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
+        values.put(DataBaseHandler.KEY_ICON, myFile.toString());
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
 
         // insert a record
@@ -263,17 +271,18 @@ public class NPCEditFragment extends Fragment {
             Glide.with(getContext())
                     .load(Crop.getOutput(result))
                     .asBitmap()
+                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                     .override(px, px)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             ContextWrapper cw = new ContextWrapper(getContext().getApplicationContext());
                             // path to /data/data/yourapp/app_data/imageDir
-                            File directory = cw.getDir("iconDir", Context.MODE_WORLD_READABLE);
+                            File directory = cw.getDir("iconDir", Context.MODE_PRIVATE);
                             // Create imageDir
                             UUID uuid = UUID.randomUUID();
                             String randomUUIDString = uuid.toString();
-                            File mypath = new File(directory, randomUUIDString +".jpg");
+                            File mypath = new File(directory, randomUUIDString);
 
                             FileOutputStream fos = null;
                             try {
@@ -291,6 +300,7 @@ public class NPCEditFragment extends Fragment {
                             }
                             //File directory = new getContext().getFileStreamPath("app_iconDir");
                             Uri uri = Uri.parse(mypath.getPath());
+                            myFile = uri;
                             ivAvatar.setImageURI(uri);
                             ivAvatar.invalidate();
                         }

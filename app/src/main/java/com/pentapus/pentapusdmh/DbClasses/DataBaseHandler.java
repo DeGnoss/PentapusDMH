@@ -27,6 +27,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String KEY_NAME = "name";
     public static final String KEY_INFO = "info";
     public static final String KEY_BELONGSTO = "belongsto";
+    public static final String KEY_ICON = "icon";
+
 
     //Encounter & NPC Table
     private static final String KEY_CR = "cr";
@@ -125,6 +127,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_WISDOM + " INTEGER, " +
                         KEY_CHARISMA + " INTEGER, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
+                        KEY_ICON + " TEXT, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_NPC_TABLE);
