@@ -273,7 +273,7 @@ public class NPCEditFragment extends Fragment {
                     .asBitmap()
                     .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                     .override(px, px)
-                    .into(new SimpleTarget<Bitmap>() {
+                    .into(new SimpleTarget<Bitmap>() { 
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             ContextWrapper cw = new ContextWrapper(getContext().getApplicationContext());
