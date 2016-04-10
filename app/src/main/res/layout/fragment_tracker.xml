@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#55F0F4C3"
     tools:context="com.pentapus.pentapusdmh.Fragments.SessionTableFragment">
 
 
@@ -12,6 +13,7 @@
         android:text="@string/next"
         android:id="@+id/bNext"
         android:theme="@style/AccentButton"
+        android:paddingBottom="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

@@ -32,7 +32,7 @@ public class DbContentProvider extends ContentProvider{
     private static final int SINGLE_NPC = 8;
     private static final int ALL_PCS = 9;
     private static final int SINGLE_PC = 10;
-    private static final int COPY = 11;
+    private static final int COPY_SINGLE_NPC = 11;
 
     // authority is the symbolic name of your provider
     // To avoid conflicts with other providers, you should use
@@ -50,8 +50,19 @@ public class DbContentProvider extends ContentProvider{
             Uri.parse("content://" + AUTHORITY + "/npc");
     public static final Uri CONTENT_URI_PC =
             Uri.parse("content://" + AUTHORITY + "/pc");
-    public static final Uri CONTENT_URI_COPY =
-            Uri.parse("content://" + AUTHORITY + "/copy");
+    public static final Uri CONTENT_URI_COPY_NPC =
+            Uri.parse("content://" + AUTHORITY + "/copy.npc");
+
+    //Mime types
+
+    public static final String CAMPAIGN =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.campaign";
+    public static final String SESSION =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.session";
+    public static final String ENCOUNTER =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.encounter";
+    public static final String NPC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.npc";
+    public static final String PC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.pc";
+    public static final String COPY_NPC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.copy.npc";
+
+
 
     // a content URI pattern matches content URIs using wildcard characters:
     // *: Matches a string of any valid characters of any length.
@@ -69,7 +80,7 @@ public class DbContentProvider extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, "npc/#", SINGLE_NPC);
         uriMatcher.addURI(AUTHORITY, "pc", ALL_PCS);
         uriMatcher.addURI(AUTHORITY, "pc/#", SINGLE_PC);
-        uriMatcher.addURI(AUTHORITY, "copy/#", COPY);
+        uriMatcher.addURI(AUTHORITY, "copy.npc/#", COPY_SINGLE_NPC);
     }
 
 
@@ -85,17 +96,17 @@ public class DbContentProvider extends ContentProvider{
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)) {
             case SINGLE_CAMPAIGN:
-                return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.campaign";
+                return CAMPAIGN;
             case SINGLE_SESSION:
-                return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.session";
+                return SESSION;
             case SINGLE_ENCOUNTER:
-                return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.encounter";
+                return ENCOUNTER;
             case SINGLE_NPC:
-                return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.npc";
+                return NPC;
             case SINGLE_PC:
-                return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.pc";
-            case COPY:
-                return "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.copy";
+                return PC;
+            case COPY_SINGLE_NPC:
+                return COPY_NPC;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -196,6 +207,13 @@ public class DbContentProvider extends ContentProvider{
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
+            case COPY_SINGLE_NPC:
+                KEY_ROWID_ENCOUNTER = db.insert(DataBaseHandler.TABLE_ENCOUNTER, null, values);
+                if(KEY_ROWID_ENCOUNTER > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTER, KEY_ROWID_ENCOUNTER);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
             default:
                 try {
                     throw new SQLException("Failed to insert row into " + uri);
@@ -253,6 +271,11 @@ public class DbContentProvider extends ContentProvider{
                 queryBuilder.setTables(DataBaseHandler.TABLE_PC);
                 id = uri.getPathSegments().get(1);
                 queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
+                break;
+            case COPY_SINGLE_NPC:
+                queryBuilder.setTables(DataBaseHandler.TABLE_NPC);
+                id = uri.getPathSegments().get(1);
+                queryBuilder.appendWhere(DataBaseHandler.KEY_BELONGSTO + "=" + id);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);

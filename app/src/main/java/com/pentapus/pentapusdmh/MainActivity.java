@@ -3,6 +3,7 @@ package com.pentapus.pentapusdmh;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -96,6 +97,10 @@ public class MainActivity extends AppCompatActivity{
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
+            String pasteString = String.valueOf(itemPaste.getText());
+            if(pasteUri == null){
+                pasteUri = Uri.parse(pasteString);
+            }
             pasteEntry(pasteUri);
 
         }
@@ -106,109 +111,22 @@ public class MainActivity extends AppCompatActivity{
     private void pasteEntry(Uri pasteUri) {
         // If the clipboard contains a URI reference
         if (pasteUri != null) {
-            Log.d("Paste", pasteUri.toString());
             // Is this a content URI?
             ContentResolver cr = getContentResolver();
             String uriMimeType = cr.getType(pasteUri);
             if(uriMimeType != null){
-                String[] projection;
-                Cursor pasteCursor;
-                int campaignId;
-                Log.d("MainActivity", uriMimeType);
                 switch(uriMimeType){
-                    case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.npc":
-                        int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
-                        projection = new String[]{
-                                DataBaseHandler.KEY_ROWID,
-                                DataBaseHandler.KEY_NAME,
-                                DataBaseHandler.KEY_INFO,
-                                DataBaseHandler.KEY_INITIATIVEBONUS,
-                                DataBaseHandler.KEY_MAXHP,
-                                DataBaseHandler.KEY_AC,
-                                DataBaseHandler.KEY_STRENGTH,
-                                DataBaseHandler.KEY_DEXTERITY,
-                                DataBaseHandler.KEY_CONSTITUTION,
-                                DataBaseHandler.KEY_INTELLIGENCE,
-                                DataBaseHandler.KEY_WISDOM,
-                                DataBaseHandler.KEY_CHARISMA
-                        };
-                        pasteCursor = cr.query(pasteUri, projection, null, null, null);
-                        if(pasteCursor != null){
-                            pasteCursor.moveToFirst();
-                            ContentValues values = new ContentValues();
-                            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-                            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-                            values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
-                            values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
-                            values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
-                            values.put(DataBaseHandler.KEY_STRENGTH, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
-                            values.put(DataBaseHandler.KEY_DEXTERITY, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
-                            values.put(DataBaseHandler.KEY_CONSTITUTION, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
-                            values.put(DataBaseHandler.KEY_INTELLIGENCE, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
-                            values.put(DataBaseHandler.KEY_WISDOM, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
-                            values.put(DataBaseHandler.KEY_CHARISMA, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
-                            values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
-                            cr.insert(DbContentProvider.CONTENT_URI_NPC, values);
-                            pasteCursor.close();
-                        }
+                    case DbContentProvider.NPC:
+                        pasteNpc(pasteUri);
                         break;
-                    case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.encounter":
-                        int sessionId = ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).getSessionId();
-                        projection = new String[]{
-                                DataBaseHandler.KEY_ROWID,
-                                DataBaseHandler.KEY_NAME,
-                                DataBaseHandler.KEY_INFO};
-                        pasteCursor = cr.query(pasteUri, projection, null, null, null);
-                        if(pasteCursor != null){
-                            pasteCursor.moveToFirst();
-                            ContentValues values = new ContentValues();
-                            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-                            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-                            values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
-                            cr.insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
-                            pasteCursor.close();
-                        }
+                    case DbContentProvider.ENCOUNTER:
+                        pasteEncounter(pasteUri);
                         break;
-                    case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.session":
-                        campaignId = ((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).getCampaignId();
-                        projection = new String[]{
-                                DataBaseHandler.KEY_ROWID,
-                                DataBaseHandler.KEY_NAME,
-                                DataBaseHandler.KEY_INFO};
-                        pasteCursor = cr.query(pasteUri, projection, null, null, null);
-                        if(pasteCursor != null){
-                            pasteCursor.moveToFirst();
-                            ContentValues values = new ContentValues();
-                            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-                            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-                            values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
-                            cr.insert(DbContentProvider.CONTENT_URI_SESSION, values);
-                            pasteCursor.close();
-                        }
+                    case DbContentProvider.SESSION:
+                        pasteSession(pasteUri);
                         break;
-                    case "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.pc":
-                        campaignId = ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).getCampaignId();
-                        projection = new String[]{
-                                DataBaseHandler.KEY_ROWID,
-                                DataBaseHandler.KEY_NAME,
-                                DataBaseHandler.KEY_INFO,
-                                DataBaseHandler.KEY_INITIATIVEBONUS,
-                                DataBaseHandler.KEY_MAXHP,
-                                DataBaseHandler.KEY_AC
-                        };
-                        pasteCursor = cr.query(pasteUri, projection, null, null, null);
-                        if(pasteCursor != null){
-                            pasteCursor.moveToFirst();
-                            ContentValues values = new ContentValues();
-                            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-                            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-                            values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
-                            values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
-                            values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
-                            values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
-                            cr.insert(DbContentProvider.CONTENT_URI_PC, values);
-                            pasteCursor.close();
-                        }
+                    case DbContentProvider.PC:
+                        pastePc(pasteUri);
                         break;
                     default:
                         break;
@@ -217,6 +135,164 @@ public class MainActivity extends AppCompatActivity{
             }
         }
     }
+
+    private void pasteNpc(Uri pasteUri) {
+        ContentResolver cr = getContentResolver();
+        int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
+        String [] projection = new String[]{
+                DataBaseHandler.KEY_ROWID,
+                DataBaseHandler.KEY_NAME,
+                DataBaseHandler.KEY_INFO,
+                DataBaseHandler.KEY_INITIATIVEBONUS,
+                DataBaseHandler.KEY_MAXHP,
+                DataBaseHandler.KEY_AC,
+                DataBaseHandler.KEY_STRENGTH,
+                DataBaseHandler.KEY_DEXTERITY,
+                DataBaseHandler.KEY_CONSTITUTION,
+                DataBaseHandler.KEY_INTELLIGENCE,
+                DataBaseHandler.KEY_WISDOM,
+                DataBaseHandler.KEY_CHARISMA
+        };
+        Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
+        if(pasteCursor != null){
+            pasteCursor.moveToFirst();
+            ContentValues values = new ContentValues();
+            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+            values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+            values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+            values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+            values.put(DataBaseHandler.KEY_STRENGTH, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
+            values.put(DataBaseHandler.KEY_DEXTERITY, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
+            values.put(DataBaseHandler.KEY_CONSTITUTION, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
+            values.put(DataBaseHandler.KEY_INTELLIGENCE, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
+            values.put(DataBaseHandler.KEY_WISDOM, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
+            values.put(DataBaseHandler.KEY_CHARISMA, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
+            values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
+            cr.insert(DbContentProvider.CONTENT_URI_NPC, values);
+            pasteCursor.close();
+        }
+    }
+
+    private void pasteEncounter(Uri pasteUri) {
+        ContentResolver cr = getContentResolver();
+        int sessionId = ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).getSessionId();
+        String [] projection = new String[]{
+                DataBaseHandler.KEY_ROWID,
+                DataBaseHandler.KEY_NAME,
+                DataBaseHandler.KEY_INFO};
+        Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
+        if(pasteCursor != null){
+            pasteCursor.moveToFirst();
+            ContentValues values = new ContentValues();
+            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+            values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
+            Uri newUri = cr.insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
+            int newId= (int) ContentUris.parseId(newUri);
+            int oldId = pasteCursor.getInt(pasteCursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
+            pasteCursor.close();
+            nestedPasteNPC(oldId, newId);
+        }
+    }
+
+    private void nestedPasteNPC(int oldId, int newId) {
+        Uri pasteUri = DbContentProvider.CONTENT_URI_NPC;
+        ContentResolver cr = getContentResolver();
+        String[] selectionArgs = new String[]{String.valueOf(oldId)};
+        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+        Cursor pasteCursor = cr.query(pasteUri, null, selection, selectionArgs, null);
+        if(pasteCursor != null){
+            while (pasteCursor.moveToNext()) {
+                Log.d("Test", pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                ContentValues values = new ContentValues();
+                values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+                values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+                values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                values.put(DataBaseHandler.KEY_STRENGTH, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
+                values.put(DataBaseHandler.KEY_DEXTERITY, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
+                values.put(DataBaseHandler.KEY_CONSTITUTION, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
+                values.put(DataBaseHandler.KEY_INTELLIGENCE, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
+                values.put(DataBaseHandler.KEY_WISDOM, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
+                values.put(DataBaseHandler.KEY_CHARISMA, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
+                values.put(DataBaseHandler.KEY_BELONGSTO, newId);
+                cr.insert(DbContentProvider.CONTENT_URI_NPC, values);
+            }
+            pasteCursor.close();
+        }
+    }
+
+    private void pasteSession(Uri pasteUri) {
+        ContentResolver cr = getContentResolver();
+        int campaignId = ((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).getCampaignId();
+        String[] projection = new String[]{
+                DataBaseHandler.KEY_ROWID,
+                DataBaseHandler.KEY_NAME,
+                DataBaseHandler.KEY_INFO};
+        Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
+        if(pasteCursor != null){
+            pasteCursor.moveToFirst();
+            ContentValues values = new ContentValues();
+            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+            values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+            Uri newUri = cr.insert(DbContentProvider.CONTENT_URI_SESSION, values);
+            int newId= (int) ContentUris.parseId(newUri);
+            int oldId = pasteCursor.getInt(pasteCursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
+            pasteCursor.close();
+            nestedPasteEncounter(oldId, newId);
+        }
+    }
+
+    private void nestedPasteEncounter(int oldId, int newId) {
+        Uri pasteUri = DbContentProvider.CONTENT_URI_ENCOUNTER;
+        ContentResolver cr = getContentResolver();
+        String[] selectionArgs = new String[]{String.valueOf(oldId)};
+        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+        Cursor pasteCursor = cr.query(pasteUri, null, selection, selectionArgs, null);
+        if(pasteCursor != null){
+            while (pasteCursor.moveToNext()) {
+                ContentValues values = new ContentValues();
+                values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                values.put(DataBaseHandler.KEY_BELONGSTO, newId);
+                Uri newUri = cr.insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
+                int newIdEnc= (int) ContentUris.parseId(newUri);
+                int oldIdEnc = pasteCursor.getInt(pasteCursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
+                nestedPasteNPC(oldIdEnc, newIdEnc);
+            }
+            pasteCursor.close();
+        }
+    }
+
+    private void pastePc(Uri pasteUri) {
+        ContentResolver cr = getContentResolver();
+        int campaignId = ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).getCampaignId();
+        String[] projection = new String[]{
+                DataBaseHandler.KEY_ROWID,
+                DataBaseHandler.KEY_NAME,
+                DataBaseHandler.KEY_INFO,
+                DataBaseHandler.KEY_INITIATIVEBONUS,
+                DataBaseHandler.KEY_MAXHP,
+                DataBaseHandler.KEY_AC
+        };
+        Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
+        if(pasteCursor != null){
+            pasteCursor.moveToFirst();
+            ContentValues values = new ContentValues();
+            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+            values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+            values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+            values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+            values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+            cr.insert(DbContentProvider.CONTENT_URI_PC, values);
+            pasteCursor.close();
+        }
+    }
+
 
     @Override
     public void onBackPressed() {

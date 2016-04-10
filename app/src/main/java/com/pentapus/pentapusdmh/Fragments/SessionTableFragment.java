@@ -171,6 +171,7 @@ public class SessionTableFragment extends Fragment implements
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
                                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                                     clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "SESSION", uri));
+                                    getActivity().invalidateOptionsMenu();
                                     dialog.dismiss();
                                 }
                                 else {
@@ -224,7 +225,22 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.campaign_settings).setVisible(true);
-        menu.findItem(R.id.play_mode).setVisible(false);
+
+        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if(clipboard.hasPrimaryClip()){
+            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+            Uri pasteUri = itemPaste.getUri();
+            String pasteString = String.valueOf(itemPaste.getText());
+            if(pasteUri == null){
+                pasteUri = Uri.parse(pasteString);
+            }
+            if(pasteUri != null){
+                if(DbContentProvider.SESSION.equals(getContext().getContentResolver().getType(pasteUri))){
+                    menu.findItem(R.id.menu_paste).setVisible(true);
+                }
+            }
+        }
         super.onPrepareOptionsMenu(menu);
     }
 

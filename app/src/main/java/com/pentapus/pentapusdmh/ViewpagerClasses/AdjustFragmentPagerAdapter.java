@@ -38,7 +38,7 @@ private Context context;
     public Fragment getItem(int position) {
         switch(position){
             case 0:
-                return SavingThrowFragment.newInstance(position);
+                return SavingThrowFragment.newInstance(id);
             case 1:
                 return HpOverviewFragment.newInstance(id);
             case 2:

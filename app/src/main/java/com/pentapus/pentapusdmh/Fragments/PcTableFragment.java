@@ -68,6 +68,7 @@ public class PcTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             campaignId = getArguments().getInt(CAMPAIGN_ID);
             campaignName = getArguments().getString(CAMPAIGN_NAME);
@@ -148,13 +149,13 @@ public class PcTableFragment extends Fragment implements
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     dialog.dismiss();
-                                }else if (item == 2) {
+                                } else if (item == 2) {
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
                                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                                     clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "PC", uri));
+                                    getActivity().invalidateOptionsMenu();
                                     dialog.dismiss();
-                                }
-                                else {
+                                } else {
                                     dialog.dismiss();
                                 }
                             }
@@ -188,6 +189,7 @@ public class PcTableFragment extends Fragment implements
         return campaignId;
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -201,6 +203,22 @@ public class PcTableFragment extends Fragment implements
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.campaign_settings).setVisible(true);
+
+        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if(clipboard.hasPrimaryClip()){
+            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+            Uri pasteUri = itemPaste.getUri();
+            String pasteString = String.valueOf(itemPaste.getText());
+            if(pasteUri == null){
+                pasteUri = Uri.parse(pasteString);
+            }
+            if(pasteUri != null){
+                if(DbContentProvider.PC.equals(getContext().getContentResolver().getType(pasteUri))){
+                    menu.findItem(R.id.menu_paste).setVisible(true);
+                }
+            }
+        }
         super.onPrepareOptionsMenu(menu);
     }
 

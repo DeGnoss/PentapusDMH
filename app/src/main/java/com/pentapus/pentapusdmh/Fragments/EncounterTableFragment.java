@@ -17,6 +17,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -72,6 +73,7 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (this.getArguments() != null) {
             sessionId = getArguments().getInt(SESSION_ID);
             sessionName = getArguments().getString(SESSION_NAME);
@@ -170,6 +172,7 @@ public class EncounterTableFragment extends Fragment implements
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
                                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                                     clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "ENCOUNTER", uri));
+                                    getActivity().invalidateOptionsMenu();
                                     dialog.dismiss();
                                 }else {
                                     dialog.dismiss();
@@ -214,6 +217,29 @@ public class EncounterTableFragment extends Fragment implements
 
     public int getSessionId() {
         return sessionId;
+    }
+
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.campaign_settings).setVisible(true);
+
+        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if(clipboard.hasPrimaryClip()){
+            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+            Uri pasteUri = itemPaste.getUri();
+            String pasteString = String.valueOf(itemPaste.getText());
+            if(pasteUri == null){
+                pasteUri = Uri.parse(pasteString);
+            }
+            if(pasteUri != null){
+                if(DbContentProvider.ENCOUNTER.equals(getContext().getContentResolver().getType(pasteUri))){
+                    menu.findItem(R.id.menu_paste).setVisible(true);
+                }
+            }
+        }
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

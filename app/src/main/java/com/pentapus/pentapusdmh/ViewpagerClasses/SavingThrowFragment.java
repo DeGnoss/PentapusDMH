@@ -25,10 +25,10 @@ public class SavingThrowFragment extends Fragment {
     private int id;
     private int[] abilities;
 
-    public static SavingThrowFragment newInstance(int page) {
+    public static SavingThrowFragment newInstance(int id) {
         SavingThrowFragment fragment = new SavingThrowFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt("id", id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,6 +36,9 @@ public class SavingThrowFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            id = getArguments().getInt("id");
+        }
         abilities = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getAbilities(id);
 
     }

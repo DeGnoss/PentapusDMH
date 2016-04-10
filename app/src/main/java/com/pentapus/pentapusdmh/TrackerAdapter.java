@@ -51,14 +51,13 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         characterViewHolder.vInitiative.setText(ci.initiative);
         characterViewHolder.vAc.setText(ci.ac);
         characterViewHolder.vHp.setText(String.valueOf(ci.hp));
-        if(!characterList.get(position).dead) {
-            if (characterList.get(position).type.equals("npc")) {
-                characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#E0F2F1"));
-            } else if (characterList.get(position).type.equals("pc")) {
-                characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#F0F4C3"));
-            }
-        }else{
-            characterViewHolder.cardViewTracker.setCardBackgroundColor(Color.parseColor("#70000000"));
+        if (characterList.get(position).type.equals("npc")) {
+            characterViewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
+        } else if (characterList.get(position).type.equals("pc")) {
+            characterViewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#3F51B5"));
+        }
+        if(characterList.get(position).dead) {
+            characterViewHolder.cardViewTracker.setBackgroundColor(Color.parseColor("#70000000"));
         }
 
         if(characterList.get(position).isBlinded()){
@@ -287,12 +286,14 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         protected TextView vHp;
         protected  CardView cardViewTracker;
         protected GridLayout vGridStatus;
+        protected View vIndicatorLine;
         protected ImageView vImageView1, vImageView2, vImageView3, vImageView4, vImageView5, vImageView6, vImageView7, vImageView8, vImageView9, vImageView10, vImageView11, vImageView12, vImageView13, vImageView14, vImageView15;
 
 
 
         public CharacterViewHolder(View v) {
             super(v);
+            vIndicatorLine = (View) v.findViewById(R.id.indicator_line);
             vName =  (TextView) v.findViewById(R.id.name);
             vInitiative = (TextView)  v.findViewById(R.id.initiative);
             vAc = (TextView) v.findViewById(R.id.acV);

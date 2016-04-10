@@ -61,7 +61,7 @@ public class EncounterFragment extends Fragment implements
      * this fragment using the provided parameters.
      *
      * @param encounterName Parameter 1.
-     * @param encounterId Parameter 2.
+     * @param encounterId   Parameter 2.
      * @return A new instance of fragment SessionTableFragment.
      */
     public static EncounterFragment newInstance(String encounterName, int encounterId) {
@@ -88,7 +88,7 @@ public class EncounterFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
         displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +147,6 @@ public class EncounterFragment extends Fragment implements
         getLoaderManager().initLoader(1, null, this);
 
 
-
         //TODO add cases to keep from crashing
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -158,42 +157,44 @@ public class EncounterFragment extends Fragment implements
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
                 new AlertDialog.Builder(getContext()).setTitle(title)
                         .setItems(items, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                if (item == 0) {
-                                    Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    listView.getAdapter();
-                                    Log.d("Adapter clicked:", listView.getAdapter().getItem(position).toString());
-                                    int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean(MODE, true);
-                                    bundle.putInt(NPC_ID, npcId);
-                                    bundle.putInt(ENCOUNTER_ID, encounterId);
-                                    editNPC(bundle);
-                                    dialog.dismiss();
-                                } else if (item == 1) {
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
-                                    getContext().getContentResolver().delete(uri, null, null);
-                                    dialog.dismiss();
-                                }else if (item == 2) {
-                                        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
-                                        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                                        clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "NPC", uri));
-                                        dialog.dismiss();
-                                    } else
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        if (item == 0) {
+                                            Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+                                            listView.getAdapter();
+                                            Log.d("Adapter clicked:", listView.getAdapter().getItem(position).toString());
+                                            int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                            Bundle bundle = new Bundle();
+                                            bundle.putBoolean(MODE, true);
+                                            bundle.putInt(NPC_ID, npcId);
+                                            bundle.putInt(ENCOUNTER_ID, encounterId);
+                                            editNPC(bundle);
+                                            dialog.dismiss();
+                                        } else if (item == 1) {
+                                            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
+                                            getContext().getContentResolver().delete(uri, null, null);
+                                            dialog.dismiss();
+                                        } else if (item == 2) {
+                                            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
+                                            ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                            ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
+                                            clipboard.setPrimaryClip(clip);
+                                            getActivity().invalidateOptionsMenu();
+                                            dialog.dismiss();
+                                        } else
 
-                                    {
-                                        dialog.dismiss();
+                                        {
+                                            dialog.dismiss();
+                                        }
                                     }
                                 }
+
+                        ).
+
+                        show();
+
+                return true;
             }
-
-            ).
-
-            show();
-
-            return true;
-        }
-    });
+        });
     }
 
     private void addNPC(Bundle bundle) {
@@ -221,22 +222,25 @@ public class EncounterFragment extends Fragment implements
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu){
+    public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.play_mode).setVisible(true);
-        super.onPrepareOptionsMenu(menu);
-        ClipboardManager clipboard = (ClipboardManager)
-                getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
+        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        MenuItem mPasteItem = menu.findItem(R.id.menu_paste);
-
-        // If the clipboard contains an item, enables the Paste option on the menu.
-        if (clipboard.hasPrimaryClip()) {
-            mPasteItem.setVisible(true);
-        } else {
-            // If the clipboard is empty, disables the menu's Paste option.
-            mPasteItem.setVisible(false);
+        if(clipboard.hasPrimaryClip()){
+            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+            Uri pasteUri = itemPaste.getUri();
+            String pasteString = String.valueOf(itemPaste.getText());
+            if(pasteUri == null){
+                pasteUri = Uri.parse(pasteString);
+            }
+            if(pasteUri != null){
+                if(DbContentProvider.NPC.equals(getContext().getContentResolver().getType(pasteUri))){
+                    menu.findItem(R.id.menu_paste).setVisible(true);
+                }
+            }
         }
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
