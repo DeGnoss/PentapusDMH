@@ -53,6 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/bpWhite"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:layout_gravity="end" />
