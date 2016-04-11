@@ -2,6 +2,7 @@ package com.pentapus.pentapusdmh.Fragments;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
@@ -34,6 +35,7 @@ import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 public class TrackerFragment extends Fragment implements
@@ -168,7 +170,8 @@ public class TrackerFragment extends Fragment implements
                     DataBaseHandler.KEY_CONSTITUTION,
                     DataBaseHandler.KEY_INTELLIGENCE,
                     DataBaseHandler.KEY_WISDOM,
-                    DataBaseHandler.KEY_CHARISMA
+                    DataBaseHandler.KEY_CHARISMA,
+                    DataBaseHandler.KEY_ICON
             };
             String[] selectionArgs = new String[]{String.valueOf(encounterId)};
             String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
@@ -180,7 +183,8 @@ public class TrackerFragment extends Fragment implements
                     DataBaseHandler.KEY_NAME,
                     DataBaseHandler.KEY_INITIATIVEBONUS,
                     DataBaseHandler.KEY_AC,
-                    DataBaseHandler.KEY_MAXHP
+                    DataBaseHandler.KEY_MAXHP,
+                    DataBaseHandler.KEY_ICON
             };
             String[] selectionArgs = new String[]{String.valueOf(campaignId)};
             String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
@@ -206,6 +210,7 @@ public class TrackerFragment extends Fragment implements
                     int intelligence = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INTELLIGENCE));
                     int wisdom = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_WISDOM));
                     int charisma = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_CHARISMA));
+                    Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
 
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
@@ -223,6 +228,7 @@ public class TrackerFragment extends Fragment implements
                     ci.intelligence = intelligence;
                     ci.wisdom = wisdom;
                     ci.charisma = charisma;
+                    ci.iconUri = iconUri;
                     chars.addListItem(ci);
                 }
                 break;
@@ -234,6 +240,7 @@ public class TrackerFragment extends Fragment implements
                     int initiativeMod = initiative;
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
+                    Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
@@ -244,6 +251,7 @@ public class TrackerFragment extends Fragment implements
                     ci.hp = maxHp;
                     ci.type = "pc";
                     ci.dead = false;
+                    ci.iconUri = iconUri;
                     chars.addListItem(ci);
                 }
                 break;

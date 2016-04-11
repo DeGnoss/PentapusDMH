@@ -22,20 +22,27 @@
                 android:id="@+id/indicator_line"
                 android:layout_width="5dp"
                 android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="10dp" />
+                android:layout_alignParentStart="true" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/knight"
+                android:id="@+id/ivIcon"
+                android:layout_toEndOf="@id/indicator_line"/>
 
             <View
                 android:layout_width="32dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
+                android:id="@+id/initBack"
                 android:background="@color/colorPrimary"
                 />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@id/indicator_line"
+                android:layout_toEndOf="@id/ivIcon"
                 android:layout_margin="5dp">
 
 
@@ -99,6 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@id/initiative"
+                    android:layout_marginEnd="10dp"
                     android:orientation="horizontal">
 
                     <ImageView

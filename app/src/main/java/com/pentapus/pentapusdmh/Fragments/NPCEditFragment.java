@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,8 @@ public class NPCEditFragment extends Fragment {
     private static final String ENCOUNTER_ID = "encounterId";
 
     private static int RESULT_LOAD_IMG = 1;
+    private static int RESULT_CHOOSE_IMG = 2;
+
 
     private Uri myFile;
 
@@ -59,7 +62,7 @@ public class NPCEditFragment extends Fragment {
     private int encounterId;
     private int px;
 
-    Button addchar_btn, bAddImage;
+    Button addchar_btn, bAddImage, bChooseImage;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar;
     ImageView ivAvatar;
 
@@ -97,7 +100,7 @@ public class NPCEditFragment extends Fragment {
                 npcId = getArguments().getInt(NPC_ID);
             }
         }
-        px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, getResources().getDisplayMetrics());
+        px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics());
     }
 
     @Override
@@ -118,6 +121,7 @@ public class NPCEditFragment extends Fragment {
         etChar = (EditText) charEditView.findViewById(R.id.etChar);
         bAddImage = (Button) charEditView.findViewById(R.id.bAddImage);
         ivAvatar = (ImageView) charEditView.findViewById(R.id.ivAvatar);
+        bChooseImage = (Button) charEditView.findViewById(R.id.bChooseImage);
 
 
         if (modeUpdate) {
@@ -139,12 +143,25 @@ public class NPCEditFragment extends Fragment {
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 // Start the Intent
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMG); */
-                ivAvatar.setImageURI(null);
-                ivAvatar.setImageResource(R.drawable.knight);
                 Glide.clear(ivAvatar);
                 Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"));
             }
         });
+
+        bChooseImage.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                ImageGridFragment fragment = new ImageGridFragment();
+                fragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.FrameTop, fragment, "F_IMAGEGRID")
+                        .addToBackStack("F_IMAGEGRID")
+                        .commit();
+            }
+        });
+
+
 
         // Inflate the layout for this fragment
         return charEditView;
@@ -224,7 +241,7 @@ public class NPCEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
         values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
         values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
-        values.put(DataBaseHandler.KEY_ICON, myFile.toString());
+        values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
 
         // insert a record
@@ -256,6 +273,22 @@ public class NPCEditFragment extends Fragment {
             beginCrop(data.getData());
         } else if (requestCode == Crop.REQUEST_CROP) {
             handleCrop(resultCode, data);
+        } else if(requestCode == RESULT_CHOOSE_IMG && resultCode == Activity.RESULT_OK){
+            if(data != null) {
+                String value = data.getStringExtra("imageUri");
+                if(value != null) {
+                    Uri uri = Uri.parse(value);
+                    myFile = uri;
+                    Log.v("NPCEdit", "Data passed from Child fragment = " + uri);
+                    ivAvatar.post(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            ivAvatar.setImageURI(myFile);
+                        }
+                    });
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -271,15 +304,15 @@ public class NPCEditFragment extends Fragment {
             Glide.with(getContext())
                     .load(Crop.getOutput(result))
                     .asBitmap()
-                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                     .override(px, px)
-                    .into(new SimpleTarget<Bitmap>() { 
+                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                    .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             ContextWrapper cw = new ContextWrapper(getContext().getApplicationContext());
-                            // path to /data/data/yourapp/app_data/imageDir
+                            // path to /data/data/yourapp/app_data/iconDir
                             File directory = cw.getDir("iconDir", Context.MODE_PRIVATE);
-                            // Create imageDir
+                            // Create iconDir
                             UUID uuid = UUID.randomUUID();
                             String randomUUIDString = uuid.toString();
                             File mypath = new File(directory, randomUUIDString);
@@ -301,6 +334,7 @@ public class NPCEditFragment extends Fragment {
                             //File directory = new getContext().getFileStreamPath("app_iconDir");
                             Uri uri = Uri.parse(mypath.getPath());
                             myFile = uri;
+                            Log.v("NPCEdit", "Data passed from Child fragment = " + uri);
                             ivAvatar.setImageURI(uri);
                             ivAvatar.invalidate();
                         }

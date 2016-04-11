@@ -4,10 +4,33 @@
     android:layout_height="match_parent"
     tools:context="com.pentapus.pentapusdmh.Fragments.SessionEditFragment">
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Image"
+        android:layout_alignParentTop="true"
+        android:id="@+id/bAddImage"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Image"
+        android:layout_toEndOf="@id/bAddImage"
+        android:layout_alignParentTop="true"
+        android:id="@+id/bChooseImage"/>
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/ivAvatar"
+        android:layout_below="@id/bAddImage"/>
+
+
     <EditText
         android:layout_width="375dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/ivAvatar"
         android:layout_centerHorizontal="true"
         android:selectAllOnFocus="true"
         android:hint="@string/sName"

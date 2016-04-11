@@ -1,5 +1,7 @@
 package com.pentapus.pentapusdmh;
 
+import android.net.Uri;
+
 /**
  * Created by Koni on 30/3/16.
  */
@@ -15,9 +17,18 @@ public class TrackerInfoCard {
     public boolean[] statuses = new boolean[15];
     public boolean dead;
     public boolean selected;
+    public Uri iconUri;
     protected static final String NAME_PREFIX = "Name_";
     protected static final String INITIATIVE_PREFIX = "Initiative_";
 
+
+    public Uri getIconUri() {
+        return iconUri;
+    }
+
+    public void setIconUri(Uri iconUri) {
+        this.iconUri = iconUri;
+    }
 
     public int getHp() {
         return hp;

@@ -51,6 +51,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         characterViewHolder.vInitiative.setText(ci.initiative);
         characterViewHolder.vAc.setText(ci.ac);
         characterViewHolder.vHp.setText(String.valueOf(ci.hp));
+        characterViewHolder.ivIcon.setImageURI(ci.iconUri);
         if (characterList.get(position).type.equals("npc")) {
             characterViewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
         } else if (characterList.get(position).type.equals("pc")) {
@@ -269,12 +270,15 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         gridLayoutParams.width = (int) context.getResources().getDimension(R.dimen.image_status_trackerfragment);
 
         //gridLayoutParams.width = 50;
-        if(layoutCounter<8){
+        if(layoutCounter<5){
             gridLayoutParams.columnSpec = GridLayout.spec(layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(0);
-        } else{
-            gridLayoutParams.columnSpec = GridLayout.spec(15-layoutCounter);
+        } else if(layoutCounter<10){
+            gridLayoutParams.columnSpec = GridLayout.spec(9-layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(1);
+        } else{
+            gridLayoutParams.columnSpec = GridLayout.spec(14-layoutCounter);
+            gridLayoutParams.rowSpec = GridLayout.spec(2);
         }
         layoutCounter++;
         return gridLayoutParams;
@@ -289,6 +293,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         protected  CardView cardViewTracker;
         protected GridLayout vGridStatus;
         protected View vIndicatorLine;
+        protected ImageView ivIcon;
         protected ImageView vImageView1, vImageView2, vImageView3, vImageView4, vImageView5, vImageView6, vImageView7, vImageView8, vImageView9, vImageView10, vImageView11, vImageView12, vImageView13, vImageView14, vImageView15;
 
 
@@ -317,6 +322,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
             vImageView13 = (ImageView) v.findViewById(R.id.imageView13);
             vImageView14 = (ImageView) v.findViewById(R.id.imageView14);
             vImageView15 = (ImageView) v.findViewById(R.id.imageView15);
+            ivIcon = (ImageView) v.findViewById(R.id.ivIcon);
         }
     }
 

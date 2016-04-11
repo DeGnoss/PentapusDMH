@@ -166,6 +166,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_CUSTOM + " INTEGER, " +
                         KEY_INFO + " TEXT, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
+                        KEY_ICON + " TEXT, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_PC_TABLE);
