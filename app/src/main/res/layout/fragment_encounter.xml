@@ -4,12 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.pentapus.pentapusdmh.Fragments.SessionTableFragment">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listViewEncounter"
+        android:id="@+id/recyclerViewEncounter"
         android:layout_gravity="center|top"
-        android:layout_margin="10dp"
         android:paddingBottom="85dp"
         android:clipToPadding="false" />
 

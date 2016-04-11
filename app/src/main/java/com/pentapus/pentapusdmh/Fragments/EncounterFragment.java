@@ -1,11 +1,9 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,26 +12,29 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.commonsware.cwac.merge.MergeAdapter;
+import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.RecyclerItemClickListener;
+import com.pentapus.pentapusdmh.SimpleItemCard;
+
+import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 
 public class EncounterFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, CursorRecyclerViewAdapter.AdapterInterface {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ENCOUNTER_ID = "encounterId";
@@ -46,11 +47,13 @@ public class EncounterFragment extends Fragment implements
     private int encounterId;
     private String encounterName;
 
-    private SimpleCursorAdapter dataAdapterNPC, dataAdapterPC;
+
+    private CursorRecyclerViewAdapter dataAdapterNPC, dataAdapterPC;
     private static int campaignId;
-    private MergeAdapter mergeAdapter;
+    RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> mergeAdapter;
     private FloatingActionButton fab;
     final CharSequence[] items = {"Edit", "Delete", "Copy"};
+    private RecyclerView mRecyclerView;
 
     public EncounterFragment() {
         // Required empty public constructor
@@ -82,6 +85,8 @@ public class EncounterFragment extends Fragment implements
             encounterName = getArguments().getString("encounterName");
         }
         setHasOptionsMenu(true);
+        dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
+        dataAdapterPC = new CursorRecyclerViewAdapter(getContext(), null, this);
     }
 
     @Override
@@ -89,7 +94,7 @@ public class EncounterFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
-        displayListView(tableView);
+        //displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +106,22 @@ public class EncounterFragment extends Fragment implements
                 addNPC(bundle);
             }
         });
+
+        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
+        mRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(llm);
+        mRecyclerView.addItemDecoration(
+                new DividerItemDecoration(getActivity()));
+
+        mergeAdapter = new RecyclerViewMergeAdapter<>();
+        mergeAdapter.addAdapter(0, dataAdapterNPC);
+        mergeAdapter.addAdapter(1, dataAdapterPC);
+
+        mRecyclerView.setAdapter(mergeAdapter);
+
         // Inflate the layout for this fragment
         return tableView;
 
@@ -108,34 +129,15 @@ public class EncounterFragment extends Fragment implements
 
     private void displayListView(View view) {
 
-        mergeAdapter = new MergeAdapter();
 
-        String[] columns = new String[]{
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO
-        };
 
-        int[] to = new int[]{
-                R.id.name,
-                R.id.info,
-        };
 
-        dataAdapterNPC = new SimpleCursorAdapter(
-                this.getContext(),
-                R.layout.encounter_info,
-                null,
-                columns,
-                to,
-                0);
 
-        dataAdapterPC = new SimpleCursorAdapter(
-                this.getContext(),
-                R.layout.encounter_info,
-                null,
-                columns,
-                to,
-                0);
 
+
+
+
+        /*
         mergeAdapter.addAdapter(dataAdapterNPC);
         mergeAdapter.addAdapter(dataAdapterPC);
 
@@ -161,7 +163,6 @@ public class EncounterFragment extends Fragment implements
                                         if (item == 0) {
                                             Cursor cursor = (Cursor) listView.getItemAtPosition(position);
                                             listView.getAdapter();
-                                            Log.d("Adapter clicked:", listView.getAdapter().getItem(position).toString());
                                             int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                             Bundle bundle = new Bundle();
                                             bundle.putBoolean(MODE, true);
@@ -194,8 +195,9 @@ public class EncounterFragment extends Fragment implements
 
                 return true;
             }
-        });
+        });  */
     }
+
 
     private void addNPC(Bundle bundle) {
         Fragment fragment;
@@ -297,10 +299,19 @@ public class EncounterFragment extends Fragment implements
                 dataAdapterNPC.swapCursor(null);
                 break;
             case 1:
-                dataAdapterPC.swapCursor(null);
+                dataAdapterNPC.swapCursor(null);
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onItemClick(int position, boolean isLongClick){
+        if(isLongClick){
+            Log.d("EncounterFragment ", "LongClick");
+        }else{
+            Log.d("EncounterFragment ", "Click");
         }
     }
 }

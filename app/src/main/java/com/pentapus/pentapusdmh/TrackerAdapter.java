@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,14 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
     @Override
     public void onBindViewHolder(CharacterViewHolder characterViewHolder, int position) {
         layoutCounter = 0;
+        if(characterList.get(position).hp == 0){
+            characterList.get(position).dead = true;
+        } else if(characterList.get(position).hp < 0){
+            characterList.get(position).dead = true;
+            characterList.get(position).hp = 0;
+        }else{
+            characterList.get(position).dead = false;
+        }
         TrackerInfoCard ci = characterList.get(position);
         characterViewHolder.vName.setText(ci.name);
         characterViewHolder.vInitiative.setText(ci.initiative);
@@ -236,7 +245,6 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         }else{
             return 0;
         }
-
     }
 
     public int[] getAbilities(int pos){
@@ -285,7 +293,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
     }
 
 
-    public static class CharacterViewHolder extends RecyclerView.ViewHolder {
+    public static class CharacterViewHolder extends RecyclerView.ViewHolder{
         protected TextView vName;
         protected TextView vInitiative;
         protected TextView vAc;
@@ -295,11 +303,12 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         protected View vIndicatorLine;
         protected ImageView ivIcon;
         protected ImageView vImageView1, vImageView2, vImageView3, vImageView4, vImageView5, vImageView6, vImageView7, vImageView8, vImageView9, vImageView10, vImageView11, vImageView12, vImageView13, vImageView14, vImageView15;
-
+        public View view;
 
 
         public CharacterViewHolder(View v) {
             super(v);
+            view = v;
             vIndicatorLine = (View) v.findViewById(R.id.indicator_line);
             vName =  (TextView) v.findViewById(R.id.name);
             vInitiative = (TextView)  v.findViewById(R.id.initiative);
