@@ -195,6 +195,7 @@ public class PcEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
         values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
         values.put(DataBaseHandler.KEY_AC, myAc);
+        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_PC);
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
 

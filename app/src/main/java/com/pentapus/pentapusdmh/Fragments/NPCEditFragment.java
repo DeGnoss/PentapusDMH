@@ -32,6 +32,7 @@ import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.SimpleItemCard;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.BufferedOutputStream;
@@ -243,10 +244,10 @@ public class NPCEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
+        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_NPC);
 
         // insert a record
         if (!modeUpdate) {
-            getContext();
             getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_NPC, values);
         }
         // update a record

@@ -42,7 +42,8 @@ import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewSubAdapter;
 public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecyclerViewAdapter.CharacterViewHolder> {
 
     private Context mContext;
-    private int selectedPos = -1;
+    private static int selectedType = -1;
+    private static int selectedPos = -1;
 
     private Cursor mCursor;
 
@@ -54,7 +55,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
     AdapterInterface itemClickListener;
 
     public interface AdapterInterface{
-        void onItemClick(int position, boolean isLongClick);
+        void onItemClick(int position, int positionType, boolean isLongClick);
     }
 
     public CursorRecyclerViewAdapter(Context context, Cursor cursor, AdapterInterface itemClickListener) {
@@ -107,7 +108,6 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
     @Override
     public void onBindViewHolder(CharacterViewHolder viewHolder, int position) {
         super.onBindViewHolder(viewHolder, position);
-        final int pos = position;
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
         }
@@ -117,17 +117,21 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
         viewHolder.vName.setText(simpleItemCard.getName());
         viewHolder.vInfo.setText(simpleItemCard.getInfo());
-        viewHolder.itemView.setSelected(selectedPos == position);
+        viewHolder.type = simpleItemCard.getType();
+        viewHolder.itemView.setSelected(selectedType == simpleItemCard.getType() && selectedPos == position);
         viewHolder.setClickListener(new ItemClickListener() {
             @Override
-            public void onClick(View view, int positionAdapter, int positionView, boolean isLongClick) {
-                itemClickListener.onItemClick(positionAdapter, isLongClick);
+            public void onClick(View view, int positionAdapter, int positionView, int positionType, boolean isLongClick) {
+                itemClickListener.onItemClick(positionAdapter, positionType, isLongClick);
                 if(isLongClick){
-                    selectedPos = positionView;
+                    selectedPos = positionAdapter;
+                    selectedType = positionType;
                     notifyDataSetChanged();
-                    Log.d("ViewHolder", String.valueOf(positionView));
+                    Log.d("view", String.valueOf(positionView));
                 }else{
-                    Log.d("ViewHolder", String.valueOf(pos));
+                    notifyDataSetChanged();
+                    Log.d("adapter", String.valueOf(positionAdapter));
+                    Log.d("type", String.valueOf(positionType));
                 }
             }
         });
@@ -192,7 +196,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
     }
 
     public interface ItemClickListener {
-        void onClick(View view, int positionAdapter, int positionView, boolean isLongClick);
+        void onClick(View view, int positionAdapter, int positionView, int type, boolean isLongClick);
     }
 
     public static class CharacterViewHolder extends RecyclerViewSubAdapter.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
@@ -203,6 +207,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         protected View vIndicatorLine;
         protected ImageView ivIcon;
         private ItemClickListener mListener;
+        private int type;
 
 
 
@@ -225,12 +230,12 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
         @Override
         public void onClick(View v) {
-            mListener.onClick(v, getSubAdapterPosition(),getLayoutPosition(), false);
+            mListener.onClick(v, getSubAdapterPosition(), getLayoutPosition(), type, false);
         }
 
         @Override
         public boolean onLongClick(View v) {
-            mListener.onClick(view, getSubAdapterPosition(), getLayoutPosition(), true);
+            mListener.onClick(view, getSubAdapterPosition(), getLayoutPosition(), type, true);
             return true;
         }
     }

@@ -12,6 +12,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
+    public static final int TYPE_NPC = 1;
+    public static final int TYPE_PC = 2;
+
     // Database Name
     private static final String DATABASE_NAME = "ddDatabase";
 
@@ -40,6 +43,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String KEY_MAXHP = "maxHp";
     private static final String KEY_HP = "hp";
     public static final String KEY_AC = "ac";
+    public static final String KEY_TYPE = "type";
 
     //PC Table
     private static final String KEY_CLASS = "class";
@@ -127,6 +131,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_WISDOM + " INTEGER, " +
                         KEY_CHARISMA + " INTEGER, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
+                        KEY_TYPE + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
@@ -166,6 +171,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_CUSTOM + " INTEGER, " +
                         KEY_INFO + " TEXT, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
+                        KEY_TYPE + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE);";

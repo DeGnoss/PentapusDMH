@@ -11,12 +11,16 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 public class SimpleItemCard {
     public String name;
     public String info;
-    public String type;
+    public int type;
     public boolean selected;
     public Uri iconUri;
     protected static final String NAME_PREFIX = "Name_";
     protected static final String INITIATIVE_PREFIX = "Initiative_";
 
+
+    public int getType() {
+        return type;
+    }
 
     public String getName() {
         return name;
@@ -47,6 +51,7 @@ public class SimpleItemCard {
         SimpleItemCard simpleItemCard = new SimpleItemCard();
         simpleItemCard.name = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_NAME));
         simpleItemCard.info = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_INFO));
+        simpleItemCard.type = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE));
         return simpleItemCard;
     }
 }

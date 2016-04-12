@@ -260,7 +260,8 @@ public class EncounterFragment extends Fragment implements
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO
+                DataBaseHandler.KEY_INFO,
+                DataBaseHandler.KEY_TYPE
         };
         if (id == 0) {
 
@@ -307,7 +308,7 @@ public class EncounterFragment extends Fragment implements
     }
 
     @Override
-    public void onItemClick(int position, boolean isLongClick){
+    public void onItemClick(int position, int positionType, boolean isLongClick){
         if(isLongClick){
             Log.d("EncounterFragment ", "LongClick");
         }else{
