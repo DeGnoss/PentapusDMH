@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,7 +44,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
     private Context mContext;
     private static int selectedType = -1;
-    private static int selectedPos = -1;
+    public static int selectedPos = -1;
 
     private Cursor mCursor;
 
@@ -126,13 +127,13 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                 if(isLongClick){
                     selectedPos = positionAdapter;
                     selectedType = positionType;
-                    notifyDataSetChanged();
                     Log.d("view", String.valueOf(positionView));
                 }else{
                     notifyDataSetChanged();
                     Log.d("adapter", String.valueOf(positionAdapter));
                     Log.d("type", String.valueOf(positionType));
                 }
+                notifyDataSetChanged();
             }
         });
     }
@@ -208,6 +209,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         protected ImageView ivIcon;
         private ItemClickListener mListener;
         private int type;
+        private com.balysv.materialripple.MaterialRippleLayout linLayout;
 
 
 
@@ -218,10 +220,10 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_tracker);
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon);
             vInfo = (TextView) v.findViewById(R.id.info);
-            view = v.findViewById(R.id.view);
+            linLayout = (com.balysv.materialripple.MaterialRippleLayout) v.findViewById(R.id.linLayout);
 
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
+            linLayout.setOnClickListener(this);
+            linLayout.setOnLongClickListener(this);
         }
 
         public void setClickListener(ItemClickListener itemClickListener) {

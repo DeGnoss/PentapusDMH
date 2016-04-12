@@ -91,7 +91,6 @@ public class EncounterPreparationAdapter extends RecyclerView.Adapter<EncounterP
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_tracker);
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon);
             vInfo = (TextView) v.findViewById(R.id.info);
-            view = v.findViewById(R.id.view);
         }
     }
 

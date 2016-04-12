@@ -12,14 +12,10 @@ import android.view.View;
  * Created by konrad.fellmann on 11.04.2016.
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
-
-    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
     private Drawable mDivider;
 
     public DividerItemDecoration(Context context) {
-        final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
-        mDivider = styledAttributes.getDrawable(0);
-        styledAttributes.recycle();
+        mDivider = context.getResources().getDrawable(R.drawable.line_divider, null);
     }
 
     @Override

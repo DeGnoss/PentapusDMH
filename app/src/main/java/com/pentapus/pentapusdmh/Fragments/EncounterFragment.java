@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -125,6 +126,11 @@ public class EncounterFragment extends Fragment implements
         // Inflate the layout for this fragment
         return tableView;
 
+    }
+
+
+    public RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> getMergeAdapter() {
+        return mergeAdapter;
     }
 
     private void displayListView(View view) {
@@ -315,4 +321,5 @@ public class EncounterFragment extends Fragment implements
             Log.d("EncounterFragment ", "Click");
         }
     }
+
 }

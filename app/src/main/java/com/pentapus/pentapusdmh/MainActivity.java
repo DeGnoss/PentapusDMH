@@ -28,7 +28,7 @@ import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity{
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if(id == R.id.campaign_settings){
-            CampaignTableFragment myFragment = (CampaignTableFragment)getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN");
-            if(myFragment != null){
-                if(!myFragment.isVisible()){
+        } else if (id == R.id.campaign_settings) {
+            CampaignTableFragment myFragment = (CampaignTableFragment) getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN");
+            if (myFragment != null) {
+                if (!myFragment.isVisible()) {
                     CampaignTableFragment ftable = new CampaignTableFragment();
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
@@ -73,34 +73,34 @@ public class MainActivity extends AppCompatActivity{
                             .commit();
                 }
                 return true;
-            } else{
-                    CampaignTableFragment ftable = new CampaignTableFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
-                            .addToBackStack("FT_CAMPAIGN")
-                            .commit();
+            } else {
+                CampaignTableFragment ftable = new CampaignTableFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
+                        .addToBackStack("FT_CAMPAIGN")
+                        .commit();
                 return true;
             }
 
-        }else if(id == R.id.play_mode){
+        } else if (id == R.id.play_mode) {
             TrackerFragment ftable = new TrackerFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.FrameTop, ftable, "F_TRACKER")
                     .addToBackStack("F_TRACKER")
                     .commit();
             return true;
-        }else if(id == R.id.player_settings) {
+        } else if (id == R.id.player_settings) {
 
             Bundle bundle = new Bundle();
             bundle.putInt("campaignId", SharedPrefsHelper.loadCampaignId(this));
             bundle.putString("campaignName", SharedPrefsHelper.loadCampaignName(this));
             loadPCs(bundle);
-        }else if(id == R.id.menu_paste){
+        } else if (id == R.id.menu_paste) {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
             String pasteString = String.valueOf(itemPaste.getText());
-            if(pasteUri == null){
+            if (pasteUri == null) {
                 pasteUri = Uri.parse(pasteString);
             }
             pasteEntry(pasteUri);
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity{
             // Is this a content URI?
             ContentResolver cr = getContentResolver();
             String uriMimeType = cr.getType(pasteUri);
-            if(uriMimeType != null){
-                switch(uriMimeType){
+            if (uriMimeType != null) {
+                switch (uriMimeType) {
                     case DbContentProvider.NPC:
                         pasteNpc(pasteUri);
                         break;
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity{
     private void pasteNpc(Uri pasteUri) {
         ContentResolver cr = getContentResolver();
         int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
-        String [] projection = new String[]{
+        String[] projection = new String[]{
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO,
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity{
                 DataBaseHandler.KEY_CHARISMA
         };
         Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
-        if(pasteCursor != null){
+        if (pasteCursor != null) {
             pasteCursor.moveToFirst();
             ContentValues values = new ContentValues();
             values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
@@ -179,19 +179,19 @@ public class MainActivity extends AppCompatActivity{
     private void pasteEncounter(Uri pasteUri) {
         ContentResolver cr = getContentResolver();
         int sessionId = ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).getSessionId();
-        String [] projection = new String[]{
+        String[] projection = new String[]{
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO};
         Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
-        if(pasteCursor != null){
+        if (pasteCursor != null) {
             pasteCursor.moveToFirst();
             ContentValues values = new ContentValues();
             values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
             Uri newUri = cr.insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
-            int newId= (int) ContentUris.parseId(newUri);
+            int newId = (int) ContentUris.parseId(newUri);
             int oldId = pasteCursor.getInt(pasteCursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
             pasteCursor.close();
             nestedPasteNPC(oldId, newId);
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity{
         String[] selectionArgs = new String[]{String.valueOf(oldId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         Cursor pasteCursor = cr.query(pasteUri, null, selection, selectionArgs, null);
-        if(pasteCursor != null){
+        if (pasteCursor != null) {
             while (pasteCursor.moveToNext()) {
                 Log.d("Test", pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
                 ContentValues values = new ContentValues();
@@ -234,14 +234,14 @@ public class MainActivity extends AppCompatActivity{
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO};
         Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
-        if(pasteCursor != null){
+        if (pasteCursor != null) {
             pasteCursor.moveToFirst();
             ContentValues values = new ContentValues();
             values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
             Uri newUri = cr.insert(DbContentProvider.CONTENT_URI_SESSION, values);
-            int newId= (int) ContentUris.parseId(newUri);
+            int newId = (int) ContentUris.parseId(newUri);
             int oldId = pasteCursor.getInt(pasteCursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
             pasteCursor.close();
             nestedPasteEncounter(oldId, newId);
@@ -254,14 +254,14 @@ public class MainActivity extends AppCompatActivity{
         String[] selectionArgs = new String[]{String.valueOf(oldId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         Cursor pasteCursor = cr.query(pasteUri, null, selection, selectionArgs, null);
-        if(pasteCursor != null){
+        if (pasteCursor != null) {
             while (pasteCursor.moveToNext()) {
                 ContentValues values = new ContentValues();
                 values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
                 values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
                 values.put(DataBaseHandler.KEY_BELONGSTO, newId);
                 Uri newUri = cr.insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
-                int newIdEnc= (int) ContentUris.parseId(newUri);
+                int newIdEnc = (int) ContentUris.parseId(newUri);
                 int oldIdEnc = pasteCursor.getInt(pasteCursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
                 nestedPasteNPC(oldIdEnc, newIdEnc);
             }
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity{
                 DataBaseHandler.KEY_AC
         };
         Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
-        if(pasteCursor != null){
+        if (pasteCursor != null) {
             pasteCursor.moveToFirst();
             ContentValues values = new ContentValues();
             values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
@@ -299,13 +299,20 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            Log.i("MainActivity", "popping backstack");
-            fm.popBackStack();
+        EncounterFragment encounterFragment = (EncounterFragment) fm.findFragmentByTag("F_ENCOUNTER");
+        if (encounterFragment != null && encounterFragment.isVisible() && CursorRecyclerViewAdapter.selectedPos != -1) {
+            CursorRecyclerViewAdapter.selectedPos = -1;
+            encounterFragment.getMergeAdapter().notifyDataSetChanged();
         } else {
-            Log.i("MainActivity", "nothing on backstack, calling super");
-            super.onBackPressed();
+            if (fm.getBackStackEntryCount() > 0) {
+                Log.i("MainActivity", "popping backstack");
+                fm.popBackStack();
+            } else {
+                Log.i("MainActivity", "nothing on backstack, calling super");
+                super.onBackPressed();
+            }
         }
+
     }
 
     private void loadPCs(Bundle bundle) {
