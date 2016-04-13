@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -28,6 +30,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
@@ -63,6 +67,8 @@ public class EncounterFragment extends Fragment implements
     private FloatingActionButton fab;
     final CharSequence[] items = {"Edit", "Delete", "Copy"};
     private RecyclerView mRecyclerView;
+    private FrameLayout swipe_bg;
+    private LinearLayout swipe_fg;
 
     public EncounterFragment() {
         // Required empty public constructor
@@ -130,6 +136,78 @@ public class EncounterFragment extends Fragment implements
         mergeAdapter.addAdapter(1, dataAdapterPC);
 
         mRecyclerView.setAdapter(mergeAdapter);
+
+
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                Log.d("Encounter ", "swiped!");
+                //Remove swiped item from list and notify the RecyclerView
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                if (viewHolder != null){
+                    final View foregroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_fg;
+
+                    getDefaultUIUtil().onSelected(foregroundView);
+                }
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                final View foregroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_fg;
+
+                drawBackground(viewHolder, dX, actionState);
+
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
+                        actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
+                                        RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                        int actionState, boolean isCurrentlyActive) {
+                final View foregroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_fg;
+
+                drawBackground(viewHolder, dX, actionState);
+
+                getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+                        actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder){
+                final View backgroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_bg;
+                final View foregroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_fg;
+
+                // TODO: should animate out instead. how?
+                backgroundView.setRight(0);
+
+                getDefaultUIUtil().clearView(foregroundView);
+            }
+
+            private void drawBackground(RecyclerView.ViewHolder viewHolder, float dX, int actionState) {
+                final View backgroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_bg;
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    //noinspection NumericCastThatLosesPrecision
+                    backgroundView.setRight((int) Math.max(dX, 0));
+                }
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         // Inflate the layout for this fragment
         return tableView;

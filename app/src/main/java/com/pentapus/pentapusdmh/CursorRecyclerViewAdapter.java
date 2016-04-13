@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -216,6 +217,8 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         protected ImageView ivIcon;
         private ItemClickListener mListener;
         private int type;
+        public FrameLayout swipe_bg;
+        public LinearLayout swipe_fg;
         private com.balysv.materialripple.MaterialRippleLayout linLayout;
 
 
@@ -227,6 +230,8 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_tracker);
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon);
             vInfo = (TextView) v.findViewById(R.id.info);
+            swipe_bg = (FrameLayout) v.findViewById(R.id.swipe_bg);
+            swipe_fg = (LinearLayout) v.findViewById(R.id.swipe_fg);
             linLayout = (com.balysv.materialripple.MaterialRippleLayout) v.findViewById(R.id.linLayout);
 
             linLayout.setOnClickListener(this);

@@ -15,16 +15,13 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.commonsware.cwac.merge.MergeAdapter;
 import com.pentapus.pentapusdmh.CustomRecyclerLayoutManager;
-import com.pentapus.pentapusdmh.ViewpagerClasses.HpOverviewFragment;
 import com.pentapus.pentapusdmh.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.TrackerAdapter;
 import com.pentapus.pentapusdmh.TrackerInfoCard;
@@ -35,8 +32,6 @@ import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
-import java.net.URI;
-import java.util.ArrayList;
 
 public class TrackerFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {

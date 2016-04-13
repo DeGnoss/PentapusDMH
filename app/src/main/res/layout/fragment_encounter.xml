@@ -12,6 +12,7 @@
         android:paddingBottom="85dp"
         android:clipToPadding="false" />
 
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabEncounter"
         android:layout_width="wrap_content"

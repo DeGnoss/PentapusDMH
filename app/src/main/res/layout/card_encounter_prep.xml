@@ -24,9 +24,19 @@
         >
 
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/swipe_bg"
+            android:visibility="gone"
+            android:background="@color/bpDarker_blue">
+        </FrameLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/swipe_fg">
 
             <RelativeLayout
                 android:layout_width="fill_parent"
