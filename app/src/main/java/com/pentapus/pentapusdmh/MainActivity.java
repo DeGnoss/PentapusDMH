@@ -153,7 +153,9 @@ public class MainActivity extends AppCompatActivity {
                 DataBaseHandler.KEY_CONSTITUTION,
                 DataBaseHandler.KEY_INTELLIGENCE,
                 DataBaseHandler.KEY_WISDOM,
-                DataBaseHandler.KEY_CHARISMA
+                DataBaseHandler.KEY_CHARISMA,
+                DataBaseHandler.KEY_ICON,
+                DataBaseHandler.KEY_TYPE
         };
         Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
         if (pasteCursor != null) {
@@ -170,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
             values.put(DataBaseHandler.KEY_INTELLIGENCE, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
             values.put(DataBaseHandler.KEY_WISDOM, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
             values.put(DataBaseHandler.KEY_CHARISMA, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
+            values.put(DataBaseHandler.KEY_ICON, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
+            values.put(DataBaseHandler.KEY_TYPE, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
             values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
             cr.insert(DbContentProvider.CONTENT_URI_NPC, values);
             pasteCursor.close();

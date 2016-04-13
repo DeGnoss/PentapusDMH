@@ -35,7 +35,8 @@
                 <View
                     android:id="@+id/indicator_line"
                     android:layout_width="5dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentStart="true" />
 
                 <ImageView
@@ -43,8 +44,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/indicator_line"
-                    android:src="@drawable/knight" />
+                    android:layout_toEndOf="@id/indicator_line" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"

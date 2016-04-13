@@ -20,6 +20,7 @@ package com.pentapus.pentapusdmh;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -119,6 +120,12 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         viewHolder.vName.setText(simpleItemCard.getName());
         viewHolder.vInfo.setText(simpleItemCard.getInfo());
         viewHolder.type = simpleItemCard.getType();
+        if (viewHolder.type==1) {
+            viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
+        } else if (viewHolder.type==2) {
+            viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#3F51B5"));
+        }
+        viewHolder.ivIcon.setImageURI(simpleItemCard.getIconUri());
         viewHolder.itemView.setSelected(selectedType == simpleItemCard.getType() && selectedPos == position);
         viewHolder.setClickListener(new ItemClickListener() {
             @Override

@@ -1,6 +1,7 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -13,15 +14,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
@@ -44,6 +51,7 @@ public class EncounterFragment extends Fragment implements
     private static final String MODE = "modeUpdate";
     private static final String NPC_ID = "npcId";
 
+    private ActionMode mActionMode;
 
     private int encounterId;
     private String encounterName;
@@ -133,77 +141,6 @@ public class EncounterFragment extends Fragment implements
         return mergeAdapter;
     }
 
-    private void displayListView(View view) {
-
-
-
-
-
-
-
-
-
-        /*
-        mergeAdapter.addAdapter(dataAdapterNPC);
-        mergeAdapter.addAdapter(dataAdapterPC);
-
-
-        final ListView listView = (ListView) view.findViewById(R.id.listViewEncounter);
-        listView.setAdapter(mergeAdapter);
-        //Ensures a loader is initialized and active.
-        getLoaderManager().initLoader(0, null, this);
-        getLoaderManager().initLoader(1, null, this);
-
-
-        //TODO add cases to keep from crashing
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
-                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-                new AlertDialog.Builder(getContext()).setTitle(title)
-                        .setItems(items, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int item) {
-                                        if (item == 0) {
-                                            Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                            listView.getAdapter();
-                                            int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                            Bundle bundle = new Bundle();
-                                            bundle.putBoolean(MODE, true);
-                                            bundle.putInt(NPC_ID, npcId);
-                                            bundle.putInt(ENCOUNTER_ID, encounterId);
-                                            editNPC(bundle);
-                                            dialog.dismiss();
-                                        } else if (item == 1) {
-                                            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
-                                            getContext().getContentResolver().delete(uri, null, null);
-                                            dialog.dismiss();
-                                        } else if (item == 2) {
-                                            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
-                                            ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                                            ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
-                                            clipboard.setPrimaryClip(clip);
-                                            getActivity().invalidateOptionsMenu();
-                                            dialog.dismiss();
-                                        } else
-
-                                        {
-                                            dialog.dismiss();
-                                        }
-                                    }
-                                }
-
-                        ).
-
-                        show();
-
-                return true;
-            }
-        });  */
-    }
-
 
     private void addNPC(Bundle bundle) {
         Fragment fragment;
@@ -252,6 +189,34 @@ public class EncounterFragment extends Fragment implements
     }
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Log.d("Contextmenu ", "Edit");
+                return true;
+            case R.id.copy:
+                Log.d("Contextmenu ", "Copy");
+                return true;
+            case R.id.delete:
+                Log.d("Contextmenu ", "Delete");
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
@@ -267,7 +232,8 @@ public class EncounterFragment extends Fragment implements
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO,
-                DataBaseHandler.KEY_TYPE
+                DataBaseHandler.KEY_TYPE,
+                DataBaseHandler.KEY_ICON
         };
         if (id == 0) {
 
@@ -314,9 +280,79 @@ public class EncounterFragment extends Fragment implements
     }
 
     @Override
-    public void onItemClick(int position, int positionType, boolean isLongClick){
+    public void onItemClick(final int position, final int positionType, boolean isLongClick){
         if(isLongClick){
-            Log.d("EncounterFragment ", "LongClick");
+            if(positionType == 1) {
+
+
+                mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                        mode.setTitle("Selected");
+                        MenuInflater inflater = mode.getMenuInflater();
+                        inflater.inflate(R.menu.context_menu, menu);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.delete:
+                                if (positionType == 1) {
+                                    Cursor cursor = dataAdapterNPC.getCursor();
+                                    cursor.moveToPosition(position);
+                                    int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                                    getContext().getContentResolver().delete(uri, null, null);
+                                }
+                                //deleteClicked();
+                                mode.finish();
+                                return true;
+                            case R.id.edit:
+                                if (positionType == 1) {
+                                    Cursor cursor = dataAdapterNPC.getCursor();
+                                    cursor.moveToPosition(position);
+                                    int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean(MODE, true);
+                                    bundle.putInt(NPC_ID, npcId);
+                                    bundle.putInt(ENCOUNTER_ID, encounterId);
+                                    editNPC(bundle);
+                                }
+                                mode.finish();
+                                return true;
+                            case R.id.copy:
+                                if (positionType == 1) {
+                                    Cursor cursor = dataAdapterNPC.getCursor();
+                                    cursor.moveToPosition(position);
+                                    int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                                    ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
+                                    clipboard.setPrimaryClip(clip);
+                                    getActivity().invalidateOptionsMenu();
+                                }
+                                mode.finish();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode mode) {
+                        CursorRecyclerViewAdapter.selectedPos = -1;
+                        mergeAdapter.notifyItemChanged(position);
+                    }
+                });
+            }else{
+                Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
+            }
         }else{
             Log.d("EncounterFragment ", "Click");
         }
