@@ -174,13 +174,17 @@ public class EncounterFragment extends Fragment implements
             }
 
             @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+
+
+            @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                // mergeAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
                 int swipedPosition = viewHolder.getAdapterPosition();
                 dataAdapterNPC.pendingRemoval(swipedPosition);
-
-                Log.d("swiped", "maybe");
             }
 
             @Override
