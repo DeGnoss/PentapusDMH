@@ -7,6 +7,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,9 @@ import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FrameTop, ftable, "FT_SESSION")
                 .commit();
+
+
     }
 
 
@@ -223,6 +229,8 @@ public class MainActivity extends AppCompatActivity {
                 values.put(DataBaseHandler.KEY_INTELLIGENCE, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
                 values.put(DataBaseHandler.KEY_WISDOM, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
                 values.put(DataBaseHandler.KEY_CHARISMA, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
+                values.put(DataBaseHandler.KEY_ICON, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
+                values.put(DataBaseHandler.KEY_TYPE, pasteCursor.getInt(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
                 values.put(DataBaseHandler.KEY_BELONGSTO, newId);
                 cr.insert(DbContentProvider.CONTENT_URI_NPC, values);
             }
@@ -304,9 +312,13 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
         EncounterFragment encounterFragment = (EncounterFragment) fm.findFragmentByTag("F_ENCOUNTER");
+        EncounterTableFragment encounterTableFragment = (EncounterTableFragment) fm.findFragmentByTag("FT_ENCOUNTER");
         if (encounterFragment != null && encounterFragment.isVisible() && CursorRecyclerViewAdapter.selectedPos != -1) {
             CursorRecyclerViewAdapter.selectedPos = -1;
             encounterFragment.getMergeAdapter().notifyDataSetChanged();
+        } else if (encounterTableFragment != null && encounterTableFragment.isVisible() && CursorRecyclerNavigationViewAdapter.selectedPos != -1) {
+            CursorRecyclerNavigationViewAdapter.selectedPos = -1;
+            encounterTableFragment.getDataAdapterEncounters().notifyDataSetChanged();
         } else {
             if (fm.getBackStackEntryCount() > 0) {
                 Log.i("MainActivity", "popping backstack");

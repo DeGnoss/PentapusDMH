@@ -141,8 +141,8 @@ public class EncounterFragment extends Fragment implements
         mRecyclerView.setAdapter(mergeAdapter);
 
 
-        setUpItemTouchHelper();
-        setUpAnimationDecoratorHelper();
+        //setUpItemTouchHelper();
+        //setUpAnimationDecoratorHelper();
 
         return tableView;
 
@@ -183,8 +183,16 @@ public class EncounterFragment extends Fragment implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                // mergeAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
-                int swipedPosition = viewHolder.getAdapterPosition();
-                dataAdapterNPC.pendingRemoval(swipedPosition);
+                CursorRecyclerViewAdapter.CharacterViewHolder subViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
+                int swipedAdapterPosition = subViewHolder.getSubAdapterPosition();
+                int swipedLayoutPosition = subViewHolder.getLayoutPosition();
+                Log.d("AdapterPosition ", String.valueOf(swipedAdapterPosition));
+                Log.d("LayoutPosition ", String.valueOf(swipedLayoutPosition));
+                if(subViewHolder.type == 1){
+                    dataAdapterNPC.pendingRemoval(swipedAdapterPosition);
+                } else{
+                    Toast.makeText(getContext(), "Not deletable from here.", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -371,25 +379,6 @@ public class EncounterFragment extends Fragment implements
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.context_menu, menu);
-    }
-
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.edit:
-                Log.d("Contextmenu ", "Edit");
-                return true;
-            case R.id.copy:
-                Log.d("Contextmenu ", "Copy");
-                return true;
-            case R.id.delete:
-                Log.d("Contextmenu ", "Delete");
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
     }
 
 

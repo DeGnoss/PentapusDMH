@@ -2,13 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pentapus.pentapusdmh.Fragments.SessionTableFragment">
+    tools:context="com.pentapus.pentapusdmh.Fragments.SessionTableFragment"
+    android:animateLayoutChanges="true"
+    >
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recyclerViewEncounter"
         android:layout_gravity="center|top"
+        android:requiresFadingEdge="vertical"
+        android:scrollbars="vertical"
         android:paddingBottom="85dp"
         android:clipToPadding="false" />
 

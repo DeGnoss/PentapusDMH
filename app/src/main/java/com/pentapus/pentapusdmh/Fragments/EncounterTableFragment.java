@@ -7,30 +7,50 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.pentapus.pentapusdmh.AdapterCallback;
+import com.pentapus.pentapusdmh.AdapterNavigationCallback;
+import com.pentapus.pentapusdmh.CursorRecyclerNavigationViewAdapter;
+import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
+import com.pentapus.pentapusdmh.CustomRecyclerLayoutManager;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 
 public class EncounterTableFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SESSION_NAME = "sessionName";
@@ -45,7 +65,10 @@ public class EncounterTableFragment extends Fragment implements
     private int sessionId;
     private String sessionName;
 
-    private SimpleCursorAdapter dataAdapterEncounters;
+    private RecyclerView mRecyclerView;
+    private ActionMode mActionMode;
+
+    private CursorRecyclerNavigationViewAdapter dataAdapterEncounters;
     private FloatingActionButton fab;
     final CharSequence[] items = {"Edit", "Delete", "Copy"};
 
@@ -78,6 +101,7 @@ public class EncounterTableFragment extends Fragment implements
             sessionId = getArguments().getInt(SESSION_ID);
             sessionName = getArguments().getString(SESSION_NAME);
         }
+        dataAdapterEncounters = new CursorRecyclerNavigationViewAdapter(getContext(), null, this);
     }
 
     @Override
@@ -87,7 +111,6 @@ public class EncounterTableFragment extends Fragment implements
         // insert a record
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
-        displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,90 +122,198 @@ public class EncounterTableFragment extends Fragment implements
                 addEncounter(bundle);
             }
         });
-        // Inflate the layout for this fragment
-        return tableView;
 
-    }
-
-    private void displayListView(View view) {
-
-        String[] columns = new String[]{
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO
-        };
-
-        int[] to = new int[]{
-                R.id.name,
-                R.id.info,
-        };
-
-        dataAdapterEncounters = new SimpleCursorAdapter(
-                this.getContext(),
-                R.layout.encounter_info,
-                null,
-                columns,
-                to,
-                0);
-
-        final ListView listView = (ListView) view.findViewById(R.id.listViewEncounters);
-        listView.setAdapter(dataAdapterEncounters);
-        //Ensures a loader is initialized and active.
         getLoaderManager().initLoader(0, null, this);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> listView, View view,
-                                    int position, long id) {
-                // Get the cursor, positioned to the corresponding row in the result set
-                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                int encounterId =
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                String encounterName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+        mRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
+        CustomRecyclerLayoutManager llm = new CustomRecyclerLayoutManager(getContext());
+        llm.setOrientation(CustomRecyclerLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(llm);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(
+                new DividerItemDecoration(getActivity()));
+        mRecyclerView.setAdapter(dataAdapterEncounters);
 
-                Bundle bundle = new Bundle();
-                bundle.putInt(ENCOUNTER_ID, encounterId);
-                bundle.putString(ENCOUNTER_NAME, encounterName);
-                loadNPC(bundle, encounterId, encounterName);
+
+        setUpItemTouchHelper();
+        setUpAnimationDecoratorHelper();
+
+        // Inflate the layout for this fragment
+        return tableView;
+    }
+
+
+
+
+    private void setUpItemTouchHelper() {
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            Drawable background;
+            Drawable xMark;
+            int xMarkMargin;
+            boolean initiated;
+
+
+            private void init() {
+                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                xMark = ContextCompat.getDrawable(getContext(), R.drawable.ic_clear_24dp);
+                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                xMarkMargin = (int) getContext().getResources().getDimension(R.dimen.ic_clear_margin);
+                initiated = true;
             }
-        });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            //Drag & drop
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
-                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-                new AlertDialog.Builder(getContext()).setTitle(title)
-                        .setItems(items, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                if (item == 0) {
-                                    Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    int encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean(MODE, true);
-                                    bundle.putInt(ENCOUNTER_ID, encounterId);
-                                    bundle.putInt(SESSION_ID, sessionId);
-                                    editEncounter(bundle);
-                                    dialog.dismiss();
-                                } else if (item == 1) {
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
-                                    getContext().getContentResolver().delete(uri, null, null);
-                                    dialog.dismiss();
-                                }else if (item == 2) {
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
-                                    ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                                    clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "ENCOUNTER", uri));
-                                    getActivity().invalidateOptionsMenu();
-                                    dialog.dismiss();
-                                }else {
-                                    dialog.dismiss();
-                                }
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int position = viewHolder.getAdapterPosition();
+                CursorRecyclerNavigationViewAdapter testAdapter = (CursorRecyclerNavigationViewAdapter)recyclerView.getAdapter();
+                if (testAdapter.isPendingRemoval(position)) {
+                    return 0;
+                }
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                //Remove swiped item from list and notify the RecyclerView
+                int swipedAdapterPosition = viewHolder.getAdapterPosition();
+                int swipedLayoutPosition = viewHolder.getLayoutPosition();
+                CursorRecyclerNavigationViewAdapter adapter = (CursorRecyclerNavigationViewAdapter)mRecyclerView.getAdapter();
+                Log.d("AdapterPosition ", String.valueOf(swipedAdapterPosition));
+                Log.d("LayoutPosition ", String.valueOf(swipedLayoutPosition));
+                adapter.pendingRemoval(swipedAdapterPosition);
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                View itemView = viewHolder.itemView;
+
+                if (viewHolder.getAdapterPosition() == -1) {
+                    // not interested in those
+                    return;
+                }
+
+                if (!initiated) {
+                    init();
+                }
+
+                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                background.draw(c);
+
+                // draw x mark
+                int itemHeight = itemView.getBottom() - itemView.getTop();
+                int intrinsicWidth = xMark.getIntrinsicWidth();
+                int intrinsicHeight = xMark.getIntrinsicWidth();
+
+                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
+                int xMarkRight = itemView.getRight() - xMarkMargin;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int xMarkBottom = xMarkTop + intrinsicHeight;
+                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+
+                xMark.draw(c);
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+
+    /**
+     * We're gonna setup another ItemDecorator that will draw the red background in the empty space while the items are animating to thier new positions
+     * after an item is removed.
+     */
+    private void setUpAnimationDecoratorHelper() {
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+
+            // we want to cache this and not allocate anything repeatedly in the onDraw method
+            Drawable background;
+            boolean initiated;
+
+            private void init() {
+                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                initiated = true;
+            }
+
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+
+                if (!initiated) {
+                    init();
+                }
+
+                // only if animation is in progress
+                if (parent.getItemAnimator().isRunning()) {
+
+                    // some items might be animating down and some items might be animating up to close the gap left by the removed item
+                    // this is not exclusive, both movement can be happening at the same time
+                    // to reproduce this leave just enough items so the first one and the last one would be just a little off screen
+                    // then remove one from the middle
+
+                    // find first child with translationY > 0
+                    // and last one with translationY < 0
+                    // we're after a rect that is not covered in recycler-view views at this point in time
+                    View lastViewComingDown = null;
+                    View firstViewComingUp = null;
+
+                    // this is fixed
+                    int left = 0;
+                    int right = parent.getWidth();
+
+                    // this we need to find out
+                    int top = 0;
+                    int bottom = 0;
+
+                    // find relevant translating views
+                    int childCount = parent.getLayoutManager().getChildCount();
+                    for (int i = 0; i < childCount; i++) {
+                        View child = parent.getLayoutManager().getChildAt(i);
+                        if (child.getTranslationY() < 0) {
+                            // view is coming down
+                            lastViewComingDown = child;
+                        } else if (child.getTranslationY() > 0) {
+                            // view is coming up
+                            if (firstViewComingUp == null) {
+                                firstViewComingUp = child;
                             }
-                        }).show();
-                return true;
+                        }
+                    }
+
+                    if (lastViewComingDown != null && firstViewComingUp != null) {
+                        // views are coming down AND going up to fill the void
+                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
+                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
+                    } else if (lastViewComingDown != null) {
+                        // views are going down to fill the void
+                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
+                        bottom = lastViewComingDown.getBottom();
+                    } else if (firstViewComingUp != null) {
+                        // views are coming up to fill the void
+                        top = firstViewComingUp.getTop();
+                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
+                    }
+
+                    background.setBounds(left, top, right, bottom);
+                    background.draw(c);
+
+                }
+                super.onDraw(c, parent, state);
             }
+
         });
     }
+
+
+
+
 
     private void addEncounter(Bundle bundle) {
         Fragment fragment;
@@ -220,21 +351,25 @@ public class EncounterTableFragment extends Fragment implements
     }
 
 
+    public CursorRecyclerNavigationViewAdapter getDataAdapterEncounters() {
+        return dataAdapterEncounters;
+    }
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.campaign_settings).setVisible(true);
 
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        if(clipboard.hasPrimaryClip()){
+        if (clipboard.hasPrimaryClip()) {
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
             String pasteString = String.valueOf(itemPaste.getText());
-            if(pasteUri == null){
+            if (pasteUri == null) {
                 pasteUri = Uri.parse(pasteString);
             }
-            if(pasteUri != null){
-                if(DbContentProvider.ENCOUNTER.equals(getContext().getContentResolver().getType(pasteUri))){
+            if (pasteUri != null) {
+                if (DbContentProvider.ENCOUNTER.equals(getContext().getContentResolver().getType(pasteUri))) {
                     menu.findItem(R.id.menu_paste).setVisible(true);
                 }
             }
@@ -278,4 +413,82 @@ public class EncounterTableFragment extends Fragment implements
     }
 
 
+    @Override
+    public void onItemClick(int position) {
+        Cursor cursor = dataAdapterEncounters.getCursor();
+        cursor.moveToPosition(position);
+        int encounterId =
+                cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        String encounterName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(ENCOUNTER_ID, encounterId);
+        bundle.putString(ENCOUNTER_NAME, encounterName);
+        loadNPC(bundle, encounterId, encounterName);
+
+    }
+
+    @Override
+    public void onItemLongCLick(final int position) {
+        Log.d("EncounterFragment ", "itemLongClicked");
+        mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.setTitle("Selected");
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.context_menu, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete:
+                        Cursor cursor = dataAdapterEncounters.getCursor();
+                        cursor.moveToPosition(position);
+                        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + npcId);
+                        getContext().getContentResolver().delete(uri, null, null);
+                        //deleteClicked();
+                        mode.finish();
+                        return true;
+                    case R.id.edit:
+                        cursor = dataAdapterEncounters.getCursor();
+                        cursor.moveToPosition(position);
+                        int encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(MODE, true);
+                        bundle.putInt(ENCOUNTER_ID, encounterId);
+                        bundle.putInt(SESSION_ID, sessionId);
+                        editEncounter(bundle);
+                        mode.finish();
+                        return true;
+                    case R.id.copy:
+                        cursor = dataAdapterEncounters.getCursor();
+                        cursor.moveToPosition(position);
+                        encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                        uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
+                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
+                        clipboard.setPrimaryClip(clip);
+                        getActivity().invalidateOptionsMenu();
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                CursorRecyclerNavigationViewAdapter.selectedPos = -1;
+                dataAdapterEncounters.notifyItemChanged(position);
+            }
+        });
+    }
 }

@@ -18,6 +18,11 @@ public class CustomRecyclerLayoutManager extends LinearLayoutManager {
     }
 
     @Override
+    public boolean supportsPredictiveItemAnimations() {
+        return true;
+    }
+
+    @Override
     public boolean canScrollVertically() {
         //Similarly you can customize "canScrollHorizontally()" for managing horizontal scroll
         return isScrollEnabled && super.canScrollVertically();
