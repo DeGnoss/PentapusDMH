@@ -25,6 +25,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -42,7 +43,7 @@ import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewSubAdapter;
  * Created by skyfishjy on 10/31/14.
  */
 
-public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecyclerViewAdapter.CharacterViewHolder> {
+public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecyclerViewAdapter.CharacterViewHolder> implements AdapterCallback {
 
     private Context mContext;
     private static int selectedType = -1;
@@ -52,17 +53,19 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
     private boolean mDataValid;
 
+    private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_tracker);
+
+    private AdapterCallback mAdapterCallback;
+
+
     private int mRowIdColumn;
 
     private DataSetObserver mDataSetObserver;
-    AdapterInterface itemClickListener;
 
-    public interface AdapterInterface{
-        void onItemClick(int position, int positionType, boolean isLongClick);
-    }
 
-    public CursorRecyclerViewAdapter(Context context, Cursor cursor, AdapterInterface itemClickListener) {
-        this.itemClickListener = itemClickListener;
+
+    public CursorRecyclerViewAdapter(Context context, Cursor cursor, AdapterCallback callback) {
+        this.mAdapterCallback = callback;
         mContext = context;
         mCursor = cursor;
         mDataValid = cursor != null;
@@ -79,7 +82,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                 from(parent.getContext()).
                 inflate(R.layout.card_encounter_prep, parent, false);
 
-        return new CharacterViewHolder(itemView);
+        return new CharacterViewHolder(itemView, this);
     }
 
     public Cursor getCursor() {
@@ -128,6 +131,28 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         }
         viewHolder.ivIcon.setImageURI(simpleItemCard.getIconUri());
         viewHolder.itemView.setSelected(selectedType == simpleItemCard.getType() && selectedPos == position);
+        viewHolder.clicker.setOnTouchListener(rippleForegroundListener);
+
+
+/*
+
+        viewHolder.clicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Viewholder ", "clicked");
+            }
+        });
+
+        viewHolder.clicker.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d("ViewHolder ", "longclicked");
+                return false;
+            }
+        }); */
+
+      /*
         viewHolder.setClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int positionAdapter, int positionView, int positionType, boolean isLongClick) {
@@ -143,7 +168,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                 }
                 notifyDataSetChanged();
             }
-        });
+        }); */
     }
 
     /**
@@ -187,6 +212,21 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         return oldCursor;
     }
 
+    @Override
+    public void onItemClick(int position, int positionType) {
+        Log.d("Adapter ", "clicked");
+        mAdapterCallback.onItemClick(position, positionType);
+    }
+
+    @Override
+    public void onItemLongCLick(int position, int positionType) {
+        selectedPos = position;
+        selectedType = positionType;
+        notifyDataSetChanged();
+        Log.d("Adapter ", "longclicked");
+        mAdapterCallback.onItemLongCLick(position, positionType);
+    }
+
     private class NotifyingDataSetObserver extends DataSetObserver {
         @Override
         public void onChanged() {
@@ -204,53 +244,50 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         }
     }
 
-    public interface ItemClickListener {
-        void onClick(View view, int positionAdapter, int positionView, int type, boolean isLongClick);
-    }
-
-    public static class CharacterViewHolder extends RecyclerViewSubAdapter.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+    public static class CharacterViewHolder extends RecyclerViewSubAdapter.ViewHolder{
         public View view;
         protected TextView vName;
         protected TextView vInfo;
         protected CardView cardViewTracker;
         protected View vIndicatorLine;
         protected ImageView ivIcon;
-        private ItemClickListener mListener;
         private int type;
-        public FrameLayout swipe_bg;
-        public LinearLayout swipe_fg;
-        private com.balysv.materialripple.MaterialRippleLayout linLayout;
+        private RelativeLayout clicker;
+        private AdapterCallback mAdapterCallback;
+
+        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_tracker);
 
 
-
-        public CharacterViewHolder(View v) {
+        public CharacterViewHolder(View v, AdapterCallback adapterCallback) {
             super(v);
+            this.mAdapterCallback = adapterCallback;
             vIndicatorLine = (View) v.findViewById(R.id.indicator_line);
             vName =  (TextView) v.findViewById(R.id.name);
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_tracker);
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon);
             vInfo = (TextView) v.findViewById(R.id.info);
-            swipe_bg = (FrameLayout) v.findViewById(R.id.swipe_bg);
-            swipe_fg = (LinearLayout) v.findViewById(R.id.swipe_fg);
-            linLayout = (com.balysv.materialripple.MaterialRippleLayout) v.findViewById(R.id.linLayout);
+            clicker = (RelativeLayout) v.findViewById(R.id.clicker);
 
-            linLayout.setOnClickListener(this);
-            linLayout.setOnLongClickListener(this);
+            clicker.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Log.d("Viewholder ", "longclicked");
+                    mAdapterCallback.onItemLongCLick(getAdapterPosition(), type);
+                    return false;
+                }
+            });
+
+            clicker.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapterCallback.onItemClick(getAdapterPosition(), type);
+                    Log.d("Viewholder ", "clicked");
+                }
+            });
+
+
+
         }
 
-        public void setClickListener(ItemClickListener itemClickListener) {
-            this.mListener = itemClickListener;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onClick(v, getSubAdapterPosition(), getLayoutPosition(), type, false);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            mListener.onClick(view, getSubAdapterPosition(), getLayoutPosition(), type, true);
-            return true;
-        }
     }
 }

@@ -1,26 +1,21 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -34,19 +29,18 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
-import com.pentapus.pentapusdmh.RecyclerItemClickListener;
-import com.pentapus.pentapusdmh.SimpleItemCard;
 
 import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 
 public class EncounterFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, CursorRecyclerViewAdapter.AdapterInterface {
+        LoaderManager.LoaderCallbacks<Cursor>, AdapterCallback {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ENCOUNTER_ID = "encounterId";
@@ -137,77 +131,6 @@ public class EncounterFragment extends Fragment implements
 
         mRecyclerView.setAdapter(mergeAdapter);
 
-
-
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                Log.d("Encounter ", "swiped!");
-                //Remove swiped item from list and notify the RecyclerView
-            }
-
-            @Override
-            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-                if (viewHolder != null){
-                    final View foregroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_fg;
-
-                    getDefaultUIUtil().onSelected(foregroundView);
-                }
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView,
-                                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                    int actionState, boolean isCurrentlyActive) {
-                final View foregroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_fg;
-
-                drawBackground(viewHolder, dX, actionState);
-
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
-                        actionState, isCurrentlyActive);
-            }
-
-            @Override
-            public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
-                                        RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                        int actionState, boolean isCurrentlyActive) {
-                final View foregroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_fg;
-
-                drawBackground(viewHolder, dX, actionState);
-
-                getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
-                        actionState, isCurrentlyActive);
-            }
-
-            @Override
-            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder){
-                final View backgroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_bg;
-                final View foregroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_fg;
-
-                // TODO: should animate out instead. how?
-                backgroundView.setRight(0);
-
-                getDefaultUIUtil().clearView(foregroundView);
-            }
-
-            private void drawBackground(RecyclerView.ViewHolder viewHolder, float dX, int actionState) {
-                final View backgroundView = ((CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder).swipe_bg;
-
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    //noinspection NumericCastThatLosesPrecision
-                    backgroundView.setRight((int) Math.max(dX, 0));
-                }
-            }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         // Inflate the layout for this fragment
         return tableView;
@@ -358,82 +281,85 @@ public class EncounterFragment extends Fragment implements
     }
 
     @Override
-    public void onItemClick(final int position, final int positionType, boolean isLongClick){
-        if(isLongClick){
-            if(positionType == 1) {
+    public void onItemClick(int position, int positionType) {
+        Log.d("EncounterFragment ", "itemClicked");
 
-
-                mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
-                    @Override
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        mode.setTitle("Selected");
-                        MenuInflater inflater = mode.getMenuInflater();
-                        inflater.inflate(R.menu.context_menu, menu);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.delete:
-                                if (positionType == 1) {
-                                    Cursor cursor = dataAdapterNPC.getCursor();
-                                    cursor.moveToPosition(position);
-                                    int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
-                                    getContext().getContentResolver().delete(uri, null, null);
-                                }
-                                //deleteClicked();
-                                mode.finish();
-                                return true;
-                            case R.id.edit:
-                                if (positionType == 1) {
-                                    Cursor cursor = dataAdapterNPC.getCursor();
-                                    cursor.moveToPosition(position);
-                                    int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean(MODE, true);
-                                    bundle.putInt(NPC_ID, npcId);
-                                    bundle.putInt(ENCOUNTER_ID, encounterId);
-                                    editNPC(bundle);
-                                }
-                                mode.finish();
-                                return true;
-                            case R.id.copy:
-                                if (positionType == 1) {
-                                    Cursor cursor = dataAdapterNPC.getCursor();
-                                    cursor.moveToPosition(position);
-                                    int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
-                                    ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                                    ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
-                                    clipboard.setPrimaryClip(clip);
-                                    getActivity().invalidateOptionsMenu();
-                                }
-                                mode.finish();
-                                return true;
-                            default:
-                                return false;
-                        }
-                    }
-
-                    @Override
-                    public void onDestroyActionMode(ActionMode mode) {
-                        CursorRecyclerViewAdapter.selectedPos = -1;
-                        mergeAdapter.notifyItemChanged(position);
-                    }
-                });
-            }else{
-                Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
-            }
-        }else{
-            Log.d("EncounterFragment ", "Click");
-        }
     }
 
+    @Override
+    public void onItemLongCLick(final int position, final int positionType) {
+        Log.d("EncounterFragment ", "itemLongClicked");
+        if(positionType == 1) {
+
+
+            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    mode.setTitle("Selected");
+                    MenuInflater inflater = mode.getMenuInflater();
+                    inflater.inflate(R.menu.context_menu, menu);
+                    return true;
+                }
+
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
+
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.delete:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                                getContext().getContentResolver().delete(uri, null, null);
+                            }
+                            //deleteClicked();
+                            mode.finish();
+                            return true;
+                        case R.id.edit:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Bundle bundle = new Bundle();
+                                bundle.putBoolean(MODE, true);
+                                bundle.putInt(NPC_ID, npcId);
+                                bundle.putInt(ENCOUNTER_ID, encounterId);
+                                editNPC(bundle);
+                            }
+                            mode.finish();
+                            return true;
+                        case R.id.copy:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
+                                clipboard.setPrimaryClip(clip);
+                                getActivity().invalidateOptionsMenu();
+                            }
+                            mode.finish();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+                    CursorRecyclerViewAdapter.selectedPos = -1;
+                    mergeAdapter.notifyItemChanged(position);
+                }
+            });
+        }else{
+            Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }
