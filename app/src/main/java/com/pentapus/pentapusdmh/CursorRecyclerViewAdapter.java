@@ -21,6 +21,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,13 +30,20 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
+import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterFragment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewSubAdapter;
 
@@ -57,6 +66,12 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
     private AdapterCallback mAdapterCallback;
 
+    List<SimpleItemCard> itemsPendingRemoval;
+    private Handler handler = new Handler(); // hanlder for running delayed runnables
+    HashMap<SimpleItemCard, Runnable> pendingRunnables = new HashMap<>();
+    private static final int PENDING_REMOVAL_TIMEOUT = 3000;
+
+
 
     private int mRowIdColumn;
 
@@ -66,6 +81,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
     public CursorRecyclerViewAdapter(Context context, Cursor cursor, AdapterCallback callback) {
         this.mAdapterCallback = callback;
+        itemsPendingRemoval = new ArrayList<>();
         mContext = context;
         mCursor = cursor;
         mDataValid = cursor != null;
@@ -112,7 +128,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
 
     @Override
-    public void onBindViewHolder(CharacterViewHolder viewHolder, int position) {
+    public void onBindViewHolder(CharacterViewHolder viewHolder, final int position) {
         super.onBindViewHolder(viewHolder, position);
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
@@ -120,7 +136,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         if (!mCursor.moveToPosition(position)) {
             throw new IllegalStateException("couldn't move cursor to position " + position);
         }
-        SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
+        final SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
         viewHolder.vName.setText(simpleItemCard.getName());
         viewHolder.vInfo.setText(simpleItemCard.getInfo());
         viewHolder.type = simpleItemCard.getType();
@@ -134,41 +150,73 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         viewHolder.clicker.setOnTouchListener(rippleForegroundListener);
 
 
-/*
-
-        viewHolder.clicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Viewholder ", "clicked");
-            }
-        });
-
-        viewHolder.clicker.setOnLongClickListener(new View.OnLongClickListener(){
-
-            @Override
-            public boolean onLongClick(View v) {
-                Log.d("ViewHolder ", "longclicked");
-                return false;
-            }
-        }); */
-
-      /*
-        viewHolder.setClickListener(new ItemClickListener() {
-            @Override
-            public void onClick(View view, int positionAdapter, int positionView, int positionType, boolean isLongClick) {
-                itemClickListener.onItemClick(positionAdapter, positionType, isLongClick);
-                if(isLongClick){
-                    selectedPos = positionAdapter;
-                    selectedType = positionType;
-                    Log.d("view", String.valueOf(positionView));
-                }else{
-                    notifyDataSetChanged();
-                    Log.d("adapter", String.valueOf(positionAdapter));
-                    Log.d("type", String.valueOf(positionType));
+        if (itemsPendingRemoval.contains(simpleItemCard)) {
+            // we need to show the "undo" state of the row
+            viewHolder.itemView.setBackgroundColor(Color.RED);
+            viewHolder.clicker.setVisibility(View.GONE);
+            viewHolder.undoButton.setVisibility(View.VISIBLE);
+            viewHolder.undoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // user wants to undo the removal, let's cancel the pending task
+                    Runnable pendingRemovalRunnable = pendingRunnables.get(simpleItemCard);
+                    pendingRunnables.remove(simpleItemCard);
+                    if (pendingRemovalRunnable != null)
+                        handler.removeCallbacks(pendingRemovalRunnable);
+                    itemsPendingRemoval.remove(simpleItemCard);
+                    // this will rebind the row in "normal" state
+                    notifyItemChanged(position);
                 }
-                notifyDataSetChanged();
-            }
-        }); */
+            });
+        } else {
+        // we need to show the "normal" state
+        viewHolder.itemView.setBackgroundColor(Color.WHITE);
+        viewHolder.clicker.setVisibility(View.VISIBLE);
+       // viewHolder.titleTextView.setText(item);
+        viewHolder.undoButton.setVisibility(View.GONE);
+        viewHolder.undoButton.setOnClickListener(null);
+    }
+
+    }
+
+
+    public void pendingRemoval(final int position) {
+        mCursor.moveToPosition(position);
+        SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
+        if (!itemsPendingRemoval.contains(simpleItemCard)) {
+            itemsPendingRemoval.add(simpleItemCard);
+            // this will redraw row in "undo" state
+            notifyItemChanged(position);
+            // let's create, store and post a runnable to remove the item
+            Runnable pendingRemovalRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    remove(position);
+                }
+            };
+            handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
+            pendingRunnables.put(simpleItemCard, pendingRemovalRunnable);
+        }
+    }
+
+
+    public void remove(int position) {
+        mCursor.moveToPosition(position);
+        SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
+        if (itemsPendingRemoval.contains(simpleItemCard)) {
+            itemsPendingRemoval.remove(simpleItemCard);
+        }
+            int npcId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+            mContext.getContentResolver().delete(uri, null, null);
+            notifyItemRemoved(position);
+    }
+
+
+    public boolean isPendingRemoval(int position) {
+        mCursor.moveToPosition(position);
+        SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
+        return itemsPendingRemoval.contains(simpleItemCard);
     }
 
     /**
@@ -254,6 +302,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         private int type;
         private RelativeLayout clicker;
         private AdapterCallback mAdapterCallback;
+        private Button undoButton;
 
         private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_tracker);
 
@@ -267,6 +316,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon);
             vInfo = (TextView) v.findViewById(R.id.info);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker);
+            undoButton = (Button) v.findViewById(R.id.undo_button);
 
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    compile 'com.balysv:material-ripple:1.0.2'
+    compile 'com.hudomju:swipe-to-dismiss-undo:1.0'
     compile 'me.mvdw.recyclerviewmergeadapter:recyclerviewmergeadapter:1.0.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
