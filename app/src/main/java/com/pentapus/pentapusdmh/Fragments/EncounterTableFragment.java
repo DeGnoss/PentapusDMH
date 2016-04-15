@@ -183,10 +183,7 @@ public class EncounterTableFragment extends Fragment implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                 int swipedAdapterPosition = viewHolder.getAdapterPosition();
-                int swipedLayoutPosition = viewHolder.getLayoutPosition();
                 CursorRecyclerNavigationViewAdapter adapter = (CursorRecyclerNavigationViewAdapter)mRecyclerView.getAdapter();
-                Log.d("AdapterPosition ", String.valueOf(swipedAdapterPosition));
-                Log.d("LayoutPosition ", String.valueOf(swipedLayoutPosition));
                 adapter.pendingRemoval(swipedAdapterPosition);
             }
 

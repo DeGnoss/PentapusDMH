@@ -127,7 +127,7 @@ public class CursorRecyclerNavigationViewAdapter extends RecyclerViewSubAdapter<
             viewHolder.vInfo.setVisibility(View.GONE);
             viewHolder.vInfoDeleted.setVisibility(View.VISIBLE);
             viewHolder.undoButton.setVisibility(View.VISIBLE);
-            /*viewHolder.undoButton.setOnClickListener(new View.OnClickListener() {
+            viewHolder.undoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // user wants to undo the removal, let's cancel the pending task
@@ -139,7 +139,7 @@ public class CursorRecyclerNavigationViewAdapter extends RecyclerViewSubAdapter<
                     // this will rebind the row in "normal" state
                     notifyItemChanged(position);
                 }
-            }); */
+            });
         } else {
             // we need to show the "normal" state
             viewHolder.itemView.setBackgroundColor(Color.WHITE);
@@ -240,13 +240,14 @@ public class CursorRecyclerNavigationViewAdapter extends RecyclerViewSubAdapter<
 
     @Override
     public void onItemLongCLick(int position) {
+        notifyItemChanged(selectedPos);
         if (selectedPos == position) {
             selectedPos = -1;
             selectedType = -1;
         }else{
             selectedPos = position;
         }
-        notifyDataSetChanged();
+        notifyItemChanged(position);
         Log.d("Adapter ", "longclicked");
         mAdapterCallback.onItemLongCLick(position);
     }
