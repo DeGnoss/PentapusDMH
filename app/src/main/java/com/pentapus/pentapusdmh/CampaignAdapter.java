@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,7 +26,7 @@ import java.util.List;
 /**
  * Created by Koni on 14/4/16.
  */
-public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.SessionViewHolder> implements AdapterNavigationCallback{
+public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.CampaignViewHolder> implements AdapterNavigationCallback {
 
     public static int selectedPos = -1;
 
@@ -41,22 +40,31 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
 
     /**
      * Constructor.
+     *
      * @param context The Context the Adapter is displayed in.
      */
-    public SessionAdapter(Context context, AdapterNavigationCallback callback) {
+    public CampaignAdapter(Context context, AdapterNavigationCallback callback) {
         super(context);
         this.mAdapterCallback = callback;
         itemsPendingRemoval = new ArrayList<>();
+        setHasStableIds(true); //in constructor
 
-        setupCursorAdapter(null, 0, R.layout.card_session, false);
+        setupCursorAdapter(null, 0, R.layout.card_campaign, false);
     }
 
     /**
      * Returns the ViewHolder to use for this adapter.
      */
     @Override
-    public SessionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SessionViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
+    public CampaignViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new CampaignViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
+    }
+
+
+    @Override
+    public long getItemId(int position) {
+        mCursorAdapter.getCursor().moveToPosition(position);
+        return mCursorAdapter.getCursor().getInt(mCursorAdapter.getCursor().getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)); //Any unique id
     }
 
     /**
@@ -64,7 +72,7 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
      * that item.
      */
     @Override
-    public void onBindViewHolder(SessionViewHolder holder, int position) {
+    public void onBindViewHolder(CampaignViewHolder holder, int position) {
         // Move cursor to this position
         mCursorAdapter.getCursor().moveToPosition(position);
 
@@ -80,8 +88,6 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
         Cursor mCursor = mCursorAdapter.getCursor();
         mCursor.moveToPosition(position);
         final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-        Log.d("pendingRemoval ", String.valueOf(position));
         if (!itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.add(identifier);
             // this will redraw row in "undo" state
@@ -109,22 +115,26 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
     public void remove(int position, String identifier) {
         Cursor mCursor = mCursorAdapter.getCursor();
 
-        if (itemsPendingRemoval.contains(identifier)){
+        if (itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.remove(identifier);
         }
-        int sessionId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
-        mContext.getContentResolver().delete(uri, null, null);
+        int campaignId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + campaignId);
         notifyItemRemoved(position);
+        mContext.getContentResolver().delete(uri, null, null);
     }
 
     public static int getSelectedPos() {
-      //  return selectedPos;
-        return 0;
+        return selectedPos;
     }
 
     public static void setSelectedPos(int selectedPos) {
-      //  SessionAdapter.selectedPos = selectedPos;
+        CampaignAdapter.selectedPos = selectedPos;
+    }
+
+
+    public Cursor getCursor() {
+        return mCursorAdapter.getCursor();
     }
 
     @Override
@@ -134,39 +144,32 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
 
     @Override
     public void onItemLongCLick(int position) {
-        //notifyItemChanged(selectedPos);
-      //  mAdapterCallback.onItemLongCLick(position);
-    }
-
-    public Cursor getCursor(){
-        return mCursorAdapter.getCursor();
+        mAdapterCallback.onItemLongCLick(position);
     }
 
 
-    public class SessionViewHolder extends RecyclerViewCursorViewHolder {
+    public class CampaignViewHolder extends RecyclerViewCursorViewHolder {
         public View view;
         protected TextView vName, vInfo, vInfoDeleted;
         protected CardView cardViewTracker;
         private RelativeLayout clicker;
         private AdapterNavigationCallback mAdapterCallback;
         private Button undoButton;
-        private Cursor mCursor;
         private String identifier;
-        private int longClickSelected;
 
-        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_session);
+        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_campaign);
 
 
-        public SessionViewHolder(View v, AdapterNavigationCallback adapterCallback) {
+        public CampaignViewHolder(View v, AdapterNavigationCallback adapterCallback) {
             super(v);
 
             this.mAdapterCallback = adapterCallback;
-            vName = (TextView) v.findViewById(R.id.nameEncounter);
-            cardViewTracker = (CardView) v.findViewById(R.id.card_view_session);
-            vInfo = (TextView) v.findViewById(R.id.info);
-            clicker = (RelativeLayout) v.findViewById(R.id.clicker);
-            undoButton = (Button) v.findViewById(R.id.undo_button);
-            vInfoDeleted = (TextView) v.findViewById(R.id.info_deleted);
+            vName = (TextView) v.findViewById(R.id.name_campaign);
+            cardViewTracker = (CardView) v.findViewById(R.id.card_view_campaign);
+            vInfo = (TextView) v.findViewById(R.id.info_campaign);
+            clicker = (RelativeLayout) v.findViewById(R.id.clicker_campaign);
+            undoButton = (Button) v.findViewById(R.id.undo_button_campaign);
+            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_campaign);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -174,8 +177,8 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
                 @Override
                 public boolean onLongClick(View v) {
                     Log.d("ViewHolder", "longclick");
-                    //selectedPos = getAdapterPosition();
-                    //mAdapterCallback.onItemLongCLick(getAdapterPosition());
+                    selectedPos = getAdapterPosition();
+                    mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
             });
@@ -183,18 +186,17 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
             clicker.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //mAdapterCallback.onItemClick(getAdapterPosition());
+                    mAdapterCallback.onItemClick(getAdapterPosition());
                 }
             });
         }
 
         @Override
         public void bindCursor(Cursor cursor) {
-            this.mCursor = cursor;
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            //itemView.setActivated(getAdapterPosition() == selectedPos);
+            itemView.setActivated(getAdapterPosition() == selectedPos);
 
             if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
                 // we need to show the "undo" state of the row
@@ -227,7 +229,6 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
                 undoButton.setOnClickListener(null);
             }
         }
-
 
 
     }

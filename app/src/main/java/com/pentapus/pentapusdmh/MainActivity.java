@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -313,7 +314,17 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         EncounterFragment encounterFragment = (EncounterFragment) fm.findFragmentByTag("F_ENCOUNTER");
         EncounterTableFragment encounterTableFragment = (EncounterTableFragment) fm.findFragmentByTag("FT_ENCOUNTER");
-        if (encounterFragment != null && encounterFragment.isVisible() && CursorRecyclerViewAdapter.selectedPos != -1) {
+        SessionTableFragment sessionTableFragment = (SessionTableFragment) fm.findFragmentByTag("FT_SESSION");
+        CampaignTableFragment campaignTableFragment = (CampaignTableFragment) fm.findFragmentByTag("FT_CAMPAIGN");
+        if (campaignTableFragment != null && campaignTableFragment.isVisible() && CampaignAdapter.getSelectedPos() != -1) {
+            //int oldPos = CampaignAdapter.getSelectedPos();
+            //CampaignAdapter.setSelectedPos(-1);
+            //campaignTableFragment.getmCampaignAdapter().notifyItemChanged(oldPos);
+        } else if (sessionTableFragment != null && sessionTableFragment.isVisible() && SessionAdapter.getSelectedPos() != -1) {
+            int oldPos = SessionAdapter.getSelectedPos();
+            //SessionAdapter.setSelectedPos(-1);
+            //sessionTableFragment.getmSessionAdapter().notifyItemChanged(oldPos);
+        } else if (encounterFragment != null && encounterFragment.isVisible() && CursorRecyclerViewAdapter.selectedPos != -1) {
             CursorRecyclerViewAdapter.selectedPos = -1;
             encounterFragment.getMergeAdapter().notifyDataSetChanged();
         } else if (encounterTableFragment != null && encounterTableFragment.isVisible() && CursorRecyclerNavigationViewAdapter.selectedPos != -1) {
