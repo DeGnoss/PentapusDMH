@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by Koni on 14/4/16.
  */
-public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.CampaignViewHolder> implements AdapterNavigationCallback {
+public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter.EncounterViewHolder> implements AdapterNavigationCallback{
 
     public static int selectedPos = -1;
 
@@ -40,23 +40,22 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
 
     /**
      * Constructor.
-     *
      * @param context The Context the Adapter is displayed in.
      */
-    public CampaignAdapter(Context context, AdapterNavigationCallback callback) {
+    public EncounterAdapter(Context context, AdapterNavigationCallback callback) {
         super(context);
         this.mAdapterCallback = callback;
         itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
-        setupCursorAdapter(null, 0, R.layout.card_campaign, false);
+        setupCursorAdapter(null, 0, R.layout.card_encounter, false);
     }
 
     /**
      * Returns the ViewHolder to use for this adapter.
      */
     @Override
-    public CampaignViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new CampaignViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
+    public EncounterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new EncounterViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
     }
 
 
@@ -65,12 +64,13 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
         mCursorAdapter.getCursor().moveToPosition(position);
         return mCursorAdapter.getCursor().getInt(mCursorAdapter.getCursor().getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
     }
+
     /**
      * Moves the Cursor of the CursorAdapter to the appropriate position and binds the view for
      * that item.
      */
     @Override
-    public void onBindViewHolder(CampaignViewHolder holder, int position) {
+    public void onBindViewHolder(EncounterViewHolder holder, int position) {
         // Move cursor to this position
         mCursorAdapter.getCursor().moveToPosition(position);
 
@@ -86,6 +86,7 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
         Cursor mCursor = mCursorAdapter.getCursor();
         mCursor.moveToPosition(position);
         final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+
         if (!itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.add(identifier);
             // this will redraw row in "undo" state
@@ -113,26 +114,17 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
     public void remove(int position, String identifier) {
         Cursor mCursor = mCursorAdapter.getCursor();
 
-        if (itemsPendingRemoval.contains(identifier)) {
+        if (itemsPendingRemoval.contains(identifier)){
             itemsPendingRemoval.remove(identifier);
         }
-        int campaignId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + campaignId);
+        int encounterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
         notifyItemRemoved(position);
         mContext.getContentResolver().delete(uri, null, null);
     }
 
-    public static int getSelectedPos() {
-        return selectedPos;
-    }
-
     public static void setSelectedPos(int selectedPos) {
-        CampaignAdapter.selectedPos = selectedPos;
-    }
-
-
-    public Cursor getCursor() {
-        return mCursorAdapter.getCursor();
+        EncounterAdapter.selectedPos = selectedPos;
     }
 
     @Override
@@ -145,8 +137,12 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
         mAdapterCallback.onItemLongCLick(position);
     }
 
+    public Cursor getCursor(){
+        return mCursorAdapter.getCursor();
+    }
 
-    public class CampaignViewHolder extends RecyclerViewCursorViewHolder {
+
+    public class EncounterViewHolder extends RecyclerViewCursorViewHolder {
         public View view;
         protected TextView vName, vInfo, vInfoDeleted;
         protected CardView cardViewTracker;
@@ -155,19 +151,19 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
         private Button undoButton;
         private String identifier;
 
-        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_campaign);
+        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_encounter);
 
 
-        public CampaignViewHolder(View v, AdapterNavigationCallback adapterCallback) {
+        public EncounterViewHolder(View v, AdapterNavigationCallback adapterCallback) {
             super(v);
 
             this.mAdapterCallback = adapterCallback;
-            vName = (TextView) v.findViewById(R.id.name_campaign);
-            cardViewTracker = (CardView) v.findViewById(R.id.card_view_campaign);
-            vInfo = (TextView) v.findViewById(R.id.info_campaign);
-            clicker = (RelativeLayout) v.findViewById(R.id.clicker_campaign);
-            undoButton = (Button) v.findViewById(R.id.undo_button_campaign);
-            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_campaign);
+            vName = (TextView) v.findViewById(R.id.name_encounter);
+            cardViewTracker = (CardView) v.findViewById(R.id.card_view_encounter);
+            vInfo = (TextView) v.findViewById(R.id.info_encounter);
+            clicker = (RelativeLayout) v.findViewById(R.id.clicker_encounter);
+            undoButton = (Button) v.findViewById(R.id.undo_encounter);
+            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_encounter);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -227,6 +223,7 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
                 undoButton.setOnClickListener(null);
             }
         }
+
 
 
     }

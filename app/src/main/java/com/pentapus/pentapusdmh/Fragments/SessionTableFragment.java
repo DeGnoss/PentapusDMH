@@ -57,9 +57,7 @@ public class SessionTableFragment extends Fragment implements
     private static final String SESSION_NAME = "sessionName";
 
 
-    final CharSequence[] items = {"Edit", "Delete", "Copy"};
     FloatingActionButton fab;
-    private SimpleCursorAdapter dataAdapterSessions;
     private int campaignId;
     private SessionAdapter mSessionAdapter;
     private RecyclerView mSessionRecyclerView;
@@ -83,6 +81,7 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSessionAdapter = new SessionAdapter(getContext(), this);
         setHasOptionsMenu(true);
     }
 
@@ -110,11 +109,11 @@ public class SessionTableFragment extends Fragment implements
         } else {
             //displayListView(tableView);
 
-            mSessionAdapter = new SessionAdapter(getContext(), this);
             mSessionRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewSession);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             mSessionRecyclerView.setLayoutManager(linearLayoutManager);
+            mSessionRecyclerView.setHasFixedSize(true);
             mSessionRecyclerView.addItemDecoration(
                     new DividerItemDecoration(getActivity()));
             mSessionRecyclerView.setAdapter(mSessionAdapter);
@@ -136,92 +135,6 @@ public class SessionTableFragment extends Fragment implements
         }
         return tableView;
     }
-
-  /*  private void displayListView(View view) {
-        String[] columns = new String[]{
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO
-        };
-
-        int[] to = new int[]{
-                R.id.name,
-                R.id.info,
-        };
-
-        dataAdapterSessions = new SimpleCursorAdapter(
-                this.getContext(),
-                R.layout.session_info,
-                null,
-                columns,
-                to,
-                0);
-
-        final ListView listView = (ListView) view.findViewById(R.id.listViewSessions);
-        listView.setAdapter(dataAdapterSessions);
-        //Ensures a loader is initialized and active.
-        if (getLoaderManager().getLoader(0) == null) {
-            getLoaderManager().initLoader(0, null, this);
-        } else {
-            getLoaderManager().restartLoader(0, null, this);
-        }
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> listView, View view,
-                                    int position, long id) {
-                // Get the cursor, positioned to the corresponding row in the result set
-                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                int sessionId =
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                String sessionName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-
-                Bundle bundle = new Bundle();
-                bundle.putInt(SESSION_ID, sessionId);
-                bundle.putString(SESSION_NAME, sessionName);
-                loadEncounters(bundle);
-            }
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
-                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-                new AlertDialog.Builder(getContext()).setTitle(title)
-                        .setItems(items, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                if (item == 0) {
-                                    Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                                    int sessionId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean(MODE, true);
-                                    bundle.putInt(SESSION_ID, sessionId);
-                                    editSession(bundle);
-                                    dialog.dismiss();
-                                } else if (item == 1) {
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
-                                    getContext().getContentResolver().delete(uri, null, null);
-                                    dialog.dismiss();
-                                }else if (item == 2) {
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
-                                    ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                                    clipboard.setPrimaryClip(ClipData.newUri(getContext().getContentResolver(), "SESSION", uri));
-                                    getActivity().invalidateOptionsMenu();
-                                    dialog.dismiss();
-                                }
-                                else {
-                                    dialog.dismiss();
-                                }
-                            }
-                        }).show();
-                return true;
-            }
-        });
-
-
-    } */
-
 
     @Override
     public void onResume() {
@@ -398,10 +311,6 @@ public class SessionTableFragment extends Fragment implements
         });
     }
 
-    public SessionAdapter getmSessionAdapter() {
-        return (SessionAdapter) mSessionRecyclerView.getAdapter();
-    }
-
     private void addSession(Bundle bundle) {
         Fragment fragment;
         fragment = new SessionEditFragment();
@@ -542,6 +451,7 @@ public class SessionTableFragment extends Fragment implements
                         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
                         getContext().getContentResolver().delete(uri, null, null);
                         mode.finish();
+                        mSessionRecyclerView.getAdapter().notifyItemRemoved(position);
                         return true;
                     case R.id.edit:
                         cursor = mSessionAdapter.getCursor();

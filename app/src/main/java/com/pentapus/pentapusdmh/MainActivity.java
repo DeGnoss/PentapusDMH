@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-        EncounterFragment encounterFragment = (EncounterFragment) fm.findFragmentByTag("F_ENCOUNTER");
+       /* EncounterFragment encounterFragment = (EncounterFragment) fm.findFragmentByTag("F_ENCOUNTER");
         EncounterTableFragment encounterTableFragment = (EncounterTableFragment) fm.findFragmentByTag("FT_ENCOUNTER");
         SessionTableFragment sessionTableFragment = (SessionTableFragment) fm.findFragmentByTag("FT_SESSION");
         CampaignTableFragment campaignTableFragment = (CampaignTableFragment) fm.findFragmentByTag("FT_CAMPAIGN");
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (encounterTableFragment != null && encounterTableFragment.isVisible() && CursorRecyclerNavigationViewAdapter.selectedPos != -1) {
             CursorRecyclerNavigationViewAdapter.selectedPos = -1;
             encounterTableFragment.getDataAdapterEncounters().notifyDataSetChanged();
-        } else {
+        } else {*/
             if (fm.getBackStackEntryCount() > 0) {
                 Log.i("MainActivity", "popping backstack");
                 fm.popBackStack();
@@ -338,8 +338,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("MainActivity", "nothing on backstack, calling super");
                 super.onBackPressed();
             }
-        }
-
     }
 
     private void loadPCs(Bundle bundle) {

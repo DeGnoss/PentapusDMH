@@ -242,6 +242,9 @@ public class NPCEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
         values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
         values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
+        if(myFile == null){
+            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/ninja");
+        }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
         values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_NPC);

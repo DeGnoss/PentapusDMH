@@ -37,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.AdapterCallback;
+import com.pentapus.pentapusdmh.CharacterAdapter;
 import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
@@ -63,14 +64,11 @@ public class EncounterFragment extends Fragment implements
     private String encounterName;
 
 
-    private CursorRecyclerViewAdapter dataAdapterNPC, dataAdapterPC;
+    private CharacterAdapter dataAdapterNPC, dataAdapterPC;
     private static int campaignId;
-    RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> mergeAdapter;
+    RecyclerViewMergeAdapter<CharacterAdapter> mergeAdapter;
     private FloatingActionButton fab;
-    final CharSequence[] items = {"Edit", "Delete", "Copy"};
     private RecyclerView mRecyclerView;
-    private FrameLayout swipe_bg;
-    private LinearLayout swipe_fg;
 
 
     public EncounterFragment() {
@@ -103,8 +101,8 @@ public class EncounterFragment extends Fragment implements
             encounterName = getArguments().getString("encounterName");
         }
         setHasOptionsMenu(true);
-        dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
-        dataAdapterPC = new CursorRecyclerViewAdapter(getContext(), null, this);
+        dataAdapterNPC = new CharacterAdapter(getContext(), this);
+        dataAdapterPC = new CharacterAdapter(getContext(), this);
     }
 
     @Override
@@ -130,6 +128,7 @@ public class EncounterFragment extends Fragment implements
         mRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
@@ -141,10 +140,28 @@ public class EncounterFragment extends Fragment implements
         mRecyclerView.setAdapter(mergeAdapter);
 
 
-        //setUpItemTouchHelper();
-        //setUpAnimationDecoratorHelper();
+        setUpItemTouchHelper();
+        setUpAnimationDecoratorHelper();
 
         return tableView;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getLoaderManager().getLoader(0) == null) {
+            getLoaderManager().initLoader(0, null, this);
+
+        } else {
+            getLoaderManager().restartLoader(0, null, this);
+        }
+        if (getLoaderManager().getLoader(1) == null) {
+            getLoaderManager().initLoader(1, null, this);
+
+        } else {
+            getLoaderManager().restartLoader(1, null, this);
+        }
 
     }
 
@@ -183,8 +200,8 @@ public class EncounterFragment extends Fragment implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                // mergeAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
-                CursorRecyclerViewAdapter.CharacterViewHolder subViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
-                int swipedAdapterPosition = subViewHolder.getSubAdapterPosition();
+                CharacterAdapter.CharacterViewHolder subViewHolder = (CharacterAdapter.CharacterViewHolder) viewHolder;
+                int swipedAdapterPosition = subViewHolder.getAdapterPosition();
                 int swipedLayoutPosition = subViewHolder.getLayoutPosition();
                 Log.d("AdapterPosition ", String.valueOf(swipedAdapterPosition));
                 Log.d("LayoutPosition ", String.valueOf(swipedLayoutPosition));
@@ -317,16 +334,6 @@ public class EncounterFragment extends Fragment implements
     }
 
 
-
-
-
-
-
-    public RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> getMergeAdapter() {
-        return mergeAdapter;
-    }
-
-
     private void addNPC(Bundle bundle) {
         Fragment fragment;
         fragment = new NPCEditFragment();
@@ -428,7 +435,6 @@ public class EncounterFragment extends Fragment implements
             default:
                 break;
         }
-
     }
 
     @Override
@@ -454,7 +460,7 @@ public class EncounterFragment extends Fragment implements
     @Override
     public void onItemLongCLick(final int position, final int positionType) {
         Log.d("EncounterFragment ", "itemLongClicked");
-        if(positionType == 1) {
+        /*if(positionType == 1) {
 
 
             mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
@@ -524,7 +530,7 @@ public class EncounterFragment extends Fragment implements
             });
         }else{
             Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
     }
 }

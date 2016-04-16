@@ -1,11 +1,9 @@
 package com.pentapus.pentapusdmh.Fragments;
 
 
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,59 +18,60 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.AdapterCallback;
-import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.CursorRecyclerNavigationViewAdapter;
 import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
-import com.pentapus.pentapusdmh.CustomRecyclerLayoutManager;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.DividerItemDecoration;
-import com.pentapus.pentapusdmh.EncounterAdapter;
-import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.R;
 
+import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 
-public class EncounterTableFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
+public class buEncounterFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>, AdapterCallback {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String SESSION_NAME = "sessionName";
-    private static final String SESSION_ID = "sessionId";
-
-    private static final String ENCOUNTER_NAME = "encounterName";
     private static final String ENCOUNTER_ID = "encounterId";
+    private static final String ENCOUNTER_NAME = "encounterName";
 
     private static final String MODE = "modeUpdate";
+    private static final String NPC_ID = "npcId";
 
-
-    private int sessionId;
-    private String sessionName;
-
-    private RecyclerView mEncounterRecyclerView;
     private ActionMode mActionMode;
 
-    private EncounterAdapter mEncounterAdapter;
-    private FloatingActionButton fab;
+    private int encounterId;
+    private String encounterName;
 
-    public EncounterTableFragment() {
+
+    private CursorRecyclerViewAdapter dataAdapterNPC, dataAdapterPC;
+    private static int campaignId;
+    RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> mergeAdapter;
+    private FloatingActionButton fab;
+    final CharSequence[] items = {"Edit", "Delete", "Copy"};
+    private RecyclerView mRecyclerView;
+    private FrameLayout swipe_bg;
+    private LinearLayout swipe_fg;
+
+
+    public buEncounterFragment() {
         // Required empty public constructor
     }
 
@@ -80,15 +79,15 @@ public class EncounterTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param sessionName Parameter 1.
-     * @param sessionId   Parameter 2.
+     * @param encounterName Parameter 1.
+     * @param encounterId   Parameter 2.
      * @return A new instance of fragment SessionTableFragment.
      */
-    public static EncounterTableFragment newInstance(String sessionName, int sessionId) {
-        EncounterTableFragment fragment = new EncounterTableFragment();
+    public static buEncounterFragment newInstance(String encounterName, int encounterId) {
+        buEncounterFragment fragment = new buEncounterFragment();
         Bundle args = new Bundle();
-        args.putString(SESSION_NAME, sessionName);
-        args.putInt(SESSION_ID, sessionId);
+        args.putString(ENCOUNTER_NAME, encounterName);
+        args.putInt(ENCOUNTER_ID, encounterId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -96,21 +95,22 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        if (this.getArguments() != null) {
-            sessionId = getArguments().getInt(SESSION_ID);
-            sessionName = getArguments().getString(SESSION_NAME);
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
+        if (getArguments() != null) {
+            encounterId = getArguments().getInt("encounterId");
+            encounterName = getArguments().getString("encounterName");
         }
-        mEncounterAdapter = new EncounterAdapter(getContext(), this);
+        setHasOptionsMenu(true);
+        dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
+        dataAdapterPC = new CursorRecyclerViewAdapter(getContext(), null, this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
-        // insert a record
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
+        final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
+        //displayListView(tableView);
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,43 +118,33 @@ public class EncounterTableFragment extends Fragment implements
 
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(MODE, false);
-                bundle.putInt(SESSION_ID, sessionId);
-                addEncounter(bundle);
+                bundle.putInt(ENCOUNTER_ID, encounterId);
+                addNPC(bundle);
             }
         });
 
-
-        mEncounterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mEncounterRecyclerView.setLayoutManager(linearLayoutManager);
-        mEncounterRecyclerView.setHasFixedSize(true);
-        mEncounterRecyclerView.addItemDecoration(
+        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
+        mRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(llm);
+        mRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
-        mEncounterRecyclerView.setAdapter(mEncounterAdapter);
+
+        mergeAdapter = new RecyclerViewMergeAdapter<>();
+        mergeAdapter.addAdapter(0, dataAdapterNPC);
+        mergeAdapter.addAdapter(1, dataAdapterPC);
+
+        mRecyclerView.setAdapter(mergeAdapter);
 
 
-        setUpItemTouchHelper();
-        setUpAnimationDecoratorHelper();
+        //setUpItemTouchHelper();
+        //setUpAnimationDecoratorHelper();
 
-        // Inflate the layout for this fragment
         return tableView;
+
     }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getLoaderManager().getLoader(0) == null) {
-            getLoaderManager().initLoader(0, null, this);
-
-        } else {
-            getLoaderManager().restartLoader(0, null, this);
-        }
-    }
-
-
-
 
 
     private void setUpItemTouchHelper() {
@@ -167,7 +157,7 @@ public class EncounterTableFragment extends Fragment implements
 
 
             private void init() {
-                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                background = new ColorDrawable(Color.RED);
                 xMark = ContextCompat.getDrawable(getContext(), R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) getContext().getResources().getDimension(R.dimen.ic_clear_margin);
@@ -176,17 +166,13 @@ public class EncounterTableFragment extends Fragment implements
 
 
             //Drag & drop
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
+            public boolean onMove(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
             }
 
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-                EncounterAdapter testAdapter = (EncounterAdapter) recyclerView.getAdapter();
-                if (testAdapter.isPendingRemoval(position)) {
-                    return 0;
-                }
                 return super.getSwipeDirs(recyclerView, viewHolder);
             }
 
@@ -194,9 +180,17 @@ public class EncounterTableFragment extends Fragment implements
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
-                int swipedAdapterPosition = viewHolder.getAdapterPosition();
-                EncounterAdapter adapter = (EncounterAdapter)mEncounterRecyclerView.getAdapter();
-                adapter.pendingRemoval(swipedAdapterPosition);
+               // mergeAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
+                CursorRecyclerViewAdapter.CharacterViewHolder subViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
+                int swipedAdapterPosition = subViewHolder.getSubAdapterPosition();
+                int swipedLayoutPosition = subViewHolder.getLayoutPosition();
+                Log.d("AdapterPosition ", String.valueOf(swipedAdapterPosition));
+                Log.d("LayoutPosition ", String.valueOf(swipedLayoutPosition));
+                if(subViewHolder.type == 1){
+                    dataAdapterNPC.pendingRemoval(swipedAdapterPosition);
+                } else{
+                    Toast.makeText(getContext(), "Not deletable from here.", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -232,7 +226,7 @@ public class EncounterTableFragment extends Fragment implements
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(mEncounterRecyclerView);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
 
@@ -241,14 +235,14 @@ public class EncounterTableFragment extends Fragment implements
      * after an item is removed.
      */
     private void setUpAnimationDecoratorHelper() {
-        mEncounterRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 
             // we want to cache this and not allocate anything repeatedly in the onDraw method
             Drawable background;
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                background = new ColorDrawable(Color.RED);
                 initiated = true;
             }
 
@@ -324,62 +318,67 @@ public class EncounterTableFragment extends Fragment implements
 
 
 
-    private void addEncounter(Bundle bundle) {
+
+
+    public RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> getMergeAdapter() {
+        return mergeAdapter;
+    }
+
+
+    private void addNPC(Bundle bundle) {
         Fragment fragment;
-        fragment = new EncounterEditFragment();
+        fragment = new NPCEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_ENCOUNTER")
-                .addToBackStack("FE_ENCOUNTER")
+                .replace(R.id.FrameTop, fragment, "FE_NPC")
+                .addToBackStack("FE_NPC")
                 .commit();
     }
 
-    private void editEncounter(Bundle bundle) {
+    private void editNPC(Bundle bundle) {
         Fragment fragment;
-        fragment = new EncounterEditFragment();
+        fragment = new NPCEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_ENCOUNTER")
-                .addToBackStack("FE_ENCOUNTER")
+                .replace(R.id.FrameTop, fragment, "FE_NPC")
+                .addToBackStack("FE_NPC")
                 .commit();
     }
 
-    private void loadNPC(Bundle bundle, int encounterId, String encounterName) {
-        SharedPrefsHelper.saveEncounter(getContext(), encounterId, encounterName);
-        Fragment fragment;
-        fragment = new EncounterFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "F_ENCOUNTER")
-                .addToBackStack("F_ENCOUNTER")
-                .commit();
-    }
-
-    public int getSessionId() {
-        return sessionId;
+    public int getEncounterId() {
+        return encounterId;
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.campaign_settings).setVisible(true);
+        menu.findItem(R.id.play_mode).setVisible(true);
 
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        if (clipboard.hasPrimaryClip()) {
+        if(clipboard.hasPrimaryClip()){
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
             String pasteString = String.valueOf(itemPaste.getText());
-            if (pasteUri == null) {
+            if(pasteUri == null){
                 pasteUri = Uri.parse(pasteString);
             }
-            if (pasteUri != null) {
-                if (DbContentProvider.ENCOUNTER.equals(getContext().getContentResolver().getType(pasteUri))) {
+            if(pasteUri != null){
+                if(DbContentProvider.NPC.equals(getContext().getContentResolver().getType(pasteUri))){
                     menu.findItem(R.id.menu_paste).setVisible(true);
                 }
             }
         }
         super.onPrepareOptionsMenu(menu);
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -396,106 +395,134 @@ public class EncounterTableFragment extends Fragment implements
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO
+                DataBaseHandler.KEY_INFO,
+                DataBaseHandler.KEY_TYPE,
+                DataBaseHandler.KEY_ICON
         };
-        String[] selectionArgs = new String[]{String.valueOf(sessionId)};
-        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-        CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_ENCOUNTER, projection, selection, selectionArgs, null);
-        return cursorLoader;
+        if (id == 0) {
+
+            String[] selectionArgs = new String[]{String.valueOf(encounterId)};
+            String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+            return new CursorLoader(this.getContext(),
+                    DbContentProvider.CONTENT_URI_NPC, projection, selection, selectionArgs, null);
+        } else {
+            String[] selectionArgs = new String[]{String.valueOf(campaignId)};
+            String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+            return new CursorLoader(this.getContext(),
+                    DbContentProvider.CONTENT_URI_PC, projection, selection, selectionArgs, null);
+        }
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mEncounterAdapter.swapCursor(data);
+        switch (loader.getId()) {
+            case 0:
+                dataAdapterNPC.swapCursor(data);
+                break;
+            case 1:
+                dataAdapterPC.swapCursor(data);
+                break;
+            default:
+                break;
+        }
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mEncounterAdapter.swapCursor(null);
-    }
-
-
-    @Override
-    public void onItemClick(int position) {
-        Cursor cursor = mEncounterAdapter.getCursor();
-        cursor.moveToPosition(position);
-        int encounterId =
-                cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        String encounterName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(ENCOUNTER_ID, encounterId);
-        bundle.putString(ENCOUNTER_NAME, encounterName);
-        loadNPC(bundle, encounterId, encounterName);
-
+        switch (loader.getId()) {
+            case 0:
+                dataAdapterNPC.swapCursor(null);
+                break;
+            case 1:
+                dataAdapterNPC.swapCursor(null);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
-    public void onItemLongCLick(final int position) {
+    public void onItemClick(int position, int positionType) {
+        Log.d("EncounterFragment ", "itemClicked");
+
+    }
+
+    @Override
+    public void onItemLongCLick(final int position, final int positionType) {
         Log.d("EncounterFragment ", "itemLongClicked");
-        mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.setTitle("Selected");
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.context_menu, menu);
-                fab.setVisibility(View.GONE);
-                return true;
-            }
+        if(positionType == 1) {
 
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
 
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.delete:
-                        Cursor cursor = mEncounterAdapter.getCursor();
-                        cursor.moveToPosition(position);
-                        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + npcId);
-                        getContext().getContentResolver().delete(uri, null, null);
-                        mode.finish();
-                        mEncounterRecyclerView.getAdapter().notifyItemRemoved(position);
-                        return true;
-                    case R.id.edit:
-                        cursor = mEncounterAdapter.getCursor();
-                        cursor.moveToPosition(position);
-                        int encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(MODE, true);
-                        bundle.putInt(ENCOUNTER_ID, encounterId);
-                        bundle.putInt(SESSION_ID, sessionId);
-                        editEncounter(bundle);
-                        mode.finish();
-                        return true;
-                    case R.id.copy:
-                        cursor = mEncounterAdapter.getCursor();
-                        cursor.moveToPosition(position);
-                        encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
-                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
-                        clipboard.setPrimaryClip(clip);
-                        getActivity().invalidateOptionsMenu();
-                        mode.finish();
-                        return true;
-                    default:
-                        return false;
+            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    mode.setTitle("Selected");
+                    MenuInflater inflater = mode.getMenuInflater();
+                    inflater.inflate(R.menu.context_menu, menu);
+                    return true;
                 }
-            }
 
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                EncounterAdapter.setSelectedPos(-1);
-                mEncounterRecyclerView.getAdapter().notifyItemChanged(position);
-                fab.setVisibility(View.VISIBLE);
-                mActionMode = null;
-            }
-        });
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
+
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.delete:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                                getContext().getContentResolver().delete(uri, null, null);
+                            }
+                            //deleteClicked();
+                            mode.finish();
+                            return true;
+                        case R.id.edit:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Bundle bundle = new Bundle();
+                                bundle.putBoolean(MODE, true);
+                                bundle.putInt(NPC_ID, npcId);
+                                bundle.putInt(ENCOUNTER_ID, encounterId);
+                                editNPC(bundle);
+                            }
+                            mode.finish();
+                            return true;
+                        case R.id.copy:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
+                                clipboard.setPrimaryClip(clip);
+                                getActivity().invalidateOptionsMenu();
+                            }
+                            mode.finish();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+                    CursorRecyclerViewAdapter.selectedPos = -1;
+                    mergeAdapter.notifyItemChanged(position);
+                }
+            });
+        }else{
+            Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

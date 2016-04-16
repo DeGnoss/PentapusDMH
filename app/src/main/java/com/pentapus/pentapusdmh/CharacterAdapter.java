@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,12 +27,13 @@ import java.util.List;
 /**
  * Created by Koni on 14/4/16.
  */
-public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.CampaignViewHolder> implements AdapterNavigationCallback {
+public class CharacterAdapter extends RecyclerViewCursorAdapter<CharacterAdapter.CharacterViewHolder> implements AdapterCallback{
 
     public static int selectedPos = -1;
+    public static int selectedType = -1;
 
 
-    private AdapterNavigationCallback mAdapterCallback;
+    private AdapterCallback mAdapterCallback;
     List<String> itemsPendingRemoval;
     private Handler handler = new Handler(); // handler for running delayed runnables
     HashMap<String, Runnable> pendingRunnables = new HashMap<>();
@@ -40,23 +42,22 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
 
     /**
      * Constructor.
-     *
      * @param context The Context the Adapter is displayed in.
      */
-    public CampaignAdapter(Context context, AdapterNavigationCallback callback) {
+    public CharacterAdapter(Context context, AdapterCallback callback) {
         super(context);
         this.mAdapterCallback = callback;
         itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
-        setupCursorAdapter(null, 0, R.layout.card_campaign, false);
+        setupCursorAdapter(null, 0, R.layout.card_encounter_prep, false);
     }
 
     /**
      * Returns the ViewHolder to use for this adapter.
      */
     @Override
-    public CampaignViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new CampaignViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
+    public CharacterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new CharacterViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
     }
 
 
@@ -65,12 +66,13 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
         mCursorAdapter.getCursor().moveToPosition(position);
         return mCursorAdapter.getCursor().getInt(mCursorAdapter.getCursor().getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
     }
+
     /**
      * Moves the Cursor of the CursorAdapter to the appropriate position and binds the view for
      * that item.
      */
     @Override
-    public void onBindViewHolder(CampaignViewHolder holder, int position) {
+    public void onBindViewHolder(CharacterViewHolder holder, int position) {
         // Move cursor to this position
         mCursorAdapter.getCursor().moveToPosition(position);
 
@@ -85,7 +87,8 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
     public void pendingRemoval(final int position) {
         Cursor mCursor = mCursorAdapter.getCursor();
         mCursor.moveToPosition(position);
-        final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)) + ":" + mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+
         if (!itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.add(identifier);
             // this will redraw row in "undo" state
@@ -113,28 +116,30 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
     public void remove(int position, String identifier) {
         Cursor mCursor = mCursorAdapter.getCursor();
 
-        if (itemsPendingRemoval.contains(identifier)) {
+        if (itemsPendingRemoval.contains(identifier)){
             itemsPendingRemoval.remove(identifier);
         }
-        int campaignId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + campaignId);
-        notifyItemRemoved(position);
-        mContext.getContentResolver().delete(uri, null, null);
-    }
+        int characterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        int characterType = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+        switch(characterType){
+            case 1:
+                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + characterId);
+                notifyItemRemoved(position);
+                mContext.getContentResolver().delete(uri, null, null);
+                break;
+            case 2:
+                uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + characterId);
+                notifyItemRemoved(position);
+                mContext.getContentResolver().delete(uri, null, null);
+                break;
+        }
 
-    public static int getSelectedPos() {
-        return selectedPos;
     }
 
     public static void setSelectedPos(int selectedPos) {
-        CampaignAdapter.selectedPos = selectedPos;
+        CharacterAdapter.selectedPos = selectedPos;
     }
-
-
-    public Cursor getCursor() {
-        return mCursorAdapter.getCursor();
-    }
-
+/*
     @Override
     public void onItemClick(int position) {
         mAdapterCallback.onItemClick(position);
@@ -144,30 +149,49 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
     public void onItemLongCLick(int position) {
         mAdapterCallback.onItemLongCLick(position);
     }
+*/
+    public Cursor getCursor(){
+        return mCursorAdapter.getCursor();
+    }
+
+    @Override
+    public void onItemClick(int position, int positionType) {
+
+    }
+
+    @Override
+    public void onItemLongCLick(int position, int positionType) {
+
+    }
 
 
-    public class CampaignViewHolder extends RecyclerViewCursorViewHolder {
+    public class CharacterViewHolder extends RecyclerViewCursorViewHolder {
         public View view;
         protected TextView vName, vInfo, vInfoDeleted;
         protected CardView cardViewTracker;
+        protected View vIndicatorLine;
+        protected ImageView ivIcon;
+        public int type;
         private RelativeLayout clicker;
-        private AdapterNavigationCallback mAdapterCallback;
+        private AdapterCallback mAdapterCallback;
         private Button undoButton;
         private String identifier;
 
-        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_campaign);
+        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_enc_prep);
 
 
-        public CampaignViewHolder(View v, AdapterNavigationCallback adapterCallback) {
+        public CharacterViewHolder(View v, AdapterCallback adapterCallback) {
             super(v);
 
             this.mAdapterCallback = adapterCallback;
-            vName = (TextView) v.findViewById(R.id.name_campaign);
-            cardViewTracker = (CardView) v.findViewById(R.id.card_view_campaign);
-            vInfo = (TextView) v.findViewById(R.id.info_campaign);
-            clicker = (RelativeLayout) v.findViewById(R.id.clicker_campaign);
-            undoButton = (Button) v.findViewById(R.id.undo_button_campaign);
-            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_campaign);
+            vIndicatorLine = (View) v.findViewById(R.id.indicator_line_enc_prep);
+            vInfo = (TextView) v.findViewById(R.id.info_enc_prep);
+            vName = (TextView) v.findViewById(R.id.name_enc_prep);
+            cardViewTracker = (CardView) v.findViewById(R.id.card_view_enc_prep);
+            clicker = (RelativeLayout) v.findViewById(R.id.clicker_enc_prep);
+            undoButton = (Button) v.findViewById(R.id.undo_enc_prep);
+            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_enc_prep);
+            ivIcon = (ImageView) v.findViewById(R.id.ivIcon_enc_prep);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -176,7 +200,7 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
                 public boolean onLongClick(View v) {
                     Log.d("ViewHolder", "longclick");
                     selectedPos = getAdapterPosition();
-                    mAdapterCallback.onItemLongCLick(getAdapterPosition());
+                    mAdapterCallback.onItemLongCLick(getAdapterPosition(), type);
                     return true;
                 }
             });
@@ -184,7 +208,7 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
             clicker.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapterCallback.onItemClick(getAdapterPosition());
+                    mAdapterCallback.onItemClick(getAdapterPosition(), type);
                 }
             });
         }
@@ -193,8 +217,21 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
         public void bindCursor(Cursor cursor) {
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            itemView.setActivated(getAdapterPosition() == selectedPos);
+            type = (cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
+            identifier = type + ":" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            itemView.setActivated(type == selectedType && getAdapterPosition() == selectedPos);
+            switch(type){
+                case 1:
+                    vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
+                    break;
+                case 2:
+                    vIndicatorLine.setBackgroundColor(Color.parseColor("#3F51B5"));
+                    break;
+            }
+            Uri iconUri = Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
+
+            ivIcon.setImageURI(iconUri);
+
 
             if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
                 // we need to show the "undo" state of the row
@@ -227,6 +264,7 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
                 undoButton.setOnClickListener(null);
             }
         }
+
 
 
     }

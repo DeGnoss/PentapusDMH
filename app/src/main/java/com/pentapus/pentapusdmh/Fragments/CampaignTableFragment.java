@@ -79,6 +79,7 @@ public class CampaignTableFragment extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        mCampaignAdapter = new CampaignAdapter(getContext(), this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -95,7 +96,6 @@ public class CampaignTableFragment extends Fragment implements
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mCampaignRecyclerView.setLayoutManager(linearLayoutManager);
-        mCampaignAdapter = new CampaignAdapter(getContext(), this);
         mCampaignRecyclerView.setHasFixedSize(true);
         mCampaignRecyclerView.addItemDecoration(
                new DividerItemDecoration(getActivity()));
@@ -284,9 +284,6 @@ public class CampaignTableFragment extends Fragment implements
     }
 
 
-    public CampaignAdapter getmCampaignAdapter() {
-        return mCampaignAdapter;
-    }
 
     private void loadPCs(Bundle bundle) {
         Fragment fragment;
@@ -377,7 +374,6 @@ public class CampaignTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        Log.d("CampaignFragment", "click");
         Cursor cursor = mCampaignAdapter.getCursor();
         cursor.moveToPosition(position);
         int campaignId =
@@ -394,7 +390,7 @@ public class CampaignTableFragment extends Fragment implements
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mCampaignRecyclerView.getAdapter().notifyItemChanged(position);
+                //mCampaignRecyclerView.getAdapter().notifyItemChanged(position);
                 String title = "Selected: " + String.valueOf(position);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
