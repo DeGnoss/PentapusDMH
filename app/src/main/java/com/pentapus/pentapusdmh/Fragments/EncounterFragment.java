@@ -28,21 +28,14 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.AdapterCallback;
-import com.pentapus.pentapusdmh.CharacterAdapter;
 import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.DividerItemDecoration;
-import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -64,9 +57,9 @@ public class EncounterFragment extends Fragment implements
     private String encounterName;
 
 
-    private CharacterAdapter dataAdapterNPC, dataAdapterPC;
+    private CursorRecyclerViewAdapter dataAdapterNPC, dataAdapterPC;
     private static int campaignId;
-    RecyclerViewMergeAdapter<CharacterAdapter> mergeAdapter;
+    RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> mergeAdapter;
     private FloatingActionButton fab;
     private RecyclerView mRecyclerView;
 
@@ -101,8 +94,8 @@ public class EncounterFragment extends Fragment implements
             encounterName = getArguments().getString("encounterName");
         }
         setHasOptionsMenu(true);
-        dataAdapterNPC = new CharacterAdapter(getContext(), this);
-        dataAdapterPC = new CharacterAdapter(getContext(), this);
+        dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(),null, this);
+        dataAdapterPC = new CursorRecyclerViewAdapter(getContext(),null, this);
     }
 
     @Override
@@ -158,7 +151,6 @@ public class EncounterFragment extends Fragment implements
         }
         if (getLoaderManager().getLoader(1) == null) {
             getLoaderManager().initLoader(1, null, this);
-
         } else {
             getLoaderManager().restartLoader(1, null, this);
         }
@@ -176,7 +168,7 @@ public class EncounterFragment extends Fragment implements
 
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
                 xMark = ContextCompat.getDrawable(getContext(), R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) getContext().getResources().getDimension(R.dimen.ic_clear_margin);
@@ -185,38 +177,58 @@ public class EncounterFragment extends Fragment implements
 
 
             //Drag & drop
-            public boolean onMove(RecyclerView recyclerView,
-                                  RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                    return false;
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
             }
 
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                return super.getSwipeDirs(recyclerView, viewHolder);
+                CursorRecyclerViewAdapter.CharacterViewHolder characterViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
+                if(characterViewHolder.type == 1){
+                    int position = characterViewHolder.getSubAdapterPosition();
+                    CursorRecyclerViewAdapter testAdapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) recyclerView.getAdapter()).getSubAdapter(0);
+                    if (testAdapter.isPendingRemoval(position)) {
+                        return 0;
+                    }
+                    return super.getSwipeDirs(recyclerView, viewHolder);
+                }else if(characterViewHolder.type == 2){
+                    int position = characterViewHolder.getSubAdapterPosition();
+                    CursorRecyclerViewAdapter testAdapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) recyclerView.getAdapter()).getSubAdapter(1);
+                    if (testAdapter.isPendingRemoval(position)) {
+                        return 0;
+                    }
+                    return super.getSwipeDirs(recyclerView, viewHolder);
+                }else{
+                    return 0;
+                }
+
             }
 
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
-               // mergeAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
-                CharacterAdapter.CharacterViewHolder subViewHolder = (CharacterAdapter.CharacterViewHolder) viewHolder;
-                int swipedAdapterPosition = subViewHolder.getAdapterPosition();
-                int swipedLayoutPosition = subViewHolder.getLayoutPosition();
-                Log.d("AdapterPosition ", String.valueOf(swipedAdapterPosition));
-                Log.d("LayoutPosition ", String.valueOf(swipedLayoutPosition));
-                if(subViewHolder.type == 1){
-                    dataAdapterNPC.pendingRemoval(swipedAdapterPosition);
-                } else{
-                    Toast.makeText(getContext(), "Not deletable from here.", Toast.LENGTH_SHORT).show();
+                CursorRecyclerViewAdapter.CharacterViewHolder characterViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
+                if(characterViewHolder.type == 1){
+                    int swipedAdapterPosition = characterViewHolder.getSubAdapterPosition();
+                    CursorRecyclerViewAdapter adapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) mRecyclerView.getAdapter()).getSubAdapter(0);
+                    int notifyPosition = characterViewHolder.getLayoutPosition();
+                    adapter.pendingRemoval(swipedAdapterPosition, notifyPosition);
+                }else if(characterViewHolder.type == 2){
+                    int swipedAdapterPosition = characterViewHolder.getSubAdapterPosition();
+                    CursorRecyclerViewAdapter adapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) mRecyclerView.getAdapter()).getSubAdapter(1);
+                    int notifyPosition = characterViewHolder.getLayoutPosition();
+                    adapter.pendingRemoval(swipedAdapterPosition, notifyPosition);
                 }
             }
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                View itemView = viewHolder.itemView;
+                CursorRecyclerViewAdapter.CharacterViewHolder characterViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
 
-                if (viewHolder.getAdapterPosition() == -1) {
+                View itemView = characterViewHolder.itemView;
+
+                if (characterViewHolder.getSubAdapterPosition() == -1) {
                     // not interested in those
                     return;
                 }
@@ -261,7 +273,7 @@ public class EncounterFragment extends Fragment implements
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
                 initiated = true;
             }
 

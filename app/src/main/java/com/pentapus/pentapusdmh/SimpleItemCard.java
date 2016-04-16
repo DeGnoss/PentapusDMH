@@ -9,6 +9,7 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
  * Created by Koni on 30/3/16.
  */
 public class SimpleItemCard {
+    public int id;
     public String name;
     public String info;
     public int type;
@@ -16,6 +17,7 @@ public class SimpleItemCard {
     public Uri iconUri;
     protected static final String NAME_PREFIX = "Name_";
     protected static final String INITIATIVE_PREFIX = "Initiative_";
+    String identifier;
 
 
     public int getType() {
@@ -50,6 +52,7 @@ public class SimpleItemCard {
     public static SimpleItemCard fromCursor(Cursor cursor) {
         Uri uri = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/ninja");
         SimpleItemCard simpleItemCard = new SimpleItemCard();
+        simpleItemCard.id = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
         simpleItemCard.name = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_NAME));
         simpleItemCard.info = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_INFO));
         simpleItemCard.type = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE));

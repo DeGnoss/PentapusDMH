@@ -7,6 +7,7 @@ import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,10 +42,11 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
     private AdapterCallback mAdapterCallback;
 
-    List<SimpleItemCard> itemsPendingRemoval;
+    private List<String> itemsPendingRemoval;
     private Handler handler = new Handler(); // hanlder for running delayed runnables
-    HashMap<SimpleItemCard, Runnable> pendingRunnables = new HashMap<>();
+    HashMap<String, Runnable> pendingRunnables = new HashMap<>();
     private static final int PENDING_REMOVAL_TIMEOUT = 3000;
+
 
 
     private int mRowIdColumn;
@@ -60,6 +62,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         mDataValid = cursor != null;
         mRowIdColumn = mDataValid ? mCursor.getColumnIndex("_id") : -1;
         mDataSetObserver = new NotifyingDataSetObserver();
+        setHasStableIds(true);
         if (mCursor != null) {
             mCursor.registerDataSetObserver(mDataSetObserver);
         }
@@ -101,7 +104,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
 
     @Override
-    public void onBindViewHolder(CharacterViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final CharacterViewHolder viewHolder, final int position) {
         super.onBindViewHolder(viewHolder, position);
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
@@ -121,23 +124,27 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         viewHolder.ivIcon.setImageURI(simpleItemCard.getIconUri());
         viewHolder.itemView.setSelected(selectedType == simpleItemCard.getType() && selectedPos == position);
         viewHolder.clicker.setOnTouchListener(rippleForegroundListener);
+        viewHolder.identifier = simpleItemCard.type +":" + simpleItemCard.id;
 
 
-        if (itemsPendingRemoval.contains(simpleItemCard)) {
+        if (itemsPendingRemoval.contains(viewHolder.identifier)) {
             // we need to show the "undo" state of the row
-            viewHolder.itemView.setBackgroundColor(Color.RED);
+            viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
             viewHolder.clicker.setVisibility(View.GONE);
+            viewHolder.vInfoDeleted.setVisibility(View.VISIBLE);
             viewHolder.undoButton.setVisibility(View.VISIBLE);
             viewHolder.undoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // user wants to undo the removal, let's cancel the pending task
-                    Runnable pendingRemovalRunnable = pendingRunnables.get(simpleItemCard);
-                    pendingRunnables.remove(simpleItemCard);
+                    Runnable pendingRemovalRunnable = pendingRunnables.get(viewHolder.identifier);
+                    pendingRunnables.remove(viewHolder.identifier);
                     if (pendingRemovalRunnable != null)
                         handler.removeCallbacks(pendingRemovalRunnable);
-                    itemsPendingRemoval.remove(simpleItemCard);
+                    itemsPendingRemoval.remove(viewHolder.identifier);
                     // this will rebind the row in "normal" state
+                    notifyDataSetChanged();
+                    //TODO: MAKE IT WORK WITH NOTIFYITEMCHANGED
                     notifyItemChanged(position);
                 }
             });
@@ -145,49 +152,62 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
             // we need to show the "normal" state
             viewHolder.itemView.setBackgroundColor(Color.WHITE);
             viewHolder.clicker.setVisibility(View.VISIBLE);
-            // viewHolder.titleTextView.setText(item);
+            viewHolder.vInfoDeleted.setVisibility(View.GONE);
             viewHolder.undoButton.setVisibility(View.GONE);
             viewHolder.undoButton.setOnClickListener(null);
         }
     }
 
 
-    public void pendingRemoval(final int position) {
+    public void pendingRemoval(final int position, int notifyPosition) {
         mCursor.moveToPosition(position);
-        Log.d("pendingRemoval ", String.valueOf(position));
-        final SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
-        if (!itemsPendingRemoval.contains(simpleItemCard)) {
-            itemsPendingRemoval.add(simpleItemCard);
+        final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)) + ":" + mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+
+        if (!itemsPendingRemoval.contains(identifier)) {
+            itemsPendingRemoval.add(identifier);
             // this will redraw row in "undo" state
-            notifyItemChanged(position);
+            notifyDataSetChanged();
+            //TODO: MAKE IT WORK WITH NOTIFYITEMCHANGED
+            //notifyItemChanged(notifyPosition);
             // let's create, store and post a runnable to remove the item
             Runnable pendingRemovalRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    remove(position, simpleItemCard);
+                    remove(position, identifier);
                 }
             };
             handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
-            pendingRunnables.put(simpleItemCard, pendingRemovalRunnable);
+            pendingRunnables.put(identifier, pendingRemovalRunnable);
         }
-    }
-
-
-    public void remove(int position, SimpleItemCard simpleItemCard) {
-        if (itemsPendingRemoval.contains(simpleItemCard)) {
-            itemsPendingRemoval.remove(simpleItemCard);
-        }
-        int npcId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
-        mContext.getContentResolver().delete(uri, null, null);
-        notifyItemRemoved(position);
     }
 
 
     public boolean isPendingRemoval(int position) {
         mCursor.moveToPosition(position);
-        SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
-        return itemsPendingRemoval.contains(simpleItemCard);
+        return itemsPendingRemoval.contains(mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)) + ":" + mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)));
+    }
+
+
+    public void remove(int position, String identifier) {
+        if (itemsPendingRemoval.contains(identifier)) {
+            itemsPendingRemoval.remove(identifier);
+        }
+        int characterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        int characterType = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+        switch (characterType) {
+            case 1:
+                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + characterId);
+                notifyItemRemoved(position);
+                mContext.getContentResolver().delete(uri, null, null);
+                break;
+            case 2:
+                uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + characterId);
+                notifyItemRemoved(position);
+                mContext.getContentResolver().delete(uri, null, null);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -279,6 +299,9 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         private RelativeLayout clicker;
         private AdapterCallback mAdapterCallback;
         private Button undoButton;
+        private TextView vInfoDeleted;
+        private String identifier;
+
 
         private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_enc_prep);
 
@@ -286,13 +309,16 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         public CharacterViewHolder(View v, AdapterCallback adapterCallback) {
             super(v);
             this.mAdapterCallback = adapterCallback;
-            vIndicatorLine = (View) v.findViewById(R.id.indicator_line);
-            vName = (TextView) v.findViewById(R.id.name);
+            vIndicatorLine = (View) v.findViewById(R.id.indicator_line_enc_prep);
+            vName = (TextView) v.findViewById(R.id.name_enc_prep);
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_enc_prep);
-            ivIcon = (ImageView) v.findViewById(R.id.ivIcon);
-            vInfo = (TextView) v.findViewById(R.id.info);
-            clicker = (RelativeLayout) v.findViewById(R.id.clicker);
-            undoButton = (Button) v.findViewById(R.id.undo_button);
+            ivIcon = (ImageView) v.findViewById(R.id.ivIcon_enc_prep);
+            vInfo = (TextView) v.findViewById(R.id.info_enc_prep);
+            clicker = (RelativeLayout) v.findViewById(R.id.clicker_enc_prep);
+            undoButton = (Button) v.findViewById(R.id.undo_enc_prep);
+            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_enc_prep);
+
+            clicker.setOnTouchListener(rippleForegroundListener);
 
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -310,8 +336,6 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                     Log.d("Viewholder ", "clicked");
                 }
             });
-
-
         }
 
     }
