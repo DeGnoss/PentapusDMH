@@ -30,7 +30,7 @@ import java.io.File;
 public class ImageGridFragment extends Fragment implements AdapterNavigationCallback, ImageViewPagerDialogFragment.UpdateableFragment {
     private ImageGridAdapter imageGridAdapter;
     private GridLayoutManager gridLayoutManager;
-    private static int selectedPos;
+    private static int selectedPos = -1;
     private int id;
     private ActionMode mActionMode;
     private RecyclerView mRecyclerView;
@@ -86,6 +86,7 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
 
     private void onClick(int position) {
         imageGridAdapter.statusClicked(position);
+        ImageGridAdapter.setSelectedUri(Uri.parse(imageGridAdapter.getImageUris()[position].toString()));
         selectedPos = position;
     }
 
@@ -108,6 +109,11 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
 
     @Override
     public void onItemLongCLick(final int position) {
+        ImageGridAdapter.setHighlightedPos(position);
+        int oldPos = ImageGridAdapter.getSelectedPos();
+        imageGridAdapter.setSelectedPos(position);
+        imageGridAdapter.notifyItemChanged(oldPos);
+        imageGridAdapter.notifyItemChanged(position);
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -142,6 +148,9 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
             public void onDestroyActionMode(ActionMode mode) {
                 //fab.setVisibility(View.VISIBLE);
                 mActionMode = null;
+                ImageGridAdapter.setHighlightedPos(-1);
+                imageGridAdapter.setSelectedPos(-1);
+                imageGridAdapter.notifyItemChanged(position);
             }
         });
     }

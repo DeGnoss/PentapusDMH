@@ -30,6 +30,7 @@ import java.util.List;
  */
 public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.ImageViewHolder> implements AdapterNavigationCallback{
     private static int selectedPos =-1;
+    private static int highlightedPos = -1;
     private File imageUris[];
     private Context mContext;
     private static Uri selectedUri;
@@ -84,9 +85,24 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
         }
     }
 
-    public void setSelectedPos(int selectedPos) {
-        this.selectedPos = selectedPos;
+    public static void setHighlightedPos(int highlightedPos) {
+        ImageGridAdapter.highlightedPos = highlightedPos;
     }
+
+
+
+    public void setSelectedPos(int selectedPos) {
+        ImageGridAdapter.selectedPos = selectedPos;
+    }
+
+    public static int getSelectedPos() {
+        return selectedPos;
+    }
+
+    public static void setSelectedUri(Uri selectedUri) {
+        ImageGridAdapter.selectedUri = selectedUri;
+    }
+
 
 
     public File[] getImageUris() {
@@ -105,7 +121,6 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
     @Override
     public void onItemClick(int position) {
         mAdapterNavigationCallback.onItemClick(position);
-        selectedUri = Uri.parse(imageUris[position].toString());
     }
 
     @Override
@@ -131,7 +146,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
             vCardView = (CardView) v.findViewById(R.id.cardGridIcon);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_imagegrid);
 
-            clicker.setActivated(getAdapterPosition() == selectedPos);
+            clicker.setActivated(getAdapterPosition() == highlightedPos);
 
 
             vCardView.setOnClickListener(new View.OnClickListener() {
