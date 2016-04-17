@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +28,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ViewPagerMyImageGridFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.R;
 import com.soundcloud.android.crop.Crop;
 
@@ -128,8 +130,8 @@ public class PcEditFragment extends Fragment {
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 // Start the Intent
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMG); */
-                Glide.clear(ivAvatar);
-                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_PC"));
+                //lide.clear(ivAvatar);
+                //Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_PC"));
             }
         });
 
@@ -137,18 +139,27 @@ public class PcEditFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                ViewPagerMyImageGridFragment fragment = new ViewPagerMyImageGridFragment();
-                fragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_PC"), RESULT_CHOOSE_IMG);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.FrameTop, fragment, "F_IMAGEGRID")
-                        .addToBackStack("F_IMAGEGRID")
-                        .commit();
+                showViewPager();
             }
         });
 
         // Inflate the layout for this fragment
         return charEditView;
 
+    }
+
+
+    public void showViewPager() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        ImageViewPagerDialogFragment newFragment = new ImageViewPagerDialogFragment();
+        newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_PC"), RESULT_CHOOSE_IMG);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        transaction.add(android.R.id.content, newFragment, "F_IMAGE_PAGER")
+                .addToBackStack(null).commit();
     }
 
     private void loadCharacterInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, int id) {

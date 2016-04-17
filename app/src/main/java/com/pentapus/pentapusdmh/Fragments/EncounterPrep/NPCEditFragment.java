@@ -280,11 +280,7 @@ public class NPCEditFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
-            beginCrop(data.getData());
-        } else if (requestCode == Crop.REQUEST_CROP) {
-            handleCrop(resultCode, data);
-        } else if(requestCode == RESULT_CHOOSE_IMG && resultCode == Activity.RESULT_OK){
+        if(requestCode == RESULT_CHOOSE_IMG && resultCode == Activity.RESULT_OK){
             if(data != null) {
                 String value = data.getStringExtra("imageUri");
                 if(value != null) {

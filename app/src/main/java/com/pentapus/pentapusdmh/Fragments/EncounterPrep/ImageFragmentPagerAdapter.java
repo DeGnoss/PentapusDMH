@@ -7,21 +7,24 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import java.io.File;
+
 /**
  * Created by Koni on 4/4/16.
  */
 public class ImageFragmentPagerAdapter extends FragmentPagerAdapter {
-final int PAGE_COUNT = 2;
-private String tabTitles[] = new String[] { "My Icons", "Icons" };
-private Context context;
+    final int PAGE_COUNT = 1;
+    private String tabTitles[] = new String[]{"My Icons", "Icons"};
+    private Context context;
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private int id;
+    private File[] imageUri;
 
 
     public ImageFragmentPagerAdapter(FragmentManager fm, Context context, int id) {
         super(fm);
         this.context = context;
-        this.id=id;
+        this.id = id;
     }
 
     @Override
@@ -31,14 +34,29 @@ private Context context;
 
     @Override
     public Fragment getItem(int position) {
-        switch(position){
+        switch (position) {
             case 0:
-                return ViewPagerMyImageGridFragment.newInstance(id);
+                return ImageGridFragment.newInstance(id);
             case 1:
-                return ViewPagerImageGridFragment.newInstance(id);
+                return null;
             default:
                 return null;
         }
+    }
+
+
+    public void setImageUri(File[] imageUri) {
+        this.imageUri = imageUri;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        if (object instanceof ImageGridFragment) {
+            ((ImageGridFragment) object).update(imageUri);
+        }
+        //don't return POSITION_NONE, avoid fragment recreation.
+        return super.getItemPosition(object);
     }
 
     @Override

@@ -38,7 +38,7 @@ import java.util.UUID;
 /**
  * Created by Koni on 4/4/16.
  */
-public class ImageViewPagerDialogFragment extends Fragment {
+public class ImageViewPagerDialogFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
@@ -46,6 +46,7 @@ public class ImageViewPagerDialogFragment extends Fragment {
     private ViewPager viewPager;
     private ImageFragmentPagerAdapter pagerAdapter;
     private FloatingActionButton fabImageVP;
+    private static Uri selectedUri;
     private Button bDone;
     private int id;
     private Uri imageUri;
@@ -56,6 +57,10 @@ public class ImageViewPagerDialogFragment extends Fragment {
 
     private static int RESULT_LOAD_IMG = 1;
     private static int RESULT_CHOOSE_IMG = 2;
+
+    public interface UpdateableFragment {
+        public void update(File[] updateData);
+    }
 
 
 
@@ -71,7 +76,8 @@ public class ImageViewPagerDialogFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        }
+        px = (int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -86,6 +92,7 @@ public class ImageViewPagerDialogFragment extends Fragment {
         bDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imageUri = ImageGridAdapter.getSelectedUri();
                 if(imageUri != null){
                     Intent intent = new Intent();
                     intent.putExtra("imageUri", String.valueOf(imageUri));
@@ -105,7 +112,6 @@ public class ImageViewPagerDialogFragment extends Fragment {
             }
         });
 
-        px = (int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
 
 
 
@@ -122,24 +128,18 @@ public class ImageViewPagerDialogFragment extends Fragment {
         this.imageUri = imageUri;
     }
 
-
-
-    private void saveData() {
-        //((HpOverviewFragment)pagerAdapter.getRegisteredFragment(1)).saveChanges();
-        //((StatusFragment)pagerAdapter.getRegisteredFragment(2)).saveChanges();
-    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         pagerAdapter = new ImageFragmentPagerAdapter(getChildFragmentManager(), getContext(), id);
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(2);
-        //viewPager.setOffscreenPageLimit(1);
+        viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(1);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
 
     }
+
 
 
     @Override
@@ -162,7 +162,7 @@ public class ImageViewPagerDialogFragment extends Fragment {
 
     private void beginCrop(Uri source) {
         Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
-        Crop.of(source, destination).asSquare().start(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"));
+        Crop.of(source, destination).asSquare().start(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("F_IMAGE_PAGER"));
     }
 
 
@@ -183,7 +183,6 @@ public class ImageViewPagerDialogFragment extends Fragment {
                             UUID uuid = UUID.randomUUID();
                             String randomUUIDString = uuid.toString();
                             File mypath = new File(directory, randomUUIDString);
-
                             FileOutputStream fos = null;
                             try {
                                 fos = new FileOutputStream(mypath);
@@ -198,9 +197,15 @@ public class ImageViewPagerDialogFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }
-                            ((ViewPagerMyImageGridFragment)pagerAdapter.getItem(0)).updateView();
+                            directory = cw.getDir("myIconDir", Context.MODE_PRIVATE);
+                            File[] newFile = directory.listFiles();
+                            pagerAdapter.setImageUri(newFile);
+
+                            //((ViewPagerMyImageGridFragment)pagerAdapter.getItem(0)).updateView();
                             //File directory = new getContext().getFileStreamPath("app_iconDir");
+                            //((ViewPagerMyImageGridFragment)pagerAdapter.getItem()).refresh();
                             Uri uri = Uri.parse(mypath.getPath());
+                            imageUri = uri;
                             myFile = uri;
                             //setimageuri
                         }
@@ -212,4 +217,30 @@ public class ImageViewPagerDialogFragment extends Fragment {
     }
 
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        switch (position){
+            case 0 :
+                fabImageVP.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                fabImageVP.setVisibility(View.GONE);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }
