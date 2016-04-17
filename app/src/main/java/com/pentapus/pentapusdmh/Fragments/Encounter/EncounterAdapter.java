@@ -47,6 +47,7 @@ public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter
 
     /**
      * Constructor.
+     *
      * @param context The Context the Adapter is displayed in.
      */
     public EncounterAdapter(Context context, AdapterNavigationCallback callback) {
@@ -127,9 +128,9 @@ public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter
         }
         int encounterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
-        if(position==0){
+        if (position == 0) {
             notifyItemChanged(position);
-        }else{
+        } else {
             notifyItemRemoved(position);
         }
         mContext.getContentResolver().delete(uri, null, null);
@@ -137,11 +138,16 @@ public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter
         if (clipboard.hasPrimaryClip()) {
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
-            if(pasteUri.equals(uri)){
-                Uri newUri = Uri.parse("");
-                ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
-                clipboard.setPrimaryClip(clip);
-                mAdapterCallback.onMenuRefresh();
+            if (pasteUri == null) {
+                pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+            }
+            if (pasteUri != null) {
+                if (pasteUri.equals(uri)) {
+                    Uri newUri = Uri.parse("");
+                    ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
+                    clipboard.setPrimaryClip(clip);
+                    mAdapterCallback.onMenuRefresh();
+                }
             }
         }
     }
@@ -165,7 +171,7 @@ public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter
     public void onMenuRefresh() {
     }
 
-    public Cursor getCursor(){
+    public Cursor getCursor() {
         return mCursorAdapter.getCursor();
     }
 
@@ -251,7 +257,6 @@ public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter
                 undoButton.setOnClickListener(null);
             }
         }
-
 
 
     }

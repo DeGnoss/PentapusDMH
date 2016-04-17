@@ -454,6 +454,9 @@ public class EncounterTableFragment extends Fragment implements
                         if (clipboard.hasPrimaryClip()) {
                             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
                             Uri pasteUri = itemPaste.getUri();
+                            if (pasteUri == null) {
+                                pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+                            }
                             if(pasteUri.equals(uri)){
                                 Uri newUri = Uri.parse("");
                                 ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);

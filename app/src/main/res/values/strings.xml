@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PentapusDMH</string>
     <string name="action_settings">Settings</string>
-    <string name="sDone">Done</string>
+    <string name="sDone">Save</string>
     <string name="sName">Name</string>
     <string name="sDetails">Details</string>
     <string name="campaign_settings">Manage Campaigns</string>

@@ -95,8 +95,8 @@ public class EncounterFragment extends Fragment implements
             encounterName = getArguments().getString("encounterName");
         }
         setHasOptionsMenu(true);
-        dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(),null, this);
-        dataAdapterPC = new CursorRecyclerViewAdapter(getContext(),null, this);
+        dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
+        dataAdapterPC = new CursorRecyclerViewAdapter(getContext(), null, this);
     }
 
     @Override
@@ -185,21 +185,21 @@ public class EncounterFragment extends Fragment implements
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 CursorRecyclerViewAdapter.CharacterViewHolder characterViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
-                if(characterViewHolder.type == 1){
+                if (characterViewHolder.type == 1) {
                     int position = characterViewHolder.getSubAdapterPosition();
                     CursorRecyclerViewAdapter testAdapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) recyclerView.getAdapter()).getSubAdapter(0);
                     if (testAdapter.isPendingRemoval(position)) {
                         return 0;
                     }
                     return super.getSwipeDirs(recyclerView, viewHolder);
-                }else if(characterViewHolder.type == 2){
+                } else if (characterViewHolder.type == 2) {
                     int position = characterViewHolder.getSubAdapterPosition();
                     CursorRecyclerViewAdapter testAdapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) recyclerView.getAdapter()).getSubAdapter(1);
                     if (testAdapter.isPendingRemoval(position)) {
                         return 0;
                     }
                     return super.getSwipeDirs(recyclerView, viewHolder);
-                }else{
+                } else {
                     return 0;
                 }
 
@@ -210,12 +210,12 @@ public class EncounterFragment extends Fragment implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                 CursorRecyclerViewAdapter.CharacterViewHolder characterViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
-                if(characterViewHolder.type == 1){
+                if (characterViewHolder.type == 1) {
                     int swipedAdapterPosition = characterViewHolder.getSubAdapterPosition();
                     CursorRecyclerViewAdapter adapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) mRecyclerView.getAdapter()).getSubAdapter(0);
                     int notifyPosition = characterViewHolder.getLayoutPosition();
                     adapter.pendingRemoval(swipedAdapterPosition, notifyPosition);
-                }else if(characterViewHolder.type == 2){
+                } else if (characterViewHolder.type == 2) {
                     int swipedAdapterPosition = characterViewHolder.getSubAdapterPosition();
                     CursorRecyclerViewAdapter adapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) mRecyclerView.getAdapter()).getSubAdapter(1);
                     int notifyPosition = characterViewHolder.getLayoutPosition();
@@ -248,7 +248,7 @@ public class EncounterFragment extends Fragment implements
 
                 int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
                 int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                 int xMarkBottom = xMarkTop + intrinsicHeight;
                 xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
 
@@ -377,15 +377,15 @@ public class EncounterFragment extends Fragment implements
 
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        if(clipboard.hasPrimaryClip()){
+        if (clipboard.hasPrimaryClip()) {
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
             String pasteString = String.valueOf(itemPaste.getText());
-            if(pasteUri == null){
+            if (pasteUri == null) {
                 pasteUri = Uri.parse(pasteString);
             }
-            if(pasteUri != null){
-                if(DbContentProvider.NPC.equals(getContext().getContentResolver().getType(pasteUri))){
+            if (pasteUri != null) {
+                if (DbContentProvider.NPC.equals(getContext().getContentResolver().getType(pasteUri))) {
                     menu.findItem(R.id.menu_paste).setVisible(true);
                 }
             }
@@ -473,7 +473,7 @@ public class EncounterFragment extends Fragment implements
     @Override
     public void onItemLongCLick(final int position, final int positionType) {
         Log.d("EncounterFragment ", "itemLongClicked");
-        if(positionType == 1) {
+        if (positionType == 1) {
 
 
             mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
@@ -507,11 +507,16 @@ public class EncounterFragment extends Fragment implements
                                 if (clipboard.hasPrimaryClip()) {
                                     ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
                                     Uri pasteUri = itemPaste.getUri();
-                                    if(pasteUri.equals(uri)){
-                                        Uri newUri = Uri.parse("");
-                                        ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
-                                        clipboard.setPrimaryClip(clip);
-                                        getActivity().invalidateOptionsMenu();
+                                    if (pasteUri == null) {
+                                        pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+                                    }
+                                    if (pasteUri != null) {
+                                        if (pasteUri.equals(uri)) {
+                                            Uri newUri = Uri.parse("");
+                                            ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
+                                            clipboard.setPrimaryClip(clip);
+                                            getActivity().invalidateOptionsMenu();
+                                        }
                                     }
                                 }
                             }
@@ -554,7 +559,7 @@ public class EncounterFragment extends Fragment implements
                     mergeAdapter.notifyItemChanged(position);
                 }
             });
-        }else{
+        } else {
             Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
         }
 

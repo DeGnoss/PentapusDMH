@@ -53,7 +53,6 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
     private static final int PENDING_REMOVAL_TIMEOUT = 3000;
 
 
-
     private int mRowIdColumn;
 
     private DataSetObserver mDataSetObserver;
@@ -129,7 +128,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         viewHolder.ivIcon.setImageURI(simpleItemCard.getIconUri());
         viewHolder.itemView.setActivated(selectedType == simpleItemCard.getType() && selectedPos == position);
         viewHolder.clicker.setOnTouchListener(rippleForegroundListener);
-        viewHolder.identifier = simpleItemCard.type +":" + simpleItemCard.id;
+        viewHolder.identifier = simpleItemCard.type + ":" + simpleItemCard.id;
 
 
         if (itemsPendingRemoval.contains(viewHolder.identifier)) {
@@ -208,11 +207,17 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                 if (clipboard.hasPrimaryClip()) {
                     ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
                     Uri pasteUri = itemPaste.getUri();
-                    if(pasteUri.equals(uri)){
-                        Uri newUri = Uri.parse("");
-                        ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
-                        clipboard.setPrimaryClip(clip);
-                        mAdapterCallback.onMenuRefresh();
+                    if (pasteUri == null) {
+                        pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+                    }
+                    if (pasteUri != null) {
+
+                        if (pasteUri.equals(uri)) {
+                            Uri newUri = Uri.parse("");
+                            ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
+                            clipboard.setPrimaryClip(clip);
+                            mAdapterCallback.onMenuRefresh();
+                        }
                     }
                 }
                 break;
@@ -277,7 +282,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         if (selectedType == positionType && selectedPos == position) {
             selectedPos = -1;
             selectedType = -1;
-        }else{
+        } else {
             selectedPos = position;
             selectedType = positionType;
         }

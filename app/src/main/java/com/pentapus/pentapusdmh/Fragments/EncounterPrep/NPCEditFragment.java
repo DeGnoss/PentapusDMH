@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,7 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +29,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.ImageGridFragment;
 import com.pentapus.pentapusdmh.R;
 import com.soundcloud.android.crop.Crop;
 
@@ -55,9 +56,9 @@ public class NPCEditFragment extends Fragment {
     private int encounterId;
     private int px;
 
-    Button addchar_btn, bAddImage, bChooseImage;
+    Button addchar_btn;
+    ImageButton bChooseImage;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar;
-    ImageView ivAvatar;
 
     public NPCEditFragment() {
         // Required empty public constructor
@@ -93,7 +94,7 @@ public class NPCEditFragment extends Fragment {
                 npcId = getArguments().getInt(NPC_ID);
             }
         }
-        px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics());
+        px = (int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
     }
 
     @Override
@@ -112,9 +113,7 @@ public class NPCEditFragment extends Fragment {
         etInt = (EditText) charEditView.findViewById(R.id.etInt);
         etWis = (EditText) charEditView.findViewById(R.id.etWis);
         etChar = (EditText) charEditView.findViewById(R.id.etChar);
-        bAddImage = (Button) charEditView.findViewById(R.id.bAddImage);
-        ivAvatar = (ImageView) charEditView.findViewById(R.id.ivAvatar);
-        bChooseImage = (Button) charEditView.findViewById(R.id.bChooseImage);
+        bChooseImage = (ImageButton) charEditView.findViewById(R.id.bChooseImage);
 
 
         if (modeUpdate) {
@@ -128,29 +127,31 @@ public class NPCEditFragment extends Fragment {
             }
         });
 
-        bAddImage.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-               /* Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                // Start the Intent
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMG); */
-                Glide.clear(ivAvatar);
-                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"));
-            }
-        });
-
         bChooseImage.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                ImageGridFragment fragment = new ImageGridFragment();
+                showViewPager();
+                /*
+                ViewPagerMyImageGridFragment fragment = new ViewPagerMyImageGridFragment();
                 fragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.FrameTop, fragment, "F_IMAGEGRID")
                         .addToBackStack("F_IMAGEGRID")
-                        .commit();
+                        .commit();*/
+            }
+        });
+
+
+
+
+        bChooseImage.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                Glide.clear(bChooseImage);
+                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"));
+                return true;
             }
         });
 
@@ -158,6 +159,20 @@ public class NPCEditFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return charEditView;
+    }
+
+
+    public void showViewPager() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        ImageViewPagerDialogFragment newFragment = new ImageViewPagerDialogFragment();
+        newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        transaction.add(android.R.id.content, newFragment, "F_IMAGE_PAGER")
+                .addToBackStack(null).commit();
     }
 
     private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, EditText strength, EditText dex, EditText constit, EditText intelligence, EditText wis, EditText charisma, int id) {
@@ -204,7 +219,7 @@ public class NPCEditFragment extends Fragment {
             intelligence.setText(myIntelligence, TextView.BufferType.EDITABLE);
             wis.setText(myWisdom, TextView.BufferType.EDITABLE);
             charisma.setText(myCharisma, TextView.BufferType.EDITABLE);
-            ivAvatar.setImageURI(myFile);
+            bChooseImage.setImageURI(myFile);
 
         }
     }
@@ -235,7 +250,7 @@ public class NPCEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
         values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
         if(myFile == null){
-            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/ninja");
+            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
         }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
@@ -276,11 +291,11 @@ public class NPCEditFragment extends Fragment {
                     Uri uri = Uri.parse(value);
                     myFile = uri;
                     Log.v("NPCEdit", "Data passed from Child fragment = " + uri);
-                    ivAvatar.post(new Runnable() {
+                    bChooseImage.post(new Runnable() {
                         @Override
                         public void run()
                         {
-                            ivAvatar.setImageURI(myFile);
+                            bChooseImage.setImageURI(myFile);
                         }
                     });
                 }
@@ -330,9 +345,8 @@ public class NPCEditFragment extends Fragment {
                             //File directory = new getContext().getFileStreamPath("app_iconDir");
                             Uri uri = Uri.parse(mypath.getPath());
                             myFile = uri;
-                            Log.v("NPCEdit", "Data passed from Child fragment = " + uri);
-                            ivAvatar.setImageURI(uri);
-                            ivAvatar.invalidate();
+                            bChooseImage.setImageURI(uri);
+                            bChooseImage.invalidate();
                         }
                     });
 

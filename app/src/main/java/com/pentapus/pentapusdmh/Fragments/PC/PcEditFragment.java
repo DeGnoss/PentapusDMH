@@ -26,7 +26,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.ImageGridFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ViewPagerMyImageGridFragment;
 import com.pentapus.pentapusdmh.R;
 import com.soundcloud.android.crop.Crop;
 
@@ -137,7 +137,7 @@ public class PcEditFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                ImageGridFragment fragment = new ImageGridFragment();
+                ViewPagerMyImageGridFragment fragment = new ViewPagerMyImageGridFragment();
                 fragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_PC"), RESULT_CHOOSE_IMG);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.FrameTop, fragment, "F_IMAGEGRID")

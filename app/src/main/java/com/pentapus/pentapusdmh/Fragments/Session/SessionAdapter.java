@@ -45,6 +45,7 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
 
     /**
      * Constructor.
+     *
      * @param context The Context the Adapter is displayed in.
      */
     public SessionAdapter(Context context, AdapterNavigationCallback callback) {
@@ -119,7 +120,7 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
     public void remove(int position, String identifier) {
         Cursor mCursor = mCursorAdapter.getCursor();
 
-        if (itemsPendingRemoval.contains(identifier)){
+        if (itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.remove(identifier);
         }
         int sessionId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
@@ -130,11 +131,17 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
         if (clipboard.hasPrimaryClip()) {
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
-            if(pasteUri.equals(uri)){
-                Uri newUri = Uri.parse("");
-                ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
-                clipboard.setPrimaryClip(clip);
-                mAdapterCallback.onMenuRefresh();
+            if (pasteUri == null) {
+                pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+            }
+            if (pasteUri != null) {
+
+                if (pasteUri.equals(uri)) {
+                    Uri newUri = Uri.parse("");
+                    ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
+                    clipboard.setPrimaryClip(clip);
+                    mAdapterCallback.onMenuRefresh();
+                }
             }
         }
     }
@@ -157,7 +164,7 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
     public void onMenuRefresh() {
     }
 
-    public Cursor getCursor(){
+    public Cursor getCursor() {
         return mCursorAdapter.getCursor();
     }
 
@@ -242,7 +249,6 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
                 undoButton.setOnClickListener(null);
             }
         }
-
 
 
     }
