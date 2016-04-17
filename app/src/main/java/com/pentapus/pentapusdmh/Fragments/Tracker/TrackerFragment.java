@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
@@ -38,6 +39,8 @@ public class TrackerFragment extends Fragment implements
     private static final String STATUSES = "statuses";
     private static final String HP = "hp";
     private static final String ABILITIES = "abilities";
+    private RecyclerView mRecyclerView;
+    private boolean pendingIntroAnimation;
 
 
     private TrackerAdapter chars;
@@ -63,6 +66,9 @@ public class TrackerFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         encounterId = SharedPrefsHelper.loadEncounterId(getContext());
+        if (savedInstanceState == null) {
+            pendingIntroAnimation = true;
+        }
     }
 
 
@@ -70,7 +76,7 @@ public class TrackerFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_tracker, container, false);
-        final RecyclerView mRecyclerView = (RecyclerView) tableView.findViewById(R.id.listViewEncounter);
+        mRecyclerView = (RecyclerView) tableView.findViewById(R.id.listViewEncounter);
         CustomRecyclerLayoutManager llm = new CustomRecyclerLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
@@ -99,6 +105,10 @@ public class TrackerFragment extends Fragment implements
                     }
                 })
         );
+        if (pendingIntroAnimation) {
+            pendingIntroAnimation = false;
+            startIntroAnimation();
+        }
         // Inflate the layout for this fragment
         return tableView;
     }
@@ -278,6 +288,16 @@ public class TrackerFragment extends Fragment implements
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+
+    private void startIntroAnimation() {
+        mRecyclerView.setAlpha(0f);
+        mRecyclerView.animate()
+                .setDuration(500)
+                .alpha(1f)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
     }
 
 }
