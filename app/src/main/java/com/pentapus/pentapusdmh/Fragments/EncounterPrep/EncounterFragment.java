@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh.Fragments;
+package com.pentapus.pentapusdmh.Fragments.EncounterPrep;
 
 
 import android.content.ClipData;
@@ -28,14 +28,15 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.AdapterCallback;
-import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.DividerItemDecoration;
+import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -472,13 +473,16 @@ public class EncounterFragment extends Fragment implements
     @Override
     public void onItemLongCLick(final int position, final int positionType) {
         Log.d("EncounterFragment ", "itemLongClicked");
-        /*if(positionType == 1) {
+        if(positionType == 1) {
 
 
             mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    mode.setTitle("Selected");
+                    mRecyclerView.getAdapter().notifyItemChanged(position);
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
+                    String title = "Selected: " + String.valueOf(position);
+                    mode.setTitle(title);
                     MenuInflater inflater = mode.getMenuInflater();
                     inflater.inflate(R.menu.context_menu, menu);
                     return true;
@@ -499,8 +503,18 @@ public class EncounterFragment extends Fragment implements
                                 int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                 Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
                                 getContext().getContentResolver().delete(uri, null, null);
+                                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                if (clipboard.hasPrimaryClip()) {
+                                    ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+                                    Uri pasteUri = itemPaste.getUri();
+                                    if(pasteUri.equals(uri)){
+                                        Uri newUri = Uri.parse("");
+                                        ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
+                                        clipboard.setPrimaryClip(clip);
+                                        getActivity().invalidateOptionsMenu();
+                                    }
+                                }
                             }
-                            //deleteClicked();
                             mode.finish();
                             return true;
                         case R.id.edit:
@@ -542,7 +556,12 @@ public class EncounterFragment extends Fragment implements
             });
         }else{
             Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
+    }
+
+    @Override
+    public void onMenuRefresh() {
+        getActivity().invalidateOptionsMenu();
     }
 }

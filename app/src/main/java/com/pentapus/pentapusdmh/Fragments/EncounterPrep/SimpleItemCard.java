@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.Fragments.EncounterPrep;
 
 import android.database.Cursor;
 import android.net.Uri;

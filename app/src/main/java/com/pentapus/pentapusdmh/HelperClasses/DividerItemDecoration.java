@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.HelperClasses;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.pentapus.pentapusdmh.R;
 
 /**
  * Created by konrad.fellmann on 11.04.2016.

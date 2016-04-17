@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
+import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.R;
 

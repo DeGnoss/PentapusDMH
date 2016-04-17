@@ -6,4 +6,5 @@ package com.pentapus.pentapusdmh;
 public interface AdapterCallback {
     void onItemClick(int position, int positionType);
     void onItemLongCLick(int position, int positionType);
+    void onMenuRefresh();
 }

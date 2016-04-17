@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh.Fragments;
+package com.pentapus.pentapusdmh.Fragments.PC;
 
 
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh.Fragments;
+package com.pentapus.pentapusdmh.Fragments.Session;
 
 
 import android.app.AlertDialog;
@@ -20,32 +20,26 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.CursorRecyclerNavigationViewAdapter;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.DividerItemDecoration;
+import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
+import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
+import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
-import com.pentapus.pentapusdmh.SessionAdapter;
-
-import java.util.List;
 
 
 public class SessionTableFragment extends Fragment implements
@@ -396,7 +390,6 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mSessionAdapter.swapCursor(data);
-        //dataAdapterSessions.notifyDataSetChanged();
     }
 
     @Override
@@ -450,8 +443,18 @@ public class SessionTableFragment extends Fragment implements
                         int sessionId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
                         getContext().getContentResolver().delete(uri, null, null);
+                        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                        if (clipboard.hasPrimaryClip()) {
+                            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+                            Uri pasteUri = itemPaste.getUri();
+                            if(pasteUri.equals(uri)){
+                                Uri newUri = Uri.parse("");
+                                ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
+                                clipboard.setPrimaryClip(clip);
+                                getActivity().invalidateOptionsMenu();
+                            }
+                        }
                         mode.finish();
-                        mSessionRecyclerView.getAdapter().notifyItemRemoved(position);
                         return true;
                     case R.id.edit:
                         cursor = mSessionAdapter.getCursor();
@@ -462,17 +465,19 @@ public class SessionTableFragment extends Fragment implements
                         bundle.putInt(SESSION_ID, sessionId);
                         editSession(bundle);
                         mode.finish();
+                        mSessionRecyclerView.getAdapter().notifyItemChanged(position);
                         return true;
                     case R.id.copy:
                         cursor = mSessionAdapter.getCursor();
                         cursor.moveToPosition(position);
                         sessionId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                         uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
-                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
                         clipboard.setPrimaryClip(clip);
                         getActivity().invalidateOptionsMenu();
                         mode.finish();
+                        mSessionRecyclerView.getAdapter().notifyItemChanged(position);
                         return true;
                     default:
                         return false;
@@ -487,7 +492,11 @@ public class SessionTableFragment extends Fragment implements
                 mActionMode = null;
             }
         });
-        mSessionRecyclerView.getAdapter().notifyItemChanged(position);
         //TODO: set title according to selection
+    }
+
+    @Override
+    public void onMenuRefresh() {
+        getActivity().invalidateOptionsMenu();
     }
 }

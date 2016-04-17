@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.Fragments.PC;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -16,8 +16,11 @@ import android.widget.TextView;
 
 import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorAdapter;
 import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorViewHolder;
+import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
+import com.pentapus.pentapusdmh.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +29,7 @@ import java.util.List;
 /**
  * Created by Koni on 14/4/16.
  */
-public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter.EncounterViewHolder> implements AdapterNavigationCallback{
+public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.EncounterViewHolder> implements AdapterNavigationCallback {
 
     public static int selectedPos = -1;
 
@@ -42,7 +45,7 @@ public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter
      * Constructor.
      * @param context The Context the Adapter is displayed in.
      */
-    public EncounterAdapter(Context context, AdapterNavigationCallback callback) {
+    public PcAdapter(Context context, AdapterNavigationCallback callback) {
         super(context);
         this.mAdapterCallback = callback;
         itemsPendingRemoval = new ArrayList<>();
@@ -124,7 +127,7 @@ public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter
     }
 
     public static void setSelectedPos(int selectedPos) {
-        EncounterAdapter.selectedPos = selectedPos;
+        PcAdapter.selectedPos = selectedPos;
     }
 
     @Override
@@ -135,6 +138,10 @@ public class EncounterAdapter extends RecyclerViewCursorAdapter<EncounterAdapter
     @Override
     public void onItemLongCLick(int position) {
         mAdapterCallback.onItemLongCLick(position);
+    }
+
+    @Override
+    public void onMenuRefresh() {
     }
 
     public Cursor getCursor(){

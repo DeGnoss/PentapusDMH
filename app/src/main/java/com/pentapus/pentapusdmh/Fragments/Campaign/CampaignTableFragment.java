@@ -1,12 +1,8 @@
-package com.pentapus.pentapusdmh.Fragments;
+package com.pentapus.pentapusdmh.Fragments.Campaign;
 
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,27 +17,23 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.CampaignAdapter;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.DividerItemDecoration;
+import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
+import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -394,7 +386,7 @@ public class CampaignTableFragment extends Fragment implements
                 String title = "Selected: " + String.valueOf(position);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.context_menu, menu);
+                inflater.inflate(R.menu.context_menu_campaign, menu);
                 fab.setVisibility(View.GONE);
                 return true;
             }
@@ -426,7 +418,7 @@ public class CampaignTableFragment extends Fragment implements
                         editCampaign(bundle);
                         mode.finish();
                         return true;
-                    case R.id.copy:
+                    case R.id.pcs:
                         cursor = mCampaignAdapter.getCursor();
                         cursor.moveToPosition(position);
                         campaignId =
@@ -452,5 +444,10 @@ public class CampaignTableFragment extends Fragment implements
             }
         });
         //TODO: set title according to selection
+    }
+
+    @Override
+    public void onMenuRefresh() {
+        getActivity().invalidateOptionsMenu();
     }
 }

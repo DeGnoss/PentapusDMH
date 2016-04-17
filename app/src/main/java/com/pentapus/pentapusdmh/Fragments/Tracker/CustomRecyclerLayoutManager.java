@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.Fragments.Tracker;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;

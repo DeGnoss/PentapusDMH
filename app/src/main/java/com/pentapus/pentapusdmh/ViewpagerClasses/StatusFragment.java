@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
+import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.RecyclerItemClickListener;
+import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 
 /**
  * Created by Koni on 02.04.2016.

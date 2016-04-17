@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh.Fragments;
+package com.pentapus.pentapusdmh.Fragments.Encounter;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,23 +15,25 @@ import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
-public class SessionEditFragment extends Fragment {
+public class EncounterEditFragment extends Fragment {
+
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String MODE = "modeUpdate";
+    private static final String ENCOUNTER_ID = "encounterId";
     private static final String SESSION_ID = "sessionId";
 
     private boolean modeUpdate;
+    private int encounterId;
     private int sessionId;
 
     Button addchar_btn;
     EditText name_tf, info_tf;
-    private int campaignId;
 
-    public SessionEditFragment() {
+
+    public EncounterEditFragment() {
         // Required empty public constructor
     }
 
@@ -39,14 +41,16 @@ public class SessionEditFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param modeUpdate Parameter 1.
-     * @param sessionId  Parameter 2.
-     * @return A new instance of fragment SessionEditFragment.
+     * @param mode        Parameter 1.
+     * @param encounterId Parameter 2.
+     * @param sessionId   Parameter 3.
+     * @return A new instance of fragment EncounterEditFragment.
      */
-    public static SessionEditFragment newInstance(boolean modeUpdate, int sessionId) {
-        SessionEditFragment fragment = new SessionEditFragment();
+    public static EncounterEditFragment newInstance(boolean mode, int encounterId, int sessionId) {
+        EncounterEditFragment fragment = new EncounterEditFragment();
         Bundle args = new Bundle();
-        args.putBoolean(MODE, modeUpdate);
+        args.putBoolean(MODE, mode);
+        args.putInt(ENCOUNTER_ID, encounterId);
         args.putInt(SESSION_ID, sessionId);
         fragment.setArguments(args);
         return fragment;
@@ -55,12 +59,11 @@ public class SessionEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        if (this.getArguments() != null) {
+        if (getArguments() != null) {
             modeUpdate = getArguments().getBoolean(MODE);
-            //check wheter entry gets updated or added
-            if (modeUpdate) {
-                sessionId = getArguments().getInt(SESSION_ID);
+            sessionId = getArguments().getInt(SESSION_ID);
+            if(modeUpdate){
+                encounterId = getArguments().getInt(ENCOUNTER_ID);
             }
         }
     }
@@ -69,13 +72,13 @@ public class SessionEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View charEditView = inflater.inflate(R.layout.fragment_session_edit, container, false);
+        final View charEditView = inflater.inflate(R.layout.fragment_encounter_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
 
-
+        //check wheter entry gets updated or added
         if (modeUpdate) {
-            loadSessionInfo(name_tf, info_tf, sessionId);
+            loadEncounterInfo(name_tf, info_tf, encounterId);
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
@@ -86,16 +89,14 @@ public class SessionEditFragment extends Fragment {
         });
         // Inflate the layout for this fragment
         return charEditView;
-
     }
 
-
-    private void loadSessionInfo(EditText name, EditText info, int id) {
+    private void loadEncounterInfo(EditText name, EditText info, int id) {
         String[] projection = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO};
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + id);
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
                 null);
         if (cursor != null) {
@@ -114,15 +115,15 @@ public class SessionEditFragment extends Fragment {
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
         values.put(DataBaseHandler.KEY_INFO, myInitiative);
-        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+        values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
 
         // insert a record
         if (!mode) {
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_SESSION, values);
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
         }
         // update a record
         else {
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
         getActivity().getSupportFragmentManager().popBackStack();

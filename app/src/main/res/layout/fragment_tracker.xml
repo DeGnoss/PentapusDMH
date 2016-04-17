@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#55F0F4C3"
-    tools:context="com.pentapus.pentapusdmh.Fragments.SessionTableFragment">
+    tools:context=".Fragments.Session.SessionTableFragment">
 
 
 

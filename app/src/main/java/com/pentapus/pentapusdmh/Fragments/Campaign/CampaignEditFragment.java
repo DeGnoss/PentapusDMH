@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh.Fragments;
+package com.pentapus.pentapusdmh.Fragments.Campaign;
 
 import android.content.ContentValues;
 import android.content.Context;

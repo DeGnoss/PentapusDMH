@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh.Fragments;
+package com.pentapus.pentapusdmh.Fragments.Tracker;
 
 
 import android.content.Intent;
@@ -21,10 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.pentapus.pentapusdmh.CustomRecyclerLayoutManager;
-import com.pentapus.pentapusdmh.RecyclerItemClickListener;
-import com.pentapus.pentapusdmh.TrackerAdapter;
-import com.pentapus.pentapusdmh.TrackerInfoCard;
+import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;

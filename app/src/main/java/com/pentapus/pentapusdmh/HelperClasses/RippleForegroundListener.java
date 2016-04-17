@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.HelperClasses;
 
 /**
  * Created by Koni on 14/4/16.

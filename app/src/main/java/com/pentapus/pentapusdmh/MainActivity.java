@@ -7,14 +7,11 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -22,16 +19,13 @@ import android.view.MenuItem;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.CampaignTableFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterTableFragment;
-import com.pentapus.pentapusdmh.Fragments.PcTableFragment;
-import com.pentapus.pentapusdmh.Fragments.SessionTableFragment;
-import com.pentapus.pentapusdmh.Fragments.TrackerFragment;
+import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
+import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
+import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
+import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
+import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -312,25 +306,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-       /* EncounterFragment encounterFragment = (EncounterFragment) fm.findFragmentByTag("F_ENCOUNTER");
-        EncounterTableFragment encounterTableFragment = (EncounterTableFragment) fm.findFragmentByTag("FT_ENCOUNTER");
-        SessionTableFragment sessionTableFragment = (SessionTableFragment) fm.findFragmentByTag("FT_SESSION");
-        CampaignTableFragment campaignTableFragment = (CampaignTableFragment) fm.findFragmentByTag("FT_CAMPAIGN");
-        if (campaignTableFragment != null && campaignTableFragment.isVisible() && CampaignAdapter.getSelectedPos() != -1) {
-            //int oldPos = CampaignAdapter.getSelectedPos();
-            //CampaignAdapter.setSelectedPos(-1);
-            //campaignTableFragment.getmCampaignAdapter().notifyItemChanged(oldPos);
-        } else if (sessionTableFragment != null && sessionTableFragment.isVisible() && SessionAdapter.getSelectedPos() != -1) {
-            int oldPos = SessionAdapter.getSelectedPos();
-            //SessionAdapter.setSelectedPos(-1);
-            //sessionTableFragment.getmSessionAdapter().notifyItemChanged(oldPos);
-        } else if (encounterFragment != null && encounterFragment.isVisible() && CursorRecyclerViewAdapter.selectedPos != -1) {
-            CursorRecyclerViewAdapter.selectedPos = -1;
-            encounterFragment.getMergeAdapter().notifyDataSetChanged();
-        } else if (encounterTableFragment != null && encounterTableFragment.isVisible() && CursorRecyclerNavigationViewAdapter.selectedPos != -1) {
-            CursorRecyclerNavigationViewAdapter.selectedPos = -1;
-            encounterTableFragment.getDataAdapterEncounters().notifyDataSetChanged();
-        } else {*/
             if (fm.getBackStackEntryCount() > 0) {
                 Log.i("MainActivity", "popping backstack");
                 fm.popBackStack();

@@ -1,5 +1,7 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.Fragments.Session;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -8,7 +10,6 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,8 +18,11 @@ import android.widget.TextView;
 
 import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorAdapter;
 import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorViewHolder;
+import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +31,7 @@ import java.util.List;
 /**
  * Created by Koni on 14/4/16.
  */
-public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.SessionViewHolder> implements AdapterNavigationCallback{
+public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.SessionViewHolder> implements AdapterNavigationCallback {
 
     public static int selectedPos = -1;
 
@@ -122,6 +126,17 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
         notifyItemRemoved(position);
         mContext.getContentResolver().delete(uri, null, null);
+        ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboard.hasPrimaryClip()) {
+            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+            Uri pasteUri = itemPaste.getUri();
+            if(pasteUri.equals(uri)){
+                Uri newUri = Uri.parse("");
+                ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
+                clipboard.setPrimaryClip(clip);
+                mAdapterCallback.onMenuRefresh();
+            }
+        }
     }
 
     public static void setSelectedPos(int selectedPos) {
@@ -136,6 +151,10 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
     @Override
     public void onItemLongCLick(int position) {
         mAdapterCallback.onItemLongCLick(position);
+    }
+
+    @Override
+    public void onMenuRefresh() {
     }
 
     public Cursor getCursor(){
@@ -171,7 +190,6 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Log.d("ViewHolder", "longclick");
                     selectedPos = getAdapterPosition();
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;

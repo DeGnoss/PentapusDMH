@@ -5,5 +5,6 @@ package com.pentapus.pentapusdmh;
  */
 public interface AdapterNavigationCallback {
     void onItemClick(int position);
-    void onItemLongCLick(int positione);
+    void onItemLongCLick(int position);
+    void onMenuRefresh();
 }

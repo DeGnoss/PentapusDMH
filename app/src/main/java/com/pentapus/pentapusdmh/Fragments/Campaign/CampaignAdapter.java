@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh;
+package com.pentapus.pentapusdmh.Fragments.Campaign;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -16,8 +16,11 @@ import android.widget.TextView;
 
 import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorAdapter;
 import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorViewHolder;
+import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -143,6 +146,10 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
     @Override
     public void onItemLongCLick(int position) {
         mAdapterCallback.onItemLongCLick(position);
+    }
+
+    @Override
+    public void onMenuRefresh() {
     }
 
 

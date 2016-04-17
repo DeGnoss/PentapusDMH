@@ -1,11 +1,9 @@
-package com.pentapus.pentapusdmh.Fragments;
+package com.pentapus.pentapusdmh.Fragments.Encounter;
 
 
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,7 +18,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,19 +30,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.CursorRecyclerNavigationViewAdapter;
-import com.pentapus.pentapusdmh.CursorRecyclerViewAdapter;
-import com.pentapus.pentapusdmh.CustomRecyclerLayoutManager;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.DividerItemDecoration;
-import com.pentapus.pentapusdmh.EncounterAdapter;
+import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -434,11 +424,12 @@ public class EncounterTableFragment extends Fragment implements
 
     @Override
     public void onItemLongCLick(final int position) {
-        Log.d("EncounterFragment ", "itemLongClicked");
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.setTitle("Selected");
+                mEncounterRecyclerView.getAdapter().notifyItemChanged(position);
+                String title = "Selected: " + String.valueOf(position);
+                mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
                 fab.setVisibility(View.GONE);
@@ -459,8 +450,18 @@ public class EncounterTableFragment extends Fragment implements
                         int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + npcId);
                         getContext().getContentResolver().delete(uri, null, null);
+                        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                        if (clipboard.hasPrimaryClip()) {
+                            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+                            Uri pasteUri = itemPaste.getUri();
+                            if(pasteUri.equals(uri)){
+                                Uri newUri = Uri.parse("");
+                                ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
+                                clipboard.setPrimaryClip(clip);
+                                getActivity().invalidateOptionsMenu();
+                            }
+                        }
                         mode.finish();
-                        mEncounterRecyclerView.getAdapter().notifyItemRemoved(position);
                         return true;
                     case R.id.edit:
                         cursor = mEncounterAdapter.getCursor();
@@ -478,7 +479,7 @@ public class EncounterTableFragment extends Fragment implements
                         cursor.moveToPosition(position);
                         encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                         uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
-                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
                         clipboard.setPrimaryClip(clip);
                         getActivity().invalidateOptionsMenu();
@@ -497,5 +498,10 @@ public class EncounterTableFragment extends Fragment implements
                 mActionMode = null;
             }
         });
+    }
+
+    @Override
+    public void onMenuRefresh() {
+        getActivity().invalidateOptionsMenu();
     }
 }
