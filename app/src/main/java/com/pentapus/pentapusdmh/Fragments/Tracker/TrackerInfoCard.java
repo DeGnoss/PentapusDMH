@@ -9,8 +9,8 @@ public class TrackerInfoCard {
     public String name;
     public String initiative;
     public String initiativeMod;
-    public String maxHp;
-    public String ac;
+    public int maxHp;
+    public int ac;
     public String type;
     public int hp;
     public int strength = 0, dexterity = 0, constitution = 0, intelligence = 0, wisdom = 0, charisma = 0;
@@ -21,6 +21,10 @@ public class TrackerInfoCard {
     protected static final String NAME_PREFIX = "Name_";
     protected static final String INITIATIVE_PREFIX = "Initiative_";
 
+
+    public String getType() {
+        return type;
+    }
 
     public Uri getIconUri() {
         return iconUri;
@@ -62,23 +66,25 @@ public class TrackerInfoCard {
         return charisma;
     }
 
-    public String getMaxHp() {
+    public int getMaxHp() {
         return maxHp;
     }
 
-    public void setMaxHp(String maxHp) {
+    public void setMaxHp(int maxHp) {
         this.maxHp = maxHp;
     }
 
-    public String getAc() {
+    public int getAc() {
         return ac;
     }
 
-    public void setAc(String ac) {
+    public void setAc(int ac) {
         this.ac = ac;
     }
 
-
+    public String getName() {
+        return name;
+    }
 
     public void setStatuses(boolean[] statuses){
         this.statuses = statuses;

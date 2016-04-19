@@ -166,6 +166,7 @@ public class TrackerFragment extends Fragment implements
                     DataBaseHandler.KEY_NAME,
                     DataBaseHandler.KEY_INITIATIVEBONUS,
                     DataBaseHandler.KEY_AC,
+                    DataBaseHandler.KEY_HP,
                     DataBaseHandler.KEY_MAXHP,
                     DataBaseHandler.KEY_STRENGTH,
                     DataBaseHandler.KEY_DEXTERITY,
@@ -185,6 +186,7 @@ public class TrackerFragment extends Fragment implements
                     DataBaseHandler.KEY_NAME,
                     DataBaseHandler.KEY_INITIATIVEBONUS,
                     DataBaseHandler.KEY_AC,
+                    DataBaseHandler.KEY_HP,
                     DataBaseHandler.KEY_MAXHP,
                     DataBaseHandler.KEY_ICON
             };
@@ -201,26 +203,27 @@ public class TrackerFragment extends Fragment implements
             //case NPC
             case 0:
                 while (data.moveToNext()) {
-                    String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
-                    int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
+                    String names = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+                    int initiative = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int initiativeMod = initiative;
-                    int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
-                    int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
-                    int strength = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_STRENGTH));
-                    int dexterity = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_DEXTERITY));
-                    int constitution = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_CONSTITUTION));
-                    int intelligence = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INTELLIGENCE));
-                    int wisdom = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_WISDOM));
-                    int charisma = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_CHARISMA));
-                    Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
+                    int ac = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
+                    int hp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_HP));
+                    int maxHp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
+                    int strength = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH));
+                    int dexterity = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY));
+                    int constitution = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION));
+                    int intelligence = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE));
+                    int wisdom = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
+                    int charisma = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
+                    Uri iconUri = Uri.parse(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
 
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
                     ci.initiative = String.valueOf(initiative);
                     ci.initiativeMod = String.valueOf(initiativeMod);
-                    ci.ac = String.valueOf(ac);
-                    ci.maxHp = String.valueOf(maxHp);
+                    ci.ac = ac;
+                    ci.maxHp = maxHp;
                     ci.hp = maxHp;
                     ci.type = "npc";
                     ci.dead = false;
@@ -241,6 +244,7 @@ public class TrackerFragment extends Fragment implements
                     int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int initiativeMod = initiative;
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
+                    int hp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_HP));
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
                     initiative = initiative + DiceHelper.d20();
@@ -248,8 +252,8 @@ public class TrackerFragment extends Fragment implements
                     ci.name = names;
                     ci.initiative = String.valueOf(initiative);
                     ci.initiativeMod = String.valueOf(initiativeMod);
-                    ci.ac = String.valueOf(ac);
-                    ci.maxHp = String.valueOf(maxHp);
+                    ci.ac = ac;
+                    ci.maxHp = maxHp;
                     ci.hp = maxHp;
                     ci.type = "pc";
                     ci.dead = false;

@@ -41,7 +41,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     //PC & NPC Table
     public static final String KEY_MAXHP = "maxHp";
-    private static final String KEY_HP = "hp";
+    public static final String KEY_HP = "hp";
     public static final String KEY_AC = "ac";
     public static final String KEY_TYPE = "type";
 
@@ -120,6 +120,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
                         KEY_NAME + " TEXT, " +
                         KEY_INFO + " TEXT, " +
+                        KEY_HP + " INTEGER, " +
                         KEY_MAXHP + " INTEGER, " +
                         KEY_AC + " INTEGER, " +
                         KEY_CR + " INTEGER, " +

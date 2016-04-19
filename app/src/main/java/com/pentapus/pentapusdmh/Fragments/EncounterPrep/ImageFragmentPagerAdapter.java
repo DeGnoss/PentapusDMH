@@ -13,7 +13,7 @@ import java.io.File;
  * Created by Koni on 4/4/16.
  */
 public class ImageFragmentPagerAdapter extends FragmentPagerAdapter {
-    final int PAGE_COUNT = 1;
+    final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[]{"My Icons", "Icons"};
     private Context context;
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
@@ -38,7 +38,7 @@ public class ImageFragmentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return ImageGridFragment.newInstance(id);
             case 1:
-                return null;
+                return PreFilledImageGridFragment.newInstance(id);
             default:
                 return null;
         }

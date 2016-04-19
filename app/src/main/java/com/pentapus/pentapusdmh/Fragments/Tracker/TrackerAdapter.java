@@ -2,6 +2,7 @@ package com.pentapus.pentapusdmh.Fragments.Tracker;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * Created by Koni on 30/3/16.
  */
-public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder> {
+public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder> {
     private List<TrackerInfoCard> characterList = new ArrayList<>();
     private Context context;
     private int layoutCounter = 0;
@@ -66,7 +67,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         TrackerInfoCard ci = characterList.get(position);
         characterViewHolder.vName.setText(ci.name);
         characterViewHolder.vInitiative.setText(ci.initiative);
-        characterViewHolder.vAc.setText(ci.ac);
+        characterViewHolder.vAc.setText(String.valueOf(ci.ac));
         characterViewHolder.vHp.setText(String.valueOf(ci.hp));
         characterViewHolder.ivIcon.setImageURI(ci.iconUri);
         if (characterList.get(position).type.equals("npc")) {
@@ -247,11 +248,23 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
     }
 
     public int getHp(int pos) {
-        if (characterList.get(pos).hp != 0) {
             return characterList.get(pos).getHp();
-        } else {
-            return 0;
-        }
+    }
+
+    public int getMaxHp(int pos){
+        return characterList.get(pos).getMaxHp();
+    }
+
+    public int getAc(int pos){
+        return characterList.get(pos).getAc();
+    }
+
+    public String getName(int pos){
+        return characterList.get(pos).getName();
+    }
+
+    public Uri getIconUri(int pos){
+        return characterList.get(pos).getIconUri();
     }
 
     public int[] getAbilities(int pos) {

@@ -1,16 +1,21 @@
 package com.pentapus.pentapusdmh.ViewpagerClasses;
 
+import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
+import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerInfoCard;
 import com.pentapus.pentapusdmh.R;
 
 import java.math.BigDecimal;
@@ -22,11 +27,18 @@ import java.math.BigInteger;
 public class HpOverviewFragment extends Fragment implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2{
 
     private int id;
-    private Button bDamage;
-    private TextView tvDamage, tvIdentifier;
+    private View vFrame;
+    private ImageButton bDamage;
+    private ImageView ivIcon;
+    private TextView tvDamage, tvIdentifier, tvName, tvHpCurrent, tvHpMax, tvAc;
     private int hpDiff;
     private int hpCurrent;
     private int hpMax;
+    private int ac;
+    private String name;
+    private Uri iconUri;
+    private String type;
+    private TrackerInfoCard selectedCharacter;
 
 
     public static HpOverviewFragment newInstance(int id) {
@@ -43,7 +55,15 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         if (getArguments() != null) {
             id = getArguments().getInt("id");
         }
-        hpCurrent = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getHp(id);
+        selectedCharacter = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getItem(id);
+
+        hpCurrent = selectedCharacter.getHp();
+        hpMax = selectedCharacter.getMaxHp();
+        ac = selectedCharacter.getAc();
+        name = selectedCharacter.getName();
+        iconUri = selectedCharacter.getIconUri();
+        type = selectedCharacter.getType();
+
     }
 
 
@@ -58,7 +78,31 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
 
         tvDamage = (TextView) view.findViewById(R.id.tvNumber);
         tvIdentifier = (TextView) view.findViewById(R.id.tvIdent);
-        bDamage = (Button) view.findViewById(R.id.buttonDamage);
+        tvName = (TextView) view.findViewById(R.id.tvName);
+        tvHpCurrent = (TextView) view.findViewById(R.id.tvHpCurrent);
+        tvHpMax = (TextView) view.findViewById(R.id.tvHpMax);
+        tvAc = (TextView) view.findViewById(R.id.tvAc);
+        ivIcon = (ImageView) view.findViewById(R.id.ivAvatar);
+        vFrame = (View) view.findViewById(R.id.vFrame);
+
+        tvHpCurrent.setText("HP " + String.valueOf(hpCurrent));
+        tvHpMax.setText(" / " + String.valueOf(hpMax));
+        tvAc.setText("AC " + String.valueOf(ac));
+        tvName.setText(name);
+        ivIcon.setImageURI(iconUri);
+
+        if(type.equals("npc")){
+            vFrame.setBackgroundColor(Color.parseColor("#F44336"));
+        }else if(type.equals("pc")){
+            vFrame.setBackgroundColor(Color.parseColor("#3F51B5"));
+        }else{
+            vFrame.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
+
+
+
+        bDamage = (ImageButton) view.findViewById(R.id.buttonDamage);
+        bDamage.setColorFilter(Color.parseColor("#ffffffff"));
 
         bDamage.setOnClickListener(new View.OnClickListener() {
             @Override

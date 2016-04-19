@@ -134,7 +134,7 @@ public class ImageViewPagerDialogFragment extends Fragment implements ViewPager.
         pagerAdapter = new ImageFragmentPagerAdapter(getChildFragmentManager(), getContext(), id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(2);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
 
