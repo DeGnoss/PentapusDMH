@@ -117,8 +117,8 @@ public class EncounterFragment extends Fragment implements
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
-        getLoaderManager().initLoader(1, null, this);
+        //getLoaderManager().initLoader(0, null, this);
+        //getLoaderManager().initLoader(1, null, this);
         mRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -457,7 +457,7 @@ public class EncounterFragment extends Fragment implements
                 dataAdapterNPC.swapCursor(null);
                 break;
             case 1:
-                dataAdapterNPC.swapCursor(null);
+                dataAdapterPC.swapCursor(null);
                 break;
             default:
                 break;
