@@ -33,6 +33,9 @@ import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -376,12 +379,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void nestedPasteEncounter(int oldId, final int newId) {
-        final int[] oldEncId = new int[1];
+        final List<Integer> oldIds = new ArrayList<>();
         final AsyncQueryHandler insertHandler = new AsyncQueryHandler(getContentResolver()) {
+            int i = 0;
             @Override
             protected void onInsertComplete(int token, Object cookie, Uri uri) {
                 int newId = (int) ContentUris.parseId(uri);
-                //TODO nestedCopyNPC
+                nestedPasteNPC(oldIds.get(i), newId);
+                i++;
             }
         };
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
@@ -393,6 +398,7 @@ public class MainActivity extends AppCompatActivity {
                     // No matches found
                 } else {
                     while (cursor.moveToNext()) {
+                        oldIds.add(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)));
                         ContentValues values = new ContentValues();
                         values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
                         values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
@@ -418,30 +424,10 @@ public class MainActivity extends AppCompatActivity {
                 selectionArgs,
                 null
         );
-
-
-
-        /*
-        Uri pasteUri = DbContentProvider.CONTENT_URI_ENCOUNTER;
-        ContentResolver cr = getContentResolver();
-        String[] selectionArgs = new String[]{String.valueOf(oldId)};
-        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-        Cursor pasteCursor = cr.query(pasteUri, null, selection, selectionArgs, null);
-        if (pasteCursor != null) {
-            while (pasteCursor.moveToNext()) {
-                ContentValues values = new ContentValues();
-                values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-                values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-                values.put(DataBaseHandler.KEY_BELONGSTO, newId);
-                Uri newUri = cr.insert(DbContentProvider.CONTENT_URI_ENCOUNTER, values);
-                int newIdEnc = (int) ContentUris.parseId(newUri);
-                int oldIdEnc = pasteCursor.getInt(pasteCursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
-                nestedPasteNPC(oldIdEnc, newIdEnc);
-            }
-            pasteCursor.close();
-        } */
     }
 
+
+    //TODO add asynctask for pcs
     private void pastePc(Uri pasteUri) {
         ContentResolver cr = getContentResolver();
         int campaignId = ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).getCampaignId();
