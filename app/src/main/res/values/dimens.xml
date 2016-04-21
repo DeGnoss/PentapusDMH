@@ -3,6 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">10dp</dimen>
-    <dimen name="image_status_trackerfragment">25dp</dimen>
+    <dimen name="image_status_trackerfragment">20dp</dimen>
     <dimen name="ic_clear_margin">16dp</dimen>
 </resources>

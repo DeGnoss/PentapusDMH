@@ -39,7 +39,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.StatusView
         StatusEffect ci = statusList.get(position);
         holder.vStatusName.setText(ci.name);
         holder.vStatusImage.setImageResource(ci.imageId);
-        holder.vCardView.setCardBackgroundColor(statusList.get(position).isSelected() ? Color.parseColor("#aa000000") : Color.TRANSPARENT);
+        holder.vCardView.setCardBackgroundColor(statusList.get(position).isSelected() ? Color.parseColor("#77DCE775") : Color.TRANSPARENT);
 
     }
 

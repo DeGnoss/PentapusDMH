@@ -106,6 +106,8 @@
         android:textColor="#FFFFFFFF"
         android:textSize="30dp" />
 
+    <!--
+
         <View
             android:id="@+id/dividerLine"
             android:layout_width="match_parent"
@@ -208,7 +210,7 @@
 
         </ScrollView>
 
-
+-->
 
 
 </RelativeLayout>

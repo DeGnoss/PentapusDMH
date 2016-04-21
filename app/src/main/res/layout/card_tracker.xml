@@ -25,13 +25,13 @@
                 android:layout_alignParentStart="true" />
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/ivIcon"
                 android:layout_toEndOf="@id/indicator_line"/>
 
             <View
-                android:layout_width="32dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:id="@+id/initBack"
@@ -51,7 +51,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_alignParentStart="true"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                    android:textSize="20dp"
+                    android:textColor="#de000000"/>
 
                 <TextView
                     android:id="@+id/initiative"
@@ -59,59 +60,65 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="5dp"
                     android:textColor="@color/bpWhite"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textSize="20dp"
                     android:layout_gravity="end" />
 
-                <TextView
-                    android:id="@+id/acT"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:scaleType="fitCenter"
+                    android:id="@+id/ivAc"
                     android:layout_alignStart="@id/name"
+                    android:src="@drawable/shield"
                     android:layout_below="@id/name"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="2dp"
-                    android:text="AC " />
+                    android:layout_marginStart="2dp"/>
 
                 <TextView
                     android:id="@+id/acV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/name"
-                    android:layout_gravity="bottom"
-                    android:layout_toEndOf="@id/acT" />
+                    android:layout_alignTop="@+id/ivAc"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/ivAc"
+                    android:textSize="15dp"
+                    android:textColor="#de000000"/>
 
-                <TextView
-                    android:id="@+id/hpT"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/ivHp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/health"
                     android:layout_below="@id/name"
                     android:layout_gravity="bottom"
-                    android:layout_marginStart="20sp"
-                    android:layout_toEndOf="@id/acV"
-                    android:text="HP " />
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/acV"/>
 
                 <TextView
                     android:id="@+id/hpV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/name"
-                    android:layout_gravity="bottom"
-                    android:layout_toEndOf="@id/hpT" />
+                    android:layout_alignTop="@+id/ivHp"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/ivHp"
+                    android:textSize="15dp"
+                    android:textColor="#de000000"/>
 
                 <GridLayout
                     android:id="@+id/gridStatus"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toStartOf="@id/initiative"
-                    android:layout_marginEnd="10dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="35dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imageView1"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_blinded"
@@ -119,8 +126,8 @@
 
                     <ImageView
                         android:id="@+id/imageView2"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_charmed"
@@ -128,8 +135,8 @@
 
                     <ImageView
                         android:id="@+id/imageView3"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_deafened"
@@ -137,8 +144,8 @@
 
                     <ImageView
                         android:id="@+id/imageView4"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_frightened"
@@ -146,8 +153,8 @@
 
                     <ImageView
                         android:id="@+id/imageView5"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_grappled"
@@ -155,8 +162,8 @@
 
                     <ImageView
                         android:id="@+id/imageView6"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_incapacitated"
@@ -164,8 +171,8 @@
 
                     <ImageView
                         android:id="@+id/imageView7"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_invisible"
@@ -173,8 +180,8 @@
 
                     <ImageView
                         android:id="@+id/imageView8"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_paralyzed"
@@ -182,8 +189,8 @@
 
                     <ImageView
                         android:id="@+id/imageView9"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_petrified"
@@ -191,8 +198,8 @@
 
                     <ImageView
                         android:id="@+id/imageView10"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_poisoned"
@@ -200,8 +207,8 @@
 
                     <ImageView
                         android:id="@+id/imageView11"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_prone"
@@ -209,8 +216,8 @@
 
                     <ImageView
                         android:id="@+id/imageView12"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_restrained"
@@ -218,8 +225,8 @@
 
                     <ImageView
                         android:id="@+id/imageView13"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_stunned"
@@ -227,8 +234,8 @@
 
                     <ImageView
                         android:id="@+id/imageView14"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_unconscious"
@@ -236,8 +243,8 @@
 
                     <ImageView
                         android:id="@+id/imageView15"
-                        android:layout_width="30sp"
-                        android:layout_height="30sp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_columnSpan="1"
                         android:layout_rowSpan="1"
                         android:src="@drawable/status_custom"

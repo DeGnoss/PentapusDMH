@@ -297,16 +297,26 @@ public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Chara
         gridLayoutParams.height = (int) context.getResources().getDimension(R.dimen.image_status_trackerfragment);
         gridLayoutParams.width = (int) context.getResources().getDimension(R.dimen.image_status_trackerfragment);
 
-        //gridLayoutParams.width = 50;
+       /* //gridLayoutParams.width = 50;
         if (layoutCounter < 5) {
-            gridLayoutParams.columnSpec = GridLayout.spec(layoutCounter);
+            gridLayoutParams.columnSpec = GridLayout.spec(10-layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(0);
-        } else if (layoutCounter < 10) {
+        } */ /*else if (layoutCounter < 10) {
             gridLayoutParams.columnSpec = GridLayout.spec(9 - layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(1);
-        } else {
-            gridLayoutParams.columnSpec = GridLayout.spec(14 - layoutCounter);
+        } */ /*else {
+            gridLayoutParams.columnSpec = GridLayout.spec(15 - layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(2);
+        }*/
+        if (layoutCounter < 5) {
+            gridLayoutParams.columnSpec = GridLayout.spec(9-layoutCounter);
+            gridLayoutParams.rowSpec = GridLayout.spec(1);
+        }  else if (layoutCounter < 10) {
+            gridLayoutParams.columnSpec = GridLayout.spec(14 - layoutCounter);
+            gridLayoutParams.rowSpec = GridLayout.spec(0);
+        }  else {
+            gridLayoutParams.columnSpec = GridLayout.spec(14-layoutCounter);
+            gridLayoutParams.rowSpec = GridLayout.spec(1);
         }
         layoutCounter++;
         return gridLayoutParams;
