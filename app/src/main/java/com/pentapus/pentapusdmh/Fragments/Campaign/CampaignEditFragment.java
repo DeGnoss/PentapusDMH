@@ -1,5 +1,6 @@
 package com.pentapus.pentapusdmh.Fragments.Campaign;
 
+import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
 public class CampaignEditFragment extends Fragment {
@@ -113,13 +115,18 @@ public class CampaignEditFragment extends Fragment {
 
         // insert a record
         if (!modeUpdate) {
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_CAMPAIGN, values);
+            Uri campaign;
+            campaign = getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_CAMPAIGN, values);
+            String campaignStr = campaign.getPath();
+            campaignId = Integer.parseInt(campaignStr.substring(campaignStr.lastIndexOf('/') + 1));
+
         }
         // update a record
         else {
             Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + campaignId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
+        SharedPrefsHelper.saveCampaign(getContext(), campaignId, myName);
         getActivity().getSupportFragmentManager().popBackStack();
     }
 

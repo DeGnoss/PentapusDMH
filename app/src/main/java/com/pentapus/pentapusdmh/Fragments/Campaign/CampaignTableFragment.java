@@ -94,6 +94,10 @@ public class CampaignTableFragment extends Fragment implements
         mCampaignRecyclerView.setAdapter(mCampaignAdapter);
 
 
+
+
+
+
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabCampaign);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
