@@ -75,6 +75,46 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
 
 
+    public static final String[] PROJECTION_NPC = new String[]{
+            DataBaseHandler.KEY_ROWID,
+            DataBaseHandler.KEY_NAME,
+            DataBaseHandler.KEY_INFO,
+            DataBaseHandler.KEY_INITIATIVEBONUS,
+            DataBaseHandler.KEY_MAXHP,
+            DataBaseHandler.KEY_AC,
+            DataBaseHandler.KEY_STRENGTH,
+            DataBaseHandler.KEY_DEXTERITY,
+            DataBaseHandler.KEY_CONSTITUTION,
+            DataBaseHandler.KEY_INTELLIGENCE,
+            DataBaseHandler.KEY_WISDOM,
+            DataBaseHandler.KEY_CHARISMA,
+            DataBaseHandler.KEY_ICON,
+            DataBaseHandler.KEY_TYPE
+    };
+
+    public static final String[] PROJECTION_ENCOUNTER = new String[]{
+            DataBaseHandler.KEY_ROWID,
+            DataBaseHandler.KEY_NAME,
+            DataBaseHandler.KEY_INFO
+    };
+
+    public static final String[] PROJECTION_SESSION = new String[]{
+            DataBaseHandler.KEY_ROWID,
+            DataBaseHandler.KEY_NAME,
+            DataBaseHandler.KEY_INFO
+    };
+
+    public static final String[] PROJECTION_PC = new String[]{
+            DataBaseHandler.KEY_ROWID,
+            DataBaseHandler.KEY_NAME,
+            DataBaseHandler.KEY_INFO,
+            DataBaseHandler.KEY_INITIATIVEBONUS,
+            DataBaseHandler.KEY_MAXHP,
+            DataBaseHandler.KEY_AC
+    };
+
+
+
 
     public DataBaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

@@ -156,12 +156,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void pasteNpc(Uri pasteUri) {
         final int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
-        final AsyncQueryHandler insertHandler = new AsyncQueryHandler(getContentResolver()) {
-            @Override
-            protected void onInsertComplete(int token, Object cookie, Uri uri) {
-            }
-        };
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
+
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
                 if (cursor == null) {
@@ -185,36 +181,21 @@ public class MainActivity extends AppCompatActivity {
                         values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
                         values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
-                        insertHandler.startInsert(1, null, DbContentProvider.CONTENT_URI_NPC, values);
+                        startInsert(1, null, DbContentProvider.CONTENT_URI_NPC, values);
                     }
                 }
             }
         };
-        String[] projection = new String[]{
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO,
-                DataBaseHandler.KEY_INITIATIVEBONUS,
-                DataBaseHandler.KEY_MAXHP,
-                DataBaseHandler.KEY_AC,
-                DataBaseHandler.KEY_STRENGTH,
-                DataBaseHandler.KEY_DEXTERITY,
-                DataBaseHandler.KEY_CONSTITUTION,
-                DataBaseHandler.KEY_INTELLIGENCE,
-                DataBaseHandler.KEY_WISDOM,
-                DataBaseHandler.KEY_CHARISMA,
-                DataBaseHandler.KEY_ICON,
-                DataBaseHandler.KEY_TYPE
-        };
+
         String[] selectionArgs = new String[]{String.valueOf(encounterId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
 
         queryHandler.startQuery(
                 1, null,
                 pasteUri,
-                projection,
-                selection,
-                selectionArgs,
+                DataBaseHandler.PROJECTION_NPC,
+                null,
+                null,
                 null
         );
     }
@@ -222,15 +203,7 @@ public class MainActivity extends AppCompatActivity {
     private void pasteEncounter(Uri pasteUri) {
         final String oldUri = pasteUri.getPath();
         final int sessionId = ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).getSessionId();
-        final AsyncQueryHandler insertHandler = new AsyncQueryHandler(getContentResolver()) {
-            @Override
-            protected void onInsertComplete(int token, Object cookie, Uri uri) {
-                int newId = (int) ContentUris.parseId(uri);
 
-                int oldId = Integer.parseInt(oldUri.substring(oldUri.lastIndexOf('/') + 1));
-                nestedPasteNPC(oldId, newId);
-            }
-        };
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -244,35 +217,32 @@ public class MainActivity extends AppCompatActivity {
                         values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
                         values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, sessionId);
-                        insertHandler.startInsert(3, null, DbContentProvider.CONTENT_URI_ENCOUNTER, values);
+                        startInsert(3, null, DbContentProvider.CONTENT_URI_ENCOUNTER, values);
                     }
                 }
             }
+
+            @Override
+            protected void onInsertComplete(int token, Object cookie, Uri uri) {
+                int newId = (int) ContentUris.parseId(uri);
+
+                int oldId = Integer.parseInt(oldUri.substring(oldUri.lastIndexOf('/') + 1));
+                nestedPasteNPC(oldId, newId);
+            }
+
         };
-        String[] projection = new String[]{
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO
-        };
-        String[] selectionArgs = new String[]{String.valueOf(sessionId)};
-        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
 
         queryHandler.startQuery(
                 3, null,
                 pasteUri,
-                projection,
-                selection,
-                selectionArgs,
+                DataBaseHandler.PROJECTION_ENCOUNTER,
+                null,
+                null,
                 null
         );
     }
 
     private void nestedPasteNPC(int oldId, final int newId) {
-        final AsyncQueryHandler insertHandler = new AsyncQueryHandler(getContentResolver()) {
-            @Override
-            protected void onInsertComplete(int token, Object cookie, Uri uri) {
-            }
-        };
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -297,34 +267,19 @@ public class MainActivity extends AppCompatActivity {
                         values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
                         values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, newId);
-                        insertHandler.startInsert(2, null, DbContentProvider.CONTENT_URI_NPC, values);
+                        startInsert(2, null, DbContentProvider.CONTENT_URI_NPC, values);
                     }
                 }
             }
         };
-        String[] projection = new String[]{
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO,
-                DataBaseHandler.KEY_INITIATIVEBONUS,
-                DataBaseHandler.KEY_MAXHP,
-                DataBaseHandler.KEY_AC,
-                DataBaseHandler.KEY_STRENGTH,
-                DataBaseHandler.KEY_DEXTERITY,
-                DataBaseHandler.KEY_CONSTITUTION,
-                DataBaseHandler.KEY_INTELLIGENCE,
-                DataBaseHandler.KEY_WISDOM,
-                DataBaseHandler.KEY_CHARISMA,
-                DataBaseHandler.KEY_ICON,
-                DataBaseHandler.KEY_TYPE
-        };
+
         String[] selectionArgs = new String[]{String.valueOf(oldId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
 
         queryHandler.startQuery(
                 2, null,
                 DbContentProvider.CONTENT_URI_NPC,
-                projection,
+                DataBaseHandler.PROJECTION_NPC,
                 selection,
                 selectionArgs,
                 null
@@ -334,14 +289,7 @@ public class MainActivity extends AppCompatActivity {
     private void pasteSession(Uri pasteUri) {
         final String oldUri = pasteUri.getPath();
         final int campaignId = ((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).getCampaignId();
-        final AsyncQueryHandler insertHandler = new AsyncQueryHandler(getContentResolver()) {
-            @Override
-            protected void onInsertComplete(int token, Object cookie, Uri uri) {
-                int newId = (int) ContentUris.parseId(uri);
-                int oldId = Integer.parseInt(oldUri.substring(oldUri.lastIndexOf('/') + 1));
-                nestedPasteEncounter(oldId, newId);
-            }
-        };
+
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -355,40 +303,32 @@ public class MainActivity extends AppCompatActivity {
                         values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
                         values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
-                        insertHandler.startInsert(5, null, DbContentProvider.CONTENT_URI_SESSION, values);
+                        startInsert(5, null, DbContentProvider.CONTENT_URI_SESSION, values);
                     }
                 }
             }
+            @Override
+            protected void onInsertComplete(int token, Object cookie, Uri uri) {
+                int newId = (int) ContentUris.parseId(uri);
+                int oldId = Integer.parseInt(oldUri.substring(oldUri.lastIndexOf('/') + 1));
+                nestedPasteEncounter(oldId, newId);
+            }
+
         };
-        String[] projection = new String[]{
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO
-        };
-        String[] selectionArgs = new String[]{String.valueOf(campaignId)};
-        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
 
         queryHandler.startQuery(
                 5, null,
                 pasteUri,
-                projection,
-                selection,
-                selectionArgs,
+                DataBaseHandler.PROJECTION_SESSION,
+                null,
+                null,
                 null
         );
     }
 
     private void nestedPasteEncounter(int oldId, final int newId) {
         final List<Integer> oldIds = new ArrayList<>();
-        final AsyncQueryHandler insertHandler = new AsyncQueryHandler(getContentResolver()) {
-            int i = 0;
-            @Override
-            protected void onInsertComplete(int token, Object cookie, Uri uri) {
-                int newId = (int) ContentUris.parseId(uri);
-                nestedPasteNPC(oldIds.get(i), newId);
-                i++;
-            }
-        };
+
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -403,23 +343,27 @@ public class MainActivity extends AppCompatActivity {
                         values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
                         values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, newId);
-                        insertHandler.startInsert(4, null, DbContentProvider.CONTENT_URI_ENCOUNTER, values);
+                        startInsert(4, null, DbContentProvider.CONTENT_URI_ENCOUNTER, values);
                     }
                 }
             }
+
+            int i = 0;
+            @Override
+            protected void onInsertComplete(int token, Object cookie, Uri uri) {
+                int newId = (int) ContentUris.parseId(uri);
+                nestedPasteNPC(oldIds.get(i), newId);
+                i++;
+            }
         };
-        String[] projection = new String[]{
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO,
-        };
+
         String[] selectionArgs = new String[]{String.valueOf(oldId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
 
         queryHandler.startQuery(
                 4, null,
                 DbContentProvider.CONTENT_URI_ENCOUNTER,
-                projection,
+                DataBaseHandler.PROJECTION_ENCOUNTER,
                 selection,
                 selectionArgs,
                 null
@@ -431,15 +375,8 @@ public class MainActivity extends AppCompatActivity {
     private void pastePc(Uri pasteUri) {
         ContentResolver cr = getContentResolver();
         int campaignId = ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).getCampaignId();
-        String[] projection = new String[]{
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO,
-                DataBaseHandler.KEY_INITIATIVEBONUS,
-                DataBaseHandler.KEY_MAXHP,
-                DataBaseHandler.KEY_AC
-        };
-        Cursor pasteCursor = cr.query(pasteUri, projection, null, null, null);
+
+        Cursor pasteCursor = cr.query(pasteUri, DataBaseHandler.PROJECTION_PC, null, null, null);
         if (pasteCursor != null) {
             pasteCursor.moveToFirst();
             ContentValues values = new ContentValues();
