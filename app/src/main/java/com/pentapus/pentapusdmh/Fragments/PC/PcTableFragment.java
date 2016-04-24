@@ -16,15 +16,21 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.CursorRecyclerViewAdapter;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
@@ -40,6 +46,7 @@ public class PcTableFragment extends Fragment implements
     private int campaignId;
     private String campaignName;
 
+    private ActionMode mActionMode;
     private SimpleCursorAdapter dataAdapterPc;
     private FloatingActionButton fab;
     final CharSequence[] items = {"Edit", "Delete"};
@@ -221,6 +228,104 @@ public class PcTableFragment extends Fragment implements
         }
         super.onPrepareOptionsMenu(menu);
     }
+
+/*
+    public void onItemLongCLick(final int position, final int positionType) {
+        Log.d("EncounterFragment ", "itemLongClicked");
+        if (positionType == 1) {
+
+
+            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    mRecyclerView.getAdapter().notifyItemChanged(position);
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
+                    String title = "Selected: " + String.valueOf(position);
+                    mode.setTitle(title);
+                    MenuInflater inflater = mode.getMenuInflater();
+                    inflater.inflate(R.menu.context_menu, menu);
+                    return true;
+                }
+
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
+
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.delete:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                                getContext().getContentResolver().delete(uri, null, null);
+                                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                if (clipboard.hasPrimaryClip()) {
+                                    ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+                                    Uri pasteUri = itemPaste.getUri();
+                                    if (pasteUri == null) {
+                                        pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+                                    }
+                                    if (pasteUri != null) {
+                                        if (pasteUri.equals(uri)) {
+                                            Uri newUri = Uri.parse("");
+                                            ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
+                                            clipboard.setPrimaryClip(clip);
+                                            getActivity().invalidateOptionsMenu();
+                                        }
+                                    }
+                                }
+                            }
+                            mode.finish();
+                            return true;
+                        case R.id.edit:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Bundle bundle = new Bundle();
+                                bundle.putBoolean(MODE, true);
+                                bundle.putInt(NPC_ID, npcId);
+                                bundle.putInt(ENCOUNTER_ID, encounterId);
+                                editNPC(bundle);
+                            }
+                            mode.finish();
+                            return true;
+                        case R.id.copy:
+                            if (positionType == 1) {
+                                Cursor cursor = dataAdapterNPC.getCursor();
+                                cursor.moveToPosition(position);
+                                int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
+                                clipboard.setPrimaryClip(clip);
+                                getActivity().invalidateOptionsMenu();
+                            }
+                            mode.finish();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+                    CursorRecyclerViewAdapter.selectedPos = -1;
+                    mergeAdapter.notifyItemChanged(position);
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    */
+
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

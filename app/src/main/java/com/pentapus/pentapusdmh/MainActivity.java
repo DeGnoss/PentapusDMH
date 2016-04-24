@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -186,9 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-        String[] selectionArgs = new String[]{String.valueOf(encounterId)};
-        String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
 
         queryHandler.startQuery(
                 1, null,
@@ -371,31 +370,66 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //TODO add asynctask for pcs
-    private void pastePc(Uri pasteUri) {
-        ContentResolver cr = getContentResolver();
-        int campaignId = ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).getCampaignId();
+    private void pastePc(final Uri pasteUri) {
+        final int campaignId = ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).getCampaignId();
 
-        Cursor pasteCursor = cr.query(pasteUri, DataBaseHandler.PROJECTION_PC, null, null, null);
-        if (pasteCursor != null) {
-            pasteCursor.moveToFirst();
-            ContentValues values = new ContentValues();
-            values.put(DataBaseHandler.KEY_NAME, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-            values.put(DataBaseHandler.KEY_INFO, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            values.put(DataBaseHandler.KEY_INITIATIVEBONUS, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
-            values.put(DataBaseHandler.KEY_MAXHP, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
-            values.put(DataBaseHandler.KEY_AC, pasteCursor.getString(pasteCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
-            values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
-            cr.insert(DbContentProvider.CONTENT_URI_PC, values);
-            pasteCursor.close();
-        }
+        final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
+
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if (cursor == null) {
+                    // Some providers return null if an error occurs whereas others throw an exception
+                } else if (cursor.getCount() < 1) {
+                    // No matches found
+                } else {
+                    while (cursor.moveToNext()) {
+                        ContentValues values = new ContentValues();
+                        values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                        values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+                        values.put(DataBaseHandler.KEY_MAXHP, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+                        values.put(DataBaseHandler.KEY_AC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                        values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
+                        values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
+                        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+                        startInsert(1, null, DbContentProvider.CONTENT_URI_PC, values);
+                    }
+                }
+            }
+        };
+
+        queryHandler.startQuery(
+                1, null,
+                pasteUri,
+                DataBaseHandler.PROJECTION_PC,
+                null,
+                null,
+                null
+        );
     }
 
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
+        final FragmentManager fm = getSupportFragmentManager();
+        if("F_TRACKER".equals(getCurrentFragmentTag())){
+            new AlertDialog.Builder(this)
+                    .setTitle("Exit Tracker")
+                    .setMessage("Are you sure you want to exit the Tracker? This will reset the encounter.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            fm.popBackStack();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+        else if (fm.getBackStackEntryCount() > 0) {
             Log.i("MainActivity", "popping backstack");
             fm.popBackStack();
         } else {
@@ -403,6 +437,13 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    private String getCurrentFragmentTag(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+        return fragmentTag;
+    }
+
 
     private void loadPCs(Bundle bundle) {
         Fragment fragment;

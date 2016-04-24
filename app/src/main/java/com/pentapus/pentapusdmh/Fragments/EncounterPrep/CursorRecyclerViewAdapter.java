@@ -196,6 +196,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         if (itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.remove(identifier);
         }
+        mCursor.moveToPosition(position);
         int characterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
         int characterType = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
         switch (characterType) {
@@ -222,9 +223,9 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                 }
                 break;
             case 2:
-                uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + characterId);
+                /*uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + characterId);
                 notifyItemRemoved(position);
-                mContext.getContentResolver().delete(uri, null, null);
+                mContext.getContentResolver().delete(uri, null, null);*/
                 break;
             default:
                 break;
