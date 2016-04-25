@@ -92,6 +92,8 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         ivIcon.setImageURI(iconUri);
 
         if(type.equals("npc")){
+            vFrame.setBackgroundColor(Color.parseColor("#4caf50"));
+        }else if(type.equals("monster")){
             vFrame.setBackgroundColor(Color.parseColor("#F44336"));
         }else if(type.equals("pc")){
             vFrame.setBackgroundColor(Color.parseColor("#3F51B5"));

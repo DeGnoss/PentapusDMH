@@ -12,6 +12,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
+    public static final int TYPE_MONSTER = 0;
     public static final int TYPE_NPC = 1;
     public static final int TYPE_PC = 2;
 
@@ -21,6 +22,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String TABLE_CAMPAIGN = "campaign";
     public static final String TABLE_SESSION = "session";
     public static final String TABLE_ENCOUNTER = "encounter";
+    public static final String TABLE_MONSTER = "monster";
     public static final String TABLE_NPC = "npc";
     public static final String TABLE_PC = "pc";
 
@@ -31,6 +33,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String KEY_INFO = "info";
     public static final String KEY_BELONGSTO = "belongsto";
     public static final String KEY_ICON = "icon";
+    public static final String KEY_DISABLED = "disabled";
+
 
 
     //Encounter & NPC Table
@@ -74,6 +78,24 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     private static final String KEY_CUSTOM = "custom";
 
 
+    public static final String[] PROJECTION_MONSTER = new String[]{
+            DataBaseHandler.KEY_ROWID,
+            DataBaseHandler.KEY_NAME,
+            DataBaseHandler.KEY_INFO,
+            DataBaseHandler.KEY_INITIATIVEBONUS,
+            DataBaseHandler.KEY_MAXHP,
+            DataBaseHandler.KEY_AC,
+            DataBaseHandler.KEY_STRENGTH,
+            DataBaseHandler.KEY_DEXTERITY,
+            DataBaseHandler.KEY_CONSTITUTION,
+            DataBaseHandler.KEY_INTELLIGENCE,
+            DataBaseHandler.KEY_WISDOM,
+            DataBaseHandler.KEY_CHARISMA,
+            DataBaseHandler.KEY_ICON,
+            DataBaseHandler.KEY_TYPE
+    };
+
+
 
     public static final String[] PROJECTION_NPC = new String[]{
             DataBaseHandler.KEY_ROWID,
@@ -109,8 +131,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             DataBaseHandler.KEY_NAME,
             DataBaseHandler.KEY_INFO,
             DataBaseHandler.KEY_INITIATIVEBONUS,
+            DataBaseHandler.KEY_HP,
             DataBaseHandler.KEY_MAXHP,
-            DataBaseHandler.KEY_AC
+            DataBaseHandler.KEY_AC,
+            DataBaseHandler.KEY_ICON,
+            DataBaseHandler.KEY_DISABLED
     };
 
 
@@ -154,6 +179,31 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_SESSION + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_ENCOUNTER_TABLE);
 
+        //Create Monster table
+        String CREATE_MONSTER_TABLE =
+                "CREATE TABLE if not exists " + TABLE_MONSTER + " (" +
+                        KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
+                        KEY_NAME + " TEXT, " +
+                        KEY_INFO + " TEXT, " +
+                        KEY_HP + " INTEGER, " +
+                        KEY_MAXHP + " INTEGER, " +
+                        KEY_AC + " INTEGER, " +
+                        KEY_CR + " INTEGER, " +
+                        KEY_XP + " DOUBLE, " +
+                        KEY_STRENGTH + " INTEGER, " +
+                        KEY_DEXTERITY + " INTEGER, " +
+                        KEY_CONSTITUTION + " INTEGER, " +
+                        KEY_INTELLIGENCE + " INTEGER, " +
+                        KEY_WISDOM + " INTEGER, " +
+                        KEY_CHARISMA + " INTEGER, " +
+                        KEY_INITIATIVEBONUS + " INTEGER, " +
+                        KEY_TYPE + " INTEGER, " +
+                        KEY_ICON + " TEXT, " +
+                        KEY_BELONGSTO + " integer NOT NULL, " +
+                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
+        db.execSQL(CREATE_MONSTER_TABLE);
+
+
         //Create NPC table
         String CREATE_NPC_TABLE =
                 "CREATE TABLE if not exists " + TABLE_NPC + " (" +
@@ -177,6 +227,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_NPC_TABLE);
+
 
         //Create PC table
         String CREATE_PC_TABLE =
@@ -214,6 +265,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_INITIATIVEBONUS + " INTEGER, " +
                         KEY_TYPE + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
+                        KEY_DISABLED + " INTEGER, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_PC_TABLE);
@@ -236,6 +288,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENCOUNTER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PC);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MONSTER);
         // Create tables again
         onCreate(db);
     }

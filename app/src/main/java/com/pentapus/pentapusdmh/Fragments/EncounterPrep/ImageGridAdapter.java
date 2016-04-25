@@ -86,7 +86,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
     }
 
     public static void setHighlightedPos(int highlightedPos) {
-        ImageGridAdapter.highlightedPos = highlightedPos;
+        ImageGridAdapter.selectedPos = highlightedPos;
     }
 
 
@@ -146,7 +146,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
             vCardView = (CardView) v.findViewById(R.id.cardGridIcon);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_imagegrid);
 
-            clicker.setActivated(getAdapterPosition() == highlightedPos);
+            clicker.setActivated(getAdapterPosition() == selectedPos);
 
 
             vCardView.setOnClickListener(new View.OnClickListener() {

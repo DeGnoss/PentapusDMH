@@ -32,7 +32,8 @@ public class DbContentProvider extends ContentProvider{
     private static final int SINGLE_NPC = 8;
     private static final int ALL_PCS = 9;
     private static final int SINGLE_PC = 10;
-    private static final int COPY_SINGLE_NPC = 11;
+    private static final int ALL_MONSTERS = 11;
+    private static final int SINGLE_MONSTER = 12;
 
     // authority is the symbolic name of your provider
     // To avoid conflicts with other providers, you should use
@@ -50,8 +51,8 @@ public class DbContentProvider extends ContentProvider{
             Uri.parse("content://" + AUTHORITY + "/npc");
     public static final Uri CONTENT_URI_PC =
             Uri.parse("content://" + AUTHORITY + "/pc");
-    public static final Uri CONTENT_URI_COPY_NPC =
-            Uri.parse("content://" + AUTHORITY + "/copy.npc");
+    public static final Uri CONTENT_URI_MONSTER =
+            Uri.parse("content://" + AUTHORITY + "/monster");
 
     //Mime types
 
@@ -60,7 +61,7 @@ public class DbContentProvider extends ContentProvider{
     public static final String ENCOUNTER =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.encounter";
     public static final String NPC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.npc";
     public static final String PC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.pc";
-    public static final String COPY_NPC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.copy.npc";
+    public static final String MONSTER =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.monster";
 
 
 
@@ -80,7 +81,8 @@ public class DbContentProvider extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, "npc/#", SINGLE_NPC);
         uriMatcher.addURI(AUTHORITY, "pc", ALL_PCS);
         uriMatcher.addURI(AUTHORITY, "pc/#", SINGLE_PC);
-        uriMatcher.addURI(AUTHORITY, "copy.npc/#", COPY_SINGLE_NPC);
+        uriMatcher.addURI(AUTHORITY, "monster", ALL_MONSTERS);
+        uriMatcher.addURI(AUTHORITY, "monster/#", SINGLE_MONSTER);
     }
 
 
@@ -105,8 +107,8 @@ public class DbContentProvider extends ContentProvider{
                 return NPC;
             case SINGLE_PC:
                 return PC;
-            case COPY_SINGLE_NPC:
-                return COPY_NPC;
+            case SINGLE_MONSTER:
+                return MONSTER;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -117,7 +119,7 @@ public class DbContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri _uri = null;
-        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC, KEY_ROWID_PC;
+        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC, KEY_ROWID_MONSTER, KEY_ROWID_PC;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
         int uriType = uriMatcher.match(uri);
         switch (uriType) {
@@ -126,7 +128,6 @@ public class DbContentProvider extends ContentProvider{
                 //if added successfully
                 if(KEY_ROWID_CAMPAIGN > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_CAMPAIGN, KEY_ROWID_CAMPAIGN);
-                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
@@ -135,7 +136,6 @@ public class DbContentProvider extends ContentProvider{
                 //if added successfully
                 if(KEY_ROWID_CAMPAIGN > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_CAMPAIGN, KEY_ROWID_CAMPAIGN);
-                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
 
@@ -145,7 +145,6 @@ public class DbContentProvider extends ContentProvider{
                 //if added successfully
                 if(KEY_ROWID_SESSION > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_SESSION, KEY_ROWID_SESSION);
-                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
@@ -154,7 +153,6 @@ public class DbContentProvider extends ContentProvider{
                 //if added successfully
                 if(KEY_ROWID_SESSION > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_SESSION, KEY_ROWID_SESSION);
-                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
 
@@ -164,7 +162,6 @@ public class DbContentProvider extends ContentProvider{
                 //if added successfully
                 if(KEY_ROWID_ENCOUNTER > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTER, KEY_ROWID_ENCOUNTER);
-                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
@@ -180,7 +177,6 @@ public class DbContentProvider extends ContentProvider{
                 //if added successfully
                 if(KEY_ROWID_NPC > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_NPC, KEY_ROWID_NPC);
-                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
@@ -196,7 +192,6 @@ public class DbContentProvider extends ContentProvider{
                 //if added successfully
                 if(KEY_ROWID_PC > 0){
                     _uri = ContentUris.withAppendedId(CONTENT_URI_PC, KEY_ROWID_PC);
-                    //_uri = Uri.parse(CONTENT_URI_SESSION + "/" + KEY_ROWID_SESSION);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
@@ -207,10 +202,18 @@ public class DbContentProvider extends ContentProvider{
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
-            case COPY_SINGLE_NPC:
-                KEY_ROWID_ENCOUNTER = db.insert(DataBaseHandler.TABLE_ENCOUNTER, null, values);
-                if(KEY_ROWID_ENCOUNTER > 0){
-                    _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTER, KEY_ROWID_ENCOUNTER);
+            case ALL_MONSTERS:
+                KEY_ROWID_MONSTER = db.insert(DataBaseHandler.TABLE_MONSTER, null, values);
+                //if added successfully
+                if(KEY_ROWID_MONSTER > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_MONSTER, KEY_ROWID_MONSTER);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
+            case SINGLE_MONSTER:
+                KEY_ROWID_MONSTER = db.insert(DataBaseHandler.TABLE_MONSTER, "", values);
+                if(KEY_ROWID_MONSTER > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_MONSTER, KEY_ROWID_MONSTER);
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
@@ -272,10 +275,13 @@ public class DbContentProvider extends ContentProvider{
                 id = uri.getPathSegments().get(1);
                 queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
                 break;
-            case COPY_SINGLE_NPC:
-                queryBuilder.setTables(DataBaseHandler.TABLE_NPC);
+            case ALL_MONSTERS:
+                queryBuilder.setTables(DataBaseHandler.TABLE_MONSTER);
+                break;
+            case SINGLE_MONSTER:
+                queryBuilder.setTables(DataBaseHandler.TABLE_MONSTER);
                 id = uri.getPathSegments().get(1);
-                queryBuilder.appendWhere(DataBaseHandler.KEY_BELONGSTO + "=" + id);
+                queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -333,6 +339,14 @@ public class DbContentProvider extends ContentProvider{
                 deleteCount = db.delete(DataBaseHandler.TABLE_PC, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
+            case SINGLE_MONSTER:
+                id = uri.getPathSegments().get(1);
+                selection = DataBaseHandler.KEY_ROWID + "=" + id
+                        + (!TextUtils.isEmpty(selection) ?
+                        " AND (" + selection + ')' : "");
+                deleteCount = db.delete(DataBaseHandler.TABLE_MONSTER, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -383,6 +397,14 @@ public class DbContentProvider extends ContentProvider{
                         + (!TextUtils.isEmpty(selection) ?
                         " AND (" + selection + ')' : "");
                 updateCount = db.update(DataBaseHandler.TABLE_PC, values, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                break;
+            case SINGLE_MONSTER:
+                id = uri.getPathSegments().get(1);
+                selection = DataBaseHandler.KEY_ROWID + "=" + id
+                        + (!TextUtils.isEmpty(selection) ?
+                        " AND (" + selection + ')' : "");
+                updateCount = db.update(DataBaseHandler.TABLE_MONSTER, values, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
             default:

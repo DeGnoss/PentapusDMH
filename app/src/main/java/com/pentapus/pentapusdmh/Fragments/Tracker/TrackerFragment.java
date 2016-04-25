@@ -84,6 +84,7 @@ public class TrackerFragment extends Fragment implements
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
+        getLoaderManager().initLoader(2, null, this);
         chars = new TrackerAdapter(getContext());
         mRecyclerView.setAdapter(chars);
 
@@ -160,54 +161,73 @@ public class TrackerFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == 0) {
-            String[] projection = {
-                    DataBaseHandler.KEY_ROWID,
-                    DataBaseHandler.KEY_NAME,
-                    DataBaseHandler.KEY_INITIATIVEBONUS,
-                    DataBaseHandler.KEY_AC,
-                    DataBaseHandler.KEY_HP,
-                    DataBaseHandler.KEY_MAXHP,
-                    DataBaseHandler.KEY_STRENGTH,
-                    DataBaseHandler.KEY_DEXTERITY,
-                    DataBaseHandler.KEY_CONSTITUTION,
-                    DataBaseHandler.KEY_INTELLIGENCE,
-                    DataBaseHandler.KEY_WISDOM,
-                    DataBaseHandler.KEY_CHARISMA,
-                    DataBaseHandler.KEY_ICON
-            };
-            String[] selectionArgs = new String[]{String.valueOf(encounterId)};
-            String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-            return new CursorLoader(this.getContext(),
-                    DbContentProvider.CONTENT_URI_NPC, projection, selection, selectionArgs, null);
-        } else {
-            String[] projection = {
-                    DataBaseHandler.KEY_ROWID,
-                    DataBaseHandler.KEY_NAME,
-                    DataBaseHandler.KEY_INITIATIVEBONUS,
-                    DataBaseHandler.KEY_AC,
-                    DataBaseHandler.KEY_HP,
-                    DataBaseHandler.KEY_MAXHP,
-                    DataBaseHandler.KEY_ICON
-            };
-            String[] selectionArgs = new String[]{String.valueOf(campaignId)};
-            String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-            return new CursorLoader(this.getContext(),
-                    DbContentProvider.CONTENT_URI_PC, projection, selection, selectionArgs, null);
+        switch (id) {
+            case 0: //NPC
+                String[] selectionArgs = new String[]{String.valueOf(encounterId)};
+                String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+                return new CursorLoader(this.getContext(),
+                        DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER, selection, selectionArgs, null);
+            case 1:
+                selectionArgs = new String[]{String.valueOf(encounterId)};
+                selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+                return new CursorLoader(this.getContext(),
+                        DbContentProvider.CONTENT_URI_NPC, DataBaseHandler.PROJECTION_NPC, selection, selectionArgs, null);
+            case 2:
+                selectionArgs = new String[]{String.valueOf(campaignId)};
+                selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+                return new CursorLoader(this.getContext(),
+                        DbContentProvider.CONTENT_URI_PC, DataBaseHandler.PROJECTION_PC, selection, selectionArgs, null);
+            default:
+                return null;
         }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
-            //case NPC
+            //case monster
             case 0:
                 while (data.moveToNext()) {
                     String names = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
                     int initiative = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int initiativeMod = initiative;
                     int ac = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
-                    int hp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_HP));
+                    int maxHp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
+                    int strength = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH));
+                    int dexterity = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY));
+                    int constitution = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION));
+                    int intelligence = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE));
+                    int wisdom = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
+                    int charisma = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
+                    Uri iconUri = Uri.parse(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
+
+                    initiative = initiative + DiceHelper.d20();
+                    TrackerInfoCard ci = new TrackerInfoCard();
+                    ci.name = names;
+                    ci.initiative = String.valueOf(initiative);
+                    ci.initiativeMod = String.valueOf(initiativeMod);
+                    ci.ac = ac;
+                    ci.maxHp = maxHp;
+                    ci.hp = maxHp;
+                    ci.type = "monster";
+                    ci.dead = false;
+                    ci.strength = strength;
+                    ci.dexterity = dexterity;
+                    ci.constitution = constitution;
+                    ci.intelligence = intelligence;
+                    ci.wisdom = wisdom;
+                    ci.charisma = charisma;
+                    ci.iconUri = iconUri;
+                    chars.addListItem(ci);
+                }
+                break;
+            //case NPC
+            case 1:
+                while (data.moveToNext()) {
+                    String names = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+                    int initiative = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
+                    int initiativeMod = initiative;
+                    int ac = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
                     int maxHp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
                     int strength = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH));
                     int dexterity = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY));
@@ -237,8 +257,9 @@ public class TrackerFragment extends Fragment implements
                     chars.addListItem(ci);
                 }
                 break;
+
             //case PC
-            case 1:
+            case 2:
                 while (data.moveToNext()) {
                     String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
                     int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
@@ -246,6 +267,7 @@ public class TrackerFragment extends Fragment implements
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
                     int hp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_HP));
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
+                    int disabled = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_DISABLED));
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
@@ -258,7 +280,9 @@ public class TrackerFragment extends Fragment implements
                     ci.type = "pc";
                     ci.dead = false;
                     ci.iconUri = iconUri;
-                    chars.addListItem(ci);
+                    if(disabled == 0){
+                        chars.addListItem(ci);
+                    }
                 }
                 break;
             default:
@@ -280,6 +304,8 @@ public class TrackerFragment extends Fragment implements
                 break;
             case 1:
                 //dataAdapterPC.swapCursor(null);
+                break;
+            case 2:
                 break;
             default:
                 break;

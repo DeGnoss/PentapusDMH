@@ -120,8 +120,10 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         viewHolder.vName.setText(simpleItemCard.getName());
         viewHolder.vInfo.setText(simpleItemCard.getInfo());
         viewHolder.type = simpleItemCard.getType();
-        if (viewHolder.type == 1) {
+        if (viewHolder.type == 0) {
             viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
+        } else if (viewHolder.type == 1) {
+            viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
         } else if (viewHolder.type == 2) {
             viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#3F51B5"));
         }
@@ -149,7 +151,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                     // this will rebind the row in "normal" state
                     notifyDataSetChanged();
                     //TODO: MAKE IT WORK WITH NOTIFYITEMCHANGED
-                    notifyItemChanged(position);
+                    //notifyItemChanged(position);
                 }
             });
         } else {
@@ -200,8 +202,8 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         int characterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
         int characterType = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
         switch (characterType) {
-            case 1:
-                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + characterId);
+            case 0:
+                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + characterId);
                 notifyItemRemoved(position);
                 mContext.getContentResolver().delete(uri, null, null);
                 ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -222,10 +224,29 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                     }
                 }
                 break;
-            case 2:
-                /*uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + characterId);
+            case 1:
+                uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + characterId);
                 notifyItemRemoved(position);
-                mContext.getContentResolver().delete(uri, null, null);*/
+                mContext.getContentResolver().delete(uri, null, null);
+                clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                if (clipboard.hasPrimaryClip()) {
+                    ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+                    Uri pasteUri = itemPaste.getUri();
+                    if (pasteUri == null) {
+                        pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+                    }
+                    if (pasteUri != null) {
+
+                        if (pasteUri.equals(uri)) {
+                            Uri newUri = Uri.parse("");
+                            ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
+                            clipboard.setPrimaryClip(clip);
+                            mAdapterCallback.onMenuRefresh();
+                        }
+                    }
+                }
+                break;
+            case 2:
                 break;
             default:
                 break;
@@ -348,7 +369,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                 @Override
                 public boolean onLongClick(View v) {
                     Log.d("Viewholder ", "longclicked");
-                    mAdapterCallback.onItemLongCLick(getAdapterPosition(), type);
+                    mAdapterCallback.onItemLongCLick(getSubAdapterPosition(), type);
                     return true;
                 }
             });
@@ -356,7 +377,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
             clicker.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapterCallback.onItemClick(getAdapterPosition(), type);
+                    mAdapterCallback.onItemClick(getSubAdapterPosition(), type);
                     Log.d("Viewholder ", "clicked");
                 }
             });

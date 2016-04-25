@@ -50,7 +50,6 @@ public class SimpleItemCard {
 
 
     public static SimpleItemCard fromCursor(Cursor cursor) {
-        Uri uri = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/ninja");
         SimpleItemCard simpleItemCard = new SimpleItemCard();
         simpleItemCard.id = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
         simpleItemCard.name = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_NAME));
@@ -58,8 +57,6 @@ public class SimpleItemCard {
         simpleItemCard.type = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE));
         if(!cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)).isEmpty()){
             simpleItemCard.iconUri = Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
-        }else{
-            simpleItemCard.iconUri = uri;
         }
         return simpleItemCard;
     }

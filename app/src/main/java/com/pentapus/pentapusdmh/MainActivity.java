@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FrameTop, ftable, "FT_SESSION")
                 .commit();
-
-
     }
 
 
@@ -136,8 +134,11 @@ public class MainActivity extends AppCompatActivity {
             String uriMimeType = cr.getType(pasteUri);
             if (uriMimeType != null) {
                 switch (uriMimeType) {
+                    case DbContentProvider.MONSTER:
+                        pasteMonster(pasteUri);
+                        break;
                     case DbContentProvider.NPC:
-                        pasteNpc(pasteUri);
+                        pasteNPC(pasteUri);
                         break;
                     case DbContentProvider.ENCOUNTER:
                         pasteEncounter(pasteUri);
@@ -156,7 +157,50 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void pasteNpc(Uri pasteUri) {
+    private void pasteMonster(Uri pasteUri) {
+        final int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
+        final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
+
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if (cursor == null) {
+                    // Some providers return null if an error occurs whereas others throw an exception
+                } else if (cursor.getCount() < 1) {
+                    // No matches found
+                } else {
+                    while (cursor.moveToNext()) {
+                        ContentValues values = new ContentValues();
+                        values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                        values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+                        values.put(DataBaseHandler.KEY_MAXHP, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+                        values.put(DataBaseHandler.KEY_AC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                        values.put(DataBaseHandler.KEY_STRENGTH, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
+                        values.put(DataBaseHandler.KEY_DEXTERITY, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
+                        values.put(DataBaseHandler.KEY_CONSTITUTION, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
+                        values.put(DataBaseHandler.KEY_INTELLIGENCE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
+                        values.put(DataBaseHandler.KEY_WISDOM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
+                        values.put(DataBaseHandler.KEY_CHARISMA, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
+                        values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
+                        values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
+                        values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
+                        startInsert(1, null, DbContentProvider.CONTENT_URI_MONSTER, values);
+                    }
+                }
+            }
+        };
+
+        queryHandler.startQuery(
+                1, null,
+                pasteUri,
+                DataBaseHandler.PROJECTION_MONSTER,
+                null,
+                null,
+                null
+        );
+    }
+
+    private void pasteNPC(Uri pasteUri) {
         final int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
 
@@ -226,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 int newId = (int) ContentUris.parseId(uri);
 
                 int oldId = Integer.parseInt(oldUri.substring(oldUri.lastIndexOf('/') + 1));
-                nestedPasteNPC(oldId, newId);
+                nestedPasteMonster(oldId, newId);
             }
 
         };
@@ -241,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void nestedPasteNPC(int oldId, final int newId) {
+    private void nestedPasteMonster(int oldId, final int newId) {
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -266,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                         values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
                         values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, newId);
-                        startInsert(2, null, DbContentProvider.CONTENT_URI_NPC, values);
+                        startInsert(2, null, DbContentProvider.CONTENT_URI_MONSTER, values);
                     }
                 }
             }
@@ -277,8 +321,8 @@ public class MainActivity extends AppCompatActivity {
 
         queryHandler.startQuery(
                 2, null,
-                DbContentProvider.CONTENT_URI_NPC,
-                DataBaseHandler.PROJECTION_NPC,
+                DbContentProvider.CONTENT_URI_MONSTER,
+                DataBaseHandler.PROJECTION_MONSTER,
                 selection,
                 selectionArgs,
                 null
@@ -306,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             protected void onInsertComplete(int token, Object cookie, Uri uri) {
                 int newId = (int) ContentUris.parseId(uri);
@@ -348,10 +393,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             int i = 0;
+
             @Override
             protected void onInsertComplete(int token, Object cookie, Uri uri) {
                 int newId = (int) ContentUris.parseId(uri);
-                nestedPasteNPC(oldIds.get(i), newId);
+                nestedPasteMonster(oldIds.get(i), newId);
                 i++;
             }
         };
@@ -412,36 +458,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         final FragmentManager fm = getSupportFragmentManager();
-        if("F_TRACKER".equals(getCurrentFragmentTag())){
-            new AlertDialog.Builder(this)
-                    .setTitle("Exit Tracker")
-                    .setMessage("Are you sure you want to exit the Tracker? This will reset the encounter.")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            fm.popBackStack();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        }
-        else if (fm.getBackStackEntryCount() > 0) {
-            Log.i("MainActivity", "popping backstack");
-            fm.popBackStack();
+        if (fm.getBackStackEntryCount() > 0) {
+
+            if ("F_TRACKER".equals(getCurrentFragmentTag())) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Exit Tracker")
+                        .setMessage("Are you sure you want to exit the Tracker? The encounter will be reset.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                fm.popBackStack();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .show();
+            } else {
+                fm.popBackStack();
+            }
         } else {
             Log.i("MainActivity", "nothing on backstack, calling super");
             super.onBackPressed();
         }
     }
 
-    private String getCurrentFragmentTag(){
+    private String getCurrentFragmentTag() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
-        return fragmentTag;
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+            return fragmentTag;
+        } else {
+            return null;
+        }
     }
 
 

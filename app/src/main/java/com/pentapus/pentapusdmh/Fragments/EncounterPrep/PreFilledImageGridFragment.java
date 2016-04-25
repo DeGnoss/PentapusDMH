@@ -54,7 +54,7 @@ public class PreFilledImageGridFragment extends Fragment implements AdapterNavig
             id = getArguments().getInt("id");
         }
         //TODO get selectedPos
-        //selectedPos = ((NPCEditFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER"));
+        //selectedPos = ((MonsterEditFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER"));
     }
 
 

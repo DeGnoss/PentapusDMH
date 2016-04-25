@@ -121,6 +121,11 @@ public class CampaignAdapter extends RecyclerViewCursorAdapter<CampaignAdapter.C
         }
         int campaignId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + campaignId);
+        if (position == 0) {
+            notifyItemChanged(position);
+        } else {
+            notifyItemRemoved(position);
+        }
         notifyItemRemoved(position);
         mContext.getContentResolver().delete(uri, null, null);
     }

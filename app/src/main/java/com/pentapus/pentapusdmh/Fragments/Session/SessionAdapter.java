@@ -119,13 +119,18 @@ public class SessionAdapter extends RecyclerViewCursorAdapter<SessionAdapter.Ses
 
     public void remove(int position, String identifier) {
         Cursor mCursor = mCursorAdapter.getCursor();
+        mCursor.moveToPosition(position);
 
         if (itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.remove(identifier);
         }
         int sessionId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
-        notifyItemRemoved(position);
+        if (position == 0) {
+            notifyItemChanged(position);
+        } else {
+            notifyItemRemoved(position);
+        }
         mContext.getContentResolver().delete(uri, null, null);
         ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboard.hasPrimaryClip()) {

@@ -38,11 +38,11 @@ import java.io.IOException;
 import java.util.UUID;
 
 
-public class NPCEditFragment extends Fragment {
+public class MonsterEditFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String MODE = "modeUpdate";
-    private static final String NPC_ID = "npcId";
+    private static final String MONSTER_ID = "monsterId";
     private static final String ENCOUNTER_ID = "encounterId";
 
     private static int RESULT_LOAD_IMG = 1;
@@ -52,7 +52,7 @@ public class NPCEditFragment extends Fragment {
     private Uri myFile;
 
     private boolean modeUpdate;
-    private int npcId;
+    private int monsterId;
     private int encounterId;
     private int px;
 
@@ -60,7 +60,7 @@ public class NPCEditFragment extends Fragment {
     ImageButton bChooseImage;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar;
 
-    public NPCEditFragment() {
+    public MonsterEditFragment() {
         // Required empty public constructor
     }
 
@@ -69,15 +69,15 @@ public class NPCEditFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param modeUpdate  Parameter 1.
-     * @param npcId       Parameter 2.
+     * @param monsterId       Parameter 2.
      * @param encounterId Parameter 3.
      * @return A new instance of fragment EncounterEditFragment.
      */
-    public static NPCEditFragment newInstance(boolean modeUpdate, int npcId, int encounterId) {
-        NPCEditFragment fragment = new NPCEditFragment();
+    public static MonsterEditFragment newInstance(boolean modeUpdate, int monsterId, int encounterId) {
+        MonsterEditFragment fragment = new MonsterEditFragment();
         Bundle args = new Bundle();
         args.putBoolean(MODE, modeUpdate);
-        args.putInt(NPC_ID, npcId);
+        args.putInt(MONSTER_ID, monsterId);
         args.putInt(ENCOUNTER_ID, encounterId);
         fragment.setArguments(args);
         return fragment;
@@ -91,7 +91,7 @@ public class NPCEditFragment extends Fragment {
             encounterId = getArguments().getInt(ENCOUNTER_ID);
             //check wheter entry gets updated or added
             if (modeUpdate) {
-                npcId = getArguments().getInt(NPC_ID);
+                monsterId = getArguments().getInt(MONSTER_ID);
             }
         }
         px = (int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
@@ -101,7 +101,7 @@ public class NPCEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View charEditView = inflater.inflate(R.layout.fragment_npc_edit, container, false);
+        final View charEditView = inflater.inflate(R.layout.fragment_monster_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
         init_tf = (EditText) charEditView.findViewById(R.id.etInit);
@@ -117,7 +117,7 @@ public class NPCEditFragment extends Fragment {
 
 
         if (modeUpdate) {
-            loadNPCInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar, npcId);
+            loadMonsterInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar, monsterId);
         }
         addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
@@ -127,31 +127,27 @@ public class NPCEditFragment extends Fragment {
             }
         });
 
-        bChooseImage.setOnClickListener(new View.OnClickListener() {
+        bChooseImage.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
                 showViewPager();
-                /*
-                ViewPagerMyImageGridFragment fragment = new ViewPagerMyImageGridFragment();
-                fragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.FrameTop, fragment, "F_IMAGEGRID")
-                        .addToBackStack("F_IMAGEGRID")
-                        .commit();*/
             }
         });
 
 
-        bChooseImage.setOnLongClickListener(new View.OnLongClickListener() {
+
+
+        bChooseImage.setOnLongClickListener(new View.OnLongClickListener(){
 
             @Override
             public boolean onLongClick(View v) {
                 Glide.clear(bChooseImage);
-                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"));
+                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_MONSTER"));
                 return true;
             }
         });
+
 
 
         // Inflate the layout for this fragment
@@ -162,7 +158,7 @@ public class NPCEditFragment extends Fragment {
     public void showViewPager() {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         ImageViewPagerDialogFragment newFragment = new ImageViewPagerDialogFragment();
-        newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
+        newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_MONSTER"), RESULT_CHOOSE_IMG);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         // For a little polish, specify a transition animation
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -172,10 +168,10 @@ public class NPCEditFragment extends Fragment {
                 .addToBackStack(null).commit();
     }
 
-    private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, EditText strength, EditText dex, EditText constit, EditText intelligence, EditText wis, EditText charisma, int id) {
+    private void loadMonsterInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, EditText strength, EditText dex, EditText constit, EditText intelligence, EditText wis, EditText charisma, int id) {
 
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
-        Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_NPC, null, null,
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + id);
+        Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_MONSTER, null, null,
                 null);
         if (cursor != null && cursor.moveToFirst()) {
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
@@ -203,7 +199,6 @@ public class NPCEditFragment extends Fragment {
             wis.setText(myWisdom, TextView.BufferType.EDITABLE);
             charisma.setText(myCharisma, TextView.BufferType.EDITABLE);
             bChooseImage.setImageURI(myFile);
-
         }
         assert cursor != null;
         cursor.close();
@@ -234,20 +229,20 @@ public class NPCEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
         values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
         values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
-        if (myFile == null) {
+        if(myFile == null){
             myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
         }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
-        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_NPC);
+        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_MONSTER);
 
         // insert a record
         if (!modeUpdate) {
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_NPC, values);
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_MONSTER, values);
         }
         // update a record
         else {
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
         getActivity().getSupportFragmentManager().popBackStack();
@@ -265,16 +260,17 @@ public class NPCEditFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RESULT_CHOOSE_IMG && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
+        if(requestCode == RESULT_CHOOSE_IMG && resultCode == Activity.RESULT_OK){
+            if(data != null) {
                 String value = data.getStringExtra("imageUri");
-                if (value != null) {
+                if(value != null) {
                     Uri uri = Uri.parse(value);
                     myFile = uri;
-                    Log.v("NPCEdit", "Data passed from Child fragment = " + uri);
+                    Log.v("MonsterEdit", "Data passed from Child fragment = " + uri);
                     bChooseImage.post(new Runnable() {
                         @Override
-                        public void run() {
+                        public void run()
+                        {
                             bChooseImage.setImageURI(myFile);
                         }
                     });
@@ -286,7 +282,7 @@ public class NPCEditFragment extends Fragment {
 
     private void beginCrop(Uri source) {
         Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
-        Crop.of(source, destination).asSquare().start(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"));
+        Crop.of(source, destination).asSquare().start(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_MONSTER"));
     }
 
 

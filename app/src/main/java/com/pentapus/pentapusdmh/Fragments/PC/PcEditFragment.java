@@ -163,17 +163,9 @@ public class PcEditFragment extends Fragment {
     }
 
     private void loadCharacterInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, int id) {
-        String[] projection = {
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO,
-                DataBaseHandler.KEY_INITIATIVEBONUS,
-                DataBaseHandler.KEY_MAXHP,
-                DataBaseHandler.KEY_AC,
-                DataBaseHandler.KEY_ICON
-        };
+
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + id);
-        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
+        Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_PC, null, null,
                 null);
         if (cursor != null) {
             cursor.moveToFirst();
@@ -207,6 +199,7 @@ public class PcEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_AC, myAc);
         values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_PC);
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
+        values.put(DataBaseHandler.KEY_DISABLED, 0);
         values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
 
         // insert a record

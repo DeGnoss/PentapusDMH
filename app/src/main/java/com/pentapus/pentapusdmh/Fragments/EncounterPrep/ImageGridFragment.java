@@ -57,7 +57,7 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
             id = getArguments().getInt("id");
         }
         //TODO get selectedPos
-        //selectedPos = ((NPCEditFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER"));
+        //selectedPos = ((MonsterEditFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER"));
     }
 
 
@@ -86,8 +86,13 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
 
     private void onClick(int position) {
         imageGridAdapter.statusClicked(position);
-        ImageGridAdapter.setSelectedUri(Uri.parse(imageGridAdapter.getImageUris()[position].toString()));
-        selectedPos = position;
+        if(position == selectedPos){
+            selectedPos = -1;
+            ImageGridAdapter.setSelectedUri(null);
+        }else{
+            selectedPos = position;
+            ImageGridAdapter.setSelectedUri(Uri.parse(imageGridAdapter.getImageUris()[position].toString()));
+        }
     }
 
     @Override
