@@ -233,7 +233,7 @@ public class MonsterEditFragment extends Fragment {
             myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
         }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
-        values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
+        values.put(DataBaseHandler.KEY_MM, 0);
         values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_MONSTER);
 
         // insert a record

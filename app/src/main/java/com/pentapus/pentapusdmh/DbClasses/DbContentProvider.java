@@ -34,6 +34,8 @@ public class DbContentProvider extends ContentProvider{
     private static final int SINGLE_PC = 10;
     private static final int ALL_MONSTERS = 11;
     private static final int SINGLE_MONSTER = 12;
+    private static final int ALL_ENCOUNTERPREPS = 13;
+    private static final int SINGLE_ENCOUNTERPREP = 14;
 
     // authority is the symbolic name of your provider
     // To avoid conflicts with other providers, you should use
@@ -53,6 +55,8 @@ public class DbContentProvider extends ContentProvider{
             Uri.parse("content://" + AUTHORITY + "/pc");
     public static final Uri CONTENT_URI_MONSTER =
             Uri.parse("content://" + AUTHORITY + "/monster");
+    public static final Uri CONTENT_URI_ENCOUNTERPREP =
+            Uri.parse("content://" + AUTHORITY + "/encounterprep");
 
     //Mime types
 
@@ -62,6 +66,7 @@ public class DbContentProvider extends ContentProvider{
     public static final String NPC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.npc";
     public static final String PC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.pc";
     public static final String MONSTER =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.monster";
+    public static final String ENCOUNTERPREP =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.encounterprep";
 
 
 
@@ -83,6 +88,8 @@ public class DbContentProvider extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, "pc/#", SINGLE_PC);
         uriMatcher.addURI(AUTHORITY, "monster", ALL_MONSTERS);
         uriMatcher.addURI(AUTHORITY, "monster/#", SINGLE_MONSTER);
+        uriMatcher.addURI(AUTHORITY, "encounterprep", ALL_ENCOUNTERPREPS);
+        uriMatcher.addURI(AUTHORITY, "encounterprep/#", SINGLE_ENCOUNTERPREP);
     }
 
 
@@ -109,6 +116,8 @@ public class DbContentProvider extends ContentProvider{
                 return PC;
             case SINGLE_MONSTER:
                 return MONSTER;
+            case SINGLE_ENCOUNTERPREP:
+                return ENCOUNTERPREP;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -119,7 +128,7 @@ public class DbContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri _uri = null;
-        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC, KEY_ROWID_MONSTER, KEY_ROWID_PC;
+        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC, KEY_ROWID_MONSTER, KEY_ROWID_PC, KEY_ROWID_ENCOUNTERPREP;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
         int uriType = uriMatcher.match(uri);
         switch (uriType) {
@@ -217,6 +226,21 @@ public class DbContentProvider extends ContentProvider{
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
+            case ALL_ENCOUNTERPREPS:
+                KEY_ROWID_ENCOUNTERPREP = db.insert(DataBaseHandler.TABLE_ENCOUNTER_PREP, null, values);
+                //if added successfully
+                if(KEY_ROWID_ENCOUNTERPREP > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTERPREP, KEY_ROWID_ENCOUNTERPREP);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
+            case SINGLE_ENCOUNTERPREP:
+                KEY_ROWID_ENCOUNTERPREP = db.insert(DataBaseHandler.TABLE_ENCOUNTER_PREP, "", values);
+                if(KEY_ROWID_ENCOUNTERPREP > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_ENCOUNTERPREP, KEY_ROWID_ENCOUNTERPREP);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
             default:
                 try {
                     throw new SQLException("Failed to insert row into " + uri);
@@ -280,6 +304,14 @@ public class DbContentProvider extends ContentProvider{
                 break;
             case SINGLE_MONSTER:
                 queryBuilder.setTables(DataBaseHandler.TABLE_MONSTER);
+                id = uri.getPathSegments().get(1);
+                queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
+                break;
+            case ALL_ENCOUNTERPREPS:
+                queryBuilder.setTables(DataBaseHandler.TABLE_ENCOUNTER_PREP);
+                break;
+            case SINGLE_ENCOUNTERPREP:
+                queryBuilder.setTables(DataBaseHandler.TABLE_ENCOUNTER_PREP);
                 id = uri.getPathSegments().get(1);
                 queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
                 break;
@@ -347,6 +379,14 @@ public class DbContentProvider extends ContentProvider{
                 deleteCount = db.delete(DataBaseHandler.TABLE_MONSTER, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
+            case SINGLE_ENCOUNTERPREP:
+                id = uri.getPathSegments().get(1);
+                selection = DataBaseHandler.KEY_ROWID + "=" + id
+                        + (!TextUtils.isEmpty(selection) ?
+                        " AND (" + selection + ')' : "");
+                deleteCount = db.delete(DataBaseHandler.TABLE_ENCOUNTER_PREP, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -405,6 +445,14 @@ public class DbContentProvider extends ContentProvider{
                         + (!TextUtils.isEmpty(selection) ?
                         " AND (" + selection + ')' : "");
                 updateCount = db.update(DataBaseHandler.TABLE_MONSTER, values, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                break;
+            case SINGLE_ENCOUNTERPREP:
+                id = uri.getPathSegments().get(1);
+                selection = DataBaseHandler.KEY_ROWID + "=" + id
+                        + (!TextUtils.isEmpty(selection) ?
+                        " AND (" + selection + ')' : "");
+                updateCount = db.update(DataBaseHandler.TABLE_ENCOUNTER_PREP, values, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
             default:

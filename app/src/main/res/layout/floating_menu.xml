@@ -91,7 +91,7 @@
                 android:id="@+id/demotext2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Browse Monster Manual"
+                android:text="Add Monster"
                 android:gravity="right"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/loc_item_detail_floatmenu_btn_monster"
@@ -101,38 +101,7 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/loc_item_detail_floatmenu_new_monster"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_margin="16dp"
-            >
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/loc_item_detail_floatmenu_btn_new_monster"
-                android:layout_width="@dimen/filter_image"
-                android:layout_height="@dimen/filter_image"
-                app:fabSize="mini"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
-                android:src="@drawable/ic_person_add"/>
-
-
-            <TextView
-                android:id="@+id/demotext3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Create Monster"
-                android:gravity="right"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/loc_item_detail_floatmenu_btn_new_monster"
-                android:textColor="#fff"
-                />
-
-
-        </RelativeLayout>
 
 
 

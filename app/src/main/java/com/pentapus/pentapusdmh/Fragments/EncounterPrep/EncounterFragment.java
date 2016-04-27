@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -42,12 +44,16 @@ import android.widget.Toast;
 import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 import java.io.File;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 
 public class EncounterFragment extends Fragment implements
@@ -62,6 +68,11 @@ public class EncounterFragment extends Fragment implements
     private static final String MONSTER_ID = "monsterId";
     private static final String NPC_ID = "npcId";
 
+/*
+    @BindView(R.id.loc_item_detail_floatmenu_btn_npc) FloatingActionButton btnNpc;
+    @BindView(R.id.loc_item_detail_floatmenu_btn_monster) FloatingActionButton btnMonster;
+    @BindView(R.id.loc_item_detail_floatmenu_btn_close) FloatingActionButton btnClose;
+    @BindView(R.id.fabEncounter) FloatingActionButton fab;*/
 
     private ActionMode mActionMode;
 
@@ -74,7 +85,6 @@ public class EncounterFragment extends Fragment implements
     private CursorRecyclerViewAdapter dataAdapterMonster, dataAdapterNPC, dataAdapterPC;
     private static int campaignId;
     RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> mergeAdapter;
-    private FloatingActionButton fab;
     private RecyclerView mRecyclerView;
 
 
@@ -109,7 +119,7 @@ public class EncounterFragment extends Fragment implements
         }
         setHasOptionsMenu(true);
         dataAdapterMonster = new CursorRecyclerViewAdapter(getContext(), null, this);
-        dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
+        //dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
         dataAdapterPC = new CursorRecyclerViewAdapter(getContext(), null, this);
     }
 
@@ -119,7 +129,8 @@ public class EncounterFragment extends Fragment implements
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
         //displayListView(tableView);
-        fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
+        FloatingActionButton fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,8 +150,8 @@ public class EncounterFragment extends Fragment implements
 
         mergeAdapter = new RecyclerViewMergeAdapter<>();
         mergeAdapter.addAdapter(0, dataAdapterMonster);
-        mergeAdapter.addAdapter(1, dataAdapterNPC);
-        mergeAdapter.addAdapter(2, dataAdapterPC);
+        //mergeAdapter.addAdapter(1, dataAdapterNPC);
+        mergeAdapter.addAdapter(1, dataAdapterPC);
 
         mRecyclerView.setAdapter(mergeAdapter);
 
@@ -153,6 +164,7 @@ public class EncounterFragment extends Fragment implements
     }
 
 
+    //@OnClick(R.id.fabEncounter)
     public void showFloatingMenu() {
 
         dialog = new Dialog(getContext());
@@ -172,17 +184,7 @@ public class EncounterFragment extends Fragment implements
         // it dismiss the dialog when click outside the dialog frame
         dialog.setCanceledOnTouchOutside(true);
 
-        FloatingActionButton btnNpc = (FloatingActionButton) dialog.findViewById(R.id.loc_item_detail_floatmenu_btn_npc);
 
-        FloatingActionButton btnMonster = (FloatingActionButton) dialog.findViewById(R.id.loc_item_detail_floatmenu_btn_monster);
-
-        FloatingActionButton btnNewMonster = (FloatingActionButton) dialog.findViewById(R.id.loc_item_detail_floatmenu_btn_new_monster);
-
-        FloatingActionButton btnClose = (FloatingActionButton) dialog.findViewById(R.id.loc_item_detail_floatmenu_btn_close);
-
-
-        //floatingBtn.setImageTintList(ColorStateList.valueOf(ContrastCalculator.textColor(Color.parseColor(ColorHelper.loadColorPrimaryDark()))));
-        //floatingBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(ColorHelper.loadColorPrimary())));
 
         View closeButton = (View) dialog.findViewById(R.id.loc_item_detail_floatmenu_close);
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +195,8 @@ public class EncounterFragment extends Fragment implements
             }
         });
 
+
+
         View npcButton = (View) dialog.findViewById(R.id.loc_item_detail_floatmenu_npc);
         npcButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,20 +206,13 @@ public class EncounterFragment extends Fragment implements
             }
         });
 
-        View monsterButton = (View) dialog.findViewById(R.id.loc_item_detail_floatmenu_monster);
-        monsterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBrowseMM(v);
-                dialog.dismiss();
-            }
-        });
 
-        View addMonsterButton = (View) dialog.findViewById(R.id.loc_item_detail_floatmenu_new_monster);
+        View addMonsterButton = (View) dialog.findViewById(R.id.loc_item_detail_floatmenu_monster);
         addMonsterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onAddMonster(v);
+                showViewPager();
+                //onAddMonster(v);
                 dialog.dismiss();
             }
         });
@@ -224,18 +221,16 @@ public class EncounterFragment extends Fragment implements
         dialog.show();
     }
 
-    private void onBrowseMM(View v) {
-        Toast.makeText(getContext(), "MonsterManual not yet implemented", Toast.LENGTH_SHORT).show();
-    }
-
-    private void onAddMonster(View v) {
+   // @OnClick(R.id.loc_item_detail_floatmenu_monster)
+    public void onAddMonster(View v) {
         Bundle bundle = new Bundle();
         bundle.putBoolean(MODE, false);
         bundle.putInt(ENCOUNTER_ID, encounterId);
         addMonster(bundle);
     }
 
-    private void onAddNpc(View v) {
+   // @OnClick(R.id.loc_item_detail_floatmenu_npc)
+    public void onAddNpc(View v) {
         Bundle bundle = new Bundle();
         bundle.putBoolean(MODE, false);
         bundle.putInt(ENCOUNTER_ID, encounterId);
@@ -442,15 +437,26 @@ public class EncounterFragment extends Fragment implements
                         top = firstViewComingUp.getTop();
                         bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
                     }
-
                     background.setBounds(left, top, right, bottom);
                     background.draw(c);
 
                 }
                 super.onDraw(c, parent, state);
             }
-
         });
+    }
+
+    public void showViewPager() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        MonsterViewPagerDialogFragment newFragment = new MonsterViewPagerDialogFragment();
+        //newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        transaction.replace(android.R.id.content, newFragment, "F_MONSTER_PAGER")
+                .addToBackStack("F_ENCOUNTER").commit();
     }
 
 
@@ -542,6 +548,8 @@ public class EncounterFragment extends Fragment implements
         super.onDetach();
     }
 
+    //FIXME: copy into db and load or only load?
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
@@ -556,13 +564,13 @@ public class EncounterFragment extends Fragment implements
                 String[] selectionArgs = new String[]{String.valueOf(encounterId)};
                 String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
-                        DbContentProvider.CONTENT_URI_MONSTER, projection, selection, selectionArgs, null);
-            case 1:
+                        DbContentProvider.CONTENT_URI_ENCOUNTERPREP, projection, selection, selectionArgs, null);
+           /* case 1:
                 selectionArgs = new String[]{String.valueOf(encounterId)};
                 selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
-                        DbContentProvider.CONTENT_URI_NPC, projection, selection, selectionArgs, null);
-            case 2:
+                        DbContentProvider.CONTENT_URI_ENCOUNTERPREP, projection, selection, selectionArgs, null);*/
+            case 1:
                 selectionArgs = new String[]{String.valueOf(campaignId)};
                 selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
@@ -570,7 +578,6 @@ public class EncounterFragment extends Fragment implements
             default:
                 return null;
         }
-
     }
 
     @Override
@@ -579,10 +586,10 @@ public class EncounterFragment extends Fragment implements
             case 0:
                 dataAdapterMonster.swapCursor(data);
                 break;
-            case 1:
+           /* case 1:
                 dataAdapterNPC.swapCursor(data);
-                break;
-            case 2:
+                break; */
+            case 1:
                 dataAdapterPC.swapCursor(data);
                 break;
             default:
@@ -596,10 +603,10 @@ public class EncounterFragment extends Fragment implements
             case 0:
                 dataAdapterMonster.swapCursor(null);
                 break;
+        /*     case 1:
+               dataAdapterNPC.swapCursor(null);
+                break; */
             case 1:
-                dataAdapterNPC.swapCursor(null);
-                break;
-            case 2:
                 dataAdapterPC.swapCursor(null);
                 break;
             default:

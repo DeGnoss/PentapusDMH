@@ -22,6 +22,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String TABLE_CAMPAIGN = "campaign";
     public static final String TABLE_SESSION = "session";
     public static final String TABLE_ENCOUNTER = "encounter";
+
+    public static final String TABLE_ENCOUNTER_PREP = "encounterprep";
     public static final String TABLE_MONSTER = "monster";
     public static final String TABLE_NPC = "npc";
     public static final String TABLE_PC = "pc";
@@ -44,6 +46,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
 
     //PC & NPC Table
+    public static final String KEY_MM = "mm";
     public static final String KEY_MAXHP = "maxHp";
     public static final String KEY_HP = "hp";
     public static final String KEY_AC = "ac";
@@ -179,6 +182,31 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_SESSION + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_ENCOUNTER_TABLE);
 
+
+        String CREATE_ENCOUNTERPREP_TABLE =
+                "CREATE TABLE if not exists " + TABLE_ENCOUNTER_PREP + " (" +
+                        KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
+                        KEY_NAME + " TEXT, " +
+                        KEY_INFO + " TEXT, " +
+                        KEY_HP + " INTEGER, " +
+                        KEY_MAXHP + " INTEGER, " +
+                        KEY_AC + " INTEGER, " +
+                        KEY_CR + " INTEGER, " +
+                        KEY_XP + " DOUBLE, " +
+                        KEY_STRENGTH + " INTEGER, " +
+                        KEY_DEXTERITY + " INTEGER, " +
+                        KEY_CONSTITUTION + " INTEGER, " +
+                        KEY_INTELLIGENCE + " INTEGER, " +
+                        KEY_WISDOM + " INTEGER, " +
+                        KEY_CHARISMA + " INTEGER, " +
+                        KEY_INITIATIVEBONUS + " INTEGER, " +
+                        KEY_TYPE + " INTEGER, " +
+                        KEY_ICON + " TEXT, " +
+                        KEY_BELONGSTO + " integer NOT NULL, " +
+                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
+        db.execSQL(CREATE_ENCOUNTERPREP_TABLE);
+
+
         //Create Monster table
         String CREATE_MONSTER_TABLE =
                 "CREATE TABLE if not exists " + TABLE_MONSTER + " (" +
@@ -199,8 +227,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_INITIATIVEBONUS + " INTEGER, " +
                         KEY_TYPE + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
-                        KEY_BELONGSTO + " integer NOT NULL, " +
-                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
+                        KEY_MM + " INTEGER);";
         db.execSQL(CREATE_MONSTER_TABLE);
 
 
@@ -225,7 +252,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_TYPE + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
-                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
+                        "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_NPC_TABLE);
 
 
