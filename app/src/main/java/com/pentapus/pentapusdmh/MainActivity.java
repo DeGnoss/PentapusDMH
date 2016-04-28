@@ -478,6 +478,7 @@ public class MainActivity extends AppCompatActivity {
                         .show();
             } else {
                 fm.popBackStack();
+                Log.i("MainActivity", "pop backstack");
             }
         } else {
             Log.i("MainActivity", "nothing on backstack, calling super");

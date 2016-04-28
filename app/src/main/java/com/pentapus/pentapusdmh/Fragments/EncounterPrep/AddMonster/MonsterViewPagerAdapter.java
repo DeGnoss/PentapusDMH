@@ -41,7 +41,7 @@ public class MonsterViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return MyMonsterTableFragment.newInstance();
             case 1:
-                return MyMonsterTableFragment.newInstance();
+                return MonsterManualTableFragment.newInstance();
             default:
                 return null;
         }

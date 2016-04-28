@@ -127,7 +127,6 @@ public class EncounterFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
         //displayListView(tableView);
         FloatingActionButton fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
 
@@ -221,13 +220,6 @@ public class EncounterFragment extends Fragment implements
         dialog.show();
     }
 
-   // @OnClick(R.id.loc_item_detail_floatmenu_monster)
-    public void onAddMonster(View v) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(MODE, false);
-        bundle.putInt(ENCOUNTER_ID, encounterId);
-        addMonster(bundle);
-    }
 
    // @OnClick(R.id.loc_item_detail_floatmenu_npc)
     public void onAddNpc(View v) {
@@ -241,9 +233,9 @@ public class EncounterFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
-
         } else {
             getLoaderManager().restartLoader(0, null, this);
         }
@@ -447,16 +439,29 @@ public class EncounterFragment extends Fragment implements
     }
 
     public void showViewPager() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(ENCOUNTER_ID, encounterId);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         MonsterViewPagerDialogFragment newFragment = new MonsterViewPagerDialogFragment();
         //newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
+        newFragment.setArguments(bundle);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         // For a little polish, specify a transition animation
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
         transaction.replace(android.R.id.content, newFragment, "F_MONSTER_PAGER")
-                .addToBackStack("F_ENCOUNTER").commit();
+                .addToBackStack("F_MONSTER_PAGER").commit();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            // Set title
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
+
+        }
     }
 
 
@@ -477,17 +482,6 @@ public class EncounterFragment extends Fragment implements
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FrameTop, fragment, "FE_NPC")
                 .addToBackStack("FE_NPC")
-                .commit();
-    }
-
-
-    private void addMonster(Bundle bundle) {
-        Fragment fragment;
-        fragment = new MonsterEditFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_MONSTER")
-                .addToBackStack("FE_MONSTER")
                 .commit();
     }
 

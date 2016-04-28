@@ -1,10 +1,8 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster;
 
 
-import android.content.AsyncQueryHandler;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -14,7 +12,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -36,14 +33,12 @@ import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageGridAdapter;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.MonsterEditFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 
 
-public class MyMonsterTableFragment extends Fragment implements
+public class MonsterManualTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 
@@ -51,8 +46,6 @@ public class MyMonsterTableFragment extends Fragment implements
 
     private static final String MODE = "modeUpdate";
 
-    private static int monsterId = -1;
-    private static int selectedPos = -1;
 
     private int sessionId;
     private String sessionName;
@@ -60,9 +53,9 @@ public class MyMonsterTableFragment extends Fragment implements
     private RecyclerView myMonsterRecyclerView;
     private ActionMode mActionMode;
 
-    private MyMonsterAdapter myMonsterAdapter;
+    private MonsterManualAdapter myMonsterAdapter;
 
-    public MyMonsterTableFragment() {
+    public MonsterManualTableFragment() {
         // Required empty public constructor
     }
 
@@ -70,8 +63,8 @@ public class MyMonsterTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static MyMonsterTableFragment newInstance() {
-        MyMonsterTableFragment fragment = new MyMonsterTableFragment();
+    public static MonsterManualTableFragment newInstance() {
+        MonsterManualTableFragment fragment = new MonsterManualTableFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -81,8 +74,9 @@ public class MyMonsterTableFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        selectedPos = -1;
-        myMonsterAdapter = new MyMonsterAdapter(getContext(), this);
+        if (this.getArguments() != null) {
+        }
+        myMonsterAdapter = new MonsterManualAdapter(getContext(), this);
     }
 
     @Override
@@ -100,18 +94,9 @@ public class MyMonsterTableFragment extends Fragment implements
                 new DividerItemDecoration(getActivity()));
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
 
-
-        setUpItemTouchHelper();
-        setUpAnimationDecoratorHelper();
-
         // Inflate the layout for this fragment
         return tableView;
     }
-
-    public static int getSelectedMonster() {
-        return monsterId;
-    }
-
 
     @Override
     public void onResume() {
@@ -123,176 +108,6 @@ public class MyMonsterTableFragment extends Fragment implements
             getLoaderManager().restartLoader(0, null, this);
         }
     }
-
-
-
-
-
-
-
-    private void setUpItemTouchHelper() {
-
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            Drawable background;
-            Drawable xMark;
-            int xMarkMargin;
-            boolean initiated;
-
-
-            private void init() {
-                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
-                xMark = ContextCompat.getDrawable(getContext(), R.drawable.ic_clear_24dp);
-                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                xMarkMargin = (int) getContext().getResources().getDimension(R.dimen.ic_clear_margin);
-                initiated = true;
-            }
-
-
-            //Drag & drop
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-                MyMonsterAdapter testAdapter = (MyMonsterAdapter) recyclerView.getAdapter();
-                if (testAdapter.isPendingRemoval(position)) {
-                    return 0;
-                }
-                return super.getSwipeDirs(recyclerView, viewHolder);
-            }
-
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                //Remove swiped item from list and notify the RecyclerView
-                int swipedAdapterPosition = viewHolder.getAdapterPosition();
-                MyMonsterAdapter adapter = (MyMonsterAdapter) myMonsterRecyclerView.getAdapter();
-                adapter.pendingRemoval(swipedAdapterPosition);
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                View itemView = viewHolder.itemView;
-
-                if (viewHolder.getAdapterPosition() == -1) {
-                    // not interested in those
-                    return;
-                }
-
-                if (!initiated) {
-                    init();
-                }
-
-                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                background.draw(c);
-
-                // draw x mark
-                int itemHeight = itemView.getBottom() - itemView.getTop();
-                int intrinsicWidth = xMark.getIntrinsicWidth();
-                int intrinsicHeight = xMark.getIntrinsicWidth();
-
-                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
-                int xMarkBottom = xMarkTop + intrinsicHeight;
-                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-
-                xMark.draw(c);
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(myMonsterRecyclerView);
-    }
-
-
-    /**
-     * We're gonna setup another ItemDecorator that will draw the red background in the empty space while the items are animating to thier new positions
-     * after an item is removed.
-     */
-    private void setUpAnimationDecoratorHelper() {
-        myMonsterRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-
-            // we want to cache this and not allocate anything repeatedly in the onDraw method
-            Drawable background;
-            boolean initiated;
-
-            private void init() {
-                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
-                initiated = true;
-            }
-
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-
-                if (!initiated) {
-                    init();
-                }
-
-                // only if animation is in progress
-                if (parent.getItemAnimator().isRunning()) {
-
-                    // some items might be animating down and some items might be animating up to close the gap left by the removed item
-                    // this is not exclusive, both movement can be happening at the same time
-                    // to reproduce this leave just enough items so the first one and the last one would be just a little off screen
-                    // then remove one from the middle
-
-                    // find first child with translationY > 0
-                    // and last one with translationY < 0
-                    // we're after a rect that is not covered in recycler-view views at this point in time
-                    View lastViewComingDown = null;
-                    View firstViewComingUp = null;
-
-                    // this is fixed
-                    int left = 0;
-                    int right = parent.getWidth();
-
-                    // this we need to find out
-                    int top = 0;
-                    int bottom = 0;
-
-                    // find relevant translating views
-                    int childCount = parent.getLayoutManager().getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        View child = parent.getLayoutManager().getChildAt(i);
-                        if (child.getTranslationY() < 0) {
-                            // view is coming down
-                            lastViewComingDown = child;
-                        } else if (child.getTranslationY() > 0) {
-                            // view is coming up
-                            if (firstViewComingUp == null) {
-                                firstViewComingUp = child;
-                            }
-                        }
-                    }
-
-                    if (lastViewComingDown != null && firstViewComingUp != null) {
-                        // views are coming down AND going up to fill the void
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    } else if (lastViewComingDown != null) {
-                        // views are going down to fill the void
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = lastViewComingDown.getBottom();
-                    } else if (firstViewComingUp != null) {
-                        // views are coming up to fill the void
-                        top = firstViewComingUp.getTop();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    }
-
-                    background.setBounds(left, top, right, bottom);
-                    background.draw(c);
-
-                }
-                super.onDraw(c, parent, state);
-            }
-
-        });
-    }
-
 
 
     public int getSessionId() {
@@ -334,7 +149,7 @@ public class MyMonsterTableFragment extends Fragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        String[] selectionArgs = new String[]{String.valueOf(0)};
+        String[] selectionArgs = new String[]{String.valueOf(1)};
         String selection = DataBaseHandler.KEY_MM + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER, selection, selectionArgs, null);
@@ -356,19 +171,6 @@ public class MyMonsterTableFragment extends Fragment implements
     @Override
     public void onItemClick(int position) {
 
-        myMonsterAdapter.statusClicked(position);
-        if(position == selectedPos){
-            selectedPos = -1;
-            MyMonsterAdapter.setSelectedUri(null);
-        }else{
-            selectedPos = position;
-            Cursor cursor = myMonsterAdapter.getCursor();
-            cursor.moveToPosition(position);
-            monsterId =
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-        }
-
         //TODO: Select on itemclick
        /* Cursor cursor = myMonsterAdapter.getCursor();
         cursor.moveToPosition(position);
@@ -382,8 +184,6 @@ public class MyMonsterTableFragment extends Fragment implements
         loadNPC(bundle, encounterId, encounterName); */
 
     }
-
-
 
     @Override
     public void onItemLongCLick(final int position) {
