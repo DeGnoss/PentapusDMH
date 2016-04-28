@@ -23,6 +23,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final String TABLE_SESSION = "session";
     public static final String TABLE_ENCOUNTER = "encounter";
 
+    public static final String TABLE_ENCOUNTER_PREP_LINKER = "encounterpreplinker";
     public static final String TABLE_ENCOUNTER_PREP = "encounterprep";
     public static final String TABLE_MONSTER = "monster";
     public static final String TABLE_NPC = "npc";
@@ -81,7 +82,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     private static final String KEY_CUSTOM = "custom";
 
 
-    public static final String[] PROJECTION_MONSTER = new String[]{
+    public static final String[] PROJECTION_ENCOUNTERPREP = new String[]{
             DataBaseHandler.KEY_ROWID,
             DataBaseHandler.KEY_NAME,
             DataBaseHandler.KEY_INFO,
@@ -98,9 +99,27 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             DataBaseHandler.KEY_TYPE
     };
 
+    public static final String[] PROJECTION_MONSTER_TEMPLATE = new String[]{
+            DataBaseHandler.KEY_ROWID,
+            DataBaseHandler.KEY_NAME,
+            DataBaseHandler.KEY_INFO,
+            DataBaseHandler.KEY_INITIATIVEBONUS,
+            DataBaseHandler.KEY_MAXHP,
+            DataBaseHandler.KEY_AC,
+            DataBaseHandler.KEY_STRENGTH,
+            DataBaseHandler.KEY_DEXTERITY,
+            DataBaseHandler.KEY_CONSTITUTION,
+            DataBaseHandler.KEY_INTELLIGENCE,
+            DataBaseHandler.KEY_WISDOM,
+            DataBaseHandler.KEY_CHARISMA,
+            DataBaseHandler.KEY_ICON,
+            DataBaseHandler.KEY_TYPE,
+            DataBaseHandler.KEY_MM
+    };
 
 
-    public static final String[] PROJECTION_NPC = new String[]{
+
+    public static final String[] PROJECTION_NPC_TEMPLATE = new String[]{
             DataBaseHandler.KEY_ROWID,
             DataBaseHandler.KEY_NAME,
             DataBaseHandler.KEY_INFO,
@@ -181,6 +200,14 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_SESSION + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
         db.execSQL(CREATE_ENCOUNTER_TABLE);
+
+
+        String CREATE_ENCOUNTERPREP_LINKER_TABLE =
+                "CREATE TABLE if not exists " + TABLE_ENCOUNTER_PREP + " (" +
+                        KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
+                        KEY_TYPE + " INTEGER, " +
+                        KEY_BELONGSTO + " integer NOT NULL);";
+        db.execSQL(CREATE_ENCOUNTERPREP_LINKER_TABLE);
 
 
         String CREATE_ENCOUNTERPREP_TABLE =
@@ -316,6 +343,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PC);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MONSTER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENCOUNTER_PREP);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENCOUNTER_PREP_LINKER);
+
         // Create tables again
         onCreate(db);
     }

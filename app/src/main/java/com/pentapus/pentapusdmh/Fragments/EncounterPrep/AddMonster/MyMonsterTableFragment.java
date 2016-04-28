@@ -36,6 +36,7 @@ import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
+import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterEditFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageGridAdapter;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.MonsterEditFragment;
@@ -47,19 +48,13 @@ public class MyMonsterTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 
-
-
     private static final String MODE = "modeUpdate";
-
-    private static int monsterId = -1;
-    private static int selectedPos = -1;
+    private static final String MONSTER_ID = "monsterId";
 
     private int sessionId;
     private String sessionName;
-
     private RecyclerView myMonsterRecyclerView;
     private ActionMode mActionMode;
-
     private MyMonsterAdapter myMonsterAdapter;
 
     public MyMonsterTableFragment() {
@@ -81,7 +76,6 @@ public class MyMonsterTableFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        selectedPos = -1;
         myMonsterAdapter = new MyMonsterAdapter(getContext(), this);
     }
 
@@ -108,11 +102,6 @@ public class MyMonsterTableFragment extends Fragment implements
         return tableView;
     }
 
-    public static int getSelectedMonster() {
-        return monsterId;
-    }
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -123,11 +112,6 @@ public class MyMonsterTableFragment extends Fragment implements
             getLoaderManager().restartLoader(0, null, this);
         }
     }
-
-
-
-
-
 
 
     private void setUpItemTouchHelper() {
@@ -195,7 +179,7 @@ public class MyMonsterTableFragment extends Fragment implements
 
                 int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
                 int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                 int xMarkBottom = xMarkTop + intrinsicHeight;
                 xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
 
@@ -294,7 +278,6 @@ public class MyMonsterTableFragment extends Fragment implements
     }
 
 
-
     public int getSessionId() {
         return sessionId;
     }
@@ -313,7 +296,7 @@ public class MyMonsterTableFragment extends Fragment implements
                 pasteUri = Uri.parse(pasteString);
             }
             if (pasteUri != null) {
-                if (DbContentProvider.ENCOUNTER.equals(getContext().getContentResolver().getType(pasteUri))) {
+                if (DbContentProvider.MONSTER.equals(getContext().getContentResolver().getType(pasteUri))) {
                     menu.findItem(R.id.menu_paste).setVisible(true);
                 }
             }
@@ -337,7 +320,7 @@ public class MyMonsterTableFragment extends Fragment implements
         String[] selectionArgs = new String[]{String.valueOf(0)};
         String selection = DataBaseHandler.KEY_MM + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER, selection, selectionArgs, null);
+                DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER_TEMPLATE, selection, selectionArgs, null);
         return cursorLoader;
     }
 
@@ -355,34 +338,8 @@ public class MyMonsterTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-
         myMonsterAdapter.statusClicked(position);
-        if(position == selectedPos){
-            selectedPos = -1;
-            MyMonsterAdapter.setSelectedUri(null);
-        }else{
-            selectedPos = position;
-            Cursor cursor = myMonsterAdapter.getCursor();
-            cursor.moveToPosition(position);
-            monsterId =
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-        }
-
-        //TODO: Select on itemclick
-       /* Cursor cursor = myMonsterAdapter.getCursor();
-        cursor.moveToPosition(position);
-        int encounterId =
-                cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        String encounterName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(ENCOUNTER_ID, encounterId);
-        bundle.putString(ENCOUNTER_NAME, encounterName);
-        loadNPC(bundle, encounterId, encounterName); */
-
     }
-
 
 
     @Override
@@ -420,7 +377,7 @@ public class MyMonsterTableFragment extends Fragment implements
                             if (pasteUri == null) {
                                 pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
                             }
-                            if(pasteUri.equals(uri)){
+                            if (pasteUri.equals(uri)) {
                                 Uri newUri = Uri.parse("");
                                 ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
                                 clipboard.setPrimaryClip(clip);
@@ -430,27 +387,23 @@ public class MyMonsterTableFragment extends Fragment implements
                         mode.finish();
                         return true;
                     case R.id.edit:
-                       /* cursor = myMonsterAdapter.getCursor();
+                        cursor = myMonsterAdapter.getCursor();
                         cursor.moveToPosition(position);
-                        int encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                        int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(MODE, true);
-                        bundle.putInt(ENCOUNTER_ID, encounterId);
-                        bundle.putInt(SESSION_ID, sessionId);
-                        editEncounter(bundle);
+                        bundle.putInt(MONSTER_ID, monsterId);
+                        editMonster(bundle);
                         mode.finish();
-                        return true;*/
+                        return true;
                     case R.id.copy:
-                       /* cursor = mEncounterAdapter.getCursor();
+                        cursor = myMonsterAdapter.getCursor();
                         cursor.moveToPosition(position);
-                        encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
-                        clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
-                        clipboard.setPrimaryClip(clip);
-                        getActivity().invalidateOptionsMenu();
+                        monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                        uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId);
+                        pasteMonster(uri);
                         mode.finish();
-                        return true; */
+                        return true;
                     default:
                         return false;
                 }
@@ -464,6 +417,61 @@ public class MyMonsterTableFragment extends Fragment implements
             }
         });
     }
+
+    private void editMonster(Bundle bundle) {
+        Fragment fragment;
+        fragment = new MyMonsterEditFragment();
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(android.R.id.content, fragment, "FE_MYMONSTER")
+                .addToBackStack("FE_MYMONSTER")
+                .commit();
+    }
+
+
+    private void pasteMonster(Uri pasteUri) {
+        final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContext().getContentResolver()) {
+
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if (cursor == null) {
+                    // Some providers return null if an error occurs whereas others throw an exception
+                } else if (cursor.getCount() < 1) {
+                    // No matches found
+                } else {
+                    while (cursor.moveToNext()) {
+                        ContentValues values = new ContentValues();
+                        values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                        values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+                        values.put(DataBaseHandler.KEY_MAXHP, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+                        values.put(DataBaseHandler.KEY_AC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                        values.put(DataBaseHandler.KEY_STRENGTH, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
+                        values.put(DataBaseHandler.KEY_DEXTERITY, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
+                        values.put(DataBaseHandler.KEY_CONSTITUTION, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
+                        values.put(DataBaseHandler.KEY_INTELLIGENCE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
+                        values.put(DataBaseHandler.KEY_WISDOM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
+                        values.put(DataBaseHandler.KEY_CHARISMA, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
+                        values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
+                        values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
+                        values.put(DataBaseHandler.KEY_MM, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MM)));
+                        startInsert(1, null, DbContentProvider.CONTENT_URI_MONSTER, values);
+                    }
+                    cursor.close();
+                }
+            }
+        };
+
+        queryHandler.startQuery(
+                1, null,
+                pasteUri,
+                DataBaseHandler.PROJECTION_MONSTER_TEMPLATE,
+                null,
+                null,
+                null
+        );
+    }
+
 
     @Override
     public void onMenuRefresh() {

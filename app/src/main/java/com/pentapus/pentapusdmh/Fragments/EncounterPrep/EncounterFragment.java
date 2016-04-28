@@ -513,7 +513,7 @@ public class EncounterFragment extends Fragment implements
                 pasteUri = Uri.parse(pasteString);
             }
             if (pasteUri != null) {
-                if (DbContentProvider.MONSTER.equals(getContext().getContentResolver().getType(pasteUri))) {
+                if (DbContentProvider.ENCOUNTERPREP.equals(getContext().getContentResolver().getType(pasteUri))) {
                     menu.findItem(R.id.menu_paste).setVisible(true);
                 } else if (DbContentProvider.NPC.equals(getContext().getContentResolver().getType(pasteUri))) {
                     menu.findItem(R.id.menu_paste).setVisible(true);
@@ -646,7 +646,7 @@ public class EncounterFragment extends Fragment implements
                                     cursor.moveToPosition(position);
                                     int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     cursor.close();
-                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + characterId);
+                                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                                     if (clipboard.hasPrimaryClip()) {
@@ -728,7 +728,7 @@ public class EncounterFragment extends Fragment implements
                                 Cursor cursor = dataAdapterMonster.getCursor();
                                 cursor.moveToPosition(position);
                                 int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + characterId);
+                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                                 ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
                                 clipboard.setPrimaryClip(clip);

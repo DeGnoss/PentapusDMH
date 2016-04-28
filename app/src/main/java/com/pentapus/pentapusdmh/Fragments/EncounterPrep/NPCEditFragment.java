@@ -175,7 +175,7 @@ public class NPCEditFragment extends Fragment {
     private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, EditText strength, EditText dex, EditText constit, EditText intelligence, EditText wis, EditText charisma, int id) {
 
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
-        Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_NPC, null, null,
+        Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_ENCOUNTERPREP, null, null,
                 null);
         if (cursor != null && cursor.moveToFirst()) {
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));

@@ -22,11 +22,9 @@ import java.io.File;
  * Created by Koni on 03.04.2016.
  */
 public class PreFilledImageGridAdapter extends RecyclerView.Adapter<PreFilledImageGridAdapter.ImageViewHolder> implements AdapterNavigationCallback{
-    private static int selectedPos =-1;
-    private static int highlightedPos = -1;
+
     private File imageUris[];
     private Context mContext;
-    private static Uri selectedUri;
     private AdapterNavigationCallback mAdapterNavigationCallback;
     private File directory;
 
@@ -35,7 +33,7 @@ public class PreFilledImageGridAdapter extends RecyclerView.Adapter<PreFilledIma
         mAdapterNavigationCallback = adapterNavigationCallback;
         mContext = context;
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
-        directory = cw.getDir("myIconDir", Context.MODE_PRIVATE);
+        directory = cw.getDir("IconDir", Context.MODE_PRIVATE);
         imageUris = directory.listFiles();
     }
 
@@ -56,9 +54,9 @@ public class PreFilledImageGridAdapter extends RecyclerView.Adapter<PreFilledIma
                 .with(mContext)
                 .load(imageUris[position])
                 .fitCenter()
-                .into((ImageView) holder.vStatusImage);
+                .into(holder.vStatusImage);
 
-        holder.vCardView.setCardBackgroundColor(position==selectedPos ? Color.parseColor("#aa000000") : Color.TRANSPARENT);
+        holder.vCardView.setCardBackgroundColor(ImageViewPagerDialogFragment.getSelectedType() == 1 && position==ImageViewPagerDialogFragment.getSelectedPos() ? Color.parseColor("#aa000000") : Color.TRANSPARENT);
     }
 
     @Override
@@ -67,33 +65,23 @@ public class PreFilledImageGridAdapter extends RecyclerView.Adapter<PreFilledIma
     }
 
     public void statusClicked(int position) {
-        int oldPos = selectedPos;
-        if(position == selectedPos){
-            selectedPos = -1;
+        int oldPos = ImageViewPagerDialogFragment.getSelectedPos();
+        if(ImageViewPagerDialogFragment.getSelectedType() == 1 && position == ImageViewPagerDialogFragment.getSelectedPos()){
+            ImageViewPagerDialogFragment.setSelectedType(-1);
+            ImageViewPagerDialogFragment.setSelectedPos(-1);
+            ImageViewPagerDialogFragment.setSelectedUri(null);
             notifyItemChanged(position);
-        }else{
-            selectedPos = position;
+        }else if(ImageViewPagerDialogFragment.getSelectedType() == 1){
+            ImageViewPagerDialogFragment.setSelectedPos(position);
+            ImageViewPagerDialogFragment.setSelectedUri(Uri.parse(imageUris[position].toString()));
             notifyItemChanged(oldPos);
             notifyItemChanged(position);
+        }else{
+            ImageViewPagerDialogFragment.setSelectedType(1);
+            ImageViewPagerDialogFragment.setSelectedPos(position);
+            ImageViewPagerDialogFragment.setSelectedUri(Uri.parse(imageUris[position].toString()));
+            notifyItemChanged(position);
         }
-    }
-
-    public static void setHighlightedPos(int highlightedPos) {
-        PreFilledImageGridAdapter.highlightedPos = highlightedPos;
-    }
-
-
-
-    public void setSelectedPos(int selectedPos) {
-        PreFilledImageGridAdapter.selectedPos = selectedPos;
-    }
-
-    public static int getSelectedPos() {
-        return selectedPos;
-    }
-
-    public static void setSelectedUri(Uri selectedUri) {
-        PreFilledImageGridAdapter.selectedUri = selectedUri;
     }
 
 
@@ -106,11 +94,6 @@ public class PreFilledImageGridAdapter extends RecyclerView.Adapter<PreFilledIma
         this.imageUris = imageUris;
     }
 
-    public void updateUris(){
-        imageUris = directory.listFiles();
-        notifyDataSetChanged();
-    }
-
     @Override
     public void onItemClick(int position) {
         mAdapterNavigationCallback.onItemClick(position);
@@ -118,7 +101,7 @@ public class PreFilledImageGridAdapter extends RecyclerView.Adapter<PreFilledIma
 
     @Override
     public void onItemLongCLick(int position) {
-        mAdapterNavigationCallback.onItemLongCLick(position);
+
     }
 
     @Override
@@ -139,7 +122,7 @@ public class PreFilledImageGridAdapter extends RecyclerView.Adapter<PreFilledIma
             vCardView = (CardView) v.findViewById(R.id.cardGridIcon);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_imagegrid);
 
-            clicker.setActivated(getAdapterPosition() == highlightedPos);
+            //clicker.setActivated(ImageViewPagerDialogFragment.getSelectedType() == 1 && getAdapterPosition() == ImageViewPagerDialogFragment.getHighlightedPos());
 
 
             vCardView.setOnClickListener(new View.OnClickListener() {
@@ -157,9 +140,5 @@ public class PreFilledImageGridAdapter extends RecyclerView.Adapter<PreFilledIma
                 }
             });
         }
-    }
-
-    public static Uri getSelectedUri() {
-        return selectedUri;
     }
 }

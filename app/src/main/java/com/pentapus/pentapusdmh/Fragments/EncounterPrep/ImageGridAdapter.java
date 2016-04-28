@@ -29,11 +29,8 @@ import java.util.List;
  * Created by Koni on 03.04.2016.
  */
 public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.ImageViewHolder> implements AdapterNavigationCallback{
-    private static int selectedPos =-1;
-    private static int highlightedPos = -1;
     private File imageUris[];
     private Context mContext;
-    private static Uri selectedUri;
     private AdapterNavigationCallback mAdapterNavigationCallback;
     private File directory;
 
@@ -63,9 +60,9 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
                 .with(mContext)
                 .load(imageUris[position])
                 .fitCenter()
-                .into((ImageView) holder.vStatusImage);
+                .into(holder.vStatusImage);
 
-        holder.vCardView.setCardBackgroundColor(position==selectedPos ? Color.parseColor("#aa000000") : Color.TRANSPARENT);
+        holder.vCardView.setCardBackgroundColor(ImageViewPagerDialogFragment.getSelectedType() == 0 && position==ImageViewPagerDialogFragment.getSelectedPos() ? Color.parseColor("#aa000000") : Color.TRANSPARENT);
     }
 
     @Override
@@ -74,35 +71,24 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
     }
 
     public void statusClicked(int position) {
-        int oldPos = selectedPos;
-        if(position == selectedPos){
-            selectedPos = -1;
+        int oldPos = ImageViewPagerDialogFragment.getSelectedPos();
+        if(ImageViewPagerDialogFragment.getSelectedType() == 0 && position == ImageViewPagerDialogFragment.getSelectedPos()){
+            ImageViewPagerDialogFragment.setSelectedType(-1);
+            ImageViewPagerDialogFragment.setSelectedPos(-1);
+            ImageViewPagerDialogFragment.setSelectedUri(null);
+            notifyItemChanged(position);
+        }else if(ImageViewPagerDialogFragment.getSelectedType() == 0){
+            ImageViewPagerDialogFragment.setSelectedPos(position);
+            ImageViewPagerDialogFragment.setSelectedUri(Uri.parse(imageUris[position].toString()));
+            notifyItemChanged(oldPos);
             notifyItemChanged(position);
         }else{
-            selectedPos = position;
-            notifyItemChanged(oldPos);
+            ImageViewPagerDialogFragment.setSelectedType(0);
+            ImageViewPagerDialogFragment.setSelectedPos(position);
+            ImageViewPagerDialogFragment.setSelectedUri(Uri.parse(imageUris[position].toString()));
             notifyItemChanged(position);
         }
     }
-
-    public static void setHighlightedPos(int highlightedPos) {
-        ImageGridAdapter.selectedPos = highlightedPos;
-    }
-
-
-
-    public void setSelectedPos(int selectedPos) {
-        ImageGridAdapter.selectedPos = selectedPos;
-    }
-
-    public static int getSelectedPos() {
-        return selectedPos;
-    }
-
-    public static void setSelectedUri(Uri selectedUri) {
-        ImageGridAdapter.selectedUri = selectedUri;
-    }
-
 
 
     public File[] getImageUris() {
@@ -146,7 +132,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
             vCardView = (CardView) v.findViewById(R.id.cardGridIcon);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_imagegrid);
 
-            clicker.setActivated(getAdapterPosition() == selectedPos);
+            //clicker.setActivated(ImageViewPagerDialogFragment.getSelectedType() == 0 && getAdapterPosition() == ImageViewPagerDialogFragment.getSelectedPos());
 
 
             vCardView.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +152,4 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
         }
     }
 
-    public static Uri getSelectedUri() {
-        return selectedUri;
-    }
 }

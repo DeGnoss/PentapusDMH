@@ -166,12 +166,12 @@ public class TrackerFragment extends Fragment implements
                 String[] selectionArgs = new String[]{String.valueOf(encounterId)};
                 String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
-                        DbContentProvider.CONTENT_URI_ENCOUNTERPREP, DataBaseHandler.PROJECTION_MONSTER, selection, selectionArgs, null);
+                        DbContentProvider.CONTENT_URI_ENCOUNTERPREP, DataBaseHandler.PROJECTION_ENCOUNTERPREP, selection, selectionArgs, null);
             case 1:
                 selectionArgs = new String[]{String.valueOf(encounterId)};
                 selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
-                        DbContentProvider.CONTENT_URI_NPC, DataBaseHandler.PROJECTION_NPC, selection, selectionArgs, null);
+                        DbContentProvider.CONTENT_URI_NPC, DataBaseHandler.PROJECTION_ENCOUNTERPREP, selection, selectionArgs, null);
             case 2:
                 selectionArgs = new String[]{String.valueOf(campaignId)};
                 selection = DataBaseHandler.KEY_BELONGSTO + " = ?";

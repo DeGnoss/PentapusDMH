@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * Created by Koni on 4/4/16.
  */
-public class MonsterViewPagerDialogFragment extends Fragment implements ViewPager.OnPageChangeListener {
+public class MonsterViewPagerDialogFragment extends Fragment {
 
     private static final String ARG_PAGE = "ARG_PAGE";
     private static final String ENCOUNTER_ID = "encounterId";
@@ -53,9 +53,13 @@ public class MonsterViewPagerDialogFragment extends Fragment implements ViewPage
     private FloatingActionButton fabImageVP;
     private int id;
     private int encounterId;
-    private int monsterId;
     private static final String MODE = "modeUpdate";
     private Button bDone;
+
+    private static int selectedType = -1;
+    private static int selectedPos = -1;
+    private static int highlightedPos = -1;
+    private static Uri monsterUri = null;
 
 
     public MonsterViewPagerDialogFragment() {
@@ -91,12 +95,9 @@ public class MonsterViewPagerDialogFragment extends Fragment implements ViewPage
         bDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                monsterId = MyMonsterTableFragment.getSelectedMonster();
-                if(monsterId > 0) {
-                    Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId);
-                    pasteMonster(uri);
-                }
-                getFragmentManager().popBackStack();            }
+                pasteMonster(monsterUri);
+                getFragmentManager().popBackStack();
+            }
         });
 
         fabImageVP.setOnClickListener(new View.OnClickListener() {
@@ -108,8 +109,33 @@ public class MonsterViewPagerDialogFragment extends Fragment implements ViewPage
             }
         });
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        fabImageVP.setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        fabImageVP.setVisibility(View.GONE);
+                        break;
+                    default:
+                        fabImageVP.setVisibility(View.GONE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         return view;
     }
@@ -151,7 +177,7 @@ public class MonsterViewPagerDialogFragment extends Fragment implements ViewPage
         queryHandler.startQuery(
                 1, null,
                 pasteUri,
-                DataBaseHandler.PROJECTION_MONSTER,
+                DataBaseHandler.PROJECTION_ENCOUNTERPREP,
                 null,
                 null,
                 null
@@ -161,11 +187,11 @@ public class MonsterViewPagerDialogFragment extends Fragment implements ViewPage
 
     private void addMonster(Bundle bundle) {
         Fragment fragment;
-        fragment = new MonsterEditFragment();
+        fragment = new MyMonsterEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, fragment, "FE_MONSTER")
-                .addToBackStack("FE_MONSTER")
+                .add(android.R.id.content, fragment, "FE_MYMONSTER")
+                .addToBackStack("FE_MYMONSTER")
                 .commit();
     }
 
@@ -183,37 +209,42 @@ public class MonsterViewPagerDialogFragment extends Fragment implements ViewPage
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    public static int getSelectedType() {
+        return selectedType;
     }
 
-    @Override
-    public void onPageSelected(int position) {
-        switch (position){
-            case 0 :
-                fabImageVP.setVisibility(View.VISIBLE);
-                break;
-            case 1:
-                fabImageVP.setVisibility(View.GONE);
-                break;
-            default:
-                break;
-        }
-
+    public static void setSelectedType(int selectedType) {
+        MonsterViewPagerDialogFragment.selectedType = selectedType;
     }
 
+    public static int getSelectedPos() {
+        return selectedPos;
+    }
 
+    public static void setSelectedPos(int selectedPos) {
+        MonsterViewPagerDialogFragment.selectedPos = selectedPos;
+    }
 
-    @Override
-    public void onPageScrollStateChanged(int state) {
+    public static int getHighlightedPos() {
+        return highlightedPos;
+    }
 
+    public static void setHighlightedPos(int highlightedPos) {
+        MonsterViewPagerDialogFragment.highlightedPos = highlightedPos;
+    }
+
+    public static Uri getMonsterUri() {
+        return monsterUri;
+    }
+
+    public static void setMonsterUri(Uri monsterUri) {
+        MonsterViewPagerDialogFragment.monsterUri = monsterUri;
     }
 }
+//Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId);
+

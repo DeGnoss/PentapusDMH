@@ -22,6 +22,7 @@ import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 import com.pentapus.pentapusdmh.R;
 
@@ -33,19 +34,12 @@ import java.util.List;
  * Created by Koni on 14/4/16.
  */
 public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter.MyMonsterViewHolder> implements AdapterNavigationCallback {
-
-    public static int selectedPos = -1;
-
-
     private AdapterNavigationCallback mAdapterCallback;
     List<String> itemsPendingRemoval;
     private Handler handler = new Handler(); // handler for running delayed runnables
     HashMap<String, Runnable> pendingRunnables = new HashMap<>();
     private static final int PENDING_REMOVAL_TIMEOUT = 3000;
     Context mContext;
-    private static Uri selectedUri;
-    private static int monsterId;
-
 
     /**
      * Constructor.
@@ -57,13 +51,8 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         this.mContext = context;
         this.mAdapterCallback = callback;
         itemsPendingRemoval = new ArrayList<>();
-        selectedPos = -1;
         setHasStableIds(true);
         setupCursorAdapter(null, 0, R.layout.card_monster, false);
-    }
-
-    public static int getSelectedMonster() {
-        return monsterId;
     }
 
     /**
@@ -160,24 +149,29 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
     }
 
     public void statusClicked(int position) {
-        int oldPos = selectedPos;
-        if(position == selectedPos){
-            selectedPos = -1;
+        int oldPos = MonsterViewPagerDialogFragment.getSelectedPos();
+        if (MonsterViewPagerDialogFragment.getSelectedType() == 0 && position == MonsterViewPagerDialogFragment.getSelectedPos()) {
+            MonsterViewPagerDialogFragment.setSelectedType(-1);
+            MonsterViewPagerDialogFragment.setSelectedPos(-1);
+            MonsterViewPagerDialogFragment.setMonsterUri(null);
             notifyItemChanged(position);
-        }else{
-            selectedPos = position;
+        } else if (MonsterViewPagerDialogFragment.getSelectedType() == 0) {
+            Cursor cursor = getCursor();
+            cursor.moveToPosition(position);
+            int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            MonsterViewPagerDialogFragment.setSelectedPos(position);
+            MonsterViewPagerDialogFragment.setMonsterUri(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId));
             notifyItemChanged(oldPos);
             notifyItemChanged(position);
+        } else {
+            Cursor cursor = getCursor();
+            cursor.moveToPosition(position);
+            int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            MonsterViewPagerDialogFragment.setSelectedType(0);
+            MonsterViewPagerDialogFragment.setSelectedPos(position);
+            MonsterViewPagerDialogFragment.setMonsterUri(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId));
+            notifyItemChanged(position);
         }
-    }
-
-    public static void setSelectedUri(Uri selectedUri) {
-        MyMonsterAdapter.selectedUri = selectedUri;
-    }
-
-
-    public static void setSelectedPos(int selectedPos) {
-        MyMonsterAdapter.selectedPos = selectedPos;
     }
 
     @Override
@@ -233,7 +227,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    MyMonsterAdapter.selectedPos = getAdapterPosition();
+                    MonsterViewPagerDialogFragment.setSelectedPos(getAdapterPosition());
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
@@ -256,7 +250,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            itemView.setActivated(getAdapterPosition() == MyMonsterAdapter.selectedPos);
+            itemView.setActivated(MonsterViewPagerDialogFragment.getSelectedType() == 0 && getAdapterPosition() == MonsterViewPagerDialogFragment.getSelectedPos());
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
 
             if (itemsPendingRemoval.contains(String.valueOf(identifier))) {

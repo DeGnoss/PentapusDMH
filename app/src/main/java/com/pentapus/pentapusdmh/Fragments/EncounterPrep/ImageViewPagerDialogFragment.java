@@ -38,7 +38,7 @@ import java.util.UUID;
 /**
  * Created by Koni on 4/4/16.
  */
-public class ImageViewPagerDialogFragment extends Fragment implements ViewPager.OnPageChangeListener {
+public class ImageViewPagerDialogFragment extends Fragment{
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
@@ -46,12 +46,16 @@ public class ImageViewPagerDialogFragment extends Fragment implements ViewPager.
     private ViewPager viewPager;
     private ImageFragmentPagerAdapter pagerAdapter;
     private FloatingActionButton fabImageVP;
-    private static Uri selectedUri;
     private Button bDone;
     private int id;
     private Uri imageUri;
     private Uri myFile;
     private int px;
+
+    private static int selectedType = -1;
+    private static int selectedPos =-1;
+    private static int highlightedPos = -1;
+    private static Uri selectedUri;
 
 
 
@@ -92,7 +96,7 @@ public class ImageViewPagerDialogFragment extends Fragment implements ViewPager.
         bDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageUri = ImageGridAdapter.getSelectedUri();
+                imageUri = ImageViewPagerDialogFragment.getSelectedUri();
                 if(imageUri != null){
                     Intent intent = new Intent();
                     intent.putExtra("imageUri", String.valueOf(imageUri));
@@ -109,6 +113,35 @@ public class ImageViewPagerDialogFragment extends Fragment implements ViewPager.
             public void onClick(View v) {
                 //Glide.clear(bChooseImage);
                 Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("F_IMAGE_PAGER"));
+            }
+        });
+
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0 :
+                        fabImageVP.setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        fabImageVP.setVisibility(View.GONE);
+                        break;
+                    default:
+                        fabImageVP.setVisibility(View.GONE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
@@ -134,7 +167,7 @@ public class ImageViewPagerDialogFragment extends Fragment implements ViewPager.
         pagerAdapter = new ImageFragmentPagerAdapter(getChildFragmentManager(), getContext(), id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(0);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
 
@@ -216,31 +249,35 @@ public class ImageViewPagerDialogFragment extends Fragment implements ViewPager.
         }
     }
 
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    public static Uri getSelectedUri() {
+        return selectedUri;
     }
 
-    @Override
-    public void onPageSelected(int position) {
-        switch (position){
-            case 0 :
-                fabImageVP.setVisibility(View.VISIBLE);
-                break;
-            case 1:
-                fabImageVP.setVisibility(View.GONE);
-                break;
-            default:
-                break;
-        }
-
+    public static void setSelectedUri(Uri selectedUri) {
+        ImageViewPagerDialogFragment.selectedUri = selectedUri;
     }
 
+    public static int getSelectedPos() {
+        return selectedPos;
+    }
 
+    public static void setSelectedPos(int selectedPos) {
+        ImageViewPagerDialogFragment.selectedPos = selectedPos;
+    }
 
-    @Override
-    public void onPageScrollStateChanged(int state) {
+    public static int getHighlightedPos() {
+        return highlightedPos;
+    }
 
+    public static void setHighlightedPos(int highlightedPos) {
+        ImageViewPagerDialogFragment.highlightedPos = highlightedPos;
+    }
+
+    public static int getSelectedType() {
+        return selectedType;
+    }
+
+    public static void setSelectedType(int selectedType) {
+        ImageViewPagerDialogFragment.selectedType = selectedType;
     }
 }

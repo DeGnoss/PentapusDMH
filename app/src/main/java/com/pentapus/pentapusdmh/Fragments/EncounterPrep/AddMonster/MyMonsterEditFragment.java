@@ -1,12 +1,10 @@
-package com.pentapus.pentapusdmh.Fragments.EncounterPrep;
+package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,24 +20,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.R;
 import com.soundcloud.android.crop.Crop;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.UUID;
 
-
-public class MonsterEditFragment extends Fragment {
+public class MyMonsterEditFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String MODE = "modeUpdate";
@@ -61,7 +51,7 @@ public class MonsterEditFragment extends Fragment {
     ImageButton bChooseImage;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar;
 
-    public MonsterEditFragment() {
+    public MyMonsterEditFragment() {
         // Required empty public constructor
     }
 
@@ -74,8 +64,8 @@ public class MonsterEditFragment extends Fragment {
      * @param encounterId Parameter 3.
      * @return A new instance of fragment EncounterEditFragment.
      */
-    public static MonsterEditFragment newInstance(boolean modeUpdate, int monsterId, int encounterId) {
-        MonsterEditFragment fragment = new MonsterEditFragment();
+    public static MyMonsterEditFragment newInstance(boolean modeUpdate, int monsterId, int encounterId) {
+        MyMonsterEditFragment fragment = new MyMonsterEditFragment();
         Bundle args = new Bundle();
         args.putBoolean(MODE, modeUpdate);
         args.putInt(MONSTER_ID, monsterId);
@@ -102,7 +92,7 @@ public class MonsterEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View charEditView = inflater.inflate(R.layout.fragment_monster_edit, container, false);
+        final View charEditView = inflater.inflate(R.layout.fragment_mymonster_edit, container, false);
         charEditView.setBackgroundColor(Color.WHITE);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
@@ -172,8 +162,8 @@ public class MonsterEditFragment extends Fragment {
 
     private void loadMonsterInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, EditText strength, EditText dex, EditText constit, EditText intelligence, EditText wis, EditText charisma, int id) {
 
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + id);
-        Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_ENCOUNTERPREP, null, null,
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + id);
+        Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_MONSTER_TEMPLATE, null, null,
                 null);
         if (cursor != null && cursor.moveToFirst()) {
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
@@ -240,11 +230,11 @@ public class MonsterEditFragment extends Fragment {
 
         // insert a record
         if (!modeUpdate) {
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_ENCOUNTERPREP, values);
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_MONSTER, values);
         }
         // update a record
         else {
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + monsterId);
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
         getActivity().getSupportFragmentManager().popBackStack();

@@ -152,7 +152,7 @@ public class MonsterManualTableFragment extends Fragment implements
         String[] selectionArgs = new String[]{String.valueOf(1)};
         String selection = DataBaseHandler.KEY_MM + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER, selection, selectionArgs, null);
+                DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER_TEMPLATE, selection, selectionArgs, null);
         return cursorLoader;
     }
 

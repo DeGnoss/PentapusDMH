@@ -27,7 +27,6 @@ import java.io.File;
 public class PreFilledImageGridFragment extends Fragment implements AdapterNavigationCallback, ImageViewPagerDialogFragment.UpdateableFragment {
     private PreFilledImageGridAdapter imageGridAdapter;
     private GridLayoutManager gridLayoutManager;
-    private static int selectedPos = -1;
     private int id;
     private ActionMode mActionMode;
     private RecyclerView mRecyclerView;
@@ -64,7 +63,7 @@ public class PreFilledImageGridFragment extends Fragment implements AdapterNavig
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = (View)inflater.inflate(R.layout.my_icons_grid, container, false);
+        View view = inflater.inflate(R.layout.my_icons_grid, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.gridViewMyIcons);
         gridLayoutManager = new GridLayoutManager(getContext(), 4) {
@@ -75,7 +74,6 @@ public class PreFilledImageGridFragment extends Fragment implements AdapterNavig
         };
         mRecyclerView.setLayoutManager(gridLayoutManager);
         imageGridAdapter = new PreFilledImageGridAdapter(getContext(), this);
-        imageGridAdapter.setSelectedPos(selectedPos);
         mRecyclerView.setAdapter(imageGridAdapter);
         // Inflate the layout to use as dialog or embedded fragment
         return view;
@@ -83,8 +81,6 @@ public class PreFilledImageGridFragment extends Fragment implements AdapterNavig
 
     private void onClick(int position) {
         imageGridAdapter.statusClicked(position);
-        ImageGridAdapter.setSelectedUri(Uri.parse(imageGridAdapter.getImageUris()[position].toString()));
-        selectedPos = position;
     }
 
     @Override
@@ -106,50 +102,6 @@ public class PreFilledImageGridFragment extends Fragment implements AdapterNavig
 
     @Override
     public void onItemLongCLick(final int position) {
-        ImageGridAdapter.setHighlightedPos(position);
-        int oldPos = ImageGridAdapter.getSelectedPos();
-        imageGridAdapter.setSelectedPos(position);
-        imageGridAdapter.notifyItemChanged(oldPos);
-        imageGridAdapter.notifyItemChanged(position);
-        mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                String title = "Selected: " + String.valueOf(position);
-                mode.setTitle(title);
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.context_menu_imagegrid, menu);
-                //fab.setVisibility(View.GONE);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.delete:
-                        File fileDelete = ((ImageGridAdapter)mRecyclerView.getAdapter()).getImageUris()[position];
-                        fileDelete.delete();
-                        ((ImageGridAdapter)mRecyclerView.getAdapter()).updateUris();
-                        mode.finish();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                //fab.setVisibility(View.VISIBLE);
-                mActionMode = null;
-                ImageGridAdapter.setHighlightedPos(-1);
-                imageGridAdapter.setSelectedPos(-1);
-                imageGridAdapter.notifyItemChanged(position);
-            }
-        });
     }
 
     @Override
@@ -157,7 +109,14 @@ public class PreFilledImageGridFragment extends Fragment implements AdapterNavig
 
     }
 
-    public static int getSelectedPos() {
-        return selectedPos;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        // Make sure that we are currently visible
+        if (this.isVisible()) {
+            // If we are becoming invisible, then...
+            imageGridAdapter.notifyDataSetChanged();
+        }
     }
 }

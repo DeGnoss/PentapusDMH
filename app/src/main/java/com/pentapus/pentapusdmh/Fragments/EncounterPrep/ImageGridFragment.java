@@ -30,7 +30,6 @@ import java.io.File;
 public class ImageGridFragment extends Fragment implements AdapterNavigationCallback, ImageViewPagerDialogFragment.UpdateableFragment {
     private ImageGridAdapter imageGridAdapter;
     private GridLayoutManager gridLayoutManager;
-    private static int selectedPos = -1;
     private int id;
     private ActionMode mActionMode;
     private RecyclerView mRecyclerView;
@@ -67,7 +66,7 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = (View)inflater.inflate(R.layout.my_icons_grid, container, false);
+        View view = inflater.inflate(R.layout.my_icons_grid, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.gridViewMyIcons);
         gridLayoutManager = new GridLayoutManager(getContext(), 4) {
@@ -78,7 +77,6 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
         };
         mRecyclerView.setLayoutManager(gridLayoutManager);
         imageGridAdapter = new ImageGridAdapter(getContext(), this);
-        imageGridAdapter.setSelectedPos(selectedPos);
         mRecyclerView.setAdapter(imageGridAdapter);
         // Inflate the layout to use as dialog or embedded fragment
         return view;
@@ -86,13 +84,6 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
 
     private void onClick(int position) {
         imageGridAdapter.statusClicked(position);
-        if(position == selectedPos){
-            selectedPos = -1;
-            ImageGridAdapter.setSelectedUri(null);
-        }else{
-            selectedPos = position;
-            ImageGridAdapter.setSelectedUri(Uri.parse(imageGridAdapter.getImageUris()[position].toString()));
-        }
     }
 
     @Override
@@ -114,9 +105,10 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
 
     @Override
     public void onItemLongCLick(final int position) {
-        ImageGridAdapter.setHighlightedPos(position);
-        int oldPos = ImageGridAdapter.getSelectedPos();
-        imageGridAdapter.setSelectedPos(position);
+        ImageViewPagerDialogFragment.setSelectedType(0);
+        ImageViewPagerDialogFragment.setHighlightedPos(position);
+        int oldPos = ImageViewPagerDialogFragment.getSelectedPos();
+        ImageViewPagerDialogFragment.setSelectedPos(position);
         imageGridAdapter.notifyItemChanged(oldPos);
         imageGridAdapter.notifyItemChanged(position);
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
@@ -153,8 +145,8 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
             public void onDestroyActionMode(ActionMode mode) {
                 //fab.setVisibility(View.VISIBLE);
                 mActionMode = null;
-                ImageGridAdapter.setHighlightedPos(-1);
-                imageGridAdapter.setSelectedPos(-1);
+                ImageViewPagerDialogFragment.setHighlightedPos(-1);
+                ImageViewPagerDialogFragment.setSelectedPos(-1);
                 imageGridAdapter.notifyItemChanged(position);
             }
         });
@@ -165,7 +157,14 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
 
     }
 
-    public static int getSelectedPos() {
-        return selectedPos;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        // Make sure that we are currently visible
+        if (this.isVisible()) {
+            // If we are becoming invisible, then...
+            imageGridAdapter.notifyDataSetChanged();
+        }
     }
 }

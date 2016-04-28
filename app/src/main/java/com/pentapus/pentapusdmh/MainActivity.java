@@ -7,16 +7,14 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.UserDictionary;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +25,6 @@ import android.view.MenuItem;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.CursorRecyclerViewAdapter;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
@@ -35,6 +32,11 @@ import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        copyAssets();
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
         setContentView(R.layout.activity_main);
@@ -134,10 +137,7 @@ public class MainActivity extends AppCompatActivity {
             String uriMimeType = cr.getType(pasteUri);
             if (uriMimeType != null) {
                 switch (uriMimeType) {
-                    case DbContentProvider.MONSTER:
-                        pasteMonster(pasteUri);
-                        break;
-                    case DbContentProvider.NPC:
+                    case DbContentProvider.ENCOUNTERPREP:
                         pasteNPC(pasteUri);
                         break;
                     case DbContentProvider.ENCOUNTER:
@@ -155,49 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-    }
-
-    private void pasteMonster(Uri pasteUri) {
-        final int encounterId = ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).getEncounterId();
-        final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
-
-            @Override
-            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-                if (cursor == null) {
-                    // Some providers return null if an error occurs whereas others throw an exception
-                } else if (cursor.getCount() < 1) {
-                    // No matches found
-                } else {
-                    while (cursor.moveToNext()) {
-                        ContentValues values = new ContentValues();
-                        values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-                        values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-                        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
-                        values.put(DataBaseHandler.KEY_MAXHP, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
-                        values.put(DataBaseHandler.KEY_AC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
-                        values.put(DataBaseHandler.KEY_STRENGTH, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
-                        values.put(DataBaseHandler.KEY_DEXTERITY, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
-                        values.put(DataBaseHandler.KEY_CONSTITUTION, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
-                        values.put(DataBaseHandler.KEY_INTELLIGENCE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
-                        values.put(DataBaseHandler.KEY_WISDOM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
-                        values.put(DataBaseHandler.KEY_CHARISMA, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
-                        values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
-                        values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
-                        values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
-                        startInsert(1, null, DbContentProvider.CONTENT_URI_MONSTER, values);
-                    }
-                }
-            }
-        };
-
-        queryHandler.startQuery(
-                1, null,
-                pasteUri,
-                DataBaseHandler.PROJECTION_MONSTER,
-                null,
-                null,
-                null
-        );
     }
 
     private void pasteNPC(Uri pasteUri) {
@@ -227,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                         values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
                         values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
-                        startInsert(1, null, DbContentProvider.CONTENT_URI_NPC, values);
+                        startInsert(1, null, DbContentProvider.CONTENT_URI_ENCOUNTERPREP, values);
                     }
                 }
             }
@@ -236,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         queryHandler.startQuery(
                 1, null,
                 pasteUri,
-                DataBaseHandler.PROJECTION_NPC,
+                DataBaseHandler.PROJECTION_ENCOUNTERPREP,
                 null,
                 null,
                 null
@@ -270,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 int newId = (int) ContentUris.parseId(uri);
 
                 int oldId = Integer.parseInt(oldUri.substring(oldUri.lastIndexOf('/') + 1));
-                nestedPasteMonster(oldId, newId);
+                nestedPasteNPC(oldId, newId);
             }
 
         };
@@ -285,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void nestedPasteMonster(int oldId, final int newId) {
+    private void nestedPasteNPC(int oldId, final int newId) {
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -310,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                         values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
                         values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, newId);
-                        startInsert(2, null, DbContentProvider.CONTENT_URI_MONSTER, values);
+                        startInsert(2, null, DbContentProvider.CONTENT_URI_ENCOUNTERPREP, values);
                     }
                 }
             }
@@ -321,8 +278,8 @@ public class MainActivity extends AppCompatActivity {
 
         queryHandler.startQuery(
                 2, null,
-                DbContentProvider.CONTENT_URI_MONSTER,
-                DataBaseHandler.PROJECTION_MONSTER,
+                DbContentProvider.CONTENT_URI_ENCOUNTERPREP,
+                DataBaseHandler.PROJECTION_ENCOUNTERPREP,
                 selection,
                 selectionArgs,
                 null
@@ -397,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onInsertComplete(int token, Object cookie, Uri uri) {
                 int newId = (int) ContentUris.parseId(uri);
-                nestedPasteMonster(oldIds.get(i), newId);
+                nestedPasteNPC(oldIds.get(i), newId);
                 i++;
             }
         };
@@ -506,4 +463,55 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack("FT_PC")
                 .commit();
     }
+
+    private void copyAssets() {
+        AssetManager assetManager = getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("icons");
+        } catch (IOException e) {
+            Log.e("tag", "Failed to get asset file list.", e);
+        }
+        if (files != null) for (String filename : files) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = assetManager.open("icons/" + filename);
+                ContextWrapper cw = new ContextWrapper(getApplicationContext());
+                File directory = cw.getDir("IconDir", Context.MODE_PRIVATE);
+                File outFile = new File(directory, filename);
+                //File outFile = new File(getExternalFilesDir(null), filename);
+                out = new FileOutputStream(outFile);
+                copyFile(in, out);
+            } catch(IOException e) {
+                Log.e("tag", "Failed to copy asset file: " + filename, e);
+            }
+            finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+            }
+        }
+    }
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
+    }
+
+
+
 }
