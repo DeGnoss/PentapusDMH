@@ -203,7 +203,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         int characterType = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
         switch (characterType) {
             case 0:
-                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + characterId);
+                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                 notifyItemRemoved(position);
                 mContext.getContentResolver().delete(uri, null, null);
                 ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -225,7 +225,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                 }
                 break;
             case 1:
-                uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + characterId);
+                uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                 notifyItemRemoved(position);
                 mContext.getContentResolver().delete(uri, null, null);
                 clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);

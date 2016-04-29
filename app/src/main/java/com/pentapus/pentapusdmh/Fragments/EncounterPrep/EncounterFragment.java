@@ -38,7 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.AdapterCallback;
@@ -49,11 +48,6 @@ import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
-import java.io.File;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 
 public class EncounterFragment extends Fragment implements
@@ -82,7 +76,7 @@ public class EncounterFragment extends Fragment implements
     private Dialog dialog;
 
 
-    private CursorRecyclerViewAdapter dataAdapterMonster, dataAdapterNPC, dataAdapterPC;
+    private CursorRecyclerViewAdapter dataAdapterNPC, dataAdapterPC;
     private static int campaignId;
     RecyclerViewMergeAdapter<CursorRecyclerViewAdapter> mergeAdapter;
     private RecyclerView mRecyclerView;
@@ -118,8 +112,7 @@ public class EncounterFragment extends Fragment implements
             encounterName = getArguments().getString("encounterName");
         }
         setHasOptionsMenu(true);
-        dataAdapterMonster = new CursorRecyclerViewAdapter(getContext(), null, this);
-        //dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
+        dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
         dataAdapterPC = new CursorRecyclerViewAdapter(getContext(), null, this);
     }
 
@@ -148,8 +141,7 @@ public class EncounterFragment extends Fragment implements
                 new DividerItemDecoration(getActivity()));
 
         mergeAdapter = new RecyclerViewMergeAdapter<>();
-        mergeAdapter.addAdapter(0, dataAdapterMonster);
-        //mergeAdapter.addAdapter(1, dataAdapterNPC);
+        mergeAdapter.addAdapter(0, dataAdapterNPC);
         mergeAdapter.addAdapter(1, dataAdapterPC);
 
         mRecyclerView.setAdapter(mergeAdapter);
@@ -279,16 +271,9 @@ public class EncounterFragment extends Fragment implements
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 CursorRecyclerViewAdapter.CharacterViewHolder characterViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
-                if (characterViewHolder.type == 0) {
+                if (characterViewHolder.type == 0 || characterViewHolder.type == 1) {
                     int position = characterViewHolder.getSubAdapterPosition();
                     CursorRecyclerViewAdapter testAdapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) recyclerView.getAdapter()).getSubAdapter(0);
-                    if (testAdapter.isPendingRemoval(position)) {
-                        return 0;
-                    }
-                    return super.getSwipeDirs(recyclerView, viewHolder);
-                } else if (characterViewHolder.type == 1) {
-                    int position = characterViewHolder.getSubAdapterPosition();
-                    CursorRecyclerViewAdapter testAdapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) recyclerView.getAdapter()).getSubAdapter(1);
                     if (testAdapter.isPendingRemoval(position)) {
                         return 0;
                     }
@@ -304,14 +289,9 @@ public class EncounterFragment extends Fragment implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                 CursorRecyclerViewAdapter.CharacterViewHolder characterViewHolder = (CursorRecyclerViewAdapter.CharacterViewHolder) viewHolder;
-                if (characterViewHolder.type == 0) {
+                if (characterViewHolder.type == 0 || characterViewHolder.type == 1) {
                     int swipedAdapterPosition = characterViewHolder.getSubAdapterPosition();
                     CursorRecyclerViewAdapter adapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) mRecyclerView.getAdapter()).getSubAdapter(0);
-                    int notifyPosition = characterViewHolder.getLayoutPosition();
-                    adapter.pendingRemoval(swipedAdapterPosition, notifyPosition);
-                } else if (characterViewHolder.type == 1) {
-                    int swipedAdapterPosition = characterViewHolder.getSubAdapterPosition();
-                    CursorRecyclerViewAdapter adapter = (CursorRecyclerViewAdapter) ((RecyclerViewMergeAdapter) mRecyclerView.getAdapter()).getSubAdapter(1);
                     int notifyPosition = characterViewHolder.getLayoutPosition();
                     adapter.pendingRemoval(swipedAdapterPosition, notifyPosition);
                 }
@@ -464,7 +444,6 @@ public class EncounterFragment extends Fragment implements
         }
     }
 
-
     private void addNPC(Bundle bundle) {
         Fragment fragment;
         fragment = new NPCEditFragment();
@@ -515,8 +494,6 @@ public class EncounterFragment extends Fragment implements
             if (pasteUri != null) {
                 if (DbContentProvider.ENCOUNTERPREP.equals(getContext().getContentResolver().getType(pasteUri))) {
                     menu.findItem(R.id.menu_paste).setVisible(true);
-                } else if (DbContentProvider.NPC.equals(getContext().getContentResolver().getType(pasteUri))) {
-                    menu.findItem(R.id.menu_paste).setVisible(true);
                 }
             }
         }
@@ -559,11 +536,6 @@ public class EncounterFragment extends Fragment implements
                 String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
                         DbContentProvider.CONTENT_URI_ENCOUNTERPREP, projection, selection, selectionArgs, null);
-           /* case 1:
-                selectionArgs = new String[]{String.valueOf(encounterId)};
-                selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-                return new CursorLoader(this.getContext(),
-                        DbContentProvider.CONTENT_URI_ENCOUNTERPREP, projection, selection, selectionArgs, null);*/
             case 1:
                 selectionArgs = new String[]{String.valueOf(campaignId)};
                 selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
@@ -578,11 +550,8 @@ public class EncounterFragment extends Fragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
             case 0:
-                dataAdapterMonster.swapCursor(data);
-                break;
-           /* case 1:
                 dataAdapterNPC.swapCursor(data);
-                break; */
+                break;
             case 1:
                 dataAdapterPC.swapCursor(data);
                 break;
@@ -595,11 +564,8 @@ public class EncounterFragment extends Fragment implements
     public void onLoaderReset(Loader<Cursor> loader) {
         switch (loader.getId()) {
             case 0:
-                dataAdapterMonster.swapCursor(null);
+                dataAdapterNPC.swapCursor(null);
                 break;
-        /*     case 1:
-               dataAdapterNPC.swapCursor(null);
-                break; */
             case 1:
                 dataAdapterPC.swapCursor(null);
                 break;
@@ -621,7 +587,7 @@ public class EncounterFragment extends Fragment implements
             mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
                 @Override
                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    mRecyclerView.getAdapter().notifyItemChanged(position);
+                    //mRecyclerView.getAdapter().notifyItemChanged(position);
                     mRecyclerView.getAdapter().notifyDataSetChanged();
                     String title = "Selected: " + String.valueOf(position);
                     mode.setTitle(title);
@@ -642,14 +608,14 @@ public class EncounterFragment extends Fragment implements
 
                             switch(positionType){
                                 case 0:
-                                    Cursor cursor = dataAdapterMonster.getCursor();
+                                    Cursor cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     cursor.close();
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                                    if (clipboard.hasPrimaryClip()) {
+                                  /*  if (clipboard.hasPrimaryClip()) {
                                         ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
                                         Uri pasteUri = itemPaste.getUri();
                                         if (pasteUri == null) {
@@ -663,16 +629,16 @@ public class EncounterFragment extends Fragment implements
                                                 getActivity().invalidateOptionsMenu();
                                             }
                                         }
-                                    }
+                                    }*/
                                     break;
                                 case 1:
                                     cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     cursor.close();
-                                    uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + characterId);
+                                    uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                     getContext().getContentResolver().delete(uri, null, null);
-                                    clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                 /*   clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                                     if (clipboard.hasPrimaryClip()) {
                                         ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
                                         Uri pasteUri = itemPaste.getUri();
@@ -687,7 +653,7 @@ public class EncounterFragment extends Fragment implements
                                                 getActivity().invalidateOptionsMenu();
                                             }
                                         }
-                                    }
+                                    }*/
                                     break;
                                 default:
                                     break;
@@ -697,7 +663,7 @@ public class EncounterFragment extends Fragment implements
                         case R.id.edit:
                             switch(positionType){
                                 case 0:
-                                    Cursor cursor = dataAdapterMonster.getCursor();
+                                    Cursor cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                     cursor.close();
@@ -725,7 +691,7 @@ public class EncounterFragment extends Fragment implements
                             return true;
                         case R.id.copy:
                             if (positionType == 0) {
-                                Cursor cursor = dataAdapterMonster.getCursor();
+                                Cursor cursor = dataAdapterNPC.getCursor();
                                 cursor.moveToPosition(position);
                                 int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                                 Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
@@ -737,7 +703,7 @@ public class EncounterFragment extends Fragment implements
                                 Cursor cursor = dataAdapterNPC.getCursor();
                                 cursor.moveToPosition(position);
                                 int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + characterId);
+                                Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                                 ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
                                 clipboard.setPrimaryClip(clip);
@@ -754,7 +720,7 @@ public class EncounterFragment extends Fragment implements
                 public void onDestroyActionMode(ActionMode mode) {
                     CursorRecyclerViewAdapter.selectedPos = -1;
                     //TODO: make it work with notifyItemChanged()
-                    mergeAdapter.notifyDataSetChanged();
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             });
         } else if(positionType == 2) {

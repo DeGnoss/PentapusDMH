@@ -174,7 +174,7 @@ public class NPCEditFragment extends Fragment {
 
     private void loadNPCInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, EditText strength, EditText dex, EditText constit, EditText intelligence, EditText wis, EditText charisma, int id) {
 
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + id);
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_ENCOUNTERPREP, null, null,
                 null);
         if (cursor != null && cursor.moveToFirst()) {
@@ -243,11 +243,11 @@ public class NPCEditFragment extends Fragment {
 
         // insert a record
         if (!modeUpdate) {
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_NPC, values);
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_ENCOUNTERPREP, values);
         }
         // update a record
         else {
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + npcId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
         getActivity().getSupportFragmentManager().popBackStack();

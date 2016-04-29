@@ -160,6 +160,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             DataBaseHandler.KEY_DISABLED
     };
 
+    public static final String[] PROJECTION_ENCOUNTERPREP_LINKER = new String[]{
+            DataBaseHandler.KEY_ROWID,
+            DataBaseHandler.KEY_TYPE,
+            DataBaseHandler.KEY_BELONGSTO
+    };
+
 
 
 
@@ -203,7 +209,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
 
         String CREATE_ENCOUNTERPREP_LINKER_TABLE =
-                "CREATE TABLE if not exists " + TABLE_ENCOUNTER_PREP + " (" +
+                "CREATE TABLE if not exists " + TABLE_ENCOUNTER_PREP_LINKER + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
                         KEY_TYPE + " INTEGER, " +
                         KEY_BELONGSTO + " integer NOT NULL);";
