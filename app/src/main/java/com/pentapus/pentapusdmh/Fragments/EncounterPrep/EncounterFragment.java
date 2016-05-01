@@ -615,6 +615,7 @@ public class EncounterFragment extends Fragment implements
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    mergeAdapter.getSubAdapter(0).notifyItemRemoved(position);
                                   /*  if (clipboard.hasPrimaryClip()) {
                                         ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
                                         Uri pasteUri = itemPaste.getUri();
@@ -638,6 +639,7 @@ public class EncounterFragment extends Fragment implements
                                     cursor.close();
                                     uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                     getContext().getContentResolver().delete(uri, null, null);
+                                    mergeAdapter.getSubAdapter(0).notifyItemRemoved(position);
                                  /*   clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                                     if (clipboard.hasPrimaryClip()) {
                                         ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
@@ -721,6 +723,7 @@ public class EncounterFragment extends Fragment implements
                     CursorRecyclerViewAdapter.selectedPos = -1;
                     //TODO: make it work with notifyItemChanged()
                     mRecyclerView.getAdapter().notifyDataSetChanged();
+                    int test = 0;
                 }
             });
         } else if(positionType == 2) {

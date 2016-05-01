@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
@@ -433,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
                         })
                         .setIcon(R.drawable.ic_warning_black_24dp)
                         .show();
-            } else {
+            }else{
                 fm.popBackStack();
                 Log.i("MainActivity", "pop backstack");
             }

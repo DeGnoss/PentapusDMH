@@ -129,7 +129,7 @@ public class MyMonsterEditFragment extends Fragment {
 
 
 
-
+/*
         bChooseImage.setOnLongClickListener(new View.OnLongClickListener(){
 
             @Override
@@ -138,7 +138,7 @@ public class MyMonsterEditFragment extends Fragment {
                 Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_MONSTER"));
                 return true;
             }
-        });
+        });*/
 
 
 
@@ -150,7 +150,7 @@ public class MyMonsterEditFragment extends Fragment {
     public void showViewPager() {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         ImageViewPagerDialogFragment newFragment = new ImageViewPagerDialogFragment();
-        newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_MONSTER"), RESULT_CHOOSE_IMG);
+        newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_MYMONSTER"), RESULT_CHOOSE_IMG);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         // For a little polish, specify a transition animation
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

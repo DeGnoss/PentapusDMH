@@ -18,6 +18,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.HelperClasses.Utils;
 import com.pentapus.pentapusdmh.R;
@@ -72,17 +73,15 @@ public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Chara
         characterViewHolder.vAc.setText(String.valueOf(ci.ac));
         characterViewHolder.vHp.setText(String.valueOf(ci.hp));
         characterViewHolder.ivIcon.setImageURI(ci.iconUri);
-        if (characterList.get(position).type.equals("monster")) {
+        if (characterList.get(position).type == DataBaseHandler.TYPE_MONSTER) {
             characterViewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
-        } else if (characterList.get(position).type.equals("npc")) {
+        } else if (characterList.get(position).type == DataBaseHandler.TYPE_NPC) {
             characterViewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
-        } else if (characterList.get(position).type.equals("pc")) {
+        } else if (characterList.get(position).type == DataBaseHandler.TYPE_PC) {
             characterViewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#3F51B5"));
         }
         if (characterList.get(position).dead) {
             characterViewHolder.cardViewTracker.setForeground(new ColorDrawable(Color.parseColor("#ccAA361C")));
-            //TODO: SET FOREGROUND INSTEAD OF BACKGROUND
-            //characterViewHolder.cardViewTracker.setForegroundTintList(Color.parseColor("#99AA361C"));
         } else {
             characterViewHolder.cardViewTracker.setForeground(new ColorDrawable(Color.parseColor("#00ffffff")));
         }
@@ -195,7 +194,7 @@ public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Chara
 
     public void moveToBottom() {
         characterList.add(characterList.remove(0));
-        if (characterList.get(0).dead && characterList.get(0).type.equals("monster")) {
+        if (characterList.get(0).dead && characterList.get(0).type == 0) {
             moveToBottom();
         }
     }

@@ -37,7 +37,7 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
     private int ac;
     private String name;
     private Uri iconUri;
-    private String type;
+    private int type;
     private TrackerInfoCard selectedCharacter;
 
 
@@ -91,11 +91,11 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         tvName.setText(name);
         ivIcon.setImageURI(iconUri);
 
-        if(type.equals("npc")){
+        if(type == 1){
             vFrame.setBackgroundColor(Color.parseColor("#4caf50"));
-        }else if(type.equals("monster")){
+        }else if(type == 0){
             vFrame.setBackgroundColor(Color.parseColor("#F44336"));
-        }else if(type.equals("pc")){
+        }else if(type == 2){
             vFrame.setBackgroundColor(Color.parseColor("#3F51B5"));
         }else{
             vFrame.setBackgroundColor(Color.parseColor("#ffffff"));

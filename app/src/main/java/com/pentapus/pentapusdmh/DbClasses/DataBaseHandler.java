@@ -155,6 +155,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             DataBaseHandler.KEY_INITIATIVEBONUS,
             DataBaseHandler.KEY_HP,
             DataBaseHandler.KEY_MAXHP,
+            DataBaseHandler.KEY_TYPE,
             DataBaseHandler.KEY_AC,
             DataBaseHandler.KEY_ICON,
             DataBaseHandler.KEY_DISABLED

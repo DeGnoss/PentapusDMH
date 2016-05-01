@@ -84,7 +84,7 @@ public class TrackerFragment extends Fragment implements
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
-        getLoaderManager().initLoader(2, null, this);
+       // getLoaderManager().initLoader(2, null, this);
         chars = new TrackerAdapter(getContext());
         mRecyclerView.setAdapter(chars);
 
@@ -168,15 +168,15 @@ public class TrackerFragment extends Fragment implements
                 return new CursorLoader(this.getContext(),
                         DbContentProvider.CONTENT_URI_ENCOUNTERPREP, DataBaseHandler.PROJECTION_ENCOUNTERPREP, selection, selectionArgs, null);
             case 1:
-                selectionArgs = new String[]{String.valueOf(encounterId)};
-                selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-                return new CursorLoader(this.getContext(),
-                        DbContentProvider.CONTENT_URI_NPC, DataBaseHandler.PROJECTION_ENCOUNTERPREP, selection, selectionArgs, null);
-            case 2:
                 selectionArgs = new String[]{String.valueOf(campaignId)};
                 selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
                         DbContentProvider.CONTENT_URI_PC, DataBaseHandler.PROJECTION_PC, selection, selectionArgs, null);
+           /* case 2:
+                selectionArgs = new String[]{String.valueOf(campaignId)};
+                selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
+                return new CursorLoader(this.getContext(),
+                        DbContentProvider.CONTENT_URI_PC, DataBaseHandler.PROJECTION_PC, selection, selectionArgs, null); */
             default:
                 return null;
         }
@@ -199,6 +199,7 @@ public class TrackerFragment extends Fragment implements
                     int intelligence = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE));
                     int wisdom = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
                     int charisma = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
+                    int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
 
                     initiative = initiative + DiceHelper.d20();
@@ -209,7 +210,7 @@ public class TrackerFragment extends Fragment implements
                     ci.ac = ac;
                     ci.maxHp = maxHp;
                     ci.hp = maxHp;
-                    ci.type = "monster";
+                    ci.type = type;
                     ci.dead = false;
                     ci.strength = strength;
                     ci.dexterity = dexterity;
@@ -221,51 +222,15 @@ public class TrackerFragment extends Fragment implements
                     chars.addListItem(ci);
                 }
                 break;
-            //case NPC
             case 1:
-                while (data.moveToNext()) {
-                    String names = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-                    int initiative = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
-                    int initiativeMod = initiative;
-                    int ac = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
-                    int maxHp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
-                    int strength = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH));
-                    int dexterity = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY));
-                    int constitution = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION));
-                    int intelligence = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE));
-                    int wisdom = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
-                    int charisma = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
-                    Uri iconUri = Uri.parse(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
-
-                    initiative = initiative + DiceHelper.d20();
-                    TrackerInfoCard ci = new TrackerInfoCard();
-                    ci.name = names;
-                    ci.initiative = String.valueOf(initiative);
-                    ci.initiativeMod = String.valueOf(initiativeMod);
-                    ci.ac = ac;
-                    ci.maxHp = maxHp;
-                    ci.hp = maxHp;
-                    ci.type = "npc";
-                    ci.dead = false;
-                    ci.strength = strength;
-                    ci.dexterity = dexterity;
-                    ci.constitution = constitution;
-                    ci.intelligence = intelligence;
-                    ci.wisdom = wisdom;
-                    ci.charisma = charisma;
-                    ci.iconUri = iconUri;
-                    chars.addListItem(ci);
-                }
-                break;
-
-            //case PC
-            case 2:
+                //case PC
                 while (data.moveToNext()) {
                     String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
                     int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int initiativeMod = initiative;
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
                     int hp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_HP));
+                    int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
                     int disabled = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_DISABLED));
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
@@ -277,7 +242,7 @@ public class TrackerFragment extends Fragment implements
                     ci.ac = ac;
                     ci.maxHp = maxHp;
                     ci.hp = maxHp;
-                    ci.type = "pc";
+                    ci.type = type;
                     ci.dead = false;
                     ci.iconUri = iconUri;
                     if(disabled == 0){
@@ -304,8 +269,6 @@ public class TrackerFragment extends Fragment implements
                 break;
             case 1:
                 //dataAdapterPC.swapCursor(null);
-                break;
-            case 2:
                 break;
             default:
                 break;
