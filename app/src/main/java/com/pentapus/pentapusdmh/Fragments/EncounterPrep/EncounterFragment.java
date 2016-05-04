@@ -611,36 +611,10 @@ public class EncounterFragment extends Fragment implements
                                     Cursor cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    cursor.close();
+                                    //cursor.close();
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                                    mergeAdapter.getSubAdapter(0).notifyItemRemoved(position);
-                                  /*  if (clipboard.hasPrimaryClip()) {
-                                        ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
-                                        Uri pasteUri = itemPaste.getUri();
-                                        if (pasteUri == null) {
-                                            pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
-                                        }
-                                        if (pasteUri != null) {
-                                            if (pasteUri.equals(uri)) {
-                                                Uri newUri = Uri.parse("");
-                                                ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
-                                                clipboard.setPrimaryClip(clip);
-                                                getActivity().invalidateOptionsMenu();
-                                            }
-                                        }
-                                    }*/
-                                    break;
-                                case 1:
-                                    cursor = dataAdapterNPC.getCursor();
-                                    cursor.moveToPosition(position);
-                                    characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    cursor.close();
-                                    uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
-                                    getContext().getContentResolver().delete(uri, null, null);
-                                    mergeAdapter.getSubAdapter(0).notifyItemRemoved(position);
-                                 /*   clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                                     if (clipboard.hasPrimaryClip()) {
                                         ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
                                         Uri pasteUri = itemPaste.getUri();
@@ -655,7 +629,33 @@ public class EncounterFragment extends Fragment implements
                                                 getActivity().invalidateOptionsMenu();
                                             }
                                         }
-                                    }*/
+                                    }
+                                    mergeAdapter.notifyItemRemoved(position);
+                                    break;
+                                case 1:
+                                    cursor = dataAdapterNPC.getCursor();
+                                    cursor.moveToPosition(position);
+                                    characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                                    //cursor.close();
+                                    uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
+                                    getContext().getContentResolver().delete(uri, null, null);
+                                    mergeAdapter.notifyItemRemoved(position);
+                                    clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    if (clipboard.hasPrimaryClip()) {
+                                        ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+                                        Uri pasteUri = itemPaste.getUri();
+                                        if (pasteUri == null) {
+                                            pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+                                        }
+                                        if (pasteUri != null) {
+                                            if (pasteUri.equals(uri)) {
+                                                Uri newUri = Uri.parse("");
+                                                ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
+                                                clipboard.setPrimaryClip(clip);
+                                                getActivity().invalidateOptionsMenu();
+                                            }
+                                        }
+                                    }
                                     break;
                                 default:
                                     break;
@@ -668,7 +668,7 @@ public class EncounterFragment extends Fragment implements
                                     Cursor cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    cursor.close();
+                                    //cursor.close();
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(MODE, true);
                                     bundle.putInt(MONSTER_ID, characterId);
@@ -679,7 +679,7 @@ public class EncounterFragment extends Fragment implements
                                     cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    cursor.close();
+                                    //cursor.close();
                                     bundle = new Bundle();
                                     bundle.putBoolean(MODE, true);
                                     bundle.putInt(NPC_ID, characterId);
@@ -701,6 +701,7 @@ public class EncounterFragment extends Fragment implements
                                 ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
                                 clipboard.setPrimaryClip(clip);
                                 getActivity().invalidateOptionsMenu();
+                                mergeAdapter.notifyItemChanged(position);
                             }else if (positionType == 1) {
                                 Cursor cursor = dataAdapterNPC.getCursor();
                                 cursor.moveToPosition(position);
@@ -710,6 +711,7 @@ public class EncounterFragment extends Fragment implements
                                 ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
                                 clipboard.setPrimaryClip(clip);
                                 getActivity().invalidateOptionsMenu();
+                                mergeAdapter.notifyItemChanged(position);
                             }
                             mode.finish();
                             return true;
@@ -720,9 +722,8 @@ public class EncounterFragment extends Fragment implements
 
                 @Override
                 public void onDestroyActionMode(ActionMode mode) {
-                    CursorRecyclerViewAdapter.selectedPos = -1;
                     //TODO: make it work with notifyItemChanged()
-                    mRecyclerView.getAdapter().notifyDataSetChanged();
+                    CursorRecyclerViewAdapter.selectedPos = -1;
                     int test = 0;
                 }
             });
@@ -777,5 +778,10 @@ public class EncounterFragment extends Fragment implements
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onItemRemoved(int notifyPosition) {
+        mergeAdapter.notifyItemRemoved(notifyPosition);
     }
 }

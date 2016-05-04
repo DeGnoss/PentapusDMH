@@ -165,7 +165,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
     }
 
 
-    public void pendingRemoval(final int position, int notifyPosition) {
+    public void pendingRemoval(final int position, final int notifyPosition) {
         mCursor.moveToPosition(position);
         final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)) + ":" + mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
 
@@ -179,7 +179,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
             Runnable pendingRemovalRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    remove(position, identifier);
+                    remove(position, notifyPosition, identifier);
                 }
             };
             handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
@@ -194,7 +194,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
     }
 
 
-    public void remove(int position, String identifier) {
+    public void remove(int position, int notifyPosition, String identifier) {
         if (itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.remove(identifier);
         }
@@ -204,7 +204,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         switch (characterType) {
             case 0:
                 Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
-                notifyItemRemoved(position);
+                mAdapterCallback.onItemRemoved(notifyPosition);
                 mContext.getContentResolver().delete(uri, null, null);
                 ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                 if (clipboard.hasPrimaryClip()) {
@@ -226,7 +226,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
                 break;
             case 1:
                 uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
-                notifyItemRemoved(position);
+                mAdapterCallback.onItemRemoved(notifyPosition);
                 mContext.getContentResolver().delete(uri, null, null);
                 clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                 if (clipboard.hasPrimaryClip()) {
@@ -314,6 +314,11 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
     @Override
     public void onMenuRefresh() {
+    }
+
+    @Override
+    public void onItemRemoved(int notifyPosition) {
+
     }
 
     private class NotifyingDataSetObserver extends DataSetObserver {
