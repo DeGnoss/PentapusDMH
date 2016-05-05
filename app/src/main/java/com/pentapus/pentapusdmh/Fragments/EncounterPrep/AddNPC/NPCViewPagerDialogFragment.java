@@ -1,13 +1,9 @@
-package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster;
+package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC;
 
-import android.app.Activity;
 import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,43 +11,32 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageFragmentPagerAdapter;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageGridAdapter;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.MonsterEditFragment;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.Utils;
-import com.soundcloud.android.crop.Crop;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.UUID;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Koni on 4/4/16.
  */
-public class MonsterViewPagerDialogFragment extends Fragment {
+public class NPCViewPagerDialogFragment extends Fragment {
+
+
 
     private static final String ARG_PAGE = "ARG_PAGE";
     private static final String ENCOUNTER_ID = "encounterId";
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private MonsterViewPagerAdapter pagerAdapter;
+    private NPCViewPagerAdapter pagerAdapter;
     private FloatingActionButton fabImageVP;
     private int id;
     private int encounterId;
@@ -61,15 +46,15 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     private static int selectedType = -1;
     private static int selectedPos = -1;
     private static int highlightedPos = -1;
-    private static Uri monsterUri = null;
+    private static Uri npcUri = null;
 
 
-    public MonsterViewPagerDialogFragment() {
+    public NPCViewPagerDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
-    public static MonsterViewPagerDialogFragment newInstance(int encounterId) {
-        MonsterViewPagerDialogFragment fragment = new MonsterViewPagerDialogFragment();
+    public static NPCViewPagerDialogFragment newInstance(int encounterId) {
+        NPCViewPagerDialogFragment fragment = new NPCViewPagerDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ENCOUNTER_ID, encounterId);
         fragment.setArguments(args);
@@ -86,7 +71,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.monster_viewpager_tab_layout, parent, false);
+        View view = inflater.inflate(R.layout.npc_viewpager_tab_layout, parent, false);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
         view.setBackgroundColor(Color.WHITE);
@@ -99,7 +84,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         bDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pasteMonster(monsterUri);
+                pasteNPC(npcUri);
                 getFragmentManager().popBackStack();
             }
         });
@@ -109,7 +94,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(MODE, false);
-                addMonster(bundle);
+                addNPC(bundle);
             }
         });
 
@@ -145,7 +130,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     }
 
 
-    private void pasteMonster(Uri pasteUri) {
+    private void pasteNPC(Uri pasteUri) {
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContext().getContentResolver()) {
 
             @Override
@@ -189,13 +174,13 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     }
 
 
-    private void addMonster(Bundle bundle) {
+    private void addNPC(Bundle bundle) {
         Fragment fragment;
-        fragment = new MyMonsterEditFragment();
+        fragment = new MyNPCEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, fragment, "FE_MYMONSTER")
-                .addToBackStack("FE_MYMONSTER")
+                .add(android.R.id.content, fragment, "FE_MYNPC")
+                .addToBackStack("FE_MYNPC")
                 .commit();
     }
 
@@ -203,7 +188,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        pagerAdapter = new MonsterViewPagerAdapter(getChildFragmentManager(), getContext(), id);
+        pagerAdapter = new NPCViewPagerAdapter(getChildFragmentManager(), getContext(), id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(1);
@@ -223,7 +208,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     }
 
     public static void setSelectedType(int selectedType) {
-        MonsterViewPagerDialogFragment.selectedType = selectedType;
+        NPCViewPagerDialogFragment.selectedType = selectedType;
     }
 
     public static int getSelectedPos() {
@@ -231,7 +216,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     }
 
     public static void setSelectedPos(int selectedPos) {
-        MonsterViewPagerDialogFragment.selectedPos = selectedPos;
+        NPCViewPagerDialogFragment.selectedPos = selectedPos;
     }
 
     public static int getHighlightedPos() {
@@ -239,16 +224,15 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     }
 
     public static void setHighlightedPos(int highlightedPos) {
-        MonsterViewPagerDialogFragment.highlightedPos = highlightedPos;
+        NPCViewPagerDialogFragment.highlightedPos = highlightedPos;
     }
 
-    public static Uri getMonsterUri() {
-        return monsterUri;
+    public static Uri getNPCUri() {
+        return npcUri;
     }
 
-    public static void setMonsterUri(Uri monsterUri) {
-        MonsterViewPagerDialogFragment.monsterUri = monsterUri;
+    public static void setNPCUri(Uri npcUri) {
+        NPCViewPagerDialogFragment.npcUri = npcUri;
     }
 }
-//Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId);
 

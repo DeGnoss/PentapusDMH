@@ -1,7 +1,11 @@
 package com.pentapus.pentapusdmh;
 
+import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Rect;
+import android.view.Window;
 
 /**
  * Created by konrad.fellmann on 04.05.2016.
@@ -35,6 +39,18 @@ public class Utils {
             joinedCursor.addRow(data);
         }
         return joinedCursor;
+    }
+
+
+    public static int getStatusBarHeight(Activity activity){
+        Rect rectangle= new Rect();
+        Window window= activity.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        int statusBarHeight= rectangle.top;
+        int contentViewTop=
+                window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+        int titleBarHeight= contentViewTop - statusBarHeight;
+        return statusBarHeight;
     }
 
 }

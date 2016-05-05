@@ -1,13 +1,11 @@
-package com.pentapus.pentapusdmh.Fragments.PC;
+package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,36 +28,34 @@ import java.util.List;
 /**
  * Created by Koni on 14/4/16.
  */
-public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.PCViewHolder> implements AdapterNavigationCallback {
-
-    public static int selectedPos = -1;
-
-
+public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCViewHolder> implements AdapterNavigationCallback {
     private AdapterNavigationCallback mAdapterCallback;
     List<String> itemsPendingRemoval;
     private Handler handler = new Handler(); // handler for running delayed runnables
     HashMap<String, Runnable> pendingRunnables = new HashMap<>();
     private static final int PENDING_REMOVAL_TIMEOUT = 3000;
-
+    Context mContext;
 
     /**
      * Constructor.
+     *
      * @param context The Context the Adapter is displayed in.
      */
-    public PcAdapter(Context context, AdapterNavigationCallback callback) {
+    public MyNPCAdapter(Context context, AdapterNavigationCallback callback) {
         super(context);
+        this.mContext = context;
         this.mAdapterCallback = callback;
         itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
-        setupCursorAdapter(null, 0, R.layout.card_pc, false);
+        setupCursorAdapter(null, 0, R.layout.card_monster, false);
     }
 
     /**
      * Returns the ViewHolder to use for this adapter.
      */
     @Override
-    public PCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new PCViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
+    public MyNPCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new MyNPCViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
     }
 
 
@@ -74,7 +70,7 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.PCViewHolder>
      * that item.
      */
     @Override
-    public void onBindViewHolder(PCViewHolder holder, int position) {
+    public void onBindViewHolder(MyNPCViewHolder holder, int position) {
         // Move cursor to this position
         mCursorAdapter.getCursor().moveToPosition(position);
 
@@ -85,7 +81,7 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.PCViewHolder>
         mCursorAdapter.bindView(null, mContext, mCursorAdapter.getCursor());
     }
 
-
+/*
     public void pendingRemoval(final int position) {
         Cursor mCursor = mCursorAdapter.getCursor();
         mCursor.moveToPosition(position);
@@ -117,18 +113,60 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.PCViewHolder>
 
     public void remove(int position, String identifier) {
         Cursor mCursor = mCursorAdapter.getCursor();
-
-        if (itemsPendingRemoval.contains(identifier)){
+        mCursor.moveToPosition(position);
+        if (itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.remove(identifier);
         }
-        int pcId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + pcId);
-        notifyItemRemoved(position);
+        int encounterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + encounterId);
+        if (position == 0) {
+            notifyItemChanged(position);
+        } else {
+            notifyItemRemoved(position);
+        }
         mContext.getContentResolver().delete(uri, null, null);
-    }
+        ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboard.hasPrimaryClip()) {
+            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+            Uri pasteUri = itemPaste.getUri();
+            if (pasteUri == null) {
+                pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
+            }
+            if (pasteUri != null) {
+                if (pasteUri.equals(uri)) {
+                    Uri newUri = Uri.parse("");
+                    ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
+                    clipboard.setPrimaryClip(clip);
+                    mAdapterCallback.onMenuRefresh();
+                }
+            }
+        }
+    }*/
 
-    public static void setSelectedPos(int selectedPos) {
-        PcAdapter.selectedPos = selectedPos;
+    public void statusClicked(int position) {
+        int oldPos = NPCViewPagerDialogFragment.getSelectedPos();
+        if (NPCViewPagerDialogFragment.getSelectedType() == 0 && position == NPCViewPagerDialogFragment.getSelectedPos()) {
+            NPCViewPagerDialogFragment.setSelectedType(-1);
+            NPCViewPagerDialogFragment.setSelectedPos(-1);
+            NPCViewPagerDialogFragment.setNPCUri(null);
+            notifyItemChanged(position);
+        } else if (NPCViewPagerDialogFragment.getSelectedType() == 0) {
+            Cursor cursor = getCursor();
+            cursor.moveToPosition(position);
+            int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            NPCViewPagerDialogFragment.setSelectedPos(position);
+            NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
+            notifyItemChanged(oldPos);
+            notifyItemChanged(position);
+        } else {
+            Cursor cursor = getCursor();
+            cursor.moveToPosition(position);
+            int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            NPCViewPagerDialogFragment.setSelectedType(0);
+            NPCViewPagerDialogFragment.setSelectedPos(position);
+            NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
+            notifyItemChanged(position);
+        }
     }
 
     @Override
@@ -145,45 +183,44 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.PCViewHolder>
     public void onMenuRefresh() {
     }
 
-    public Cursor getCursor(){
+    public Cursor getCursor() {
         return mCursorAdapter.getCursor();
     }
 
 
-    public class PCViewHolder extends RecyclerViewCursorViewHolder {
+    public class MyNPCViewHolder extends RecyclerViewCursorViewHolder {
         public View view;
-        protected TextView vName, vInfo, vInfoDeleted;
+        protected TextView vName;
+        protected TextView vInfo;
         protected CardView cardViewTracker;
         protected View vIndicatorLine;
         protected ImageView ivIcon;
+        public int type;
         private RelativeLayout clicker;
         private AdapterNavigationCallback mAdapterCallback;
         private Button undoButton;
+        private TextView vInfoDeleted;
         private String identifier;
 
-        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_pc);
+        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_monster);
 
 
-        public PCViewHolder(View v, AdapterNavigationCallback adapterCallback) {
+        public MyNPCViewHolder(View v, AdapterNavigationCallback adapterCallback) {
             super(v);
-
             this.mAdapterCallback = adapterCallback;
-            vIndicatorLine = (View) v.findViewById(R.id.indicator_line_pc);
-            vName = (TextView) v.findViewById(R.id.name_pc);
-            cardViewTracker = (CardView) v.findViewById(R.id.card_view_pc);
-            ivIcon = (ImageView) v.findViewById(R.id.ivIcon_pc);
-            vInfo = (TextView) v.findViewById(R.id.info_pc);
-            clicker = (RelativeLayout) v.findViewById(R.id.clicker_pc);
-            undoButton = (Button) v.findViewById(R.id.undo_pc);
-            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_pc);
+            vIndicatorLine = (View) v.findViewById(R.id.indicator_line_monster);
+            vName = (TextView) v.findViewById(R.id.name_monster);
+            cardViewTracker = (CardView) v.findViewById(R.id.card_view_monster);
+            ivIcon = (ImageView) v.findViewById(R.id.ivIcon_monster);
+            vInfo = (TextView) v.findViewById(R.id.info_monster);
+            clicker = (RelativeLayout) v.findViewById(R.id.clicker_monster);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Log.d("ViewHolder", "longclick");
-                    selectedPos = getAdapterPosition();
+                    NPCViewPagerDialogFragment.setSelectedPos(getAdapterPosition());
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
@@ -199,20 +236,22 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.PCViewHolder>
 
         @Override
         public void bindCursor(Cursor cursor) {
+
+            type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+            vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
+            ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
+            clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+            itemView.setActivated(NPCViewPagerDialogFragment.getSelectedType() == 0 && getAdapterPosition() == NPCViewPagerDialogFragment.getSelectedPos());
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            vIndicatorLine.setBackgroundColor(Color.parseColor("#3F51B5"));
-            ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
-            itemView.setActivated(getAdapterPosition() == selectedPos);
 
+            /*
             if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
                 // we need to show the "undo" state of the row
                 itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                clicker.setVisibility(View.GONE);
-                /*vIndicatorLine.setVisibility(View.GONE);
                 vName.setVisibility(View.GONE);
-                vInfo.setVisibility(View.GONE);*/
+                vInfo.setVisibility(View.GONE);
                 vInfoDeleted.setVisibility(View.VISIBLE);
                 undoButton.setVisibility(View.VISIBLE);
                 undoButton.setOnClickListener(new View.OnClickListener() {
@@ -231,16 +270,14 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.PCViewHolder>
             } else {
                 // we need to show the "normal" state
                 itemView.setBackgroundColor(Color.WHITE);
-                clicker.setVisibility(View.VISIBLE);
-                //vName.setVisibility(View.VISIBLE);
-                //vInfo.setVisibility(View.VISIBLE);
+                vName.setVisibility(View.VISIBLE);
+                vInfo.setVisibility(View.VISIBLE);
                 // viewHolder.titleTextView.setText(item);
                 vInfoDeleted.setVisibility(View.GONE);
                 undoButton.setVisibility(View.GONE);
                 undoButton.setOnClickListener(null);
-            }
+            }*/
         }
-
 
 
     }

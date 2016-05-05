@@ -1,8 +1,10 @@
-package com.pentapus.pentapusdmh.Fragments.PC;
+package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC;
 
 
+import android.content.AsyncQueryHandler;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -12,7 +14,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -35,98 +36,72 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.NotifyChange;
 import com.pentapus.pentapusdmh.R;
 
-public class PcTableFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String CAMPAIGN_ID = "campaignId";
-    private static final String CAMPAIGN_NAME = "campaignName";
-    private static final String PC_ID = "pcId";
+
+public class MyNPCTableFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 
     private static final String MODE = "modeUpdate";
+    private static final String NPC_ID = "npcId";
 
-    private int campaignId;
-    private String campaignName;
-    private int pcId;
-
-    private RecyclerView mPCRecyclerView;
-
+    private int sessionId;
+    private String sessionName;
+    private RecyclerView myNPCRecyclerView;
     private ActionMode mActionMode;
-    private PcAdapter mPCAdapter;
-    private FloatingActionButton fab;
+    private MyNPCAdapter myNPCAdapter;
+    private static int campaignId;
 
-    public PcTableFragment() {
+    public MyNPCTableFragment() {
         // Required empty public constructor
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param campaignId   Parameter 1.
-     * @param campaignName Parameter 2.
-     * @return A new instance of fragment SessionTableFragment.
      */
-    public static PcTableFragment newInstance(int campaignId, String campaignName) {
-        PcTableFragment fragment = new PcTableFragment();
+    public static MyNPCTableFragment newInstance() {
+        MyNPCTableFragment fragment = new MyNPCTableFragment();
         Bundle args = new Bundle();
-        args.putInt(CAMPAIGN_ID, campaignId);
-        args.putString(CAMPAIGN_NAME, campaignName);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (getArguments() != null) {
-            campaignId = getArguments().getInt(CAMPAIGN_ID);
-            campaignName = getArguments().getString(CAMPAIGN_NAME);
-        } else {
-            campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-            campaignName = SharedPrefsHelper.loadCampaignName(getContext());
-        }
-        mPCAdapter = new PcAdapter(getContext(), this);
-
+        campaignId = SharedPrefsHelper.loadCampaignId(getContext());
+        myNPCAdapter = new MyNPCAdapter(getContext(), this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View tableView = inflater.inflate(R.layout.fragment_pc_table, container, false);
+        final View tableView = inflater.inflate(R.layout.fragment_monster_table, container, false);
         // insert a record
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
-        fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(MODE, false);
-                bundle.putInt(CAMPAIGN_ID, campaignId);
-                addPC(bundle);
-            }
-        });
-        mPCRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewPc);
+        myNPCRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mPCRecyclerView.setLayoutManager(linearLayoutManager);
-        mPCRecyclerView.setHasFixedSize(true);
-        mPCRecyclerView.addItemDecoration(
+        myNPCRecyclerView.setLayoutManager(linearLayoutManager);
+        myNPCRecyclerView.setHasFixedSize(true);
+        myNPCRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
-        mPCRecyclerView.setAdapter(mPCAdapter);
+        myNPCRecyclerView.setAdapter(myNPCAdapter);
 
 
-        setUpItemTouchHelper();
-        setUpAnimationDecoratorHelper();
+        //setUpItemTouchHelper();
+       // setUpAnimationDecoratorHelper();
 
         // Inflate the layout for this fragment
         return tableView;
-
     }
 
     @Override
@@ -140,8 +115,7 @@ public class PcTableFragment extends Fragment implements
         }
     }
 
-
-
+/*
     private void setUpItemTouchHelper() {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -168,7 +142,7 @@ public class PcTableFragment extends Fragment implements
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
-                PcAdapter testAdapter = (PcAdapter) recyclerView.getAdapter();
+                MyNPCAdapter testAdapter = (MyNPCAdapter) recyclerView.getAdapter();
                 if (testAdapter.isPendingRemoval(position)) {
                     return 0;
                 }
@@ -180,7 +154,7 @@ public class PcTableFragment extends Fragment implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                 int swipedAdapterPosition = viewHolder.getAdapterPosition();
-                PcAdapter adapter = (PcAdapter)mPCRecyclerView.getAdapter();
+                MyNPCAdapter adapter = (MyNPCAdapter) myNPCRecyclerView.getAdapter();
                 adapter.pendingRemoval(swipedAdapterPosition);
             }
 
@@ -207,7 +181,7 @@ public class PcTableFragment extends Fragment implements
 
                 int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
                 int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                 int xMarkBottom = xMarkTop + intrinsicHeight;
                 xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
 
@@ -217,7 +191,7 @@ public class PcTableFragment extends Fragment implements
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(mPCRecyclerView);
+        itemTouchHelper.attachToRecyclerView(myNPCRecyclerView);
     }
 
 
@@ -225,8 +199,9 @@ public class PcTableFragment extends Fragment implements
      * We're gonna setup another ItemDecorator that will draw the red background in the empty space while the items are animating to thier new positions
      * after an item is removed.
      */
+    /*
     private void setUpAnimationDecoratorHelper() {
-        mPCRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+        myNPCRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 
             // we want to cache this and not allocate anything repeatedly in the onDraw method
             Drawable background;
@@ -304,31 +279,34 @@ public class PcTableFragment extends Fragment implements
 
         });
     }
+    */
 
-    private void addPC(Bundle bundle) {
-        Fragment fragment;
-        fragment = new PcEditFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_PC")
-                .addToBackStack("FE_PC")
-                .commit();
+
+    public int getSessionId() {
+        return sessionId;
     }
 
-    private void editPC(Bundle bundle) {
-        Fragment fragment;
-        fragment = new PcEditFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_PC")
-                .addToBackStack("FE_PC")
-                .commit();
-    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.campaign_settings).setVisible(true);
 
-    public int getCampaignId() {
-        return campaignId;
-    }
+        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
+        if (clipboard.hasPrimaryClip()) {
+            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
+            Uri pasteUri = itemPaste.getUri();
+            String pasteString = String.valueOf(itemPaste.getText());
+            if (pasteUri == null) {
+                pasteUri = Uri.parse(pasteString);
+            }
+            if (pasteUri != null) {
+                if (DbContentProvider.NPC.equals(getContext().getContentResolver().getType(pasteUri))) {
+                    menu.findItem(R.id.menu_paste).setVisible(true);
+                }
+            }
+        }
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -341,66 +319,48 @@ public class PcTableFragment extends Fragment implements
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.campaign_settings).setVisible(true);
-
-        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-
-        if(clipboard.hasPrimaryClip()){
-            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
-            Uri pasteUri = itemPaste.getUri();
-            String pasteString = String.valueOf(itemPaste.getText());
-            if(pasteUri == null){
-                pasteUri = Uri.parse(pasteString);
-            }
-            if(pasteUri != null){
-                if(DbContentProvider.PC.equals(getContext().getContentResolver().getType(pasteUri))){
-                    menu.findItem(R.id.menu_paste).setVisible(true);
-                }
-            }
-        }
-        super.onPrepareOptionsMenu(menu);
-    }
-
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         String[] selectionArgs = new String[]{String.valueOf(campaignId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
-                DbContentProvider.CONTENT_URI_PC, DataBaseHandler.PROJECTION_PC, selection, selectionArgs, null);
+                DbContentProvider.CONTENT_URI_NPC, DataBaseHandler.PROJECTION_NPC_TEMPLATE, selection, selectionArgs, null);
         return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mPCAdapter.swapCursor(data);
+        myNPCAdapter.swapCursor(data);
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mPCAdapter.swapCursor(null);
+        myNPCAdapter.swapCursor(null);
     }
+
 
     @Override
     public void onItemClick(int position) {
-        //TODO: SOMETHING ON CLICK
-
+        myNPCAdapter.statusClicked(position);
+        EventBus.getDefault().post(new NotifyChange());
     }
+
 
     @Override
     public void onItemLongCLick(final int position) {
+        NPCViewPagerDialogFragment.setSelectedType(0);
+        NPCViewPagerDialogFragment.setHighlightedPos(position);
+        int oldPos = NPCViewPagerDialogFragment.getSelectedPos();
+        NPCViewPagerDialogFragment.setSelectedPos(position);
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mPCRecyclerView.getAdapter().notifyItemChanged(position);
+                myNPCRecyclerView.getAdapter().notifyItemChanged(position);
                 String title = "Selected: " + String.valueOf(position);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
-                fab.setVisibility(View.GONE);
                 return true;
             }
 
@@ -413,10 +373,11 @@ public class PcTableFragment extends Fragment implements
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.delete:
-                        Cursor cursor = mPCAdapter.getCursor();
+                        //TODO: ADD DIALOG TO MAKE SURE THE DELETE IS INTENTIONAL
+                        Cursor cursor = myNPCAdapter.getCursor();
                         cursor.moveToPosition(position);
                         int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + npcId);
+                        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
                         getContext().getContentResolver().delete(uri, null, null);
                         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                         if (clipboard.hasPrimaryClip()) {
@@ -425,7 +386,7 @@ public class PcTableFragment extends Fragment implements
                             if (pasteUri == null) {
                                 pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
                             }
-                            if(pasteUri.equals(uri)){
+                            if (pasteUri.equals(uri)) {
                                 Uri newUri = Uri.parse("");
                                 ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
                                 clipboard.setPrimaryClip(clip);
@@ -435,25 +396,21 @@ public class PcTableFragment extends Fragment implements
                         mode.finish();
                         return true;
                     case R.id.edit:
-                        cursor = mPCAdapter.getCursor();
+                        cursor = myNPCAdapter.getCursor();
                         cursor.moveToPosition(position);
-                        int pcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                        npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(MODE, true);
-                        bundle.putInt(CAMPAIGN_ID, campaignId);
-                        bundle.putInt(PC_ID, pcId);
-                        editPC(bundle);
+                        bundle.putInt(NPC_ID, npcId);
+                        editNPC(bundle);
                         mode.finish();
                         return true;
                     case R.id.copy:
-                        cursor = mPCAdapter.getCursor();
+                        cursor = myNPCAdapter.getCursor();
                         cursor.moveToPosition(position);
-                        pcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + pcId);
-                        clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
-                        clipboard.setPrimaryClip(clip);
-                        getActivity().invalidateOptionsMenu();
+                        npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+                        uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+                        pasteNPC(uri);
                         mode.finish();
                         return true;
                     default:
@@ -463,17 +420,76 @@ public class PcTableFragment extends Fragment implements
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                mPCAdapter.setSelectedPos(-1);
-                mPCRecyclerView.getAdapter().notifyItemChanged(position);
-                fab.setVisibility(View.VISIBLE);
+                NPCViewPagerDialogFragment.setHighlightedPos(-1);
+                NPCViewPagerDialogFragment.setSelectedPos(-1);
+                myNPCRecyclerView.getAdapter().notifyItemChanged(position);
                 mActionMode = null;
             }
         });
     }
 
+    private void editNPC(Bundle bundle) {
+        Fragment fragment;
+        fragment = new MyNPCEditFragment();
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(android.R.id.content, fragment, "FE_MYNPC")
+                .addToBackStack("FE_MYNPC")
+                .commit();
+    }
+
+
+    private void pasteNPC(Uri pasteUri) {
+        final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContext().getContentResolver()) {
+
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if (cursor == null) {
+                    // Some providers return null if an error occurs whereas others throw an exception
+                } else if (cursor.getCount() < 1) {
+                    // No matches found
+                } else {
+                    while (cursor.moveToNext()) {
+                        ContentValues values = new ContentValues();
+                        values.put(DataBaseHandler.KEY_NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
+                        values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+                        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
+                        values.put(DataBaseHandler.KEY_MAXHP, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
+                        values.put(DataBaseHandler.KEY_AC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                        values.put(DataBaseHandler.KEY_STRENGTH, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
+                        values.put(DataBaseHandler.KEY_DEXTERITY, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
+                        values.put(DataBaseHandler.KEY_CONSTITUTION, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
+                        values.put(DataBaseHandler.KEY_INTELLIGENCE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE)));
+                        values.put(DataBaseHandler.KEY_WISDOM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
+                        values.put(DataBaseHandler.KEY_CHARISMA, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
+                        values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
+                        values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
+                        values.put(DataBaseHandler.KEY_BELONGSTO, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_BELONGSTO)));
+                        startInsert(1, null, DbContentProvider.CONTENT_URI_NPC, values);
+                    }
+                    cursor.close();
+                }
+            }
+        };
+
+        queryHandler.startQuery(
+                1, null,
+                pasteUri,
+                DataBaseHandler.PROJECTION_NPC_TEMPLATE,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Subscribe
+    public void onMessageEvent(NotifyChange event){
+        myNPCAdapter.notifyDataSetChanged();
+    }
+
+
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();
     }
-
 }

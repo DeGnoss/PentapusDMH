@@ -96,8 +96,8 @@ public class MyMonsterTableFragment extends Fragment implements
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
 
 
-        setUpItemTouchHelper();
-        setUpAnimationDecoratorHelper();
+        //setUpItemTouchHelper();
+        //setUpAnimationDecoratorHelper();
 
         // Inflate the layout for this fragment
         return tableView;
@@ -114,7 +114,7 @@ public class MyMonsterTableFragment extends Fragment implements
         }
     }
 
-
+/*
     private void setUpItemTouchHelper() {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -192,12 +192,13 @@ public class MyMonsterTableFragment extends Fragment implements
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(myMonsterRecyclerView);
     }
-
+*/
 
     /**
      * We're gonna setup another ItemDecorator that will draw the red background in the empty space while the items are animating to thier new positions
      * after an item is removed.
      */
+    /*
     private void setUpAnimationDecoratorHelper() {
         myMonsterRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 
@@ -277,6 +278,7 @@ public class MyMonsterTableFragment extends Fragment implements
 
         });
     }
+    */
 
 
     public int getSessionId() {

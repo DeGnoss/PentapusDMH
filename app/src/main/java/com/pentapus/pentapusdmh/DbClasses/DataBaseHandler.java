@@ -133,7 +133,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             DataBaseHandler.KEY_WISDOM,
             DataBaseHandler.KEY_CHARISMA,
             DataBaseHandler.KEY_ICON,
-            DataBaseHandler.KEY_TYPE
+            DataBaseHandler.KEY_TYPE,
+            DataBaseHandler.KEY_BELONGSTO
     };
 
     public static final String[] PROJECTION_ENCOUNTER = new String[]{

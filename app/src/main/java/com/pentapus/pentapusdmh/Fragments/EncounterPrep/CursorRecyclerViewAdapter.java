@@ -120,12 +120,19 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         viewHolder.vName.setText(simpleItemCard.getName());
         viewHolder.vInfo.setText(simpleItemCard.getInfo());
         viewHolder.type = simpleItemCard.getType();
-        if (viewHolder.type == 0) {
+        if (viewHolder.type == DataBaseHandler.TYPE_MONSTER) {
             viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
-        } else if (viewHolder.type == 1) {
+            viewHolder.indicDisabled.setVisibility(View.GONE);
+        } else if (viewHolder.type == DataBaseHandler.TYPE_NPC) {
             viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
-        } else if (viewHolder.type == 2) {
+            viewHolder.indicDisabled.setVisibility(View.GONE);
+        } else if (viewHolder.type == DataBaseHandler.TYPE_PC) {
             viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#3F51B5"));
+            if(simpleItemCard.disabled == 1){
+                viewHolder.indicDisabled.setVisibility(View.VISIBLE);
+            }else{
+                viewHolder.indicDisabled.setVisibility(View.GONE);
+            }
         }
         viewHolder.ivIcon.setImageURI(simpleItemCard.getIconUri());
         viewHolder.itemView.setActivated(selectedType == simpleItemCard.getType() && selectedPos == position);
@@ -346,10 +353,10 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         protected View vIndicatorLine;
         protected ImageView ivIcon;
         public int type;
-        private RelativeLayout clicker;
+        private RelativeLayout clicker, indicDisabled;
         private AdapterCallback mAdapterCallback;
         private Button undoButton;
-        private TextView vInfoDeleted;
+        private TextView vInfoDeleted, vInfoDisabled;
         private String identifier;
 
 
@@ -367,6 +374,8 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_enc_prep);
             undoButton = (Button) v.findViewById(R.id.undo_enc_prep);
             vInfoDeleted = (TextView) v.findViewById(R.id.deleted_enc_prep);
+            vInfoDisabled = (TextView) v.findViewById(R.id.disabled_enc_prep);
+            indicDisabled = (RelativeLayout) v.findViewById(R.id.indic_disabled);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 

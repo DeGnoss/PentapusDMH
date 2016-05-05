@@ -44,6 +44,7 @@ import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
@@ -192,7 +193,8 @@ public class EncounterFragment extends Fragment implements
         npcButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onAddNpc(v);
+                showNPCViewPager();
+                //onAddNpc(v);
                 dialog.dismiss();
             }
         });
@@ -202,7 +204,7 @@ public class EncounterFragment extends Fragment implements
         addMonsterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showViewPager();
+                showMonsterViewPager();
                 //onAddMonster(v);
                 dialog.dismiss();
             }
@@ -418,7 +420,7 @@ public class EncounterFragment extends Fragment implements
         });
     }
 
-    public void showViewPager() {
+    public void showMonsterViewPager() {
         Bundle bundle = new Bundle();
         bundle.putInt(ENCOUNTER_ID, encounterId);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -432,6 +434,22 @@ public class EncounterFragment extends Fragment implements
         // for the fragment, which is always the root view for the activity
         transaction.replace(android.R.id.content, newFragment, "F_MONSTER_PAGER")
                 .addToBackStack("F_MONSTER_PAGER").commit();
+    }
+
+    public void showNPCViewPager() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(ENCOUNTER_ID, encounterId);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        NPCViewPagerDialogFragment newFragment = new NPCViewPagerDialogFragment();
+        //newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
+        newFragment.setArguments(bundle);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        transaction.replace(android.R.id.content, newFragment, "F_NPC_PAGER")
+                .addToBackStack("F_NPC_PAGER").commit();
     }
 
     @Override
@@ -523,24 +541,32 @@ public class EncounterFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection = {
+        String[] projectionNPC = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO,
                 DataBaseHandler.KEY_TYPE,
                 DataBaseHandler.KEY_ICON
         };
+        String[] projectionPC = {
+                DataBaseHandler.KEY_ROWID,
+                DataBaseHandler.KEY_NAME,
+                DataBaseHandler.KEY_INFO,
+                DataBaseHandler.KEY_TYPE,
+                DataBaseHandler.KEY_ICON,
+                DataBaseHandler.KEY_DISABLED
+        };
         switch (id) {
             case 0:
                 String[] selectionArgs = new String[]{String.valueOf(encounterId)};
                 String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
-                        DbContentProvider.CONTENT_URI_ENCOUNTERPREP, projection, selection, selectionArgs, null);
+                        DbContentProvider.CONTENT_URI_ENCOUNTERPREP, projectionNPC, selection, selectionArgs, null);
             case 1:
                 selectionArgs = new String[]{String.valueOf(campaignId)};
                 selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
                 return new CursorLoader(this.getContext(),
-                        DbContentProvider.CONTENT_URI_PC, projection, selection, selectionArgs, null);
+                        DbContentProvider.CONTENT_URI_PC, projectionPC, selection, selectionArgs, null);
             default:
                 return null;
         }
@@ -611,7 +637,6 @@ public class EncounterFragment extends Fragment implements
                                     Cursor cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    //cursor.close();
                                     Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -636,7 +661,6 @@ public class EncounterFragment extends Fragment implements
                                     cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    //cursor.close();
                                     uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);
                                     getContext().getContentResolver().delete(uri, null, null);
                                     mergeAdapter.notifyItemRemoved(position);
@@ -668,7 +692,6 @@ public class EncounterFragment extends Fragment implements
                                     Cursor cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    //cursor.close();
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(MODE, true);
                                     bundle.putInt(MONSTER_ID, characterId);
@@ -679,7 +702,6 @@ public class EncounterFragment extends Fragment implements
                                     cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
                                     characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                                    //cursor.close();
                                     bundle = new Bundle();
                                     bundle.putBoolean(MODE, true);
                                     bundle.putInt(NPC_ID, characterId);

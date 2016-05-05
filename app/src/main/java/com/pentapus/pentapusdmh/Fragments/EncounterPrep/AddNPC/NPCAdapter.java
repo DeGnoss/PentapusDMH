@@ -1,4 +1,4 @@
-package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster;
+package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -31,29 +31,19 @@ import java.util.List;
 /**
  * Created by Koni on 14/4/16.
  */
-public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManualAdapter.MyMonsterViewHolder> implements AdapterNavigationCallback {
-
-    public static int selectedPos = -1;
-
-
+public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHolder> implements AdapterNavigationCallback {
     private AdapterNavigationCallback mAdapterCallback;
-    List<String> itemsPendingRemoval;
-    private Handler handler = new Handler(); // handler for running delayed runnables
-    HashMap<String, Runnable> pendingRunnables = new HashMap<>();
-    private static final int PENDING_REMOVAL_TIMEOUT = 3000;
     Context mContext;
-
 
     /**
      * Constructor.
      *
      * @param context The Context the Adapter is displayed in.
      */
-    public MonsterManualAdapter(Context context, AdapterNavigationCallback callback) {
+    public NPCAdapter(Context context, AdapterNavigationCallback callback) {
         super(context);
         this.mContext = context;
         this.mAdapterCallback = callback;
-        itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
         setupCursorAdapter(null, 0, R.layout.card_monster, false);
     }
@@ -62,8 +52,8 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
      * Returns the ViewHolder to use for this adapter.
      */
     @Override
-    public MyMonsterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyMonsterViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
+    public MyNPCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new MyNPCViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
     }
 
 
@@ -78,7 +68,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
      * that item.
      */
     @Override
-    public void onBindViewHolder(MyMonsterViewHolder holder, int position) {
+    public void onBindViewHolder(MyNPCViewHolder holder, int position) {
         // Move cursor to this position
         mCursorAdapter.getCursor().moveToPosition(position);
 
@@ -90,8 +80,30 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
     }
 
 
-    public static void setSelectedPos(int selectedPos) {
-        MonsterManualAdapter.selectedPos = selectedPos;
+    public void statusClicked(int position) {
+        int oldPos = NPCViewPagerDialogFragment.getSelectedPos();
+        if (NPCViewPagerDialogFragment.getSelectedType() == 0 && position == NPCViewPagerDialogFragment.getSelectedPos()) {
+            NPCViewPagerDialogFragment.setSelectedType(-1);
+            NPCViewPagerDialogFragment.setSelectedPos(-1);
+            NPCViewPagerDialogFragment.setNPCUri(null);
+            notifyItemChanged(position);
+        } else if (NPCViewPagerDialogFragment.getSelectedType() == 0) {
+            Cursor cursor = getCursor();
+            cursor.moveToPosition(position);
+            int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            NPCViewPagerDialogFragment.setSelectedPos(position);
+            NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
+            notifyItemChanged(oldPos);
+            notifyItemChanged(position);
+        } else {
+            Cursor cursor = getCursor();
+            cursor.moveToPosition(position);
+            int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            NPCViewPagerDialogFragment.setSelectedType(0);
+            NPCViewPagerDialogFragment.setSelectedPos(position);
+            NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
+            notifyItemChanged(position);
+        }
     }
 
     @Override
@@ -113,7 +125,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
     }
 
 
-    public class MyMonsterViewHolder extends RecyclerViewCursorViewHolder {
+    public class MyNPCViewHolder extends RecyclerViewCursorViewHolder {
         public View view;
         protected TextView vName;
         protected TextView vInfo;
@@ -130,7 +142,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
         private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_monster);
 
 
-        public MyMonsterViewHolder(View v, AdapterNavigationCallback adapterCallback) {
+        public MyNPCViewHolder(View v, AdapterNavigationCallback adapterCallback) {
             super(v);
             this.mAdapterCallback = adapterCallback;
             vIndicatorLine = (View) v.findViewById(R.id.indicator_line_monster);
@@ -145,7 +157,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    MonsterManualAdapter.selectedPos = getAdapterPosition();
+                    NPCViewPagerDialogFragment.setSelectedPos(getAdapterPosition());
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
@@ -163,50 +175,13 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
         public void bindCursor(Cursor cursor) {
 
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
-            vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
+            vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            itemView.setActivated(getAdapterPosition() == MonsterManualAdapter.selectedPos);
+            itemView.setActivated(NPCViewPagerDialogFragment.getSelectedType() == 0 && getAdapterPosition() == NPCViewPagerDialogFragment.getSelectedPos());
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-
-            /*
-            if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
-                // we need to show the "undo" state of the row
-                itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                vName.setVisibility(View.GONE);
-                vInfo.setVisibility(View.GONE);
-                vInfoDeleted.setVisibility(View.VISIBLE);
-                undoButton.setVisibility(View.VISIBLE);
-                undoButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // user wants to undo the removal, let's cancel the pending task
-                        Runnable pendingRemovalRunnable = pendingRunnables.get(String.valueOf(identifier));
-                        pendingRunnables.remove(String.valueOf(identifier));
-                        if (pendingRemovalRunnable != null)
-                            handler.removeCallbacks(pendingRemovalRunnable);
-                        itemsPendingRemoval.remove(String.valueOf(identifier));
-                        // this will rebind the row in "normal" state
-                        notifyItemChanged(getAdapterPosition());
-                    }
-                });
-            } else {
-                // we need to show the "normal" state
-                itemView.setBackgroundColor(Color.WHITE);
-                vName.setVisibility(View.VISIBLE);
-                vInfo.setVisibility(View.VISIBLE);
-                // viewHolder.titleTextView.setText(item);
-                vInfoDeleted.setVisibility(View.GONE);
-                undoButton.setVisibility(View.GONE);
-                undoButton.setOnClickListener(null);
-            } */
         }
-
-
     }
-
-
 }
