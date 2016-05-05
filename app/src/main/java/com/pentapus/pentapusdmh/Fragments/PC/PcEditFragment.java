@@ -7,6 +7,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,9 +57,9 @@ public class PcEditFragment extends Fragment {
 
     private Uri myFile;
 
-    Button addchar_btn, bAddImage, bChooseImage;
+    Button addchar_btn;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf;
-    ImageView ivAvatar;
+    ImageButton bChooseImage;
 
 
     public PcEditFragment() {
@@ -102,14 +104,13 @@ public class PcEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_pc_edit, container, false);
+        charEditView.setBackgroundColor(Color.WHITE);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
         init_tf = (EditText) charEditView.findViewById(R.id.etInit);
         maxHp_tf = (EditText) charEditView.findViewById(R.id.etHpMax);
         ac_tf = (EditText) charEditView.findViewById(R.id.etAc);
-        bAddImage = (Button) charEditView.findViewById(R.id.bAddImage);
-        ivAvatar = (ImageView) charEditView.findViewById(R.id.ivAvatar);
-        bChooseImage = (Button) charEditView.findViewById(R.id.bChooseImage);
+        bChooseImage = (ImageButton) charEditView.findViewById(R.id.bChooseImage);
 
         if (modeUpdate) {
             loadCharacterInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, pcId);
@@ -119,19 +120,6 @@ public class PcEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 doneButton(modeUpdate);
-            }
-        });
-
-        bAddImage.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-               /* Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                // Start the Intent
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMG); */
-                //lide.clear(ivAvatar);
-                //Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_PC"));
             }
         });
 
@@ -180,7 +168,7 @@ public class PcEditFragment extends Fragment {
             init.setText(myInitiative, TextView.BufferType.EDITABLE);
             maxHp.setText(myMaxHp, TextView.BufferType.EDITABLE);
             ac.setText(myAc, TextView.BufferType.EDITABLE);
-            ivAvatar.setImageURI(myFile);
+            bChooseImage.setImageURI(myFile);
         }
     }
 
@@ -198,13 +186,15 @@ public class PcEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
         values.put(DataBaseHandler.KEY_AC, myAc);
         values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_PC);
+        if(myFile == null){
+            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
+        }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_DISABLED, 0);
         values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
 
         // insert a record
         if (!mode) {
-            getContext();
             getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_PC, values);
         }
         // update a record
@@ -212,8 +202,6 @@ public class PcEditFragment extends Fragment {
             Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + pcId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
-        // Bundle bundle = new Bundle();
-        //bundle.putString("type", "pc");
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
@@ -240,11 +228,11 @@ public class PcEditFragment extends Fragment {
                 if(value != null) {
                     Uri uri = Uri.parse(value);
                     myFile = uri;
-                    ivAvatar.post(new Runnable() {
+                    bChooseImage.post(new Runnable() {
                         @Override
                         public void run()
                         {
-                            ivAvatar.setImageURI(myFile);
+                            bChooseImage.setImageURI(myFile);
                         }
                     });
                 }
@@ -294,8 +282,8 @@ public class PcEditFragment extends Fragment {
                             //File directory = new getContext().getFileStreamPath("app_iconDir");
                             Uri uri = Uri.parse(mypath.getPath());
                             myFile = uri;
-                            ivAvatar.setImageURI(uri);
-                            ivAvatar.invalidate();
+                            bChooseImage.setImageURI(uri);
+                            bChooseImage.invalidate();
                         }
                     });
 

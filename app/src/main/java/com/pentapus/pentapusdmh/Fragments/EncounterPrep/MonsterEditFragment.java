@@ -140,15 +140,7 @@ public class MonsterEditFragment extends Fragment {
 
 
 
-        /*bChooseImage.setOnLongClickListener(new View.OnLongClickListener(){
 
-            @Override
-            public boolean onLongClick(View v) {
-                Glide.clear(bChooseImage);
-                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_MONSTER"));
-                return true;
-            }
-        });*/
 
 
 

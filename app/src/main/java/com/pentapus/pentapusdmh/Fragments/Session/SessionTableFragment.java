@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -330,6 +332,8 @@ public class SessionTableFragment extends Fragment implements
         Fragment fragment;
         fragment = new EncounterTableFragment();
         fragment.setArguments(bundle);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FrameTop, fragment, "FT_ENCOUNTER")
                 .addToBackStack("FT_ENCOUNTER")

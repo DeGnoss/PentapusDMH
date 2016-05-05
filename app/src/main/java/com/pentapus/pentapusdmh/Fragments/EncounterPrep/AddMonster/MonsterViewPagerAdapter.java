@@ -17,7 +17,7 @@ import java.io.File;
  */
 public class MonsterViewPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[]{"My Monster", "Monster Manual"};
+    private String tabTitles[] = new String[]{"My Monsters", "Monster Manual"};
     private Context context;
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private int id;

@@ -194,7 +194,6 @@ public class EncounterFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 showNPCViewPager();
-                //onAddNpc(v);
                 dialog.dismiss();
             }
         });
@@ -205,22 +204,12 @@ public class EncounterFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 showMonsterViewPager();
-                //onAddMonster(v);
                 dialog.dismiss();
             }
         });
 
         // it show the dialog box
         dialog.show();
-    }
-
-
-   // @OnClick(R.id.loc_item_detail_floatmenu_npc)
-    public void onAddNpc(View v) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(MODE, false);
-        bundle.putInt(ENCOUNTER_ID, encounterId);
-        addNPC(bundle);
     }
 
 
@@ -460,16 +449,6 @@ public class EncounterFragment extends Fragment implements
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
 
         }
-    }
-
-    private void addNPC(Bundle bundle) {
-        Fragment fragment;
-        fragment = new NPCEditFragment();
-        fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_NPC")
-                .addToBackStack("FE_NPC")
-                .commit();
     }
 
     private void editNpc(Bundle bundle) {

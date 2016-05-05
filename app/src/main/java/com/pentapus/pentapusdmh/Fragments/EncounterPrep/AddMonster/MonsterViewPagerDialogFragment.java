@@ -46,8 +46,8 @@ import java.util.UUID;
  */
 public class MonsterViewPagerDialogFragment extends Fragment {
 
-    private static final String ARG_PAGE = "ARG_PAGE";
     private static final String ENCOUNTER_ID = "encounterId";
+    private static final String NAV_MODE = "navMode";
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -55,6 +55,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     private FloatingActionButton fabImageVP;
     private int id;
     private int encounterId;
+    private boolean navMode;
     private static final String MODE = "modeUpdate";
     private Button bDone;
 
@@ -68,9 +69,10 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         // Empty constructor required for DialogFragment
     }
 
-    public static MonsterViewPagerDialogFragment newInstance(int encounterId) {
+    public static MonsterViewPagerDialogFragment newInstance(int encounterId, boolean navMode) {
         MonsterViewPagerDialogFragment fragment = new MonsterViewPagerDialogFragment();
         Bundle args = new Bundle();
+        args.putBoolean(NAV_MODE, navMode);
         args.putInt(ENCOUNTER_ID, encounterId);
         fragment.setArguments(args);
         return fragment;
@@ -80,7 +82,8 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            encounterId = getArguments().getInt("encounterId");
+            encounterId = getArguments().getInt(ENCOUNTER_ID);
+            navMode = getArguments().getBoolean(NAV_MODE);
         }
     }
 
@@ -96,13 +99,18 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         fabImageVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
 
         bDone = (Button) view.findViewById(R.id.bDone);
-        bDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pasteMonster(monsterUri);
-                getFragmentManager().popBackStack();
-            }
-        });
+        if(navMode){
+            bDone.setVisibility(View.GONE);
+        }else{
+            bDone.setVisibility(View.VISIBLE);
+            bDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pasteMonster(monsterUri);
+                    getFragmentManager().popBackStack();
+                }
+            });
+        }
 
         fabImageVP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +152,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         return view;
     }
 
-
+    //only when not in navmode
     private void pasteMonster(Uri pasteUri) {
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContext().getContentResolver()) {
 
