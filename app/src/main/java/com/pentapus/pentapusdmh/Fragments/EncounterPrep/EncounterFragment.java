@@ -27,6 +27,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -46,6 +47,7 @@ import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -120,16 +122,9 @@ public class EncounterFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MainActivity)getActivity()).setFabVisibility(true);
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
-        //displayListView(tableView);
-        FloatingActionButton fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showFloatingMenu();
-            }
-        });
+        setExitTransition(new Slide(Gravity.LEFT));
 
         //getLoaderManager().initLoader(0, null, this);
         //getLoaderManager().initLoader(1, null, this);
@@ -153,6 +148,10 @@ public class EncounterFragment extends Fragment implements
 
         return tableView;
 
+    }
+
+    public void onFabClick(){
+        showFloatingMenu();
     }
 
 

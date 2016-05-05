@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
 public class SessionEditFragment extends Fragment {
@@ -55,6 +56,7 @@ public class SessionEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MainActivity)getActivity()).setFabVisibility(false);
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         if (this.getArguments() != null) {
             modeUpdate = getArguments().getBoolean(MODE);

@@ -27,6 +27,11 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.ChangeBounds;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,9 +42,12 @@ import android.view.ViewGroup;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.FabTransition;
+import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -84,9 +92,12 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MainActivity)getActivity()).setFabVisibility(true);
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext()) + " Sessions");
         final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
+        Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
+        getActivity().getWindow().setExitTransition(slide);
         if (campaignId <= 0) {
             new AlertDialog.Builder(getContext()).setTitle("No Campaign Found")
                     .setCancelable(false)
@@ -115,21 +126,19 @@ public class SessionTableFragment extends Fragment implements
             mSessionRecyclerView.setAdapter(mSessionAdapter);
 
             // Inflate the layout for this fragment
-            fab = (FloatingActionButton) tableView.findViewById(R.id.fabSession);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean(MODE, false);
-                    addSession(bundle);
-                }
-            });
+
 
             setUpItemTouchHelper();
             setUpAnimationDecoratorHelper();
 
         }
         return tableView;
+    }
+
+    public void onFabClick(){
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(MODE, false);
+        addSession(bundle);
     }
 
     @Override
@@ -332,8 +341,8 @@ public class SessionTableFragment extends Fragment implements
         Fragment fragment;
         fragment = new EncounterTableFragment();
         fragment.setArguments(bundle);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
+        fragment.setEnterTransition(new Slide(Gravity.RIGHT));
+        setExitTransition(new Slide(Gravity.LEFT));
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FrameTop, fragment, "FT_ENCOUNTER")
                 .addToBackStack("FT_ENCOUNTER")
@@ -508,5 +517,28 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();
+    }
+
+    public FloatingActionButton getFab(){
+        return fab;
+    }
+
+    public void loadNPCTable(Bundle bundle){
+        Fragment fragment = null;
+        Class fragmentClass = PcTableFragment.class;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+            fragment.setArguments(bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        fragment.setEnterTransition(new Slide(Gravity.TOP));
+        Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+        fragmentManager.beginTransaction()
+                .add(R.id.FrameTop, fragment, "FT_PC")
+                .addToBackStack("NAV_F")
+                .commit();
     }
 }

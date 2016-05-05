@@ -1,6 +1,5 @@
 package com.pentapus.pentapusdmh;
 
-import android.app.FragmentTransaction;
 import android.content.AsyncQueryHandler;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -14,9 +13,11 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,7 +25,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +43,7 @@ import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPa
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
@@ -54,6 +60,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private boolean pressedTwice = false;
     private ActionBarDrawerToggle toggle;
+    private FloatingActionButton fab;
 
 
     @Override
@@ -61,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         copyAssets();
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -72,6 +80,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick(v);
+            }
+        });
 
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -561,6 +577,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
         FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
         String str = backEntry.getName();
         boolean topBackEntryIsNav = false;
         if (str.equals("NAV_F")) {
@@ -572,18 +589,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = PcTableFragment.class;
                 bundle.putInt("campaignId", SharedPrefsHelper.loadCampaignId(this));
                 bundle.putString("campaignName", SharedPrefsHelper.loadCampaignName(this));
-                try {
+               /* try {
                     fragment = (Fragment) fragmentClass.newInstance();
                     fragment.setArguments(bundle);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                } */
                 if (topBackEntryIsNav) {
                     fragmentManager.popBackStack();
                 }
-                fragmentManager.beginTransaction().replace(R.id.FrameTop, fragment, "FT_PC")
+                Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+                ((SessionTableFragment)f).loadNPCTable(bundle);
+                /*
+                fragment.setSharedElementEnterTransition(new FabTransition());
+                fragment.setEnterTransition(new Slide(Gravity.TOP));
+                fragment.setSharedElementReturnTransition(new FabTransition());
+                Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+                fragmentManager.beginTransaction()
+                        .addSharedElement(((SessionTableFragment)f).getFab(), "fabTransition")
+                        .add(R.id.FrameTop, fragment, "FT_PC")
                         .addToBackStack("NAV_F")
-                        .commit();
+                        .commit();*/
                 break;
 
             case R.id.nav_monsters:
@@ -653,5 +679,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         toggle.setDrawerIndicatorEnabled(false);
+    }
+
+    public void onFabClick(View view) {
+        if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof SessionTableFragment) {
+            ((SessionTableFragment)getSupportFragmentManager().findFragmentByTag("FT_SESSION")).onFabClick();
+        } else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterTableFragment) {
+            ((EncounterTableFragment)getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
+        } else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterFragment) {
+            ((EncounterFragment)getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
+        }
+    }
+
+    public void setFabVisibility(boolean visibility){
+        if(visibility){
+            fab.setVisibility(View.VISIBLE);
+        }else{
+            fab.setVisibility(View.GONE);
+        }
     }
 }

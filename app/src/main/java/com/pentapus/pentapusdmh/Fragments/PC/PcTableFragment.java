@@ -23,6 +23,8 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -98,6 +100,9 @@ public class PcTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_pc_table, container, false);
+        tableView.setBackgroundColor(Color.WHITE);
+        setExitTransition(new Slide(Gravity.TOP));
+
         // insert a record
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);

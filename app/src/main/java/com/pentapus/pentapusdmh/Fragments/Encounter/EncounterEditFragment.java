@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
 public class EncounterEditFragment extends Fragment {
@@ -71,6 +72,7 @@ public class EncounterEditFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MainActivity)getActivity()).setFabVisibility(false);
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_encounter_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
