@@ -140,15 +140,7 @@ public class MonsterEditFragment extends Fragment {
 
 
 
-        bChooseImage.setOnLongClickListener(new View.OnLongClickListener(){
 
-            @Override
-            public boolean onLongClick(View v) {
-                Glide.clear(bChooseImage);
-                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_MONSTER"));
-                return true;
-            }
-        });
 
 
 
@@ -235,7 +227,6 @@ public class MonsterEditFragment extends Fragment {
             myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
         }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
-        values.put(DataBaseHandler.KEY_MM, 0);
         values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_MONSTER);
 
         // insert a record

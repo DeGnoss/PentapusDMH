@@ -4,15 +4,12 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.Session.SessionTableFragment">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listViewPc"
+        android:id="@+id/recyclerViewPc"
         android:layout_gravity="center|top"
-        android:layout_margin="10dp"
-        android:scrollIndicators="top|bottom"
-        android:requiresFadingEdge="vertical"
-        android:paddingBottom="65dp"
+        android:paddingBottom="85dp"
         android:clipToPadding="false" />
 
     <android.support.design.widget.FloatingActionButton
@@ -23,6 +20,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_black" />
+        android:src="@drawable/ic_add_black"
+        android:transitionName="fabTransition"/>
 
 </RelativeLayout>

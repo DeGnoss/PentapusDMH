@@ -15,6 +15,7 @@ public class SimpleItemCard {
     public int type;
     public boolean selected;
     public Uri iconUri;
+    public int disabled;
     protected static final String NAME_PREFIX = "Name_";
     protected static final String INITIATIVE_PREFIX = "Initiative_";
     String identifier;
@@ -55,7 +56,10 @@ public class SimpleItemCard {
         simpleItemCard.name = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_NAME));
         simpleItemCard.info = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_INFO));
         simpleItemCard.type = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE));
-        if(!cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)).isEmpty()){
+        if (cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE)) == DataBaseHandler.TYPE_PC) {
+            simpleItemCard.disabled = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_DISABLED));
+        }
+        if (!cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)).isEmpty()) {
             simpleItemCard.iconUri = Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
         }
         return simpleItemCard;

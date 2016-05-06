@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +26,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.R;
+import com.pentapus.pentapusdmh.Utils;
 import com.pentapus.pentapusdmh.ViewpagerClasses.AdjustFragmentPagerAdapter;
 import com.pentapus.pentapusdmh.ViewpagerClasses.HpOverviewFragment;
 import com.pentapus.pentapusdmh.ViewpagerClasses.StatusFragment;
@@ -86,6 +88,8 @@ public class ImageViewPagerDialogFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_viewpager_tab_layout, parent, false);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
@@ -167,7 +171,7 @@ public class ImageViewPagerDialogFragment extends Fragment{
         pagerAdapter = new ImageFragmentPagerAdapter(getChildFragmentManager(), getContext(), id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
-        viewPager.setOffscreenPageLimit(0);
+        viewPager.setOffscreenPageLimit(1);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
 

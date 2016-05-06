@@ -86,7 +86,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         mCursorAdapter.bindView(null, mContext, mCursorAdapter.getCursor());
     }
 
-
+/*
     public void pendingRemoval(final int position) {
         Cursor mCursor = mCursorAdapter.getCursor();
         mCursor.moveToPosition(position);
@@ -147,6 +147,8 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             }
         }
     }
+
+    */
 
     public void statusClicked(int position) {
         int oldPos = MonsterViewPagerDialogFragment.getSelectedPos();
@@ -219,8 +221,6 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon_monster);
             vInfo = (TextView) v.findViewById(R.id.info_monster);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_monster);
-            undoButton = (Button) v.findViewById(R.id.undo_monster);
-            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_monster);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -247,12 +247,12 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
-            clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             itemView.setActivated(MonsterViewPagerDialogFragment.getSelectedType() == 0 && getAdapterPosition() == MonsterViewPagerDialogFragment.getSelectedPos());
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
 
+            /*
             if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
                 // we need to show the "undo" state of the row
                 itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
@@ -282,7 +282,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
                 vInfoDeleted.setVisibility(View.GONE);
                 undoButton.setVisibility(View.GONE);
                 undoButton.setOnClickListener(null);
-            }
+            }*/
         }
 
 

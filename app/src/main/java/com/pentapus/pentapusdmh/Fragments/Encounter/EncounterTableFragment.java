@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -23,7 +25,10 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,8 +39,10 @@ import android.view.ViewGroup;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.FabTransition;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -98,20 +105,12 @@ public class EncounterTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
+        ((MainActivity)getActivity()).setFabVisibility(true);
+        Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
+        getActivity().getWindow().setEnterTransition(slide);
         // insert a record
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
-        fab = (FloatingActionButton) tableView.findViewById(R.id.fabEncounter);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(MODE, false);
-                bundle.putInt(SESSION_ID, sessionId);
-                addEncounter(bundle);
-            }
-        });
 
 
         mEncounterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
@@ -129,6 +128,13 @@ public class EncounterTableFragment extends Fragment implements
 
         // Inflate the layout for this fragment
         return tableView;
+    }
+
+    public void onFabClick(){
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(MODE, false);
+        bundle.putInt(SESSION_ID, sessionId);
+        addEncounter(bundle);
     }
 
 
@@ -339,6 +345,8 @@ public class EncounterTableFragment extends Fragment implements
         Fragment fragment;
         fragment = new EncounterFragment();
         fragment.setArguments(bundle);
+        fragment.setEnterTransition(new Slide(Gravity.RIGHT));
+        setExitTransition(new Slide(Gravity.LEFT));
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FrameTop, fragment, "F_ENCOUNTER")
                 .addToBackStack("F_ENCOUNTER")

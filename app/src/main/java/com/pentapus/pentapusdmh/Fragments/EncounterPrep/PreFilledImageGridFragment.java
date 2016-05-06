@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
 import java.io.File;
@@ -63,6 +64,7 @@ public class PreFilledImageGridFragment extends Fragment implements AdapterNavig
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MainActivity)getActivity()).setFabVisibility(false);
         View view = inflater.inflate(R.layout.my_icons_grid, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.gridViewMyIcons);

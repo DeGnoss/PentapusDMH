@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ import java.util.List;
 /**
  * Created by Koni on 14/4/16.
  */
-public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.EncounterViewHolder> implements AdapterNavigationCallback {
+public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.PCViewHolder> implements AdapterNavigationCallback {
 
     public static int selectedPos = -1;
 
@@ -50,15 +51,15 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.EncounterView
         this.mAdapterCallback = callback;
         itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
-        setupCursorAdapter(null, 0, R.layout.card_encounter, false);
+        setupCursorAdapter(null, 0, R.layout.card_pc, false);
     }
 
     /**
      * Returns the ViewHolder to use for this adapter.
      */
     @Override
-    public EncounterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new EncounterViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
+    public PCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new PCViewHolder(mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent), mAdapterCallback);
     }
 
 
@@ -73,7 +74,7 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.EncounterView
      * that item.
      */
     @Override
-    public void onBindViewHolder(EncounterViewHolder holder, int position) {
+    public void onBindViewHolder(PCViewHolder holder, int position) {
         // Move cursor to this position
         mCursorAdapter.getCursor().moveToPosition(position);
 
@@ -120,8 +121,8 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.EncounterView
         if (itemsPendingRemoval.contains(identifier)){
             itemsPendingRemoval.remove(identifier);
         }
-        int encounterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
+        int pcId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + pcId);
         notifyItemRemoved(position);
         mContext.getContentResolver().delete(uri, null, null);
     }
@@ -149,28 +150,32 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.EncounterView
     }
 
 
-    public class EncounterViewHolder extends RecyclerViewCursorViewHolder {
+    public class PCViewHolder extends RecyclerViewCursorViewHolder {
         public View view;
         protected TextView vName, vInfo, vInfoDeleted;
         protected CardView cardViewTracker;
+        protected View vIndicatorLine;
+        protected ImageView ivIcon;
         private RelativeLayout clicker;
         private AdapterNavigationCallback mAdapterCallback;
         private Button undoButton;
         private String identifier;
 
-        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_encounter);
+        private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_pc);
 
 
-        public EncounterViewHolder(View v, AdapterNavigationCallback adapterCallback) {
+        public PCViewHolder(View v, AdapterNavigationCallback adapterCallback) {
             super(v);
 
             this.mAdapterCallback = adapterCallback;
-            vName = (TextView) v.findViewById(R.id.name_encounter);
-            cardViewTracker = (CardView) v.findViewById(R.id.card_view_encounter);
-            vInfo = (TextView) v.findViewById(R.id.info_encounter);
-            clicker = (RelativeLayout) v.findViewById(R.id.clicker_encounter);
-            undoButton = (Button) v.findViewById(R.id.undo_encounter);
-            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_encounter);
+            vIndicatorLine = (View) v.findViewById(R.id.indicator_line_pc);
+            vName = (TextView) v.findViewById(R.id.name_pc);
+            cardViewTracker = (CardView) v.findViewById(R.id.card_view_pc);
+            ivIcon = (ImageView) v.findViewById(R.id.ivIcon_pc);
+            vInfo = (TextView) v.findViewById(R.id.info_pc);
+            clicker = (RelativeLayout) v.findViewById(R.id.clicker_pc);
+            undoButton = (Button) v.findViewById(R.id.undo_pc);
+            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_pc);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -197,13 +202,17 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.EncounterView
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            vIndicatorLine.setBackgroundColor(Color.parseColor("#3F51B5"));
+            ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             itemView.setActivated(getAdapterPosition() == selectedPos);
 
             if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
                 // we need to show the "undo" state of the row
                 itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                clicker.setVisibility(View.GONE);
+                /*vIndicatorLine.setVisibility(View.GONE);
                 vName.setVisibility(View.GONE);
-                vInfo.setVisibility(View.GONE);
+                vInfo.setVisibility(View.GONE);*/
                 vInfoDeleted.setVisibility(View.VISIBLE);
                 undoButton.setVisibility(View.VISIBLE);
                 undoButton.setOnClickListener(new View.OnClickListener() {
@@ -222,8 +231,9 @@ public class PcAdapter extends RecyclerViewCursorAdapter<PcAdapter.EncounterView
             } else {
                 // we need to show the "normal" state
                 itemView.setBackgroundColor(Color.WHITE);
-                vName.setVisibility(View.VISIBLE);
-                vInfo.setVisibility(View.VISIBLE);
+                clicker.setVisibility(View.VISIBLE);
+                //vName.setVisibility(View.VISIBLE);
+                //vInfo.setVisibility(View.VISIBLE);
                 // viewHolder.titleTextView.setText(item);
                 vInfoDeleted.setVisibility(View.GONE);
                 undoButton.setVisibility(View.GONE);

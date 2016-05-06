@@ -13,20 +13,37 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
@@ -40,21 +57,46 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private boolean pressedTwice = false;
+    private ActionBarDrawerToggle toggle;
+    private FloatingActionButton fab;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         copyAssets();
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.opendrawer, R.string.closedrawer);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick(v);
+            }
+        });
+
+
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
+
         SessionTableFragment ftable = new SessionTableFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FrameTop, ftable, "FT_SESSION")
+                .addToBackStack("FT_SESSION")
                 .commit();
     }
 
@@ -414,32 +456,47 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        final FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-
-            if ("F_TRACKER".equals(getCurrentFragmentTag())) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Exit Tracker")
-                        .setMessage("Are you sure you want to exit the Tracker? The encounter will be reset.")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                fm.popBackStack();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setIcon(R.drawable.ic_warning_black_24dp)
-                        .show();
-            } else {
-                fm.popBackStack();
-                Log.i("MainActivity", "pop backstack");
-            }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         } else {
-            Log.i("MainActivity", "nothing on backstack, calling super");
-            super.onBackPressed();
+            final FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                if ("F_TRACKER".equals(getCurrentFragmentTag())) {
+                    pressedTwice=false;
+                    new AlertDialog.Builder(this)
+                            .setTitle("Exit Tracker")
+                            .setMessage("Are you sure you want to exit the Tracker? The encounter will be reset.")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    enableNavigationDrawer();
+                                    fm.popBackStack();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(R.drawable.ic_warning_black_24dp)
+                            .show();
+                }else if("FT_SESSION".equals(getCurrentFragmentTag())){
+                    if(pressedTwice){
+                        pressedTwice=false;
+                        fm.popBackStack();
+                        fm.popBackStack();
+                        super.onBackPressed();
+                    }else{
+                        pressedTwice=true;
+                    }
+                }
+                else {
+                    pressedTwice=false;
+                    fm.popBackStack();
+                }
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -483,10 +540,9 @@ public class MainActivity extends AppCompatActivity {
                 //File outFile = new File(getExternalFilesDir(null), filename);
                 out = new FileOutputStream(outFile);
                 copyFile(in, out);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 Log.e("tag", "Failed to copy asset file: " + filename, e);
-            }
-            finally {
+            } finally {
                 if (in != null) {
                     try {
                         in.close();
@@ -504,14 +560,142 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     private void copyFile(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
-        while((read = in.read(buffer)) != -1){
+        while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        Fragment fragment = null;
+        Class fragmentClass = null;
+        int id = item.getItemId();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Bundle bundle = new Bundle();
+        FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        String str = backEntry.getName();
+        boolean topBackEntryIsNav = false;
+        if (str.equals("NAV_F")) {
+            topBackEntryIsNav = true;
+        }
 
+        switch (id) {
+            case R.id.nav_party:
+                fragmentClass = PcTableFragment.class;
+                bundle.putInt("campaignId", SharedPrefsHelper.loadCampaignId(this));
+                bundle.putString("campaignName", SharedPrefsHelper.loadCampaignName(this));
+               /* try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    fragment.setArguments(bundle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } */
+                if (topBackEntryIsNav) {
+                    fragmentManager.popBackStack();
+                }
+                Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+                ((SessionTableFragment)f).loadNPCTable(bundle);
+                /*
+                fragment.setSharedElementEnterTransition(new FabTransition());
+                fragment.setEnterTransition(new Slide(Gravity.TOP));
+                fragment.setSharedElementReturnTransition(new FabTransition());
+                Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+                fragmentManager.beginTransaction()
+                        .addSharedElement(((SessionTableFragment)f).getFab(), "fabTransition")
+                        .add(R.id.FrameTop, fragment, "FT_PC")
+                        .addToBackStack("NAV_F")
+                        .commit();*/
+                break;
 
+            case R.id.nav_monsters:
+                fragmentClass = MonsterViewPagerDialogFragment.class;
+                bundle.putBoolean("navMode", true);
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    fragment.setArguments(bundle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (topBackEntryIsNav) {
+                    fragmentManager.popBackStack();
+                }
+                fragmentManager.beginTransaction().replace(android.R.id.content, fragment, "F_MONSTER_PAGER")
+                        .addToBackStack("NAV_F")
+                        .commit();
+                break;
+
+            case R.id.nav_npc:
+                fragmentClass = NPCViewPagerDialogFragment.class;
+                bundle.putBoolean("navMode", true);
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    fragment.setArguments(bundle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (topBackEntryIsNav) {
+                    fragmentManager.popBackStack();
+                }
+                fragmentManager.beginTransaction().replace(android.R.id.content, fragment, "FT_PC")
+                        .addToBackStack("NAV_F")
+                        .commit();
+                break;
+
+            case R.id.nav_campaign:
+                fragmentClass = CampaignTableFragment.class;
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    fragment.setArguments(bundle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (topBackEntryIsNav) {
+                    fragmentManager.popBackStack();
+                }
+                fragmentManager.beginTransaction().replace(R.id.FrameTop, fragment, "FT_CAMPAIGN")
+                        .addToBackStack("NAV_F")
+                        .commit();
+                break;
+            default:
+                break;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void enableNavigationDrawer(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        toggle.setDrawerIndicatorEnabled(true);
+    }
+
+    public void disableNavigationDrawer(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        toggle.setDrawerIndicatorEnabled(false);
+    }
+
+    public void onFabClick(View view) {
+        if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof SessionTableFragment) {
+            ((SessionTableFragment)getSupportFragmentManager().findFragmentByTag("FT_SESSION")).onFabClick();
+        } else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterTableFragment) {
+            ((EncounterTableFragment)getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
+        } else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterFragment) {
+            ((EncounterFragment)getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
+        }
+    }
+
+    public void setFabVisibility(boolean visibility){
+        if(visibility){
+            fab.setVisibility(View.VISIBLE);
+        }else{
+            fab.setVisibility(View.GONE);
+        }
+    }
 }

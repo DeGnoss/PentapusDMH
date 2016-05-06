@@ -92,4 +92,27 @@
         />
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorDialog"
+        android:id="@+id/indic_disabled">
+
+
+        <TextView
+            android:id="@+id/disabled_enc_prep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:text="Disabled"
+            android:textSize="30dp"
+            android:textColor="@color/bpWhite"
+            android:layout_marginStart="20dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

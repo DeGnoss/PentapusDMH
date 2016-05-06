@@ -11,7 +11,7 @@ public class TrackerInfoCard {
     public String initiativeMod;
     public int maxHp;
     public int ac;
-    public String type;
+    public int type;
     public int hp;
     public int strength = 0, dexterity = 0, constitution = 0, intelligence = 0, wisdom = 0, charisma = 0;
     public boolean[] statuses = new boolean[15];
@@ -22,7 +22,7 @@ public class TrackerInfoCard {
     protected static final String INITIATIVE_PREFIX = "Initiative_";
 
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 

@@ -39,6 +39,7 @@ import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterEditFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageGridAdapter;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.MonsterEditFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
@@ -95,8 +96,8 @@ public class MyMonsterTableFragment extends Fragment implements
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
 
 
-        setUpItemTouchHelper();
-        setUpAnimationDecoratorHelper();
+        //setUpItemTouchHelper();
+        //setUpAnimationDecoratorHelper();
 
         // Inflate the layout for this fragment
         return tableView;
@@ -113,7 +114,7 @@ public class MyMonsterTableFragment extends Fragment implements
         }
     }
 
-
+/*
     private void setUpItemTouchHelper() {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -191,12 +192,13 @@ public class MyMonsterTableFragment extends Fragment implements
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(myMonsterRecyclerView);
     }
-
+*/
 
     /**
      * We're gonna setup another ItemDecorator that will draw the red background in the empty space while the items are animating to thier new positions
      * after an item is removed.
      */
+    /*
     private void setUpAnimationDecoratorHelper() {
         myMonsterRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 
@@ -276,6 +278,7 @@ public class MyMonsterTableFragment extends Fragment implements
 
         });
     }
+    */
 
 
     public int getSessionId() {
@@ -344,6 +347,10 @@ public class MyMonsterTableFragment extends Fragment implements
 
     @Override
     public void onItemLongCLick(final int position) {
+        MonsterViewPagerDialogFragment.setSelectedType(0);
+        MonsterViewPagerDialogFragment.setHighlightedPos(position);
+        int oldPos = MonsterViewPagerDialogFragment.getSelectedPos();
+        MonsterViewPagerDialogFragment.setSelectedPos(position);
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -411,7 +418,8 @@ public class MyMonsterTableFragment extends Fragment implements
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                EncounterAdapter.setSelectedPos(-1);
+                MonsterViewPagerDialogFragment.setHighlightedPos(-1);
+                MonsterViewPagerDialogFragment.setSelectedPos(-1);
                 myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
                 mActionMode = null;
             }

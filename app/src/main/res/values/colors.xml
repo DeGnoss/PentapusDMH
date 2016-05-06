@@ -5,4 +5,5 @@
     <color name="colorAccent">#DCE775</color>
     <color name="colorAccentDark">#CDDC39</color>
     <color name="colorDialog">#cc000000</color>
+    <color name="colorDisabled">#77000000</color>
 </resources>

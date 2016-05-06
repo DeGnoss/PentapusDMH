@@ -139,8 +139,6 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon_monster);
             vInfo = (TextView) v.findViewById(R.id.info_monster);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_monster);
-            undoButton = (Button) v.findViewById(R.id.undo_monster);
-            vInfoDeleted = (TextView) v.findViewById(R.id.deleted_monster);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -173,6 +171,8 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             itemView.setActivated(getAdapterPosition() == MonsterManualAdapter.selectedPos);
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
 
+
+            /*
             if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
                 // we need to show the "undo" state of the row
                 itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
@@ -202,7 +202,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
                 vInfoDeleted.setVisibility(View.GONE);
                 undoButton.setVisibility(View.GONE);
                 undoButton.setOnClickListener(null);
-            }
+            } */
         }
 
 
