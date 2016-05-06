@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.FabTransition;
@@ -47,7 +48,7 @@ import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 
-public class EncounterTableFragment extends Fragment implements
+public class EncounterTableFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -104,11 +105,11 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        int test = getActivity().getSupportFragmentManager().getBackStackEntryCount();
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
         ((MainActivity)getActivity()).setFabVisibility(true);
         Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
         getActivity().getWindow().setEnterTransition(slide);
-        // insert a record
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
 
@@ -440,7 +441,8 @@ public class EncounterTableFragment extends Fragment implements
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
-                fab.setVisibility(View.GONE);
+//                fab.setVisibility(View.GONE);
+                ((MainActivity)getActivity()).setFabVisibility(false);
                 return true;
             }
 
@@ -505,7 +507,8 @@ public class EncounterTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 EncounterAdapter.setSelectedPos(-1);
                 mEncounterRecyclerView.getAdapter().notifyItemChanged(position);
-                fab.setVisibility(View.VISIBLE);
+            //    fab.setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).setFabVisibility(true);
                 mActionMode = null;
             }
         });

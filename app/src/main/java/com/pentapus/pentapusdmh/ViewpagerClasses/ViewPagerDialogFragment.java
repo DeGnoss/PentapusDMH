@@ -9,13 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.R;
 
 /**
  * Created by Koni on 4/4/16.
  */
-public class ViewPagerDialogFragment extends Fragment {
+public class ViewPagerDialogFragment extends BaseFragment {
 
     private static final String ARG_PAGE = "ARG_PAGE";
 

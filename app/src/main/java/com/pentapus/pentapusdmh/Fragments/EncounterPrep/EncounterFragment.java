@@ -42,6 +42,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.AdapterCallback;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
@@ -53,7 +54,7 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 
-public class EncounterFragment extends Fragment implements
+public class EncounterFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterCallback {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -122,9 +123,10 @@ public class EncounterFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        int test = getActivity().getSupportFragmentManager().getBackStackEntryCount();
         ((MainActivity)getActivity()).setFabVisibility(true);
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
-        setExitTransition(new Slide(Gravity.LEFT));
+        //setExitTransition(new Slide(Gravity.LEFT));
 
         //getLoaderManager().initLoader(0, null, this);
         //getLoaderManager().initLoader(1, null, this);
@@ -226,12 +228,6 @@ public class EncounterFragment extends Fragment implements
         } else {
             getLoaderManager().restartLoader(1, null, this);
         }
-        if (getLoaderManager().getLoader(2) == null) {
-            getLoaderManager().initLoader(2, null, this);
-        } else {
-            getLoaderManager().restartLoader(2, null, this);
-        }
-
     }
 
 
@@ -420,7 +416,8 @@ public class EncounterFragment extends Fragment implements
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.replace(android.R.id.content, newFragment, "F_MONSTER_PAGER")
+        transaction.remove(this);
+        transaction.add(android.R.id.content, newFragment, "F_MONSTER_PAGER")
                 .addToBackStack("F_MONSTER_PAGER").commit();
     }
 
@@ -596,6 +593,7 @@ public class EncounterFragment extends Fragment implements
                     String title = "Selected: " + String.valueOf(position);
                     mode.setTitle(title);
                     MenuInflater inflater = mode.getMenuInflater();
+                    ((MainActivity)getActivity()).setFabVisibility(false);
                     inflater.inflate(R.menu.context_menu, menu);
                     return true;
                 }
@@ -658,6 +656,7 @@ public class EncounterFragment extends Fragment implements
                                             }
                                         }
                                     }
+                                    mergeAdapter.notifyItemRemoved(position);
                                     break;
                                 default:
                                     break;
@@ -723,7 +722,10 @@ public class EncounterFragment extends Fragment implements
                 @Override
                 public void onDestroyActionMode(ActionMode mode) {
                     //TODO: make it work with notifyItemChanged()
+                    ((MainActivity)getActivity()).setFabVisibility(true);
+                    int oldpos = CursorRecyclerViewAdapter.selectedPos;
                     CursorRecyclerViewAdapter.selectedPos = -1;
+                    mergeAdapter.notifyItemChanged(oldpos);
                     int test = 0;
                 }
             });

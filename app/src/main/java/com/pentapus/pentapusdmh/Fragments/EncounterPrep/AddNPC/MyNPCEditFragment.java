@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
@@ -44,7 +45,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 
-public class MyNPCEditFragment extends Fragment {
+public class MyNPCEditFragment extends BaseFragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String MODE = "modeUpdate";
@@ -160,7 +161,7 @@ public class MyNPCEditFragment extends Fragment {
             @Override
             public boolean onLongClick(View v) {
                 Glide.clear(bChooseImage);
-                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"));
+                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_MYNPC"));
                 return true;
             }
         });
@@ -174,13 +175,13 @@ public class MyNPCEditFragment extends Fragment {
     public void showViewPager() {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         ImageViewPagerDialogFragment newFragment = new ImageViewPagerDialogFragment();
-        newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_NPC"), RESULT_CHOOSE_IMG);
+        newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_MYNPC"), RESULT_CHOOSE_IMG);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         // For a little polish, specify a transition animation
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.add(android.R.id.content, newFragment, "F_IMAGE_PAGER")
+        transaction.replace(android.R.id.content, newFragment, "F_IMAGE_PAGER")
                 .addToBackStack(null).commit();
     }
 

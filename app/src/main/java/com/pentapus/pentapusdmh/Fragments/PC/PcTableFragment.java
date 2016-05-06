@@ -33,13 +33,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
-public class PcTableFragment extends Fragment implements
+public class PcTableFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -100,12 +102,13 @@ public class PcTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_pc_table, container, false);
+        ((MainActivity)getActivity()).setFabVisibility(true);
         tableView.setBackgroundColor(Color.WHITE);
         setExitTransition(new Slide(Gravity.TOP));
 
         // insert a record
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
-        fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);
+       /* fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,7 +118,7 @@ public class PcTableFragment extends Fragment implements
                 bundle.putInt(CAMPAIGN_ID, campaignId);
                 addPC(bundle);
             }
-        });
+        });*/
         mPCRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewPc);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -132,6 +135,13 @@ public class PcTableFragment extends Fragment implements
         // Inflate the layout for this fragment
         return tableView;
 
+    }
+
+    public void onFabClick(){
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(MODE, false);
+        bundle.putInt(CAMPAIGN_ID, campaignId);
+        addPC(bundle);
     }
 
     @Override
@@ -405,7 +415,7 @@ public class PcTableFragment extends Fragment implements
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
-                fab.setVisibility(View.GONE);
+                ((MainActivity)getActivity()).setFabVisibility(false);
                 return true;
             }
 
@@ -470,7 +480,7 @@ public class PcTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 mPCAdapter.setSelectedPos(-1);
                 mPCRecyclerView.getAdapter().notifyItemChanged(position);
-                fab.setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).setFabVisibility(true);
                 mActionMode = null;
             }
         });

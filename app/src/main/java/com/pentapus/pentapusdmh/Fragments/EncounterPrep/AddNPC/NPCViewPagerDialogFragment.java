@@ -17,17 +17,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.Utils;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Koni on 4/4/16.
  */
-public class NPCViewPagerDialogFragment extends Fragment {
+public class NPCViewPagerDialogFragment extends BaseFragment {
 
 
 
@@ -37,7 +37,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private NPCViewPagerAdapter pagerAdapter;
-    private FloatingActionButton fabImageVP;
+    private FloatingActionButton fabNPCVP;
     private int id;
     private boolean navMode;
     private int encounterId;
@@ -75,13 +75,14 @@ public class NPCViewPagerDialogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.npc_viewpager_tab_layout, parent, false);
+        ((MainActivity)getActivity()).setFabVisibility(false);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
         view.setBackgroundColor(Color.WHITE);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
-        fabImageVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
+        fabNPCVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
 
         bDone = (Button) view.findViewById(R.id.bDone);
         if(navMode){
@@ -92,12 +93,12 @@ public class NPCViewPagerDialogFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     pasteNPC(npcUri);
-                    getFragmentManager().popBackStack();
+                    getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
         }
 
-        fabImageVP.setOnClickListener(new View.OnClickListener() {
+        fabNPCVP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -117,13 +118,13 @@ public class NPCViewPagerDialogFragment extends Fragment {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        fabImageVP.setVisibility(View.VISIBLE);
+                        fabNPCVP.setVisibility(View.VISIBLE);
                         break;
                     case 1:
-                        fabImageVP.setVisibility(View.GONE);
+                        fabNPCVP.setVisibility(View.GONE);
                         break;
                     default:
-                        fabImageVP.setVisibility(View.GONE);
+                        fabNPCVP.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -241,6 +242,14 @@ public class NPCViewPagerDialogFragment extends Fragment {
 
     public static void setNPCUri(Uri npcUri) {
         NPCViewPagerDialogFragment.npcUri = npcUri;
+    }
+
+    public void setFabVisibility(boolean visibility){
+        if(visibility){
+            fabNPCVP.setVisibility(View.VISIBLE);
+        }else{
+            fabNPCVP.setVisibility(View.GONE);
+        }
     }
 }
 

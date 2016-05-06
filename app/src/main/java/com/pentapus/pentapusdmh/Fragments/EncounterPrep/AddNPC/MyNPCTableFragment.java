@@ -32,10 +32,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.NotifyChange;
 import com.pentapus.pentapusdmh.R;
 
@@ -43,7 +45,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 
-public class MyNPCTableFragment extends Fragment implements
+public class MyNPCTableFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 
@@ -356,6 +358,8 @@ public class MyNPCTableFragment extends Fragment implements
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                ((NPCViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).setFabVisibility(false);
+
                 myNPCRecyclerView.getAdapter().notifyItemChanged(position);
                 String title = "Selected: " + String.valueOf(position);
                 mode.setTitle(title);
@@ -423,6 +427,7 @@ public class MyNPCTableFragment extends Fragment implements
                 NPCViewPagerDialogFragment.setHighlightedPos(-1);
                 NPCViewPagerDialogFragment.setSelectedPos(-1);
                 myNPCRecyclerView.getAdapter().notifyItemChanged(position);
+                ((NPCViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).setFabVisibility(true);
                 mActionMode = null;
             }
         });

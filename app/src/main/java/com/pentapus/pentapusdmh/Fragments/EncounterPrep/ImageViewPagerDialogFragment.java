@@ -24,7 +24,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.Utils;
 import com.pentapus.pentapusdmh.ViewpagerClasses.AdjustFragmentPagerAdapter;
@@ -40,7 +42,7 @@ import java.util.UUID;
 /**
  * Created by Koni on 4/4/16.
  */
-public class ImageViewPagerDialogFragment extends Fragment{
+public class ImageViewPagerDialogFragment extends BaseFragment {
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
@@ -88,6 +90,7 @@ public class ImageViewPagerDialogFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_viewpager_tab_layout, parent, false);
+        ((MainActivity)getActivity()).setFabVisibility(false);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
 

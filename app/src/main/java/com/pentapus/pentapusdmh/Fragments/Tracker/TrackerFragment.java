@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
@@ -33,7 +34,7 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
 
-public class TrackerFragment extends Fragment implements
+public class TrackerFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
 
@@ -79,6 +80,7 @@ public class TrackerFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_tracker, container, false);
+        ((MainActivity)getActivity()).setFabVisibility(false);
         mRecyclerView = (RecyclerView) tableView.findViewById(R.id.listViewEncounter);
         CustomRecyclerLayoutManager llm = new CustomRecyclerLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

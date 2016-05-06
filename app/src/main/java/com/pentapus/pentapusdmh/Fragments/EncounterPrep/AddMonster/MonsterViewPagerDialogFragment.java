@@ -1,13 +1,9 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster;
 
-import android.app.Activity;
 import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,36 +11,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.signature.StringSignature;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageFragmentPagerAdapter;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageGridAdapter;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.MonsterEditFragment;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.Utils;
-import com.soundcloud.android.crop.Crop;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.UUID;
 
 /**
  * Created by Koni on 4/4/16.
  */
-public class MonsterViewPagerDialogFragment extends Fragment {
+public class MonsterViewPagerDialogFragment extends BaseFragment {
 
     private static final String ENCOUNTER_ID = "encounterId";
     private static final String NAV_MODE = "navMode";
@@ -52,7 +35,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private MonsterViewPagerAdapter pagerAdapter;
-    private FloatingActionButton fabImageVP;
+    private FloatingActionButton fabMonsterVP;
     private int id;
     private int encounterId;
     private boolean navMode;
@@ -90,13 +73,14 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.monster_viewpager_tab_layout, parent, false);
+        ((MainActivity)getActivity()).setFabVisibility(false);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
         view.setBackgroundColor(Color.WHITE);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
-        fabImageVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
+        fabMonsterVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
 
         bDone = (Button) view.findViewById(R.id.bDone);
         if(navMode){
@@ -107,12 +91,12 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     pasteMonster(monsterUri);
-                    getFragmentManager().popBackStack();
+                    getActivity().getFragmentManager().popBackStack();
                 }
             });
         }
 
-        fabImageVP.setOnClickListener(new View.OnClickListener() {
+        fabMonsterVP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -132,13 +116,13 @@ public class MonsterViewPagerDialogFragment extends Fragment {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        fabImageVP.setVisibility(View.VISIBLE);
+                        fabMonsterVP.setVisibility(View.VISIBLE);
                         break;
                     case 1:
-                        fabImageVP.setVisibility(View.GONE);
+                        fabMonsterVP.setVisibility(View.GONE);
                         break;
                     default:
-                        fabImageVP.setVisibility(View.GONE);
+                        fabMonsterVP.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -256,6 +240,14 @@ public class MonsterViewPagerDialogFragment extends Fragment {
 
     public static void setMonsterUri(Uri monsterUri) {
         MonsterViewPagerDialogFragment.monsterUri = monsterUri;
+    }
+
+    public void setFabVisibility(boolean visibility){
+        if(visibility){
+            fabMonsterVP.setVisibility(View.VISIBLE);
+        }else{
+            fabMonsterVP.setVisibility(View.GONE);
+        }
     }
 }
 //Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId);

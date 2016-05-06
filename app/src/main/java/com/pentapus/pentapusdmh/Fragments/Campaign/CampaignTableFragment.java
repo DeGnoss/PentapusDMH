@@ -30,14 +30,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
-public class CampaignTableFragment extends Fragment implements
+public class CampaignTableFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
     private static final String MODE = "modeUpdate";
@@ -53,7 +55,7 @@ public class CampaignTableFragment extends Fragment implements
 
 
 
-    FloatingActionButton fab;
+   // FloatingActionButton fab;
 
     public CampaignTableFragment() {
         // Required empty public constructor
@@ -81,6 +83,7 @@ public class CampaignTableFragment extends Fragment implements
                              Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.campaignsFragmentTitle);
         final View tableView = inflater.inflate(R.layout.fragment_campaign_table, container, false);
+        ((MainActivity)getActivity()).setFabVisibility(true);
         //displayListView(tableView);
         // Inflate the layout for this fragment
 
@@ -97,7 +100,7 @@ public class CampaignTableFragment extends Fragment implements
 
 
 
-
+/*
         fab = (FloatingActionButton) tableView.findViewById(R.id.fabCampaign);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,13 +110,19 @@ public class CampaignTableFragment extends Fragment implements
                 bundle.putBoolean(MODE, false);
                 addCampaign(bundle);
             }
-        });
+        });*/
 
         setUpItemTouchHelper();
         setUpAnimationDecoratorHelper();
 
 
         return tableView;
+    }
+
+    public void onFabClick(){
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(MODE, false);
+        addCampaign(bundle);
     }
 
     private void setUpItemTouchHelper() {
@@ -304,7 +313,12 @@ public class CampaignTableFragment extends Fragment implements
 
     private void loadCampaign(int campaignId, String campaignName) {
         SharedPrefsHelper.saveCampaign(getContext(), campaignId, campaignName);
-        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        int test = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+        while(test>1){
+            test--;
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
+        //getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -391,7 +405,8 @@ public class CampaignTableFragment extends Fragment implements
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu_campaign, menu);
-                fab.setVisibility(View.GONE);
+                //fab.setVisibility(View.GONE);
+                ((MainActivity)getActivity()).setFabVisibility(false);
                 return true;
             }
 
@@ -443,7 +458,7 @@ public class CampaignTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 CampaignAdapter.setSelectedPos(-1);
                 mCampaignRecyclerView.getAdapter().notifyItemChanged(position);
-                fab.setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).setFabVisibility(true);
                 mActionMode = null;
             }
         });

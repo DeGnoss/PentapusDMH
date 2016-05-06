@@ -33,10 +33,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterEditFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageGridAdapter;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
@@ -45,7 +47,7 @@ import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 
 
-public class MyMonsterTableFragment extends Fragment implements
+public class MyMonsterTableFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 
@@ -356,6 +358,7 @@ public class MyMonsterTableFragment extends Fragment implements
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
                 String title = "Selected: " + String.valueOf(position);
+                ((MonsterViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(false);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
@@ -421,6 +424,7 @@ public class MyMonsterTableFragment extends Fragment implements
                 MonsterViewPagerDialogFragment.setHighlightedPos(-1);
                 MonsterViewPagerDialogFragment.setSelectedPos(-1);
                 myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
+                ((MonsterViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(true);
                 mActionMode = null;
             }
         });

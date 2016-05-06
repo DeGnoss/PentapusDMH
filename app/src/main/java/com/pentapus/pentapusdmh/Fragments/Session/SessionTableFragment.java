@@ -438,7 +438,7 @@ public class SessionTableFragment extends Fragment implements
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
-                fab.setVisibility(View.GONE);
+                ((MainActivity)getActivity()).setFabVisibility(false);
                 return true;
             }
 
@@ -507,7 +507,7 @@ public class SessionTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 SessionAdapter.setSelectedPos(-1);
                 mSessionRecyclerView.getAdapter().notifyItemChanged(position);
-                fab.setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).setFabVisibility(true);
                 mActionMode = null;
             }
         });

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerInfoCard;
 import com.pentapus.pentapusdmh.R;
@@ -24,7 +25,7 @@ import java.math.BigInteger;
 /**
  * Created by Koni on 02.04.2016.
  */
-public class HpOverviewFragment extends Fragment implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2{
+public class HpOverviewFragment extends BaseFragment implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2{
 
     private int id;
     private View vFrame;

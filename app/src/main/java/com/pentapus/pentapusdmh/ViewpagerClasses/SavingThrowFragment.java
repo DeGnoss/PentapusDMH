@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.R;
@@ -17,7 +18,7 @@ import com.pentapus.pentapusdmh.R;
 /**
  * Created by Koni on 02.04.2016.
  */
-public class SavingThrowFragment extends Fragment {
+public class SavingThrowFragment extends BaseFragment {
     private static final String ARG_PAGE = "ARG_PAGE";
 
     private StatusAdapter statusAdapter;

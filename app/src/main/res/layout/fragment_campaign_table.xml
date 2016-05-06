@@ -12,14 +12,4 @@
         android:paddingBottom="85dp"
         android:clipToPadding="false" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabCampaign"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_black" />
-
-</RelativeLayout>
+ </RelativeLayout>

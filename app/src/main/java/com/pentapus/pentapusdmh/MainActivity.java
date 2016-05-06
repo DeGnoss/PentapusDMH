@@ -489,10 +489,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }else{
                         pressedTwice=true;
                     }
-                }
-                else {
-                    pressedTwice=false;
-                    fm.popBackStack();
+                }else {
+                    if(!BaseFragment.handleBackPressed(getSupportFragmentManager())) {
+                        pressedTwice = false;
+                        Log.d("Popping Backstack:", String.valueOf(fm.getBackStackEntryCount()));
+                        fm.popBackStack();
+                    }
                 }
             } else {
                 super.onBackPressed();
@@ -589,27 +591,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = PcTableFragment.class;
                 bundle.putInt("campaignId", SharedPrefsHelper.loadCampaignId(this));
                 bundle.putString("campaignName", SharedPrefsHelper.loadCampaignName(this));
-               /* try {
+                try {
                     fragment = (Fragment) fragmentClass.newInstance();
                     fragment.setArguments(bundle);
                 } catch (Exception e) {
                     e.printStackTrace();
-                } */
+                }
                 if (topBackEntryIsNav) {
                     fragmentManager.popBackStack();
                 }
-                Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
-                ((SessionTableFragment)f).loadNPCTable(bundle);
-                /*
-                fragment.setSharedElementEnterTransition(new FabTransition());
-                fragment.setEnterTransition(new Slide(Gravity.TOP));
-                fragment.setSharedElementReturnTransition(new FabTransition());
-                Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+                //Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+                //((SessionTableFragment)f).loadNPCTable(bundle);
+
+                //fragment.setSharedElementEnterTransition(new FabTransition());
+                //fragment.setEnterTransition(new Slide(Gravity.TOP));
+                //fragment.setSharedElementReturnTransition(new FabTransition());
+                //Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
                 fragmentManager.beginTransaction()
-                        .addSharedElement(((SessionTableFragment)f).getFab(), "fabTransition")
-                        .add(R.id.FrameTop, fragment, "FT_PC")
+                        .replace(R.id.FrameTop, fragment, "FT_PC")
                         .addToBackStack("NAV_F")
-                        .commit();*/
+                        .commit();
                 break;
 
             case R.id.nav_monsters:
@@ -641,7 +642,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (topBackEntryIsNav) {
                     fragmentManager.popBackStack();
                 }
-                fragmentManager.beginTransaction().replace(android.R.id.content, fragment, "FT_PC")
+                fragmentManager.beginTransaction().replace(android.R.id.content, fragment, "F_NPC_PAGER")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
@@ -688,6 +689,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ((EncounterTableFragment)getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
         } else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterFragment) {
             ((EncounterFragment)getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
+        }else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof CampaignTableFragment) {
+            ((CampaignTableFragment)getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN")).onFabClick();
+        }else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof PcTableFragment) {
+            ((PcTableFragment)getSupportFragmentManager().findFragmentByTag("FT_PC")).onFabClick();
         }
     }
 
