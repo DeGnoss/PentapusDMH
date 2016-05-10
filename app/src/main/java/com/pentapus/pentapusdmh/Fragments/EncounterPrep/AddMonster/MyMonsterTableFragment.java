@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
@@ -47,7 +46,7 @@ import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 
 
-public class MyMonsterTableFragment extends BaseFragment implements
+public class MyMonsterTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 

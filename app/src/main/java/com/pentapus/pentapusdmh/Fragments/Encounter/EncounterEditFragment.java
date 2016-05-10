@@ -13,13 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
-public class EncounterEditFragment extends BaseFragment {
+public class EncounterEditFragment extends Fragment {
 
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

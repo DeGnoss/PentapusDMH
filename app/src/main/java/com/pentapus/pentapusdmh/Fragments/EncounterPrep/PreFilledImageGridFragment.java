@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
@@ -26,7 +25,7 @@ import java.io.File;
 /**
  * Created by Koni on 02.04.2016.
  */
-public class PreFilledImageGridFragment extends BaseFragment implements AdapterNavigationCallback, ImageViewPagerDialogFragment.UpdateableFragment {
+public class PreFilledImageGridFragment extends Fragment implements AdapterNavigationCallback, ImageViewPagerDialogFragment.UpdateableFragment {
     private PreFilledImageGridAdapter imageGridAdapter;
     private GridLayoutManager gridLayoutManager;
     private int id;

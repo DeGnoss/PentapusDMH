@@ -28,7 +28,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
@@ -41,7 +40,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 
-public class PcEditFragment extends BaseFragment {
+public class PcEditFragment extends Fragment {
 
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

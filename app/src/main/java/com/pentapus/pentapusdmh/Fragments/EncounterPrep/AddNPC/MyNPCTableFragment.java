@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
@@ -45,7 +44,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 
-public class MyNPCTableFragment extends BaseFragment implements
+public class MyNPCTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 

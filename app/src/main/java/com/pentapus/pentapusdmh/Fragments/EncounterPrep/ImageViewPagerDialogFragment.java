@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +23,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
-import com.pentapus.pentapusdmh.BaseFragment;
-import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.Utils;
-import com.pentapus.pentapusdmh.ViewpagerClasses.AdjustFragmentPagerAdapter;
-import com.pentapus.pentapusdmh.ViewpagerClasses.HpOverviewFragment;
-import com.pentapus.pentapusdmh.ViewpagerClasses.StatusFragment;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -42,7 +36,7 @@ import java.util.UUID;
 /**
  * Created by Koni on 4/4/16.
  */
-public class ImageViewPagerDialogFragment extends BaseFragment {
+public class ImageViewPagerDialogFragment extends Fragment {
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
@@ -111,7 +105,7 @@ public class ImageViewPagerDialogFragment extends BaseFragment {
                 }else{
                     getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
                 }
-                getFragmentManager().popBackStack();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 

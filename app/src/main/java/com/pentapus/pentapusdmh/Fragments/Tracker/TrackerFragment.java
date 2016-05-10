@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
@@ -34,7 +33,7 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
 
-public class TrackerFragment extends BaseFragment implements
+public class TrackerFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
 

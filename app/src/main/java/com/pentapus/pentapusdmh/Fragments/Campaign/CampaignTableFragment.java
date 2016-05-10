@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
@@ -39,7 +38,7 @@ import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
-public class CampaignTableFragment extends BaseFragment implements
+public class CampaignTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
     private static final String MODE = "modeUpdate";

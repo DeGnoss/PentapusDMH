@@ -463,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             final FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 if ("F_TRACKER".equals(getCurrentFragmentTag())) {
-                    pressedTwice=false;
+                    pressedTwice = false;
                     new AlertDialog.Builder(this)
                             .setTitle("Exit Tracker")
                             .setMessage("Are you sure you want to exit the Tracker? The encounter will be reset.")
@@ -480,21 +480,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             })
                             .setIcon(R.drawable.ic_warning_black_24dp)
                             .show();
-                }else if("FT_SESSION".equals(getCurrentFragmentTag())){
-                    if(pressedTwice){
-                        pressedTwice=false;
+                } else if ("FT_SESSION".equals(getCurrentFragmentTag())) {
+                    if (pressedTwice) {
+                        pressedTwice = false;
                         fm.popBackStack();
                         fm.popBackStack();
                         super.onBackPressed();
-                    }else{
-                        pressedTwice=true;
+                    } else {
+                        pressedTwice = true;
                     }
-                }else {
-                    if(!BaseFragment.handleBackPressed(getSupportFragmentManager())) {
-                        pressedTwice = false;
-                        Log.d("Popping Backstack:", String.valueOf(fm.getBackStackEntryCount()));
-                        fm.popBackStack();
+                } else if ("F_MONSTER_PAGER".equals(getCurrentFragmentTag())) {
+                    Fragment fragment = fm.findFragmentByTag("F_MONSTER_PAGER");
+                    FragmentManager childFM = fragment.getChildFragmentManager();
+                    while(childFM.getBackStackEntryCount() > 0){
+                        childFM.popBackStack();
                     }
+                    fm.popBackStack();
+                } else if ("F_IMAGE_PAGER".equals(getCurrentFragmentTag())) {
+                Fragment fragment = fm.findFragmentByTag("F_IMAGE_PAGER");
+                FragmentManager childFM = fragment.getChildFragmentManager();
+                while(childFM.getBackStackEntryCount() > 0){
+                    childFM.popBackStack();
+                }
+                fm.popBackStack();
+            }
+                else {
+                    pressedTwice = false;
+                    Log.d("Backstack:", String.valueOf(fm.getBackStackEntryCount()));
+
+                    fm.popBackStack();
                 }
             } else {
                 super.onBackPressed();
@@ -670,13 +684,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void enableNavigationDrawer(){
+    private void enableNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         toggle.setDrawerIndicatorEnabled(true);
     }
 
-    public void disableNavigationDrawer(){
+    public void disableNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         toggle.setDrawerIndicatorEnabled(false);
@@ -684,22 +698,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void onFabClick(View view) {
         if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof SessionTableFragment) {
-            ((SessionTableFragment)getSupportFragmentManager().findFragmentByTag("FT_SESSION")).onFabClick();
-        } else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterTableFragment) {
-            ((EncounterTableFragment)getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
-        } else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterFragment) {
-            ((EncounterFragment)getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
-        }else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof CampaignTableFragment) {
-            ((CampaignTableFragment)getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN")).onFabClick();
-        }else if(getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof PcTableFragment) {
-            ((PcTableFragment)getSupportFragmentManager().findFragmentByTag("FT_PC")).onFabClick();
+            ((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterTableFragment) {
+            ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterFragment) {
+            ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof CampaignTableFragment) {
+            ((CampaignTableFragment) getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof PcTableFragment) {
+            ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).onFabClick();
         }
     }
 
-    public void setFabVisibility(boolean visibility){
-        if(visibility){
+    public void setFabVisibility(boolean visibility) {
+        if (visibility) {
             fab.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             fab.setVisibility(View.GONE);
         }
     }

@@ -23,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
@@ -32,7 +31,7 @@ import com.pentapus.pentapusdmh.Utils;
 import com.soundcloud.android.crop.Crop;
 
 
-public class MyMonsterEditFragment extends BaseFragment {
+public class MyMonsterEditFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String MODE = "modeUpdate";

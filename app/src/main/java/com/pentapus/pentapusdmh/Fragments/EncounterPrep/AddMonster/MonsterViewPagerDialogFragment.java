@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.MainActivity;
@@ -27,7 +26,7 @@ import com.pentapus.pentapusdmh.Utils;
 /**
  * Created by Koni on 4/4/16.
  */
-public class MonsterViewPagerDialogFragment extends BaseFragment {
+public class MonsterViewPagerDialogFragment extends Fragment {
 
     private static final String ENCOUNTER_ID = "encounterId";
     private static final String NAV_MODE = "navMode";
@@ -91,7 +90,7 @@ public class MonsterViewPagerDialogFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     pasteMonster(monsterUri);
-                    getActivity().getFragmentManager().popBackStack();
+                    getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
         }

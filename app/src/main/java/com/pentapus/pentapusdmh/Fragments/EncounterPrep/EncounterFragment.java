@@ -42,7 +42,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.AdapterCallback;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
@@ -54,7 +53,7 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
 import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 
-public class EncounterFragment extends BaseFragment implements
+public class EncounterFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterCallback {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -416,8 +415,7 @@ public class EncounterFragment extends BaseFragment implements
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.remove(this);
-        transaction.add(android.R.id.content, newFragment, "F_MONSTER_PAGER")
+        transaction.replace(android.R.id.content, newFragment, "F_MONSTER_PAGER")
                 .addToBackStack("F_MONSTER_PAGER").commit();
     }
 
@@ -512,7 +510,6 @@ public class EncounterFragment extends BaseFragment implements
         super.onDetach();
     }
 
-    //FIXME: copy into db and load or only load?
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

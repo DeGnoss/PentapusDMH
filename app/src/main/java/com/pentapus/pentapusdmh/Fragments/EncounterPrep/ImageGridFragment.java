@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.MainActivity;
@@ -29,7 +28,7 @@ import java.io.File;
 /**
  * Created by Koni on 02.04.2016.
  */
-public class ImageGridFragment extends BaseFragment implements AdapterNavigationCallback, ImageViewPagerDialogFragment.UpdateableFragment {
+public class ImageGridFragment extends Fragment implements AdapterNavigationCallback, ImageViewPagerDialogFragment.UpdateableFragment {
     private ImageGridAdapter imageGridAdapter;
     private GridLayoutManager gridLayoutManager;
     private int id;

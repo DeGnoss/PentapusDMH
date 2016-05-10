@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
-import com.pentapus.pentapusdmh.BaseFragment;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
@@ -41,7 +40,7 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
-public class PcTableFragment extends BaseFragment implements
+public class PcTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
