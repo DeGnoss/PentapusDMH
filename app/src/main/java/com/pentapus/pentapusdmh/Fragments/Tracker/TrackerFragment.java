@@ -94,7 +94,7 @@ public class TrackerFragment extends Fragment implements
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
        // getLoaderManager().initLoader(2, null, this);
-        chars = new TrackerAdapter(getActivity(), getContext());
+        chars = new TrackerAdapter((AppCompatActivity)getActivity(), getContext());
         mRecyclerView.setAdapter(chars);
 
         Button next = (Button) tableView.findViewById(R.id.bNext);

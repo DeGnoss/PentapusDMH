@@ -1,6 +1,7 @@
 package com.pentapus.pentapusdmh.Fragments.Tracker;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
@@ -9,10 +10,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,21 +45,22 @@ import java.util.List;
 public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder> {
     private List<TrackerInfoCard> characterList = new ArrayList<>();
     private Context context;
-    private Activity activity;
+    private AppCompatActivity activity;
     private int layoutCounter = 0;
     private GridLayout.LayoutParams layoutParams;
     private boolean firstTime;
     CustomRecyclerLayoutManager llm;
     private int enteredInitiative;
+    private List<Dialog> dialogList = new ArrayList<>();
 
-    public TrackerAdapter(Activity activity, Context context, List<TrackerInfoCard> characterList) {
+    public TrackerAdapter(AppCompatActivity activity, Context context, List<TrackerInfoCard> characterList) {
         this.characterList = characterList;
         this.activity = activity;
         this.context = context;
         layoutCounter = 0;
     }
 
-    public TrackerAdapter(Activity activity, Context context) {
+    public TrackerAdapter(AppCompatActivity activity, Context context) {
         this.llm = llm;
         this.activity = activity;
         this.context = context;
@@ -232,6 +239,8 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if(etRoll.getText() == null){
+                }
                 enteredInitiative = Integer.valueOf(etRoll.getText().toString());
                 trackerInfoCard.setInitiative(String.valueOf(enteredInitiative + Integer.valueOf(trackerInfoCard.getInitiativeMod())));
                 characterList.add(trackerInfoCard);
@@ -239,7 +248,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
                 notifyDataSetChanged();
             }
         });
-        builder.setNegativeButton("Roll", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("Roll", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 enteredInitiative = DiceHelper.d20();
@@ -249,8 +258,38 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
                 notifyDataSetChanged();
             }
         });
-        builder.create()
-                .show();
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+
+        etRoll.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()>0){
+                    int value = Integer.valueOf(s.toString());
+                    if(value >0 && value <=20){
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                    }else{
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    }
+                }else{
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
     }
 
     private List<TrackerInfoCard> sortList(List<TrackerInfoCard> list) {
