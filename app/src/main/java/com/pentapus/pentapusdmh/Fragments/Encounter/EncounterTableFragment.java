@@ -27,8 +27,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.Slide;
 import android.transition.TransitionInflater;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +37,6 @@ import android.view.ViewGroup;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.FabTransition;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.MainActivity;
@@ -104,13 +101,12 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //super.onCreateView(inflater, container, savedInstanceState);
         int test = getActivity().getSupportFragmentManager().getBackStackEntryCount();
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
-        ((MainActivity)getActivity()).setFabVisibility(true);
-        Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
-        getActivity().getWindow().setEnterTransition(slide);
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
+        ((MainActivity) getActivity()).setFabVisibility(true);
+        //Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
+        //getActivity().getWindow().setEnterTransition(slide);
 
 
         mEncounterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
@@ -130,7 +126,7 @@ public class EncounterTableFragment extends Fragment implements
         return tableView;
     }
 
-    public void onFabClick(){
+    public void onFabClick() {
         Bundle bundle = new Bundle();
         bundle.putBoolean(MODE, false);
         bundle.putInt(SESSION_ID, sessionId);
@@ -141,6 +137,7 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
 
@@ -148,9 +145,6 @@ public class EncounterTableFragment extends Fragment implements
             getLoaderManager().restartLoader(0, null, this);
         }
     }
-
-
-
 
 
     private void setUpItemTouchHelper() {
@@ -191,7 +185,7 @@ public class EncounterTableFragment extends Fragment implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                 int swipedAdapterPosition = viewHolder.getAdapterPosition();
-                EncounterAdapter adapter = (EncounterAdapter)mEncounterRecyclerView.getAdapter();
+                EncounterAdapter adapter = (EncounterAdapter) mEncounterRecyclerView.getAdapter();
                 adapter.pendingRemoval(swipedAdapterPosition);
             }
 
@@ -218,7 +212,7 @@ public class EncounterTableFragment extends Fragment implements
 
                 int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
                 int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                 int xMarkBottom = xMarkTop + intrinsicHeight;
                 xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
 
@@ -317,15 +311,12 @@ public class EncounterTableFragment extends Fragment implements
     }
 
 
-
-
-
     private void addEncounter(Bundle bundle) {
         Fragment fragment;
         fragment = new EncounterEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_ENCOUNTER")
+                .replace(R.id.ContainerFrame, fragment, "FE_ENCOUNTER")
                 .addToBackStack("FE_ENCOUNTER")
                 .commit();
     }
@@ -335,7 +326,7 @@ public class EncounterTableFragment extends Fragment implements
         fragment = new EncounterEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_ENCOUNTER")
+                .replace(R.id.ContainerFrame, fragment, "FE_ENCOUNTER")
                 .addToBackStack("FE_ENCOUNTER")
                 .commit();
     }
@@ -345,10 +336,14 @@ public class EncounterTableFragment extends Fragment implements
         Fragment fragment;
         fragment = new EncounterFragment();
         fragment.setArguments(bundle);
-        fragment.setEnterTransition(new Slide(Gravity.RIGHT));
-        setExitTransition(new Slide(Gravity.LEFT));
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "F_ENCOUNTER")
+        //fragment.setEnterTransition(new Slide(Gravity.RIGHT));
+        // setExitTransition(new Slide(Gravity.LEFT));
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+       // transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+
+        transaction.replace(R.id.ContainerFrame, fragment, "F_ENCOUNTER")
                 .addToBackStack("F_ENCOUNTER")
                 .commit();
     }
@@ -398,9 +393,8 @@ public class EncounterTableFragment extends Fragment implements
         };
         String[] selectionArgs = new String[]{String.valueOf(sessionId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-        CursorLoader cursorLoader = new CursorLoader(this.getContext(),
+        return new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_ENCOUNTER, projection, selection, selectionArgs, null);
-        return cursorLoader;
     }
 
     @Override
@@ -441,7 +435,7 @@ public class EncounterTableFragment extends Fragment implements
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
 //                fab.setVisibility(View.GONE);
-                ((MainActivity)getActivity()).setFabVisibility(false);
+                ((MainActivity) getActivity()).setFabVisibility(false);
                 return true;
             }
 
@@ -466,7 +460,7 @@ public class EncounterTableFragment extends Fragment implements
                             if (pasteUri == null) {
                                 pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
                             }
-                            if(pasteUri.equals(uri)){
+                            if (pasteUri.equals(uri)) {
                                 Uri newUri = Uri.parse("");
                                 ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
                                 clipboard.setPrimaryClip(clip);
@@ -506,8 +500,8 @@ public class EncounterTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 EncounterAdapter.setSelectedPos(-1);
                 mEncounterRecyclerView.getAdapter().notifyItemChanged(position);
-            //    fab.setVisibility(View.VISIBLE);
-                ((MainActivity)getActivity()).setFabVisibility(true);
+                //    fab.setVisibility(View.VISIBLE);
+                ((MainActivity) getActivity()).setFabVisibility(true);
                 mActionMode = null;
             }
         });

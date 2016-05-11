@@ -159,7 +159,7 @@ public class MonsterEditFragment extends Fragment {
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
         transaction.add(android.R.id.content, newFragment, "F_IMAGE_PAGER")
-                .addToBackStack(null).commit();
+                .addToBackStack("F_IMAGE_PAGER").commit();
     }
 
     private void loadMonsterInfo(EditText name, EditText info, EditText init, EditText maxHp, EditText ac, EditText strength, EditText dex, EditText constit, EditText intelligence, EditText wis, EditText charisma, int id) {

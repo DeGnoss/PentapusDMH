@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,7 +86,7 @@ public class ImageViewPagerDialogFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_viewpager_tab_layout, parent, false);
         ((MainActivity)getActivity()).setFabVisibility(false);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) view.getLayoutParams();
         params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
@@ -280,5 +281,11 @@ public class ImageViewPagerDialogFragment extends Fragment {
 
     public static void setSelectedType(int selectedType) {
         ImageViewPagerDialogFragment.selectedType = selectedType;
+    }
+
+    @Override
+    public void onDestroy(){
+        Glide.get(getContext()).clearMemory(); //  call this method manual
+        super.onDestroy();
     }
 }

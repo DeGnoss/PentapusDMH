@@ -324,7 +324,7 @@ public class PcTableFragment extends Fragment implements
         fragment = new PcEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.FrameTop, fragment, "FE_PC")
+                .add(R.id.ContainerFrame, fragment, "FE_PC")
                 .addToBackStack("FE_PC")
                 .commit();
     }
@@ -334,7 +334,7 @@ public class PcTableFragment extends Fragment implements
         fragment = new PcEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.FrameTop, fragment, "FE_PC")
+                .add(R.id.ContainerFrame, fragment, "FE_PC")
                 .addToBackStack("FE_PC")
                 .commit();
     }

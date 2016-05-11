@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -95,7 +96,7 @@ public class MyMonsterEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_mymonster_edit, container, false);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) charEditView.getLayoutParams();
+        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) charEditView.getLayoutParams();
         params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
         charEditView.setBackgroundColor(Color.WHITE);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
@@ -153,6 +154,8 @@ public class MyMonsterEditFragment extends Fragment {
 
     public void showViewPager() {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//        MonsterViewPagerDialogFragment newFragment = new MonsterViewPagerDialogFragment();
+
         ImageViewPagerDialogFragment newFragment = new ImageViewPagerDialogFragment();
         newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_MYMONSTER"), RESULT_CHOOSE_IMG);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -160,7 +163,7 @@ public class MyMonsterEditFragment extends Fragment {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.add(android.R.id.content, newFragment, "F_IMAGE_PAGER")
+        transaction.add(R.id.drawer_layout, newFragment, "F_IMAGE_PAGER")
                 .addToBackStack("F_IMAGE_PAGER").commit();
     }
 

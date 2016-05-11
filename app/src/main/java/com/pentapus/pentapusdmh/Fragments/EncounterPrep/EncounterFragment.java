@@ -14,7 +14,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,7 +26,6 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.Slide;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -123,7 +121,7 @@ public class EncounterFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int test = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-        ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity) getActivity()).setFabVisibility(true);
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
         //setExitTransition(new Slide(Gravity.LEFT));
 
@@ -151,7 +149,7 @@ public class EncounterFragment extends Fragment implements
 
     }
 
-    public void onFabClick(){
+    public void onFabClick() {
         showFloatingMenu();
     }
 
@@ -177,7 +175,6 @@ public class EncounterFragment extends Fragment implements
         dialog.setCanceledOnTouchOutside(true);
 
 
-
         View closeButton = (View) dialog.findViewById(R.id.loc_item_detail_floatmenu_close);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,7 +183,6 @@ public class EncounterFragment extends Fragment implements
                 dialog.dismiss();
             }
         });
-
 
 
         View npcButton = (View) dialog.findViewById(R.id.loc_item_detail_floatmenu_npc);
@@ -412,10 +408,10 @@ public class EncounterFragment extends Fragment implements
         newFragment.setArguments(bundle);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         // For a little polish, specify a transition animation
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.replace(android.R.id.content, newFragment, "F_MONSTER_PAGER")
+        transaction.add(R.id.drawer_layout, newFragment, "F_MONSTER_PAGER")
                 .addToBackStack("F_MONSTER_PAGER").commit();
     }
 
@@ -428,17 +424,17 @@ public class EncounterFragment extends Fragment implements
         newFragment.setArguments(bundle);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         // For a little polish, specify a transition animation
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.replace(android.R.id.content, newFragment, "F_NPC_PAGER")
+        transaction.add(R.id.drawer_layout, newFragment, "F_NPC_PAGER")
                 .addToBackStack("F_NPC_PAGER").commit();
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser) {
+        if (isVisibleToUser) {
             // Set title
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
 
@@ -450,7 +446,7 @@ public class EncounterFragment extends Fragment implements
         fragment = new NPCEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_NPC")
+                .replace(R.id.ContainerFrame, fragment, "FE_NPC")
                 .addToBackStack("FE_NPC")
                 .commit();
     }
@@ -460,7 +456,7 @@ public class EncounterFragment extends Fragment implements
         fragment = new MonsterEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_MONSTER")
+                .replace(R.id.ContainerFrame, fragment, "FE_MONSTER")
                 .addToBackStack("FE_MONSTER")
                 .commit();
     }
@@ -590,7 +586,7 @@ public class EncounterFragment extends Fragment implements
                     String title = "Selected: " + String.valueOf(position);
                     mode.setTitle(title);
                     MenuInflater inflater = mode.getMenuInflater();
-                    ((MainActivity)getActivity()).setFabVisibility(false);
+                    ((MainActivity) getActivity()).setFabVisibility(false);
                     inflater.inflate(R.menu.context_menu, menu);
                     return true;
                 }
@@ -605,7 +601,7 @@ public class EncounterFragment extends Fragment implements
                     switch (item.getItemId()) {
                         case R.id.delete:
 
-                            switch(positionType){
+                            switch (positionType) {
                                 case 0:
                                     Cursor cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
@@ -661,7 +657,7 @@ public class EncounterFragment extends Fragment implements
                             mode.finish();
                             return true;
                         case R.id.edit:
-                            switch(positionType){
+                            switch (positionType) {
                                 case 0:
                                     Cursor cursor = dataAdapterNPC.getCursor();
                                     cursor.moveToPosition(position);
@@ -698,7 +694,7 @@ public class EncounterFragment extends Fragment implements
                                 clipboard.setPrimaryClip(clip);
                                 getActivity().invalidateOptionsMenu();
                                 mergeAdapter.notifyItemChanged(position);
-                            }else if (positionType == 1) {
+                            } else if (positionType == 1) {
                                 Cursor cursor = dataAdapterNPC.getCursor();
                                 cursor.moveToPosition(position);
                                 int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
@@ -719,16 +715,16 @@ public class EncounterFragment extends Fragment implements
                 @Override
                 public void onDestroyActionMode(ActionMode mode) {
                     //TODO: make it work with notifyItemChanged()
-                    ((MainActivity)getActivity()).setFabVisibility(true);
+                    ((MainActivity) getActivity()).setFabVisibility(true);
                     int oldpos = CursorRecyclerViewAdapter.selectedPos;
                     CursorRecyclerViewAdapter.selectedPos = -1;
                     mergeAdapter.notifyItemChanged(oldpos);
                     int test = 0;
                 }
             });
-        } else if(positionType == 2) {
+        } else if (positionType == 2) {
             Uri myFile;
-            String myName ="";
+            String myName = "";
             Cursor cursor = dataAdapterPC.getCursor();
             cursor.moveToPosition(position);
             int characterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
@@ -753,12 +749,12 @@ public class EncounterFragment extends Fragment implements
                 values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
                 values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
 
-                if(disabled == 0){
+                if (disabled == 0) {
                     values.put(DataBaseHandler.KEY_DISABLED, 1);
-                    Toast.makeText(getContext(), myName + " disabled." , Toast.LENGTH_SHORT).show();
-                }else{
+                    Toast.makeText(getContext(), myName + " disabled.", Toast.LENGTH_SHORT).show();
+                } else {
                     values.put(DataBaseHandler.KEY_DISABLED, 0);
-                    Toast.makeText(getContext(), myName + " enabled." , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), myName + " enabled.", Toast.LENGTH_SHORT).show();
                 }
                 uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + characterId);
                 getContext().getContentResolver().update(uri, values, null, null);
@@ -768,7 +764,7 @@ public class EncounterFragment extends Fragment implements
             CursorRecyclerViewAdapter.selectedPos = -1;
             mergeAdapter.notifyDataSetChanged();
 
-        } else{
+        } else {
             Toast.makeText(getContext(), "Function not yet implemented.", Toast.LENGTH_SHORT).show();
         }
 

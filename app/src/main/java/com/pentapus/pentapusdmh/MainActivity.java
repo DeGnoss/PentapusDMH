@@ -23,18 +23,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
-import android.transition.Slide;
-import android.transition.TransitionInflater;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
@@ -43,7 +36,6 @@ import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPa
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
@@ -95,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         SessionTableFragment ftable = new SessionTableFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, ftable, "FT_SESSION")
+                .replace(R.id.ContainerFrame, ftable, "FT_SESSION")
                 .addToBackStack("FT_SESSION")
                 .commit();
     }
@@ -129,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (!myFragment.isVisible()) {
                     CampaignTableFragment ftable = new CampaignTableFragment();
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
+                            .replace(R.id.ContainerFrame, ftable, "FT_CAMPAIGN")
                             .addToBackStack("FT_CAMPAIGN")
                             .commit();
                 }
@@ -137,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 CampaignTableFragment ftable = new CampaignTableFragment();
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
+                        .replace(R.id.ContainerFrame, ftable, "FT_CAMPAIGN")
                         .addToBackStack("FT_CAMPAIGN")
                         .commit();
                 return true;
@@ -146,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.play_mode) {
             TrackerFragment ftable = new TrackerFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.FrameTop, ftable, "F_TRACKER")
+                    .replace(R.id.ContainerFrame, ftable, "F_TRACKER")
                     .addToBackStack("F_TRACKER")
                     .commit();
             return true;
@@ -496,19 +488,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         childFM.popBackStack();
                     }
                     fm.popBackStack();
+                    Log.d("FragmentList" , getSupportFragmentManager().getFragments().toString());
+
                 } else if ("F_IMAGE_PAGER".equals(getCurrentFragmentTag())) {
-                Fragment fragment = fm.findFragmentByTag("F_IMAGE_PAGER");
+                    Fragment fragment = fm.findFragmentByTag("F_IMAGE_PAGER");
                 FragmentManager childFM = fragment.getChildFragmentManager();
                 while(childFM.getBackStackEntryCount() > 0){
                     childFM.popBackStack();
                 }
                 fm.popBackStack();
-            }
+                    Log.d("FragmentList" , getSupportFragmentManager().getFragments().toString());
+
+                }
                 else {
                     pressedTwice = false;
-                    Log.d("Backstack:", String.valueOf(fm.getBackStackEntryCount()));
-
                     fm.popBackStack();
+                    Log.d("Backstack:", String.valueOf(fm.getBackStackEntryCount()));
+                    Log.d("FragmentList" , getSupportFragmentManager().getFragments().toString());
                 }
             } else {
                 super.onBackPressed();
@@ -532,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragment = new PcTableFragment();
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FT_PC")
+                .replace(R.id.ContainerFrame, fragment, "FT_PC")
                 .addToBackStack("FT_PC")
                 .commit();
     }
@@ -622,7 +618,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //fragment.setSharedElementReturnTransition(new FabTransition());
                 //Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.FrameTop, fragment, "FT_PC")
+                        .replace(R.id.ContainerFrame, fragment, "FT_PC")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
@@ -672,7 +668,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (topBackEntryIsNav) {
                     fragmentManager.popBackStack();
                 }
-                fragmentManager.beginTransaction().replace(R.id.FrameTop, fragment, "FT_CAMPAIGN")
+                fragmentManager.beginTransaction().replace(R.id.ContainerFrame, fragment, "FT_CAMPAIGN")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
@@ -697,15 +693,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void onFabClick(View view) {
-        if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof SessionTableFragment) {
+        if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof SessionTableFragment) {
             ((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).onFabClick();
-        } else if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterTableFragment) {
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof EncounterTableFragment) {
             ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
-        } else if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof EncounterFragment) {
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof EncounterFragment) {
             ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
-        } else if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof CampaignTableFragment) {
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof CampaignTableFragment) {
             ((CampaignTableFragment) getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN")).onFabClick();
-        } else if (getSupportFragmentManager().findFragmentById(R.id.FrameTop) instanceof PcTableFragment) {
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof PcTableFragment) {
             ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).onFabClick();
         }
     }

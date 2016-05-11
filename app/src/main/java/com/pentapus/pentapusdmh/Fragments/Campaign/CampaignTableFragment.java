@@ -1,7 +1,6 @@
 package com.pentapus.pentapusdmh.Fragments.Campaign;
 
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -11,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -294,7 +292,7 @@ public class CampaignTableFragment extends Fragment implements
         fragment = new PcTableFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FT_PC")
+                .replace(R.id.ContainerFrame, fragment, "FT_PC")
                 .addToBackStack("FT_PC")
                 .commit();
     }
@@ -304,7 +302,7 @@ public class CampaignTableFragment extends Fragment implements
         fragment = new CampaignEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_CAMPAIGN")
+                .replace(R.id.ContainerFrame, fragment, "FE_CAMPAIGN")
                 .addToBackStack("FE_CAMPAIGN")
                 .commit();
     }
@@ -376,7 +374,7 @@ public class CampaignTableFragment extends Fragment implements
         fragment = new CampaignEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_CAMPAIGN")
+                .replace(R.id.ContainerFrame, fragment, "FE_CAMPAIGN")
                 .addToBackStack("FE_CAMPAIGN")
                 .commit();
     }

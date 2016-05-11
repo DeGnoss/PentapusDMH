@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -27,8 +26,6 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.ChangeBounds;
-import android.transition.Explode;
 import android.transition.Slide;
 import android.transition.TransitionInflater;
 import android.view.Gravity;
@@ -42,7 +39,6 @@ import android.view.ViewGroup;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.FabTransition;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
@@ -107,7 +103,7 @@ public class SessionTableFragment extends Fragment implements
                         public void onClick(DialogInterface dialog, int which) {
                             CampaignTableFragment ftable = new CampaignTableFragment();
                             getActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.FrameTop, ftable, "FT_CAMPAIGN")
+                                    .replace(R.id.ContainerFrame, ftable, "FT_CAMPAIGN")
                                     .addToBackStack("FT_CAMPAIGN")
                                     .commit();
                         }
@@ -321,7 +317,7 @@ public class SessionTableFragment extends Fragment implements
         fragment = new SessionEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_SESSION")
+                .replace(R.id.ContainerFrame, fragment, "FE_SESSION")
                 .addToBackStack("FE_SESSION")
                 .commit();
     }
@@ -331,7 +327,7 @@ public class SessionTableFragment extends Fragment implements
         fragment = new SessionEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FE_SESSION")
+                .replace(R.id.ContainerFrame, fragment, "FE_SESSION")
                 .addToBackStack("FE_SESSION")
                 .commit();
     }
@@ -344,7 +340,7 @@ public class SessionTableFragment extends Fragment implements
         fragment.setEnterTransition(new Slide(Gravity.RIGHT));
         setExitTransition(new Slide(Gravity.LEFT));
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameTop, fragment, "FT_ENCOUNTER")
+                .replace(R.id.ContainerFrame, fragment, "FT_ENCOUNTER")
                 .addToBackStack("FT_ENCOUNTER")
                 .commit();
     }
@@ -535,9 +531,9 @@ public class SessionTableFragment extends Fragment implements
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
         fragment.setEnterTransition(new Slide(Gravity.TOP));
-        Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+        Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.ContainerFrame);
         fragmentManager.beginTransaction()
-                .add(R.id.FrameTop, fragment, "FT_PC")
+                .add(R.id.ContainerFrame, fragment, "FT_PC")
                 .addToBackStack("NAV_F")
                 .commit();
     }
