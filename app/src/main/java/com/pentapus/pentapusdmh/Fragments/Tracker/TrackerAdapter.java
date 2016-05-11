@@ -1,19 +1,24 @@
 package com.pentapus.pentapusdmh.Fragments.Tracker;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,22 +36,26 @@ import java.util.List;
 /**
  * Created by Koni on 30/3/16.
  */
-public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder> {
+public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder> {
     private List<TrackerInfoCard> characterList = new ArrayList<>();
     private Context context;
+    private Activity activity;
     private int layoutCounter = 0;
     private GridLayout.LayoutParams layoutParams;
     private boolean firstTime;
     CustomRecyclerLayoutManager llm;
+    private int enteredInitiative;
 
-    public TrackerAdapter(Context context, List<TrackerInfoCard> characterList) {
+    public TrackerAdapter(Activity activity, Context context, List<TrackerInfoCard> characterList) {
         this.characterList = characterList;
+        this.activity = activity;
         this.context = context;
         layoutCounter = 0;
     }
 
-    public TrackerAdapter(Context context) {
+    public TrackerAdapter(Activity activity, Context context) {
         this.llm = llm;
+        this.activity = activity;
         this.context = context;
         layoutCounter = 0;
     }
@@ -188,8 +197,12 @@ public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Chara
     }
 
     public void addListItem(TrackerInfoCard trackerInfoCard) {
-        characterList.add(trackerInfoCard);
-        characterList = sortList(characterList);
+        if (trackerInfoCard.getType() == DataBaseHandler.TYPE_PC) {
+            enterInitiative(trackerInfoCard);
+        } else {
+            characterList.add(trackerInfoCard);
+            characterList = sortList(characterList);
+        }
     }
 
     public void moveToBottom() {
@@ -197,6 +210,47 @@ public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Chara
         if (characterList.get(0).dead && characterList.get(0).type == 0) {
             moveToBottom();
         }
+    }
+
+    private void enterInitiative(final TrackerInfoCard trackerInfoCard) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Enter Initiative for " + trackerInfoCard.getName());
+        LayoutInflater inflater = activity.getLayoutInflater();
+        // Set up the input
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        View view = inflater.inflate(R.layout.dialog_initiative, null);
+        final EditText etRoll = (EditText) view.findViewById(R.id.initiativeRoll);
+        TextView tvMod = (TextView) view.findViewById(R.id.initiativeMod);
+        tvMod.setText(trackerInfoCard.getInitiativeMod());
+
+
+        builder.setView(view);
+
+
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                enteredInitiative = Integer.valueOf(etRoll.getText().toString());
+                trackerInfoCard.setInitiative(String.valueOf(enteredInitiative + Integer.valueOf(trackerInfoCard.getInitiativeMod())));
+                characterList.add(trackerInfoCard);
+                characterList = sortList(characterList);
+                notifyDataSetChanged();
+            }
+        });
+        builder.setNegativeButton("Roll", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                enteredInitiative = DiceHelper.d20();
+                trackerInfoCard.setInitiative(String.valueOf(enteredInitiative + Integer.valueOf(trackerInfoCard.getInitiativeMod())));
+                characterList.add(trackerInfoCard);
+                characterList = sortList(characterList);
+                notifyDataSetChanged();
+            }
+        });
+        builder.create()
+                .show();
     }
 
     private List<TrackerInfoCard> sortList(List<TrackerInfoCard> list) {
@@ -253,22 +307,22 @@ public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Chara
     }
 
     public int getHp(int pos) {
-            return characterList.get(pos).getHp();
+        return characterList.get(pos).getHp();
     }
 
-    public int getMaxHp(int pos){
+    public int getMaxHp(int pos) {
         return characterList.get(pos).getMaxHp();
     }
 
-    public int getAc(int pos){
+    public int getAc(int pos) {
         return characterList.get(pos).getAc();
     }
 
-    public String getName(int pos){
+    public String getName(int pos) {
         return characterList.get(pos).getName();
     }
 
-    public Uri getIconUri(int pos){
+    public Uri getIconUri(int pos) {
         return characterList.get(pos).getIconUri();
     }
 
@@ -314,13 +368,13 @@ public class    TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Chara
             gridLayoutParams.rowSpec = GridLayout.spec(2);
         }*/
         if (layoutCounter < 5) {
-            gridLayoutParams.columnSpec = GridLayout.spec(9-layoutCounter);
+            gridLayoutParams.columnSpec = GridLayout.spec(9 - layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(1);
-        }  else if (layoutCounter < 10) {
+        } else if (layoutCounter < 10) {
             gridLayoutParams.columnSpec = GridLayout.spec(14 - layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(0);
-        }  else {
-            gridLayoutParams.columnSpec = GridLayout.spec(14-layoutCounter);
+        } else {
+            gridLayoutParams.columnSpec = GridLayout.spec(14 - layoutCounter);
             gridLayoutParams.rowSpec = GridLayout.spec(1);
         }
         layoutCounter++;

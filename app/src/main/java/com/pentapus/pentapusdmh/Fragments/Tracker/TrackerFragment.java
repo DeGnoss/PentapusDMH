@@ -1,6 +1,7 @@
 package com.pentapus.pentapusdmh.Fragments.Tracker;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
@@ -13,15 +14,18 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
@@ -43,6 +47,7 @@ public class TrackerFragment extends Fragment implements
     private static final String ABILITIES = "abilities";
     private RecyclerView mRecyclerView;
     private boolean pendingIntroAnimation;
+    private int enteredInitiative;
 
 
     private TrackerAdapter chars;
@@ -89,7 +94,7 @@ public class TrackerFragment extends Fragment implements
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
        // getLoaderManager().initLoader(2, null, this);
-        chars = new TrackerAdapter(getContext());
+        chars = new TrackerAdapter(getActivity(), getContext());
         mRecyclerView.setAdapter(chars);
 
         Button next = (Button) tableView.findViewById(R.id.bNext);
@@ -114,6 +119,7 @@ public class TrackerFragment extends Fragment implements
             pendingIntroAnimation = false;
             startIntroAnimation();
         }
+
         // Inflate the layout for this fragment
         return tableView;
     }
@@ -205,7 +211,6 @@ public class TrackerFragment extends Fragment implements
                     int charisma = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
                     int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
-
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = names;
@@ -229,7 +234,7 @@ public class TrackerFragment extends Fragment implements
             case 1:
                 //case PC
                 while (data.moveToNext()) {
-                    String names = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
+                    String name = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
                     int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int initiativeMod = initiative;
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
@@ -240,7 +245,7 @@ public class TrackerFragment extends Fragment implements
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
-                    ci.name = names;
+                    ci.name = name;
                     ci.initiative = String.valueOf(initiative);
                     ci.initiativeMod = String.valueOf(initiativeMod);
                     ci.ac = ac;
@@ -263,6 +268,41 @@ public class TrackerFragment extends Fragment implements
                 chars.notifyDataSetChanged();
             }
         });
+    }
+
+    private void startInitiative(){
+        for(int i=0; i<chars.getItemCount(); i++){
+            if(chars.getItem(i).getType() == DataBaseHandler.TYPE_PC){
+                enterInitiative(chars.getItem(i).getName(), i);
+            }
+        }
+        chars.notifyDataSetChanged();
+    }
+
+    private void enterInitiative(String name, final int id){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Enter Initiative for " + name);
+
+        // Set up the input
+        final EditText input = new EditText(getContext());
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                chars.getItem(id).setEnteredInitiative(Integer.valueOf(input.getText().toString()));
+            }
+        });
+        builder.setNegativeButton("Roll", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                chars.getItem(id).setEnteredInitiative(DiceHelper.d20());
+            }
+        });
+        builder.show();
     }
 
     @Override

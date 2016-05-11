@@ -26,6 +26,8 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -115,6 +117,12 @@ public class EncounterFragment extends Fragment implements
         setHasOptionsMenu(true);
         dataAdapterNPC = new CursorRecyclerViewAdapter(getContext(), null, this);
         dataAdapterPC = new CursorRecyclerViewAdapter(getContext(), null, this);
+        setupWindowAnimations();
+    }
+
+    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
+        getActivity().getWindow().setEnterTransition(slide);
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.net.Uri;
  */
 public class TrackerInfoCard {
     public String name;
+    public int enteredInitiative;
     public String initiative;
     public String initiativeMod;
     public int maxHp;
@@ -24,6 +25,26 @@ public class TrackerInfoCard {
 
     public int getType() {
         return type;
+    }
+
+    public String getInitiativeMod() {
+        return initiativeMod;
+    }
+
+    public int getEnteredInitiative() {
+        return enteredInitiative;
+    }
+
+    public void setEnteredInitiative(int enteredInitiative) {
+        this.enteredInitiative = enteredInitiative;
+    }
+
+    public String getInitiative() {
+        return initiative;
+    }
+
+    public void setInitiative(String initiative) {
+        this.initiative = initiative;
     }
 
     public Uri getIconUri() {

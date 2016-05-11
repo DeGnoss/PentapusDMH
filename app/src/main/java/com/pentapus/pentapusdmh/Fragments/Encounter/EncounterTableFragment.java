@@ -25,8 +25,10 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.Explode;
 import android.transition.Slide;
 import android.transition.TransitionInflater;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,17 +98,22 @@ public class EncounterTableFragment extends Fragment implements
             sessionName = getArguments().getString(SESSION_NAME);
         }
         mEncounterAdapter = new EncounterAdapter(getContext(), this);
+        setupWindowAnimations();
+    }
+
+    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
+        getActivity().getWindow().setExitTransition(slide);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //super.onCreateView(inflater, container, savedInstanceState);
-        int test = getActivity().getSupportFragmentManager().getBackStackEntryCount();
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
         ((MainActivity) getActivity()).setFabVisibility(true);
         //Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
-        //getActivity().getWindow().setEnterTransition(slide);
+       // getActivity().getWindow().setEnterTransition(slide);
 
 
         mEncounterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
@@ -325,6 +332,7 @@ public class EncounterTableFragment extends Fragment implements
         Fragment fragment;
         fragment = new EncounterEditFragment();
         fragment.setArguments(bundle);
+        fragment.setEnterTransition(new Explode());
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.ContainerFrame, fragment, "FE_ENCOUNTER")
                 .addToBackStack("FE_ENCOUNTER")
@@ -336,11 +344,11 @@ public class EncounterTableFragment extends Fragment implements
         Fragment fragment;
         fragment = new EncounterFragment();
         fragment.setArguments(bundle);
-        //fragment.setEnterTransition(new Slide(Gravity.RIGHT));
-        // setExitTransition(new Slide(Gravity.LEFT));
+        //fragment.setEnterTransition(new Slide(Gravity.START));
+        //setExitTransition(new Slide(Gravity.START));
+        //fragment.setReturnTransition(new Slide(Gravity.END));
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-       // transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
 
         transaction.replace(R.id.ContainerFrame, fragment, "F_ENCOUNTER")
