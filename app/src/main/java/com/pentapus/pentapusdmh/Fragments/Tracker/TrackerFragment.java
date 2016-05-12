@@ -4,6 +4,9 @@ package com.pentapus.pentapusdmh.Fragments.Tracker;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
@@ -19,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -38,9 +42,9 @@ import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
 
 public class TrackerFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, EnterInitiativeDialogFragment.EnterInitiativeDialogListener {
 
-
+    private int MSG_SHOW_DIALOG = 1000, MSG_FINISH_DIALOG = 1001;
     private static final String ID = "id";
     private static final String STATUSES = "statuses";
     private static final String HP = "hp";
@@ -48,6 +52,7 @@ public class TrackerFragment extends Fragment implements
     private RecyclerView mRecyclerView;
     private boolean pendingIntroAnimation;
     private int enteredInitiative;
+    private int dialogCounter = 0;
 
 
     private TrackerAdapter chars;
@@ -76,7 +81,7 @@ public class TrackerFragment extends Fragment implements
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         }
-        ((MainActivity)getActivity()).disableNavigationDrawer();
+        ((MainActivity) getActivity()).disableNavigationDrawer();
     }
 
 
@@ -84,7 +89,7 @@ public class TrackerFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_tracker, container, false);
-        ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity) getActivity()).setFabVisibility(false);
         mRecyclerView = (RecyclerView) tableView.findViewById(R.id.listViewEncounter);
         CustomRecyclerLayoutManager llm = new CustomRecyclerLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -93,8 +98,8 @@ public class TrackerFragment extends Fragment implements
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
-       // getLoaderManager().initLoader(2, null, this);
-        chars = new TrackerAdapter((AppCompatActivity)getActivity(), getContext());
+        // getLoaderManager().initLoader(2, null, this);
+        chars = new TrackerAdapter((AppCompatActivity) getActivity(), getContext());
         mRecyclerView.setAdapter(chars);
 
         Button next = (Button) tableView.findViewById(R.id.bNext);
@@ -117,7 +122,7 @@ public class TrackerFragment extends Fragment implements
         );
         if (pendingIntroAnimation) {
             pendingIntroAnimation = false;
-            startIntroAnimation();
+            //startIntroAnimation();
         }
 
         // Inflate the layout for this fragment
@@ -235,15 +240,14 @@ public class TrackerFragment extends Fragment implements
                 //case PC
                 while (data.moveToNext()) {
                     String name = data.getString(data.getColumnIndex(DataBaseHandler.KEY_NAME));
-                    int initiative = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
-                    int initiativeMod = initiative;
+                    int initiative = 0;
+                    int initiativeMod = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
                     int hp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_HP));
                     int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
                     int disabled = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_DISABLED));
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
-                    initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = name;
                     ci.initiative = String.valueOf(initiative);
@@ -254,10 +258,11 @@ public class TrackerFragment extends Fragment implements
                     ci.type = type;
                     ci.dead = false;
                     ci.iconUri = iconUri;
-                    if(disabled == 0){
+                    if (disabled == 0) {
                         chars.addListItem(ci);
                     }
                 }
+                handler.sendEmptyMessage(MSG_SHOW_DIALOG);
                 break;
             default:
                 break;
@@ -270,39 +275,42 @@ public class TrackerFragment extends Fragment implements
         });
     }
 
-    private void startInitiative(){
-        for(int i=0; i<chars.getItemCount(); i++){
-            if(chars.getItem(i).getType() == DataBaseHandler.TYPE_PC){
-                enterInitiative(chars.getItem(i).getName(), i);
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == MSG_SHOW_DIALOG) {
+                for(int i=0; i<chars.characterList.size(); i++){
+                    if(chars.characterList.get(i).getType() == DataBaseHandler.TYPE_PC){
+                        startInitiativeDialog(chars.characterList.get(i), i);
+                    }
+                }
+            }
+        }
+    };
+
+    private void startInitiativeDialog(TrackerInfoCard trackerInfoCard, int id) {
+        DialogFragment newFragment = EnterInitiativeDialogFragment.newInstance(trackerInfoCard.getName(), Integer.parseInt(trackerInfoCard.getInitiativeMod()), id);
+        newFragment.setTargetFragment(this, MSG_FINISH_DIALOG);
+        newFragment.show(getActivity().getSupportFragmentManager(), "F_ENTER_INITIATIVE_DIALOG");
+        dialogCounter++;
+    }
+
+    private void startInitiative() {
+        for (int i = 0; i < chars.getItemCount(); i++) {
+            if (chars.getItem(i).getType() == DataBaseHandler.TYPE_PC) {
+                //enterInitiative(chars.getItem(i).getName(), i);
             }
         }
         chars.notifyDataSetChanged();
     }
 
-    private void enterInitiative(String name, final int id){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Enter Initiative for " + name);
-
-        // Set up the input
-        final EditText input = new EditText(getContext());
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                chars.getItem(id).setEnteredInitiative(Integer.valueOf(input.getText().toString()));
-            }
-        });
-        builder.setNegativeButton("Roll", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                chars.getItem(id).setEnteredInitiative(DiceHelper.d20());
-            }
-        });
-        builder.show();
+    private void enterInitiative(TrackerInfoCard trackerInfoCard) {
+        Bundle args = new Bundle();
+        args.putString("name", trackerInfoCard.getName());
+        args.putInt("initiativeMod", Integer.parseInt(trackerInfoCard.getInitiativeMod()));
+        DialogFragment newFragment = new EnterInitiativeDialogFragment();
+        newFragment.setArguments(args);
+        newFragment.show(getActivity().getSupportFragmentManager(), "F_ENTER_INITIATIVE_DIALOG");
     }
 
     @Override
@@ -327,6 +335,16 @@ public class TrackerFragment extends Fragment implements
         }
     }
 
+    public void onDialogResult(int requestCode, int listId, int enteredInitiative) {
+        Log.d("DialogResult", String.valueOf(enteredInitiative));
+        int totalInitiative = Integer.parseInt(chars.characterList.get(listId).getInitiativeMod() + enteredInitiative);
+        chars.characterList.get(listId).setInitiative(String.valueOf(totalInitiative));
+        dialogCounter--;
+        if(dialogCounter==0){
+            chars.sortCharacterList();
+        }
+    }
+
 
     private void startIntroAnimation() {
         mRecyclerView.setAlpha(0f);
@@ -337,4 +355,13 @@ public class TrackerFragment extends Fragment implements
                 .start();
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, int enteredInitiative) {
+        Log.d("Init Input: ", String.valueOf(enteredInitiative));
+    }
+
+    @Override
+    public void onDialogNeutralClick(DialogFragment dialog, int enteredInitiative) {
+        Log.d("Init roll: ", String.valueOf(enteredInitiative));
+    }
 }

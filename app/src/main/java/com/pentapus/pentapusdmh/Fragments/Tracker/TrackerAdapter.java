@@ -8,7 +8,10 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -43,7 +46,7 @@ import java.util.List;
  * Created by Koni on 30/3/16.
  */
 public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.CharacterViewHolder> {
-    private List<TrackerInfoCard> characterList = new ArrayList<>();
+    public List<TrackerInfoCard> characterList = new ArrayList<>();
     private Context context;
     private AppCompatActivity activity;
     private int layoutCounter = 0;
@@ -51,6 +54,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
     private boolean firstTime;
     CustomRecyclerLayoutManager llm;
     private int enteredInitiative;
+    private int MSG_SHOW_DIALOG = 1000;
     private List<Dialog> dialogList = new ArrayList<>();
 
     public TrackerAdapter(AppCompatActivity activity, Context context, List<TrackerInfoCard> characterList) {
@@ -199,17 +203,11 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.card_tracker, viewGroup, false);
-
         return new CharacterViewHolder(itemView);
     }
 
     public void addListItem(TrackerInfoCard trackerInfoCard) {
-        if (trackerInfoCard.getType() == DataBaseHandler.TYPE_PC) {
-            enterInitiative(trackerInfoCard);
-        } else {
             characterList.add(trackerInfoCard);
-            characterList = sortList(characterList);
-        }
     }
 
     public void moveToBottom() {
@@ -218,6 +216,8 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
             moveToBottom();
         }
     }
+
+
 
     private void enterInitiative(final TrackerInfoCard trackerInfoCard) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -229,11 +229,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         final EditText etRoll = (EditText) view.findViewById(R.id.initiativeRoll);
         TextView tvMod = (TextView) view.findViewById(R.id.initiativeMod);
         tvMod.setText(trackerInfoCard.getInitiativeMod());
-
-
         builder.setView(view);
-
-
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -259,6 +255,8 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
             }
         });
         final AlertDialog dialog = builder.create();
+        dialogList.add(dialog);
+        dialog.setCancelable(false);
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
@@ -288,8 +286,6 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
 
             }
         });
-
-
     }
 
     private List<TrackerInfoCard> sortList(List<TrackerInfoCard> list) {
@@ -305,6 +301,11 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
             }
         });
         return list;
+    }
+
+    public void sortCharacterList(){
+        characterList = sortList(characterList);
+        notifyDataSetChanged();
     }
 
     private int reCompare(TrackerInfoCard lhs, TrackerInfoCard rhs) {

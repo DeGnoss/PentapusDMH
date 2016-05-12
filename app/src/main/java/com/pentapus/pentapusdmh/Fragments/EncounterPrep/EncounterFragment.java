@@ -787,4 +787,8 @@ public class EncounterFragment extends Fragment implements
     public void onItemRemoved(int notifyPosition) {
         mergeAdapter.notifyItemRemoved(notifyPosition);
     }
+
+    public int getListSize(){
+        return mergeAdapter.getItemCount();
+    }
 }
