@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Navigation">
-        <menu>
-            <item
-                android:id="@+id/nav_party"
-                android:icon="@drawable/ic_group_black"
-                android:title="Party" />
-            <item
-                android:id="@+id/nav_campaign"
-                android:icon="@drawable/ic_group_black"
-                android:title="Campaigns" />
+    <group android:id="@+id/menu_navigation">
+        <item
+            android:id="@+id/nav_campaign"
+            android:icon="@drawable/ic_action_book"
+            android:title="Campaigns" />
 
+        <item
+            android:id="@+id/nav_party"
+            android:icon="@drawable/ic_group_pc"
+            android:title="Party" />
+    </group>
+    <group android:id="@+id/menu_character_management">
+        <item
+            android:id="@+id/nav_npc"
+            android:icon="@drawable/ic_group_npc"
+            android:title="NPCs" />
 
-        </menu>
-    </item>
-
-    <item android:title="Character Managment">
-        <menu>
-            <item
-                android:id="@+id/nav_npc"
-                android:icon="@drawable/ic_group_black"
-                android:title="NPCs" />
-
-            <item
-                android:id="@+id/nav_monsters"
-                android:icon="@drawable/ic_group_black"
-                android:title="Monsters" />
-        </menu>
-    </item>
-
+        <item
+            android:id="@+id/nav_monsters"
+            android:icon="@drawable/ic_group_monster"
+            android:title="Monsters" />
+    </group>
+    <group android:id="@+id/menu_settings">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
+    </group>
 </menu>

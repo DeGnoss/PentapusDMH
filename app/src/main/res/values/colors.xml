@@ -6,4 +6,7 @@
     <color name="colorAccentDark">#CDDC39</color>
     <color name="colorDialog">#cc000000</color>
     <color name="colorDisabled">#77000000</color>
+    <color name="colorPc">#3F51B5</color>
+    <color name="colorNpc">#4caf50</color>
+    <color name="colorMonster">#F44336</color>
 </resources>

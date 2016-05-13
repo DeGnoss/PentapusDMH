@@ -16,19 +16,4 @@
         android:visible="false"
         android:icon="@drawable/ic_content_paste_white_24dp"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/campaign_settings"
-        android:orderInCategory="100"
-        android:title="@string/campaign_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/player_settings"
-        android:orderInCategory="100"
-        android:title="Manage Player Characters"
-        app:showAsAction="never" />
 </menu>

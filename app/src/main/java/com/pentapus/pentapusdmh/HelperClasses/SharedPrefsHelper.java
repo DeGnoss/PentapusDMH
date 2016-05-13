@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
  */
 public class SharedPrefsHelper {
 
-    private static String settings = "sharedPrefs";
+    private static String settings = "prefFilePentapus";
     static SharedPreferences sp;
 
     public static void saveCampaign(Context context, int value, String name){

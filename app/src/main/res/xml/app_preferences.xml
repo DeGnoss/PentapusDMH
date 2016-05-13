@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Tracker">
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:allowUndo="true"
+            android:defaultValue="false"
+            android:key="@string/prefs_key_app_initiative_autoroll"
+            android:summary="When the tracker starts, skip player character initiative input."
+            android:title="Auto roll initiative" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

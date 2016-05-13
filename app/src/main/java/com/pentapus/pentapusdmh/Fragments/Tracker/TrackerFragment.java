@@ -31,6 +31,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.pentapus.pentapusdmh.Fragments.SettingsFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
@@ -40,9 +41,16 @@ import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+
 
 public class TrackerFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, EnterInitiativeDialogFragment.EnterInitiativeDialogListener {
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private int MSG_SHOW_DIALOG = 1000, MSG_FINISH_DIALOG = 1001;
     private static final String ID = "id";
@@ -53,10 +61,22 @@ public class TrackerFragment extends Fragment implements
     private boolean pendingIntroAnimation;
     private int enteredInitiative;
     private int dialogCounter = 0;
+    List<PcListElement> pcList = new ArrayList<>();
 
 
     private TrackerAdapter chars;
     private static int campaignId, encounterId;
+
+
+    public class PcListElement {
+        public TrackerInfoCard trackerInfoCard;
+        public int listId;
+
+        public PcListElement(TrackerInfoCard trackerInfoCard, int listId) {
+            this.trackerInfoCard = trackerInfoCard;
+            this.listId = listId;
+        }
+    }
 
 
     public TrackerFragment() {
@@ -248,6 +268,9 @@ public class TrackerFragment extends Fragment implements
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
                     int disabled = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_DISABLED));
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));
+                    if(SettingsFragment.isAutoRollEnabled(getContext())) {
+                        initiative = initiativeMod + DiceHelper.d20();
+                    }
                     TrackerInfoCard ci = new TrackerInfoCard();
                     ci.name = name;
                     ci.initiative = String.valueOf(initiative);
@@ -261,8 +284,14 @@ public class TrackerFragment extends Fragment implements
                     if (disabled == 0) {
                         chars.addListItem(ci);
                     }
+
+
                 }
-                handler.sendEmptyMessage(MSG_SHOW_DIALOG);
+                if(!SettingsFragment.isAutoRollEnabled(getContext())) {
+                    handler.sendEmptyMessage(MSG_SHOW_DIALOG);
+                }else{
+                    chars.sortCharacterList();
+                }
                 break;
             default:
                 break;
@@ -278,39 +307,22 @@ public class TrackerFragment extends Fragment implements
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what == MSG_SHOW_DIALOG) {
-                for(int i=0; i<chars.characterList.size(); i++){
-                    if(chars.characterList.get(i).getType() == DataBaseHandler.TYPE_PC){
-                        startInitiativeDialog(chars.characterList.get(i), i);
+            if (msg.what == MSG_SHOW_DIALOG) {
+                for (int i = 0; i < chars.characterList.size(); i++) {
+                    if (chars.characterList.get(i).getType() == DataBaseHandler.TYPE_PC) {
+                        pcList.add(new PcListElement(chars.characterList.get(i), i));
+                        startInitiativeDialog(chars.characterList.get(i).getName(), Integer.parseInt(chars.characterList.get(i).getInitiativeMod()), i);
                     }
                 }
             }
         }
     };
 
-    private void startInitiativeDialog(TrackerInfoCard trackerInfoCard, int id) {
-        DialogFragment newFragment = EnterInitiativeDialogFragment.newInstance(trackerInfoCard.getName(), Integer.parseInt(trackerInfoCard.getInitiativeMod()), id);
+    private void startInitiativeDialog(String name, int initiativeMod, int i) {
+        DialogFragment newFragment = EnterInitiativeDialogFragment.newInstance(name, initiativeMod, i);
         newFragment.setTargetFragment(this, MSG_FINISH_DIALOG);
         newFragment.show(getActivity().getSupportFragmentManager(), "F_ENTER_INITIATIVE_DIALOG");
         dialogCounter++;
-    }
-
-    private void startInitiative() {
-        for (int i = 0; i < chars.getItemCount(); i++) {
-            if (chars.getItem(i).getType() == DataBaseHandler.TYPE_PC) {
-                //enterInitiative(chars.getItem(i).getName(), i);
-            }
-        }
-        chars.notifyDataSetChanged();
-    }
-
-    private void enterInitiative(TrackerInfoCard trackerInfoCard) {
-        Bundle args = new Bundle();
-        args.putString("name", trackerInfoCard.getName());
-        args.putInt("initiativeMod", Integer.parseInt(trackerInfoCard.getInitiativeMod()));
-        DialogFragment newFragment = new EnterInitiativeDialogFragment();
-        newFragment.setArguments(args);
-        newFragment.show(getActivity().getSupportFragmentManager(), "F_ENTER_INITIATIVE_DIALOG");
     }
 
     @Override
@@ -337,31 +349,11 @@ public class TrackerFragment extends Fragment implements
 
     public void onDialogResult(int requestCode, int listId, int enteredInitiative) {
         Log.d("DialogResult", String.valueOf(enteredInitiative));
-        int totalInitiative = Integer.parseInt(chars.characterList.get(listId).getInitiativeMod() + enteredInitiative);
+        int totalInitiative = Integer.parseInt(chars.characterList.get(listId).getInitiativeMod()) + enteredInitiative;
         chars.characterList.get(listId).setInitiative(String.valueOf(totalInitiative));
         dialogCounter--;
-        if(dialogCounter==0){
+        if (dialogCounter == 0) {
             chars.sortCharacterList();
         }
-    }
-
-
-    private void startIntroAnimation() {
-        mRecyclerView.setAlpha(0f);
-        mRecyclerView.animate()
-                .setDuration(500)
-                .alpha(1f)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .start();
-    }
-
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog, int enteredInitiative) {
-        Log.d("Init Input: ", String.valueOf(enteredInitiative));
-    }
-
-    @Override
-    public void onDialogNeutralClick(DialogFragment dialog, int enteredInitiative) {
-        Log.d("Init roll: ", String.valueOf(enteredInitiative));
     }
 }

@@ -356,7 +356,7 @@ public class PcTableFragment extends Fragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.campaign_settings).setVisible(true);
+       // menu.findItem(R.id.campaign_settings).setVisible(true);
 
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 

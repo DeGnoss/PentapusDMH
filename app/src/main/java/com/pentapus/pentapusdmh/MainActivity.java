@@ -11,6 +11,14 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -38,6 +46,7 @@ import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
+import com.pentapus.pentapusdmh.Fragments.SettingsFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -71,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
+       // tintNavigationViewItems(navigationView);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +102,82 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .addToBackStack("FT_SESSION")
                 .commit();
     }
+
+
+    private void tintNavigationViewItems(NavigationView navigationView){
+        //pcs
+        Drawable oldIcon = navigationView
+                .getMenu()
+                .findItem(R.id.nav_party)
+                .getIcon();
+
+        if (!(oldIcon instanceof BitmapDrawable)) {
+            return;
+        }
+
+        Bitmap immutable = ((BitmapDrawable)oldIcon).getBitmap();
+        Bitmap mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas c = new Canvas(mutable);
+        Paint p = new Paint();
+        p.setColor(Color.parseColor("#3F51B5"));
+        p.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#3F51B5"), PorterDuff.Mode.MULTIPLY));
+        c.drawBitmap(mutable, 0.f, 0.f, p);
+        BitmapDrawable newIcon = new BitmapDrawable(getResources(), mutable);
+
+        navigationView
+                .getMenu()
+                .findItem(R.id.nav_party)
+                .setIcon(newIcon);
+
+        //monsters
+        oldIcon = navigationView
+                .getMenu()
+                .findItem(R.id.nav_monsters)
+                .getIcon();
+
+        if (!(oldIcon instanceof BitmapDrawable)) {
+            return;
+        }
+
+        immutable = ((BitmapDrawable)oldIcon).getBitmap();
+        mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
+        c = new Canvas(mutable);
+        p = new Paint();
+        p.setColor(Color.parseColor("#F44336"));
+        p.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#F44336"), PorterDuff.Mode.MULTIPLY));
+        c.drawBitmap(mutable, 0.f, 0.f, p);
+        newIcon = new BitmapDrawable(getResources(), mutable);
+
+        navigationView
+                .getMenu()
+                .findItem(R.id.nav_party)
+                .setIcon(newIcon);
+
+        //npcs
+        oldIcon = navigationView
+                .getMenu()
+                .findItem(R.id.nav_monsters)
+                .getIcon();
+
+        if (!(oldIcon instanceof BitmapDrawable)) {
+            return;
+        }
+
+        immutable = ((BitmapDrawable)oldIcon).getBitmap();
+        mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
+        c = new Canvas(mutable);
+        p = new Paint();
+        p.setColor(Color.parseColor("#4caf50"));
+        p.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#4caf50"), PorterDuff.Mode.MULTIPLY));
+        c.drawBitmap(mutable, 0.f, 0.f, p);
+        newIcon = new BitmapDrawable(getResources(), mutable);
+
+        navigationView
+                .getMenu()
+                .findItem(R.id.nav_party)
+                .setIcon(newIcon);
+    }
+
 
 
     @Override
@@ -113,9 +200,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.campaign_settings) {
+        }*/ /*else if (id == R.id.campaign_settings) {
             CampaignTableFragment myFragment = (CampaignTableFragment) getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN");
             if (myFragment != null) {
                 if (!myFragment.isVisible()) {
@@ -135,20 +222,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
 
-        } else if (id == R.id.play_mode) {
+        }  else*/
+        if (id == R.id.play_mode) {
             TrackerFragment ftable = new TrackerFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.ContainerFrame, ftable, "F_TRACKER")
                     .addToBackStack("F_TRACKER")
                     .commit();
             return true;
-        } else if (id == R.id.player_settings) {
+        }/* else if (id == R.id.player_settings) {
 
             Bundle bundle = new Bundle();
             bundle.putInt("campaignId", SharedPrefsHelper.loadCampaignId(this));
             bundle.putString("campaignName", SharedPrefsHelper.loadCampaignName(this));
             loadPCs(bundle);
-        } else if (id == R.id.menu_paste) {
+        }*/ else if (id == R.id.menu_paste) {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
@@ -484,27 +572,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } else if ("F_MONSTER_PAGER".equals(getCurrentFragmentTag())) {
                     Fragment fragment = fm.findFragmentByTag("F_MONSTER_PAGER");
                     FragmentManager childFM = fragment.getChildFragmentManager();
-                    while(childFM.getBackStackEntryCount() > 0){
+                    while (childFM.getBackStackEntryCount() > 0) {
                         childFM.popBackStack();
                     }
                     fm.popBackStack();
-                    Log.d("FragmentList" , getSupportFragmentManager().getFragments().toString());
+                    Log.d("FragmentList", getSupportFragmentManager().getFragments().toString());
 
                 } else if ("F_IMAGE_PAGER".equals(getCurrentFragmentTag())) {
                     Fragment fragment = fm.findFragmentByTag("F_IMAGE_PAGER");
-                FragmentManager childFM = fragment.getChildFragmentManager();
-                while(childFM.getBackStackEntryCount() > 0){
-                    childFM.popBackStack();
-                }
-                fm.popBackStack();
-                    Log.d("FragmentList" , getSupportFragmentManager().getFragments().toString());
+                    FragmentManager childFM = fragment.getChildFragmentManager();
+                    while (childFM.getBackStackEntryCount() > 0) {
+                        childFM.popBackStack();
+                    }
+                    fm.popBackStack();
+                    Log.d("FragmentList", getSupportFragmentManager().getFragments().toString());
 
-                }
-                else {
+                } else {
                     pressedTwice = false;
                     fm.popBackStack();
                     Log.d("Backstack:", String.valueOf(fm.getBackStackEntryCount()));
-                    Log.d("FragmentList" , getSupportFragmentManager().getFragments().toString());
+                    Log.d("FragmentList", getSupportFragmentManager().getFragments().toString());
                 }
             } else {
                 super.onBackPressed();
@@ -584,12 +671,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
-        Class fragmentClass = null;
+        Class fragmentClass;
         int id = item.getItemId();
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
         FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
-        FragmentTransaction ft = fragmentManager.beginTransaction();
         String str = backEntry.getName();
         boolean topBackEntryIsNav = false;
         if (str.equals("NAV_F")) {
@@ -635,7 +721,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (topBackEntryIsNav) {
                     fragmentManager.popBackStack();
                 }
-                fragmentManager.beginTransaction().replace(android.R.id.content, fragment, "F_MONSTER_PAGER")
+                fragmentManager.beginTransaction().replace(R.id.drawer_layout, fragment, "F_MONSTER_PAGER")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
@@ -652,7 +738,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (topBackEntryIsNav) {
                     fragmentManager.popBackStack();
                 }
-                fragmentManager.beginTransaction().replace(android.R.id.content, fragment, "F_NPC_PAGER")
+                fragmentManager.beginTransaction().replace(R.id.drawer_layout, fragment, "F_NPC_PAGER")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
@@ -669,6 +755,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     fragmentManager.popBackStack();
                 }
                 fragmentManager.beginTransaction().replace(R.id.ContainerFrame, fragment, "FT_CAMPAIGN")
+                        .addToBackStack("NAV_F")
+                        .commit();
+                break;
+            case R.id.nav_settings:
+                fragmentClass = SettingsFragment.class;
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    fragment.setArguments(bundle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (topBackEntryIsNav) {
+                    fragmentManager.popBackStack();
+                }
+                fragmentManager.beginTransaction().replace(R.id.ContainerFrame, fragment, "F_SETTINGS")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -127,6 +128,13 @@ public class SessionEditFragment extends Fragment {
             Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
+
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         getActivity().getSupportFragmentManager().popBackStack();
     }
 

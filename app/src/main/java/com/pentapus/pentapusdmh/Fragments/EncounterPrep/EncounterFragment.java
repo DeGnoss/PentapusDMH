@@ -419,6 +419,7 @@ public class EncounterFragment extends Fragment implements
         //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
+        transaction.remove(this);
         transaction.add(R.id.drawer_layout, newFragment, "F_MONSTER_PAGER")
                 .addToBackStack("F_MONSTER_PAGER").commit();
     }
@@ -435,6 +436,7 @@ public class EncounterFragment extends Fragment implements
         //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
+        transaction.remove(this);
         transaction.add(R.id.drawer_layout, newFragment, "F_NPC_PAGER")
                 .addToBackStack("F_NPC_PAGER").commit();
     }

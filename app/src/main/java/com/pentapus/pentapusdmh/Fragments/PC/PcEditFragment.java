@@ -17,6 +17,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -202,6 +203,13 @@ public class PcEditFragment extends Fragment {
             Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + pcId);
             getContext().getContentResolver().update(uri, values, null, null);
         }
+
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
