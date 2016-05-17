@@ -110,7 +110,7 @@
             android:layout_centerHorizontal="true"
             android:text="Disabled"
             android:textSize="30dp"
-            android:textColor="@color/bpWhite"
+            android:textColor="@android:color/white"
             android:layout_marginStart="20dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 

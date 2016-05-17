@@ -12,10 +12,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
-import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerInfoCard;
+import com.pentapus.pentapusdmh.NumberPicker.NumberPickerBuilder;
+import com.pentapus.pentapusdmh.NumberPicker.NumberPickerDialogFragment;
 import com.pentapus.pentapusdmh.R;
 
 import java.math.BigDecimal;
@@ -112,13 +112,12 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
                 NumberPickerBuilder npb = new NumberPickerBuilder()
                         .setFragmentManager(getChildFragmentManager())
                         .setStyleResId(R.style.BetterPickersDialogFragment)
-                        .setLabelText("Damage/Healing")
-                        .setDecimalVisibility(0)
+                        .setLabelText("Damage")
+                        .setDecimalVisibility(View.INVISIBLE)
                         .setTargetFragment(HpOverviewFragment.this);
                 npb.show();
             }
         });
-
 
         return view;
     }
@@ -128,11 +127,15 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
     }
 
     @Override
-    public void onDialogNumberSet(int reference, BigInteger number, double decimal, boolean isNegative, BigDecimal fullNumber) {
+    public void onDialogNumberSet(int reference, BigInteger number, boolean temporary, boolean isNegative, BigDecimal fullNumber) {
         hpDiff = number.intValue();
         tvDamage.setText(String.valueOf(Math.abs(number.intValue())));
         if(isNegative){
-            tvIdentifier.setText("Healing");
+            if(temporary){
+                tvIdentifier.setText("Temp. Hp");
+            }else{
+                tvIdentifier.setText("Heal");
+            }
         }else{
             tvIdentifier.setText("Damage");
         }

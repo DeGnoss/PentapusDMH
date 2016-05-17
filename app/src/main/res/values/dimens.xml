@@ -8,4 +8,9 @@
     <dimen name="image_status_trackerfragment">20dp</dimen>
     <dimen name="ic_clear_margin">16dp</dimen>
     <dimen name="filter_image">48dp</dimen>
+
+    <dimen name="bp_material_button_height">48dp</dimen>
+    <dimen name="bp_material_button_textsize">14sp</dimen>
+    <dimen name="bp_material_button_minwidth">64dp</dimen>
+    <dimen name="bp_material_button_textpadding_horizontal">8dp</dimen>
 </resources>

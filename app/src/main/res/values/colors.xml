@@ -9,4 +9,8 @@
     <color name="colorPc">#3F51B5</color>
     <color name="colorNpc">#4caf50</color>
     <color name="colorMonster">#F44336</color>
+
+    <color name="bpBlue">#33b5e5</color>
+    <color name="done_text_color_disabled">#cccccc</color>
+    <color name="bpTransparent_black">#7f000000</color>
 </resources>
