@@ -207,7 +207,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
     }
 
     public void addListItem(TrackerInfoCard trackerInfoCard) {
-            characterList.add(trackerInfoCard);
+        characterList.add(trackerInfoCard);
     }
 
     public void moveToBottom() {
@@ -216,7 +216,6 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
             moveToBottom();
         }
     }
-
 
 
     private void enterInitiative(final TrackerInfoCard trackerInfoCard) {
@@ -235,7 +234,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(etRoll.getText() == null){
+                if (etRoll.getText() == null) {
                 }
                 enteredInitiative = Integer.valueOf(etRoll.getText().toString());
                 trackerInfoCard.setInitiative(String.valueOf(enteredInitiative + Integer.valueOf(trackerInfoCard.getInitiativeMod())));
@@ -269,14 +268,14 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length()>0){
+                if (s.length() > 0) {
                     int value = Integer.valueOf(s.toString());
-                    if(value >0 && value <=20){
+                    if (value > 0 && value <= 20) {
                         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                    }else{
+                    } else {
                         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                     }
-                }else{
+                } else {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                 }
             }
@@ -303,7 +302,7 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         return list;
     }
 
-    public void sortCharacterList(){
+    public void sortCharacterList() {
         characterList = sortList(characterList);
         notifyDataSetChanged();
     }
@@ -318,8 +317,30 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         }
     }
 
-    public void setHp(int id, int hpDiff) {
-        characterList.get(id).hp = characterList.get(id).hp - hpDiff;
+    public void setHp(int id, int hpDiff, boolean temporary, boolean isHeal) {
+        if (temporary) {
+            characterList.get(id).tempHp = characterList.get(id).tempHp - hpDiff;
+            characterList.get(id).hp = characterList.get(id).hp - hpDiff;
+        } else {
+            if (isHeal) {
+                characterList.get(id).hp = characterList.get(id).hp - hpDiff;
+                if (characterList.get(id).hp > (characterList.get(id).maxHp + characterList.get(id).tempHp)) {
+                    characterList.get(id).hp = characterList.get(id).maxHp + characterList.get(id).tempHp;
+                }
+            } else {
+                if (characterList.get(id).tempHp > 0) {
+                    characterList.get(id).tempHp = characterList.get(id).tempHp - hpDiff;
+                    characterList.get(id).hp = characterList.get(id).hp - hpDiff;
+                    if (characterList.get(id).tempHp < 0) {
+                        characterList.get(id).tempHp = 0;
+                    }
+                } else {
+                    characterList.get(id).hp = characterList.get(id).hp - hpDiff;
+                }
+            }
+        }
+
+
         if (characterList.get(id).hp == 0) {
             characterList.get(id).dead = true;
         } else if (characterList.get(id).hp < 0) {

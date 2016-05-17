@@ -11,6 +11,7 @@ public class TrackerInfoCard {
     public String initiative;
     public String initiativeMod;
     public int maxHp;
+    public int tempHp;
     public int ac;
     public int type;
     public int hp;
@@ -22,6 +23,14 @@ public class TrackerInfoCard {
     protected static final String NAME_PREFIX = "Name_";
     protected static final String INITIATIVE_PREFIX = "Initiative_";
 
+
+    public int getTempHp() {
+        return tempHp;
+    }
+
+    public void setTempHp(int tempHp) {
+        this.tempHp = tempHp;
+    }
 
     public int getType() {
         return type;

@@ -38,6 +38,7 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
     private String name;
     private Uri iconUri;
     private int type;
+    private boolean isTemp = false, isHeal = false;
     private TrackerInfoCard selectedCharacter;
 
 
@@ -123,12 +124,14 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
     }
 
     public void saveChanges(){
-        ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().setHp(id, hpDiff);
+        ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().setHp(id, hpDiff, isTemp, isHeal);
     }
 
     @Override
     public void onDialogNumberSet(int reference, BigInteger number, boolean temporary, boolean isNegative, BigDecimal fullNumber) {
         hpDiff = number.intValue();
+        isTemp = temporary;
+        isHeal = isNegative;
         tvDamage.setText(String.valueOf(Math.abs(number.intValue())));
         if(isNegative){
             if(temporary){
