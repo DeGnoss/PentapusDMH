@@ -4,11 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
+
 /**
  * Created by Koni on 27.02.2016.
  */
-public class DataBaseHandler extends SQLiteOpenHelper {
+public class DataBaseHandler extends SQLiteAssetHelper {
 
+    private static final String DATABASE_NAME ="pentapusdata.sqlite";
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -17,7 +20,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static final int TYPE_PC = 2;
 
     // Database Name
-    private static final String DATABASE_NAME = "ddDatabase";
 
     public static final String TABLE_CAMPAIGN = "campaign";
     public static final String TABLE_SESSION = "session";
@@ -43,12 +45,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     //Encounter & NPC Table
     private static final String KEY_CR = "cr";
     private static final String KEY_XP = "xp";
-    public static final String KEY_INITIATIVEBONUS = "init";
+    public static final String KEY_INITIATIVEBONUS = "initiativebonus";
 
 
     //PC & NPC Table
     public static final String KEY_MM = "mm";
-    public static final String KEY_MAXHP = "maxHp";
+    public static final String KEY_MAXHP = "maxhp";
     public static final String KEY_HP = "hp";
     public static final String KEY_AC = "ac";
     public static final String KEY_TYPE = "type";
@@ -175,7 +177,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    @Override
+    /*@Override
     public void onCreate(SQLiteDatabase db) {
         //Create campaign table
         String CREATE_CAMPAIGN_TABLE =
@@ -334,7 +336,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
 
 
-    }
+    } */
 
     @Override
     public void onOpen(SQLiteDatabase db) {

@@ -165,6 +165,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
+            //ivIcon.setImageURI(Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight"));
             clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));

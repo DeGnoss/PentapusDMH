@@ -721,7 +721,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (topBackEntryIsNav) {
                     fragmentManager.popBackStack();
                 }
-                fragmentManager.beginTransaction().replace(R.id.drawer_layout, fragment, "F_MONSTER_PAGER")
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.remove(fragmentManager.findFragmentByTag(getCurrentFragmentTag()));
+                transaction.replace(R.id.drawer_layout, fragment, "F_MONSTER_PAGER")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
@@ -738,7 +740,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (topBackEntryIsNav) {
                     fragmentManager.popBackStack();
                 }
-                fragmentManager.beginTransaction().replace(R.id.drawer_layout, fragment, "F_NPC_PAGER")
+                transaction = fragmentManager.beginTransaction();
+                transaction.remove(fragmentManager.findFragmentByTag(getCurrentFragmentTag()));
+                transaction.replace(R.id.drawer_layout, fragment, "F_NPC_PAGER")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
