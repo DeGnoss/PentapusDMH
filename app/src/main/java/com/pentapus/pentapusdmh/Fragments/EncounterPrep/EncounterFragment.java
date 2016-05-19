@@ -477,6 +477,7 @@ public class EncounterFragment extends Fragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.play_mode).setVisible(true);
 
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);

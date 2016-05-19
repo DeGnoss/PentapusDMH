@@ -23,6 +23,11 @@
             android:id="@+id/nav_monsters"
             android:icon="@drawable/ic_group_monster"
             android:title="Monsters" />
+
+        <item
+            android:id="@+id/nav_spells"
+            android:icon="@drawable/ic_action_book"
+            android:title="Spells" />
     </group>
     <group android:id="@+id/menu_settings">
         <item

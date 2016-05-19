@@ -27,10 +27,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +49,9 @@ import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.SettingsFragment;
+import com.pentapus.pentapusdmh.Fragments.Spells.MySpellTableFragment;
+import com.pentapus.pentapusdmh.Fragments.Spells.PHBSpellTableFragment;
+import com.pentapus.pentapusdmh.Fragments.Spells.SpellViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 
@@ -62,11 +67,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean pressedTwice = false;
     private ActionBarDrawerToggle toggle;
     private FloatingActionButton fab;
+    private FilterManager filterManager;
+    private static MainActivity instance;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         copyAssets();
         setContentView(R.layout.activity_main);
 
@@ -82,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
-       // tintNavigationViewItems(navigationView);
+        // tintNavigationViewItems(navigationView);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        filterManager = new FilterManager();
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
@@ -104,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void tintNavigationViewItems(NavigationView navigationView){
+    private void tintNavigationViewItems(NavigationView navigationView) {
         //pcs
         Drawable oldIcon = navigationView
                 .getMenu()
@@ -115,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        Bitmap immutable = ((BitmapDrawable)oldIcon).getBitmap();
+        Bitmap immutable = ((BitmapDrawable) oldIcon).getBitmap();
         Bitmap mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
         Canvas c = new Canvas(mutable);
         Paint p = new Paint();
@@ -139,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        immutable = ((BitmapDrawable)oldIcon).getBitmap();
+        immutable = ((BitmapDrawable) oldIcon).getBitmap();
         mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
         c = new Canvas(mutable);
         p = new Paint();
@@ -163,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        immutable = ((BitmapDrawable)oldIcon).getBitmap();
+        immutable = ((BitmapDrawable) oldIcon).getBitmap();
         mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
         c = new Canvas(mutable);
         p = new Paint();
@@ -179,11 +188,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterManager.setQuery(newText);
+               /* if("F_SPELL_PAGER".equals(getCurrentFragmentTag())){
+                    ((PHBSpellTableFragment)((SpellViewPagerDialogFragment)getSupportFragmentManager().findFragmentByTag("F_SPELL_PAGER")).getPagerAdapter().getRegisteredFragment(1)).filterData(newText);
+                    ((MySpellTableFragment)((SpellViewPagerDialogFragment)getSupportFragmentManager().findFragmentByTag("F_SPELL_PAGER")).getPagerAdapter().getRegisteredFragment(0)).filterData(newText);
+
+                }*/
+                return false;
+            }
+        });
         return true;
     }
 
@@ -578,6 +605,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     fm.popBackStack();
                     Log.d("FragmentList", getSupportFragmentManager().getFragments().toString());
 
+                } else if ("F_SPELL_PAGER".equals(getCurrentFragmentTag())) {
+                    Fragment fragment = fm.findFragmentByTag("F_SPELL_PAGER");
+                    FragmentManager childFM = fragment.getChildFragmentManager();
+                    while (childFM.getBackStackEntryCount() > 0) {
+                        childFM.popBackStack();
+                    }
+                    enableNavigationDrawer();
+                    fm.popBackStack();
+                    Log.d("FragmentList", getSupportFragmentManager().getFragments().toString());
+
                 } else if ("F_IMAGE_PAGER".equals(getCurrentFragmentTag())) {
                     Fragment fragment = fm.findFragmentByTag("F_IMAGE_PAGER");
                     FragmentManager childFM = fragment.getChildFragmentManager();
@@ -762,6 +799,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
+            case R.id.nav_spells:
+                fragmentClass = SpellViewPagerDialogFragment.class;
+                bundle.putBoolean("navMode", true);
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    fragment.setArguments(bundle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (topBackEntryIsNav) {
+                    fragmentManager.popBackStack();
+                }
+                transaction = fragmentManager.beginTransaction();
+                transaction.remove(fragmentManager.findFragmentByTag(getCurrentFragmentTag()));
+                transaction.replace(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
+                        .addToBackStack("F_SPELL_PAGER")
+                        .commit();
+                break;
             case R.id.nav_settings:
                 fragmentClass = SettingsFragment.class;
                 try {
@@ -785,7 +840,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void enableNavigationDrawer() {
+    public void enableNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         toggle.setDrawerIndicatorEnabled(true);
@@ -817,5 +872,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             fab.setVisibility(View.GONE);
         }
+    }
+
+    public static FilterManager getFilterManager() {
+        return instance.filterManager; // return the observable class
     }
 }

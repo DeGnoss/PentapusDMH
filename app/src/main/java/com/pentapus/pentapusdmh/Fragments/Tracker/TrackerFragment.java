@@ -180,6 +180,7 @@ public class TrackerFragment extends Fragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.play_mode).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }

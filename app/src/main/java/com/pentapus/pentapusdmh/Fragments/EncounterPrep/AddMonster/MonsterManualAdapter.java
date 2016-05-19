@@ -38,9 +38,6 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
 
     private AdapterNavigationCallback mAdapterCallback;
     List<String> itemsPendingRemoval;
-    private Handler handler = new Handler(); // handler for running delayed runnables
-    HashMap<String, Runnable> pendingRunnables = new HashMap<>();
-    private static final int PENDING_REMOVAL_TIMEOUT = 3000;
     Context mContext;
 
 
@@ -133,7 +130,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
         public MyMonsterViewHolder(View v, AdapterNavigationCallback adapterCallback) {
             super(v);
             this.mAdapterCallback = adapterCallback;
-            vIndicatorLine = (View) v.findViewById(R.id.indicator_line_monster);
+            vIndicatorLine = v.findViewById(R.id.indicator_line_monster);
             vName = (TextView) v.findViewById(R.id.name_monster);
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_monster);
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon_monster);

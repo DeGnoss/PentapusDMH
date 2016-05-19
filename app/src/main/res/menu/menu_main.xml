@@ -16,4 +16,12 @@
         android:visible="false"
         android:icon="@drawable/ic_content_paste_white_24dp"
         app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_search"
+        android:orderInCategory="100"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always" />
+
 </menu>

@@ -11,7 +11,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
  */
 public class DataBaseHandler extends SQLiteAssetHelper {
 
-    private static final String DATABASE_NAME ="pentapusdata.sqlite";
+    private static final String DATABASE_NAME ="pentadatabase.sqlite";
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -30,6 +30,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String TABLE_MONSTER = "monster";
     public static final String TABLE_NPC = "npc";
     public static final String TABLE_PC = "pc";
+    public static final String TABLE_SPELL = "spell";
 
 
     //All Tables
@@ -57,7 +58,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
 
     //PC Table
     private static final String KEY_CLASS = "class";
-    private static final String KEY_LEVEL = "level";
+    public static final String KEY_LEVEL = "level";
     private static final String KEY_PLAYER = "player";
     //Stats
     public static final String KEY_STRENGTH = "strength";
@@ -82,6 +83,17 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     private static final String KEY_STUNNED = "stunned";
     private static final String KEY_UNCONSCIOUS = "unconscious";
     private static final String KEY_CUSTOM = "custom";
+
+
+    public static final String KEY_VOCAL = "vocal";
+    public static final String KEY_SOMATIC = "somatic";
+    public static final String KEY_MATERIAL = "material";
+    public static final String KEY_TIME = "time";
+    public static final String KEY_DURATION = "duration";
+    public static final String KEY_SCHOOL = "school";
+    public static final String KEY_RANGE = "range";
+    public static final String KEY_TARGET = "target";
+    public static final String KEY_PHB = "phb";
 
 
     public static final String[] PROJECTION_ENCOUNTERPREP = new String[]{
@@ -164,10 +176,20 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_DISABLED
     };
 
-    public static final String[] PROJECTION_ENCOUNTERPREP_LINKER = new String[]{
+    public static final String[] PROJECTION_SPELL = new String[]{
             DataBaseHandler.KEY_ROWID,
-            DataBaseHandler.KEY_TYPE,
-            DataBaseHandler.KEY_BELONGSTO
+            DataBaseHandler.KEY_NAME,
+            DataBaseHandler.KEY_LEVEL,
+            DataBaseHandler.KEY_VOCAL,
+            DataBaseHandler.KEY_SOMATIC,
+            DataBaseHandler.KEY_MATERIAL,
+            DataBaseHandler.KEY_TIME,
+            DataBaseHandler.KEY_DURATION,
+            DataBaseHandler.KEY_SCHOOL,
+            DataBaseHandler.KEY_RANGE,
+            DataBaseHandler.KEY_TARGET,
+            DataBaseHandler.KEY_INFO,
+            DataBaseHandler.KEY_PHB
     };
 
 
@@ -354,7 +376,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MONSTER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENCOUNTER_PREP);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENCOUNTER_PREP_LINKER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SPELL);
 
         // Create tables again
         onCreate(db);

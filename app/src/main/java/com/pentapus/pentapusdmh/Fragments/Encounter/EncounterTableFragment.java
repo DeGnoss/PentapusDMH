@@ -141,6 +141,8 @@ public class EncounterTableFragment extends Fragment implements
     }
 
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -362,7 +364,7 @@ public class EncounterTableFragment extends Fragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        //menu.findItem(R.id.campaign_settings).setVisible(true);
+        menu.findItem(R.id.action_search).setVisible(false);
 
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 

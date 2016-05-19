@@ -36,6 +36,9 @@ public class DbContentProvider extends ContentProvider{
     private static final int SINGLE_MONSTER = 12;
     private static final int ALL_ENCOUNTERPREPS = 13;
     private static final int SINGLE_ENCOUNTERPREP = 14;
+    private static final int ALL_SPELLS = 15;
+    private static final int SINGLE_SPELL = 16;
+
 
     // authority is the symbolic name of your provider
     // To avoid conflicts with other providers, you should use
@@ -57,6 +60,8 @@ public class DbContentProvider extends ContentProvider{
             Uri.parse("content://" + AUTHORITY + "/monster");
     public static final Uri CONTENT_URI_ENCOUNTERPREP =
             Uri.parse("content://" + AUTHORITY + "/encounterprep");
+    public static final Uri CONTENT_URI_SPELL =
+            Uri.parse("content://" + AUTHORITY + "/spell");
 
     //Mime types
 
@@ -67,6 +72,7 @@ public class DbContentProvider extends ContentProvider{
     public static final String PC =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.pc";
     public static final String MONSTER =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.monster";
     public static final String ENCOUNTERPREP =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.encounterprep";
+    public static final String SPELL =  "vnd.android.cursor.item/vnd.com.pentapus.contentprovider.spell";
 
 
 
@@ -90,6 +96,8 @@ public class DbContentProvider extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, "monster/#", SINGLE_MONSTER);
         uriMatcher.addURI(AUTHORITY, "encounterprep", ALL_ENCOUNTERPREPS);
         uriMatcher.addURI(AUTHORITY, "encounterprep/#", SINGLE_ENCOUNTERPREP);
+        uriMatcher.addURI(AUTHORITY, "spell", ALL_SPELLS);
+        uriMatcher.addURI(AUTHORITY, "spell/#", SINGLE_SPELL);
     }
 
 
@@ -118,6 +126,8 @@ public class DbContentProvider extends ContentProvider{
                 return MONSTER;
             case SINGLE_ENCOUNTERPREP:
                 return ENCOUNTERPREP;
+            case SINGLE_SPELL:
+                return SPELL;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -128,7 +138,7 @@ public class DbContentProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri _uri = null;
-        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC, KEY_ROWID_MONSTER, KEY_ROWID_PC, KEY_ROWID_ENCOUNTERPREP;
+        long KEY_ROWID_CAMPAIGN, KEY_ROWID_SESSION, KEY_ROWID_ENCOUNTER, KEY_ROWID_NPC, KEY_ROWID_MONSTER, KEY_ROWID_PC, KEY_ROWID_ENCOUNTERPREP, KEY_ROWID_SPELL;
         SQLiteDatabase db = dbHandler.getWritableDatabase();
         int uriType = uriMatcher.match(uri);
         switch (uriType) {
@@ -241,6 +251,21 @@ public class DbContentProvider extends ContentProvider{
                     getContext().getContentResolver().notifyChange(_uri, null);
                 }
                 break;
+            case ALL_SPELLS:
+                KEY_ROWID_SPELL = db.insert(DataBaseHandler.TABLE_SPELL, null, values);
+                //if added successfully
+                if(KEY_ROWID_SPELL > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_SPELL, KEY_ROWID_SPELL);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
+            case SINGLE_SPELL:
+                KEY_ROWID_SPELL = db.insert(DataBaseHandler.TABLE_SPELL, "", values);
+                if(KEY_ROWID_SPELL > 0){
+                    _uri = ContentUris.withAppendedId(CONTENT_URI_SPELL, KEY_ROWID_SPELL);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                }
+                break;
             default:
                 try {
                     throw new SQLException("Failed to insert row into " + uri);
@@ -312,6 +337,14 @@ public class DbContentProvider extends ContentProvider{
                 break;
             case SINGLE_ENCOUNTERPREP:
                 queryBuilder.setTables(DataBaseHandler.TABLE_ENCOUNTER_PREP);
+                id = uri.getPathSegments().get(1);
+                queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
+                break;
+            case ALL_SPELLS:
+                queryBuilder.setTables(DataBaseHandler.TABLE_SPELL);
+                break;
+            case SINGLE_SPELL:
+                queryBuilder.setTables(DataBaseHandler.TABLE_SPELL);
                 id = uri.getPathSegments().get(1);
                 queryBuilder.appendWhere(DataBaseHandler.KEY_ROWID + "=" + id);
                 break;
@@ -387,6 +420,14 @@ public class DbContentProvider extends ContentProvider{
                 deleteCount = db.delete(DataBaseHandler.TABLE_ENCOUNTER_PREP, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
+            case SINGLE_SPELL:
+                id = uri.getPathSegments().get(1);
+                selection = DataBaseHandler.KEY_ROWID + "=" + id
+                        + (!TextUtils.isEmpty(selection) ?
+                        " AND (" + selection + ')' : "");
+                deleteCount = db.delete(DataBaseHandler.TABLE_SPELL, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -453,6 +494,14 @@ public class DbContentProvider extends ContentProvider{
                         + (!TextUtils.isEmpty(selection) ?
                         " AND (" + selection + ')' : "");
                 updateCount = db.update(DataBaseHandler.TABLE_ENCOUNTER_PREP, values, selection, selectionArgs);
+                getContext().getContentResolver().notifyChange(uri, null);
+                break;
+            case SINGLE_SPELL:
+                id = uri.getPathSegments().get(1);
+                selection = DataBaseHandler.KEY_ROWID + "=" + id
+                        + (!TextUtils.isEmpty(selection) ?
+                        " AND (" + selection + ')' : "");
+                updateCount = db.update(DataBaseHandler.TABLE_SPELL, values, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
             default:
