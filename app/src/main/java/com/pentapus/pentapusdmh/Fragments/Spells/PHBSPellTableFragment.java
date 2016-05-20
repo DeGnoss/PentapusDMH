@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.FilterManager;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
+import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterEditFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 
@@ -38,7 +40,10 @@ public class PHBSpellTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback, Observer {
 
 
-    private static final String MODE = "modeUpdate";
+
+    private static final String SPELL_ID = "spellId";
+    private static final String SPELL_NAME = "spellName";
+    private String sourceType;
 
 
     private RecyclerView mySpellRecyclerView;
@@ -54,9 +59,10 @@ public class PHBSpellTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static PHBSpellTableFragment newInstance() {
+    public static PHBSpellTableFragment newInstance(String sourceType) {
         PHBSpellTableFragment fragment = new PHBSpellTableFragment();
         Bundle args = new Bundle();
+        args.putString("sourcetype", sourceType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,6 +72,7 @@ public class PHBSpellTableFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (this.getArguments() != null) {
+            sourceType = this.getArguments().getString("sourcetype");
         }
         mySpellAdapter = new PHBSpellAdapter(getContext(), this);
     }
@@ -105,14 +112,16 @@ public class PHBSpellTableFragment extends Fragment implements
         String[] selectionArgs;
 
         if (args != null) {
-            selectionArgs = new String[]{"%" + String.valueOf(1) + "%", "%" + args.getString("filter") + "%"};
-            String selection1 = DataBaseHandler.KEY_PHB;
+            selectionArgs = new String[]{"%" + sourceType + "%", "%" + args.getString("filter") + "%"};
+            String selection1 = DataBaseHandler.KEY_SOURCE;
             String selection2 = DataBaseHandler.KEY_NAME;
             selection = selection1 + " LIKE ? AND " + selection2 + " LIKE ?";
+            //selection = selection2 + " LIKE ?";
         } else {
-            selectionArgs = new String[]{String.valueOf(1)};
-            selection = DataBaseHandler.KEY_PHB + " = ?";
-
+            //selectionArgs = new String[]{"%" + "PHB" + "%", "%" + "EE" + "%", "%" + "PHB" + "%"};
+            selectionArgs = new String[]{"%" + sourceType + "%"};
+            String selection1 = DataBaseHandler.KEY_SOURCE;
+            selection = selection1 + " LIKE ?";
         }
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_SPELL, DataBaseHandler.PROJECTION_SPELL, selection, selectionArgs, null);
@@ -122,7 +131,6 @@ public class PHBSpellTableFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mySpellAdapter.swapCursor(data);
-
     }
 
     @Override
@@ -135,17 +143,27 @@ public class PHBSpellTableFragment extends Fragment implements
     public void onItemClick(int position) {
 
         //TODO: Select on itemclick
-       /* Cursor cursor = myMonsterAdapter.getCursor();
+        Cursor cursor = mySpellAdapter.getCursor();
         cursor.moveToPosition(position);
-        int encounterId =
+        int spellId =
                 cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        String encounterName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+        String spellName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
 
         Bundle bundle = new Bundle();
-        bundle.putInt(ENCOUNTER_ID, encounterId);
-        bundle.putString(ENCOUNTER_NAME, encounterName);
-        loadNPC(bundle, encounterId, encounterName); */
+        bundle.putInt(SPELL_ID, spellId);
+        bundle.putString(SPELL_NAME, spellName);
+        loadSpell(bundle);
+    }
 
+    public void loadSpell(Bundle bundle){
+        Fragment fragment;
+        fragment = new DetailSpellFragment();
+        fragment.setArguments(bundle);
+        fragment.setEnterTransition(new Explode());
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ContainerFrame, fragment, "FD_SPELL")
+                .addToBackStack("FD_SPELL")
+                .commit();
     }
 
     @Override

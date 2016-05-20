@@ -144,7 +144,6 @@ public class MySpellEditFragment extends Fragment {
             String myConstitution = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DURATION));
             String myIntelligence = String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCHOOL)));
             String myWisdom = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_RANGE));
-            String myCharisma = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TARGET));
             //cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO))
            // cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_PHB))
 
@@ -158,7 +157,6 @@ public class MySpellEditFragment extends Fragment {
             constit.setText(myConstitution, TextView.BufferType.EDITABLE);
             intelligence.setText(myIntelligence, TextView.BufferType.EDITABLE);
             wis.setText(myWisdom, TextView.BufferType.EDITABLE);
-            charisma.setText(myCharisma, TextView.BufferType.EDITABLE);
             bChooseImage.setImageURI(myFile);
         }
         assert cursor != null;
@@ -189,9 +187,8 @@ public class MySpellEditFragment extends Fragment {
         values.put(DataBaseHandler.KEY_DURATION, myConstitution);
         values.put(DataBaseHandler.KEY_SCHOOL, myIntelligence);
         values.put(DataBaseHandler.KEY_RANGE, myWisdom);
-        values.put(DataBaseHandler.KEY_TARGET, myCharisma);
         values.put(DataBaseHandler.KEY_INFO, "info");
-        values.put(DataBaseHandler.KEY_PHB, 0);
+        values.put(DataBaseHandler.KEY_SOURCE, "custom");
 
         // insert a record
         if (!modeUpdate) {

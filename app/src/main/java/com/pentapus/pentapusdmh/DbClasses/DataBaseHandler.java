@@ -11,7 +11,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
  */
 public class DataBaseHandler extends SQLiteAssetHelper {
 
-    private static final String DATABASE_NAME ="pentadatabase.sqlite";
+    private static final String DATABASE_NAME ="pentapuslite.sqlite";
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -25,7 +25,6 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String TABLE_SESSION = "session";
     public static final String TABLE_ENCOUNTER = "encounter";
 
-    public static final String TABLE_ENCOUNTER_PREP_LINKER = "encounterpreplinker";
     public static final String TABLE_ENCOUNTER_PREP = "encounterprep";
     public static final String TABLE_MONSTER = "monster";
     public static final String TABLE_NPC = "npc";
@@ -92,8 +91,17 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_DURATION = "duration";
     public static final String KEY_SCHOOL = "school";
     public static final String KEY_RANGE = "range";
-    public static final String KEY_TARGET = "target";
-    public static final String KEY_PHB = "phb";
+    public static final String KEY_SOURCE = "source";
+    public static final String KEY_WIZARD = "wizard";
+    public static final String KEY_SORCERER = "sorcerer";
+    public static final String KEY_BARD = "bard";
+    public static final String KEY_DRUID = "druid";
+    public static final String KEY_CLERIC = "cleric";
+    public static final String KEY_PALADIN = "paladin";
+    public static final String KEY_RANGER = "ranger";
+    public static final String KEY_WARLOCK = "warlock";
+
+
 
 
     public static final String[] PROJECTION_ENCOUNTERPREP = new String[]{
@@ -187,9 +195,16 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_DURATION,
             DataBaseHandler.KEY_SCHOOL,
             DataBaseHandler.KEY_RANGE,
-            DataBaseHandler.KEY_TARGET,
             DataBaseHandler.KEY_INFO,
-            DataBaseHandler.KEY_PHB
+            DataBaseHandler.KEY_SOURCE,
+            DataBaseHandler.KEY_WIZARD,
+            DataBaseHandler.KEY_SORCERER,
+            DataBaseHandler.KEY_BARD,
+            DataBaseHandler.KEY_DRUID,
+            DataBaseHandler.KEY_CLERIC,
+            DataBaseHandler.KEY_PALADIN,
+            DataBaseHandler.KEY_RANGER,
+            DataBaseHandler.KEY_WARLOCK
     };
 
 

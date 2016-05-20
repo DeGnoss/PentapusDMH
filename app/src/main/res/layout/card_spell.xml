@@ -35,12 +35,21 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
-                android:id="@+id/info_spell"
+                android:id="@+id/school_spell"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/name_monster"
+                android:layout_below="@id/name_spell"
                 android:layout_gravity="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <TextView
+                android:id="@+id/level_spell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="end"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         </RelativeLayout>
     </RelativeLayout>

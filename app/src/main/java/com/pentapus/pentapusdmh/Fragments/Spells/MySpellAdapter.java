@@ -119,7 +119,7 @@ public class MySpellAdapter extends RecyclerViewCursorAdapter<MySpellAdapter.MyS
     public class MySpellViewHolder extends RecyclerViewCursorViewHolder {
         public View view;
         protected TextView vName;
-        protected TextView vInfo;
+        protected TextView vLevel, vSchool;
         protected CardView cardViewTracker;
         protected ImageView ivIcon;
         public int type;
@@ -135,8 +135,9 @@ public class MySpellAdapter extends RecyclerViewCursorAdapter<MySpellAdapter.MyS
             this.mAdapterCallback = adapterCallback;
             vName = (TextView) v.findViewById(R.id.name_spell);
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_spell);
-            vInfo = (TextView) v.findViewById(R.id.info_spell);
+            vLevel = (TextView) v.findViewById(R.id.level_spell);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_spell);
+            vSchool = (TextView) v.findViewById(R.id.school_spell);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -162,9 +163,9 @@ public class MySpellAdapter extends RecyclerViewCursorAdapter<MySpellAdapter.MyS
 
             clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-            vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+            vLevel.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LEVEL)));
+            vSchool.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCHOOL)));
             itemView.setActivated(getAdapterPosition() == PHBSpellAdapter.selectedPos);
-            identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
         }
 
 

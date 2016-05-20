@@ -140,14 +140,12 @@ public class MySpellTableFragment extends Fragment implements
         String[] selectionArgs;
 
         if(args != null){
-            selectionArgs = new String[]{"%" + String.valueOf(0) +"%", "%" + args.getString("filter") + "%"};
-            String selection1 = DataBaseHandler.KEY_PHB;
+            selectionArgs = new String[]{"%" + args.getString("filter") + "%"};
             String selection2 = DataBaseHandler.KEY_NAME;
-            selection = selection1 + " LIKE ? AND " + selection2 + " LIKE ?";
+            selection = selection2 + " LIKE ?";
         }else{
-            selectionArgs = new String[]{String.valueOf(0)};
-            selection = DataBaseHandler.KEY_PHB + " = ?";
-
+            selectionArgs = null;
+            selection = null;
         }
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_SPELL, DataBaseHandler.PROJECTION_SPELL, selection, selectionArgs, null);
@@ -288,9 +286,7 @@ public class MySpellTableFragment extends Fragment implements
                         values.put(DataBaseHandler.KEY_DURATION, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DURATION)));
                         values.put(DataBaseHandler.KEY_SCHOOL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCHOOL)));
                         values.put(DataBaseHandler.KEY_RANGE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_RANGE)));
-                        values.put(DataBaseHandler.KEY_TARGET, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TARGET)));
                         values.put(DataBaseHandler.KEY_INFO, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-                        values.put(DataBaseHandler.KEY_PHB, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_PHB)));
                         startInsert(1, null, DbContentProvider.CONTENT_URI_SPELL, values);
                     }
                     cursor.close();

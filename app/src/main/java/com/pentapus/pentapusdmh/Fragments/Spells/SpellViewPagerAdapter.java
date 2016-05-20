@@ -45,7 +45,7 @@ public class SpellViewPagerAdapter extends FragmentPagerAdapter {
                 filterManager.addObserver(f1);
                 return f1;
             case 1:
-                PHBSpellTableFragment f2 = PHBSpellTableFragment.newInstance();
+                PHBSpellTableFragment f2 = PHBSpellTableFragment.newInstance("PHB");
                 filterManager.addObserver(f2);
                 return f2;
             default:

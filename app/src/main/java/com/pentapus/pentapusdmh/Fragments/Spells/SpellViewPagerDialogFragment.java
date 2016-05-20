@@ -122,12 +122,15 @@ public class SpellViewPagerDialogFragment extends Fragment {
                 switch (position) {
                     case 0:
                         fabSpellVP.setVisibility(View.VISIBLE);
+                        MainActivity.closeSearchView();
                         break;
                     case 1:
                         fabSpellVP.setVisibility(View.GONE);
+                        MainActivity.closeSearchView();
                         break;
                     default:
                         fabSpellVP.setVisibility(View.GONE);
+                        MainActivity.closeSearchView();
                         break;
                 }
             }

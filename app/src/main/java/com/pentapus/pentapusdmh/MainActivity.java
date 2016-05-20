@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FloatingActionButton fab;
     private FilterManager filterManager;
     private static MainActivity instance;
+    private SearchView searchView;
 
 
     @Override
@@ -193,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -876,5 +877,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static FilterManager getFilterManager() {
         return instance.filterManager; // return the observable class
+    }
+
+    public static void closeSearchView(){
+        instance.searchView.setIconified(true);
+        instance.searchView.setIconified(true);
     }
 }
