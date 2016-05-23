@@ -43,7 +43,8 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     private Button bDone;
 
     private static int selectedType = -1;
-    private static int selectedPos = -1;
+    private static int selectedPosUnique = -1;
+    private static int selectedPosAdapter = -1;
     private static int highlightedPos = -1;
     private static Uri monsterUri = null;
 
@@ -125,6 +126,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                         fabMonsterVP.setVisibility(View.GONE);
                         break;
                 }
+                pagerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -195,7 +197,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        pagerAdapter = new MonsterViewPagerAdapter(getChildFragmentManager(), getContext(), id);
+        pagerAdapter = new MonsterViewPagerAdapter(getChildFragmentManager(), getContext(), navMode, id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(1);
@@ -218,12 +220,18 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         MonsterViewPagerDialogFragment.selectedType = selectedType;
     }
 
-    public static int getSelectedPos() {
-        return selectedPos;
+    public static int getSelectedPosUnique() {
+        return selectedPosUnique;
     }
 
-    public static void setSelectedPos(int selectedPos) {
-        MonsterViewPagerDialogFragment.selectedPos = selectedPos;
+    public static int getSelectedPosAdapter() {
+        return selectedPosAdapter;
+    }
+
+
+    public static void setSelectedPos(int selectedPosUnique, int selectedPosAdapter) {
+        MonsterViewPagerDialogFragment.selectedPosUnique = selectedPosUnique;
+        MonsterViewPagerDialogFragment.selectedPosAdapter = selectedPosAdapter;
     }
 
     public static int getHighlightedPos() {
@@ -248,6 +256,10 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         }else{
             fabMonsterVP.setVisibility(View.GONE);
         }
+    }
+
+    public boolean isNavMode(){
+        return navMode;
     }
 }
 //Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId);

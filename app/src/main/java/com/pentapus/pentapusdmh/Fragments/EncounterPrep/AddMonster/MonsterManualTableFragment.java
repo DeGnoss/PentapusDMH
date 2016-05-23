@@ -42,8 +42,6 @@ public class MonsterManualTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 
-
-
     private static final String MODE = "modeUpdate";
 
 
@@ -52,6 +50,7 @@ public class MonsterManualTableFragment extends Fragment implements
 
     private RecyclerView myMonsterRecyclerView;
     private ActionMode mActionMode;
+    private boolean isNavMode;
 
     private MonsterManualAdapter myMonsterAdapter;
 
@@ -63,9 +62,10 @@ public class MonsterManualTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static MonsterManualTableFragment newInstance() {
+    public static MonsterManualTableFragment newInstance(boolean isNavMode) {
         MonsterManualTableFragment fragment = new MonsterManualTableFragment();
         Bundle args = new Bundle();
+        args.putBoolean("navMode", isNavMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,6 +75,7 @@ public class MonsterManualTableFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (this.getArguments() != null) {
+            isNavMode = this.getArguments().getBoolean("navMode");
         }
         myMonsterAdapter = new MonsterManualAdapter(getContext(), this);
     }
@@ -93,6 +94,9 @@ public class MonsterManualTableFragment extends Fragment implements
         myMonsterRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
+        if(isNavMode){
+            myMonsterAdapter.statusClicked(-1);
+        }
 
         // Inflate the layout for this fragment
         return tableView;
@@ -159,7 +163,6 @@ public class MonsterManualTableFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         myMonsterAdapter.swapCursor(data);
-
     }
 
     @Override
@@ -170,24 +173,17 @@ public class MonsterManualTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-
-        //TODO: Select on itemclick
-       /* Cursor cursor = myMonsterAdapter.getCursor();
-        cursor.moveToPosition(position);
-        int encounterId =
-                cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        String encounterName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(ENCOUNTER_ID, encounterId);
-        bundle.putString(ENCOUNTER_NAME, encounterName);
-        loadNPC(bundle, encounterId, encounterName); */
-
+      /*  if(!isNavMode){
+            myMonsterAdapter.statusClicked(position);
+        }else{
+            myMonsterAdapter.statusClicked(-1);
+        }*/
+        myMonsterAdapter.statusClicked(position);
     }
 
     @Override
     public void onItemLongCLick(final int position) {
-        mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
+      /*  mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
@@ -240,7 +236,7 @@ public class MonsterManualTableFragment extends Fragment implements
                         editEncounter(bundle);
                         mode.finish();
                         return true;*/
-                    case R.id.copy:
+                   /* case R.id.copy:
                        /* cursor = mEncounterAdapter.getCursor();
                         cursor.moveToPosition(position);
                         encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
@@ -251,10 +247,12 @@ public class MonsterManualTableFragment extends Fragment implements
                         getActivity().invalidateOptionsMenu();
                         mode.finish();
                         return true; */
-                    default:
+                 /*   default:
                         return false;
                 }
             }
+
+                /*
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
@@ -263,6 +261,7 @@ public class MonsterManualTableFragment extends Fragment implements
                 mActionMode = null;
             }
         });
+    }*/
     }
 
     @Override

@@ -91,6 +91,44 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
         MonsterManualAdapter.selectedPos = selectedPos;
     }
 
+    public void statusClicked(int position) {
+        int uniquePosition = (int) getItemId(position);
+        int oldType = MonsterViewPagerDialogFragment.getSelectedType();
+        int oldPos = MonsterViewPagerDialogFragment.getSelectedPosAdapter();
+        if (MonsterViewPagerDialogFragment.getSelectedType() == 1 && uniquePosition == MonsterViewPagerDialogFragment.getSelectedPosUnique()) {
+            MonsterViewPagerDialogFragment.setSelectedType(-1);
+            MonsterViewPagerDialogFragment.setSelectedPos(-1, -1);
+            MonsterViewPagerDialogFragment.setMonsterUri(null);
+            notifyItemChanged(position);
+        } else if (MonsterViewPagerDialogFragment.getSelectedType() == 1) {
+            Cursor cursor = getCursor();
+            cursor.moveToPosition(position);
+            int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            MonsterViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
+            MonsterViewPagerDialogFragment.setMonsterUri(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId));
+            if (oldType == 1) {
+                notifyItemChanged(oldPos);
+            }
+            notifyItemChanged(position);
+        } else if (uniquePosition == -1) {
+            MonsterViewPagerDialogFragment.setSelectedType(-1);
+            MonsterViewPagerDialogFragment.setSelectedPos(-1, -1);
+            MonsterViewPagerDialogFragment.setMonsterUri(null);
+            if (oldType == 1) {
+                notifyItemChanged(oldPos);
+            }
+        } else {
+            Cursor cursor = getCursor();
+            cursor.moveToPosition(position);
+            int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            MonsterViewPagerDialogFragment.setSelectedType(1);
+            MonsterViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
+            MonsterViewPagerDialogFragment.setMonsterUri(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId));
+            notifyItemChanged(position);
+        }
+    }
+
+
     @Override
     public void onItemClick(int position) {
         mAdapterCallback.onItemClick(position);
@@ -142,7 +180,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    MonsterManualAdapter.selectedPos = getAdapterPosition();
+                    MonsterViewPagerDialogFragment.setSelectedPos((int)getItemId(), getAdapterPosition());
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
@@ -166,41 +204,10 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            itemView.setActivated(getAdapterPosition() == MonsterManualAdapter.selectedPos);
+            itemView.setActivated(MonsterViewPagerDialogFragment.getSelectedType() == 1 && getItemId() == MonsterViewPagerDialogFragment.getSelectedPosUnique());
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
 
 
-            /*
-            if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
-                // we need to show the "undo" state of the row
-                itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                vName.setVisibility(View.GONE);
-                vInfo.setVisibility(View.GONE);
-                vInfoDeleted.setVisibility(View.VISIBLE);
-                undoButton.setVisibility(View.VISIBLE);
-                undoButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // user wants to undo the removal, let's cancel the pending task
-                        Runnable pendingRemovalRunnable = pendingRunnables.get(String.valueOf(identifier));
-                        pendingRunnables.remove(String.valueOf(identifier));
-                        if (pendingRemovalRunnable != null)
-                            handler.removeCallbacks(pendingRemovalRunnable);
-                        itemsPendingRemoval.remove(String.valueOf(identifier));
-                        // this will rebind the row in "normal" state
-                        notifyItemChanged(getAdapterPosition());
-                    }
-                });
-            } else {
-                // we need to show the "normal" state
-                itemView.setBackgroundColor(Color.WHITE);
-                vName.setVisibility(View.VISIBLE);
-                vInfo.setVisibility(View.VISIBLE);
-                // viewHolder.titleTextView.setText(item);
-                vInfoDeleted.setVisibility(View.GONE);
-                undoButton.setVisibility(View.GONE);
-                undoButton.setOnClickListener(null);
-            } */
         }
 
 

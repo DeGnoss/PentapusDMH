@@ -1,13 +1,9 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +20,6 @@ import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 import com.pentapus.pentapusdmh.R;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Koni on 14/4/16.

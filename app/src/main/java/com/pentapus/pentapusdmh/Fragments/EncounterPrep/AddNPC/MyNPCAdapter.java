@@ -81,68 +81,6 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
         mCursorAdapter.bindView(null, mContext, mCursorAdapter.getCursor());
     }
 
-/*
-    public void pendingRemoval(final int position) {
-        Cursor mCursor = mCursorAdapter.getCursor();
-        mCursor.moveToPosition(position);
-        final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-        if (!itemsPendingRemoval.contains(identifier)) {
-            itemsPendingRemoval.add(identifier);
-            // this will redraw row in "undo" state
-            notifyItemChanged(position);
-            // let's create, store and post a runnable to remove the item
-            Runnable pendingRemovalRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    remove(position, identifier);
-                }
-            };
-            handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
-            pendingRunnables.put(identifier, pendingRemovalRunnable);
-        }
-    }
-
-
-    public boolean isPendingRemoval(int position) {
-        Cursor mCursor = mCursorAdapter.getCursor();
-        mCursor.moveToPosition(position);
-        return itemsPendingRemoval.contains(String.valueOf(mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))));
-    }
-
-
-    public void remove(int position, String identifier) {
-        Cursor mCursor = mCursorAdapter.getCursor();
-        mCursor.moveToPosition(position);
-        if (itemsPendingRemoval.contains(identifier)) {
-            itemsPendingRemoval.remove(identifier);
-        }
-        int encounterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + encounterId);
-        if (position == 0) {
-            notifyItemChanged(position);
-        } else {
-            notifyItemRemoved(position);
-        }
-        mContext.getContentResolver().delete(uri, null, null);
-        ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-        if (clipboard.hasPrimaryClip()) {
-            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
-            Uri pasteUri = itemPaste.getUri();
-            if (pasteUri == null) {
-                pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
-            }
-            if (pasteUri != null) {
-                if (pasteUri.equals(uri)) {
-                    Uri newUri = Uri.parse("");
-                    ClipData clip = ClipData.newUri(mContext.getContentResolver(), "URI", newUri);
-                    clipboard.setPrimaryClip(clip);
-                    mAdapterCallback.onMenuRefresh();
-                }
-            }
-        }
-    }*/
-
     public void statusClicked(int position) {
         int oldPos = NPCViewPagerDialogFragment.getSelectedPos();
         if (NPCViewPagerDialogFragment.getSelectedType() == 0 && position == NPCViewPagerDialogFragment.getSelectedPos()) {

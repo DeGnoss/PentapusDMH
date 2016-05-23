@@ -21,13 +21,15 @@ public class MonsterViewPagerAdapter extends FragmentPagerAdapter {
     private Context context;
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private int id;
+    private boolean isNavMode;
     private File[] imageUri;
 
 
-    public MonsterViewPagerAdapter(FragmentManager fm, Context context, int id) {
+    public MonsterViewPagerAdapter(FragmentManager fm, Context context, boolean isNavMode, int id) {
         super(fm);
         this.context = context;
         this.id = id;
+        this.isNavMode = isNavMode;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class MonsterViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return MyMonsterTableFragment.newInstance();
             case 1:
-                return MonsterManualTableFragment.newInstance();
+                return MonsterManualTableFragment.newInstance(isNavMode);
             default:
                 return null;
         }
