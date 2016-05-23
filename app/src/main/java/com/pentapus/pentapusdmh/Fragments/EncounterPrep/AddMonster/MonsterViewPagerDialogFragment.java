@@ -117,9 +117,11 @@ public class MonsterViewPagerDialogFragment extends Fragment {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
+                        ((MyMonsterTableFragment)pagerAdapter.getRegisteredFragment(0)).getMyMonsterRecyclerView().getAdapter().notifyDataSetChanged();
                         fabMonsterVP.setVisibility(View.VISIBLE);
                         break;
                     case 1:
+                        ((MonsterManualTableFragment)pagerAdapter.getRegisteredFragment(1)).getMyMonsterRecyclerView().getAdapter().notifyDataSetChanged();
                         fabMonsterVP.setVisibility(View.GONE);
                         break;
                     default:

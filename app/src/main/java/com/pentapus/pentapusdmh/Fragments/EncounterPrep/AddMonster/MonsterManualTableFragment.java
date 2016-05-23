@@ -264,6 +264,10 @@ public class MonsterManualTableFragment extends Fragment implements
     }*/
     }
 
+    public RecyclerView getMyMonsterRecyclerView(){
+        return myMonsterRecyclerView;
+    }
+
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();

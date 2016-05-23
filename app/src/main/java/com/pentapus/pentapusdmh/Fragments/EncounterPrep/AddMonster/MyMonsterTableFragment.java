@@ -315,6 +315,9 @@ public class MyMonsterTableFragment extends Fragment implements
         );
     }
 
+    public RecyclerView getMyMonsterRecyclerView(){
+        return myMonsterRecyclerView;
+    }
 
     @Override
     public void onMenuRefresh() {
