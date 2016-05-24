@@ -17,12 +17,12 @@
         <item
             android:id="@+id/nav_npc"
             android:icon="@drawable/ic_group_npc"
-            android:title="NPCs" />
+            android:title="Friends" />
 
         <item
             android:id="@+id/nav_monsters"
             android:icon="@drawable/ic_group_monster"
-            android:title="Monsters" />
+            android:title="Fiends" />
 
         <item
             android:id="@+id/nav_spells"

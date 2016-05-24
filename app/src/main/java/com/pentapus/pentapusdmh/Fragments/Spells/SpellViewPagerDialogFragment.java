@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
@@ -196,13 +197,14 @@ public class SpellViewPagerDialogFragment extends Fragment {
 
 
     private void addSpell(Bundle bundle) {
-        Fragment fragment;
+        /*Fragment fragment;
         fragment = new MySpellEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .add(R.id.drawer_layout, fragment, "FE_MYSPELL")
                 .addToBackStack("FE_MYSPELL")
-                .commit();
+                .commit();*/
+        Toast.makeText(getContext(), "Not yet implemented", Toast.LENGTH_SHORT).show();
     }
 
 
