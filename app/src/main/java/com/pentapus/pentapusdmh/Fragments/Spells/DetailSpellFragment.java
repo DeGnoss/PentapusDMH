@@ -68,6 +68,7 @@ public class DetailSpellFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(spellName);
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_detail_spell, container, false);
         //FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) charEditView.getLayoutParams();

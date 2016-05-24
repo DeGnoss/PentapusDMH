@@ -19,14 +19,16 @@ public class NPCViewPagerAdapter extends FragmentPagerAdapter {
     private String tabTitles[] = new String[]{"Campaign", "All"};
     private Context context;
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+    private boolean isNavMode;
     private int id;
     private File[] imageUri;
 
 
-    public NPCViewPagerAdapter(FragmentManager fm, Context context, int id) {
+    public NPCViewPagerAdapter(FragmentManager fm, Context context, boolean isNavMode, int id) {
         super(fm);
         this.context = context;
         this.id = id;
+        this.isNavMode = isNavMode;
     }
 
     @Override
@@ -38,9 +40,9 @@ public class NPCViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MyNPCTableFragment.newInstance();
+                return MyNPCTableFragment.newInstance(isNavMode);
             case 1:
-                return NPCTableFragment.newInstance();
+                return NPCTableFragment.newInstance(isNavMode);
             default:
                 return null;
         }

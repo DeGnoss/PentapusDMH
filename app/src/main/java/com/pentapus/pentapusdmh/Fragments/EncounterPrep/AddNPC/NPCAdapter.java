@@ -17,6 +17,7 @@ import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorViewHolder
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 import com.pentapus.pentapusdmh.R;
 
@@ -74,26 +75,40 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
 
 
     public void statusClicked(int position) {
-        int oldPos = NPCViewPagerDialogFragment.getSelectedPos();
-        if (NPCViewPagerDialogFragment.getSelectedType() == 0 && position == NPCViewPagerDialogFragment.getSelectedPos()) {
+        int uniquePosition = -1;
+        if(position >= 0){
+            uniquePosition = (int) getItemId(position);
+        }
+        int oldType = NPCViewPagerDialogFragment.getSelectedType();
+        int oldPos = NPCViewPagerDialogFragment.getSelectedPosAdapter();
+        if (NPCViewPagerDialogFragment.getSelectedType() == 1 && uniquePosition == NPCViewPagerDialogFragment.getSelectedPosUnique()) {
             NPCViewPagerDialogFragment.setSelectedType(-1);
-            NPCViewPagerDialogFragment.setSelectedPos(-1);
+            NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
             NPCViewPagerDialogFragment.setNPCUri(null);
             notifyItemChanged(position);
-        } else if (NPCViewPagerDialogFragment.getSelectedType() == 0) {
+        } else if (NPCViewPagerDialogFragment.getSelectedType() == 1) {
             Cursor cursor = getCursor();
             cursor.moveToPosition(position);
             int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            NPCViewPagerDialogFragment.setSelectedPos(position);
+            NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
             NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
-            notifyItemChanged(oldPos);
+            if(oldType == 1){
+                notifyItemChanged(oldPos);
+            }
             notifyItemChanged(position);
+        } else if (position == -1) {
+            NPCViewPagerDialogFragment.setSelectedType(-1);
+            NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
+            NPCViewPagerDialogFragment.setNPCUri(null);
+            if (oldType == 1) {
+                notifyItemChanged(oldPos);
+            }
         } else {
             Cursor cursor = getCursor();
             cursor.moveToPosition(position);
             int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            NPCViewPagerDialogFragment.setSelectedType(0);
-            NPCViewPagerDialogFragment.setSelectedPos(position);
+            NPCViewPagerDialogFragment.setSelectedType(1);
+            NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
             NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
             notifyItemChanged(position);
         }
@@ -150,7 +165,7 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    NPCViewPagerDialogFragment.setSelectedPos(getAdapterPosition());
+                    NPCViewPagerDialogFragment.setSelectedPos((int)getItemId(), getAdapterPosition());
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
@@ -173,7 +188,7 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
             clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            itemView.setActivated(NPCViewPagerDialogFragment.getSelectedType() == 0 && getAdapterPosition() == NPCViewPagerDialogFragment.getSelectedPos());
+            itemView.setActivated(getItemId() == NPCViewPagerDialogFragment.getSelectedPosUnique());
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
         }
     }

@@ -41,7 +41,7 @@ public class MonsterViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MyMonsterTableFragment.newInstance();
+                return MyMonsterTableFragment.newInstance(isNavMode);
             case 1:
                 return MonsterManualTableFragment.newInstance(isNavMode);
             default:

@@ -57,6 +57,7 @@ public class MyNPCTableFragment extends Fragment implements
     private ActionMode mActionMode;
     private MyNPCAdapter myNPCAdapter;
     private static int campaignId;
+    private boolean isNavMode;
 
     public MyNPCTableFragment() {
         // Required empty public constructor
@@ -66,9 +67,10 @@ public class MyNPCTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static MyNPCTableFragment newInstance() {
+    public static MyNPCTableFragment newInstance(boolean isNavMode) {
         MyNPCTableFragment fragment = new MyNPCTableFragment();
         Bundle args = new Bundle();
+        args.putBoolean("navMode", isNavMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,6 +80,9 @@ public class MyNPCTableFragment extends Fragment implements
         EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (this.getArguments() != null) {
+            isNavMode = this.getArguments().getBoolean("navMode");
+        }
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         myNPCAdapter = new MyNPCAdapter(getContext(), this);
     }
@@ -115,172 +120,6 @@ public class MyNPCTableFragment extends Fragment implements
             getLoaderManager().restartLoader(0, null, this);
         }
     }
-
-/*
-    private void setUpItemTouchHelper() {
-
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            Drawable background;
-            Drawable xMark;
-            int xMarkMargin;
-            boolean initiated;
-
-
-            private void init() {
-                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
-                xMark = ContextCompat.getDrawable(getContext(), R.drawable.ic_clear_24dp);
-                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                xMarkMargin = (int) getContext().getResources().getDimension(R.dimen.ic_clear_margin);
-                initiated = true;
-            }
-
-
-            //Drag & drop
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-                MyNPCAdapter testAdapter = (MyNPCAdapter) recyclerView.getAdapter();
-                if (testAdapter.isPendingRemoval(position)) {
-                    return 0;
-                }
-                return super.getSwipeDirs(recyclerView, viewHolder);
-            }
-
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                //Remove swiped item from list and notify the RecyclerView
-                int swipedAdapterPosition = viewHolder.getAdapterPosition();
-                MyNPCAdapter adapter = (MyNPCAdapter) myNPCRecyclerView.getAdapter();
-                adapter.pendingRemoval(swipedAdapterPosition);
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                View itemView = viewHolder.itemView;
-
-                if (viewHolder.getAdapterPosition() == -1) {
-                    // not interested in those
-                    return;
-                }
-
-                if (!initiated) {
-                    init();
-                }
-
-                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                background.draw(c);
-
-                // draw x mark
-                int itemHeight = itemView.getBottom() - itemView.getTop();
-                int intrinsicWidth = xMark.getIntrinsicWidth();
-                int intrinsicHeight = xMark.getIntrinsicWidth();
-
-                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                int xMarkBottom = xMarkTop + intrinsicHeight;
-                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-
-                xMark.draw(c);
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(myNPCRecyclerView);
-    }
-
-
-    /**
-     * We're gonna setup another ItemDecorator that will draw the red background in the empty space while the items are animating to thier new positions
-     * after an item is removed.
-     */
-    /*
-    private void setUpAnimationDecoratorHelper() {
-        myNPCRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-
-            // we want to cache this and not allocate anything repeatedly in the onDraw method
-            Drawable background;
-            boolean initiated;
-
-            private void init() {
-                background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.colorAccent));
-                initiated = true;
-            }
-
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-
-                if (!initiated) {
-                    init();
-                }
-
-                // only if animation is in progress
-                if (parent.getItemAnimator().isRunning()) {
-
-                    // some items might be animating down and some items might be animating up to close the gap left by the removed item
-                    // this is not exclusive, both movement can be happening at the same time
-                    // to reproduce this leave just enough items so the first one and the last one would be just a little off screen
-                    // then remove one from the middle
-
-                    // find first child with translationY > 0
-                    // and last one with translationY < 0
-                    // we're after a rect that is not covered in recycler-view views at this point in time
-                    View lastViewComingDown = null;
-                    View firstViewComingUp = null;
-
-                    // this is fixed
-                    int left = 0;
-                    int right = parent.getWidth();
-
-                    // this we need to find out
-                    int top = 0;
-                    int bottom = 0;
-
-                    // find relevant translating views
-                    int childCount = parent.getLayoutManager().getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        View child = parent.getLayoutManager().getChildAt(i);
-                        if (child.getTranslationY() < 0) {
-                            // view is coming down
-                            lastViewComingDown = child;
-                        } else if (child.getTranslationY() > 0) {
-                            // view is coming up
-                            if (firstViewComingUp == null) {
-                                firstViewComingUp = child;
-                            }
-                        }
-                    }
-
-                    if (lastViewComingDown != null && firstViewComingUp != null) {
-                        // views are coming down AND going up to fill the void
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    } else if (lastViewComingDown != null) {
-                        // views are going down to fill the void
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = lastViewComingDown.getBottom();
-                    } else if (firstViewComingUp != null) {
-                        // views are coming up to fill the void
-                        top = firstViewComingUp.getTop();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    }
-
-                    background.setBounds(left, top, right, bottom);
-                    background.draw(c);
-
-                }
-                super.onDraw(c, parent, state);
-            }
-
-        });
-    }
-    */
 
 
     public int getSessionId() {
@@ -343,23 +182,34 @@ public class MyNPCTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        myNPCAdapter.statusClicked(position);
+        if(!isNavMode){
+            myNPCAdapter.statusClicked(position);
+        }else{
+            myNPCAdapter.statusClicked(-1);
+        }
+        //myNPCAdapter.statusClicked(position);
         EventBus.getDefault().post(new NotifyChange());
     }
 
+    public RecyclerView getMyNPCRecyclerView() {
+        return myNPCRecyclerView;
+    }
 
     @Override
     public void onItemLongCLick(final int position) {
-        NPCViewPagerDialogFragment.setSelectedType(0);
-        NPCViewPagerDialogFragment.setHighlightedPos(position);
-        int oldPos = NPCViewPagerDialogFragment.getSelectedPos();
-        NPCViewPagerDialogFragment.setSelectedPos(position);
+
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                NPCViewPagerDialogFragment.setSelectedType(0);
+                NPCViewPagerDialogFragment.setHighlightedPos(position);
+                int oldPos = NPCViewPagerDialogFragment.getSelectedPosAdapter();
+                NPCViewPagerDialogFragment.setSelectedPos((int)myNPCAdapter.getItemId(position), position);
+                myNPCAdapter.notifyItemChanged(position);
+                myNPCAdapter.notifyItemChanged(oldPos);
+
                 ((NPCViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).setFabVisibility(false);
 
-                myNPCRecyclerView.getAdapter().notifyItemChanged(position);
                 String title = "Selected: " + String.valueOf(position);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
@@ -424,7 +274,7 @@ public class MyNPCTableFragment extends Fragment implements
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 NPCViewPagerDialogFragment.setHighlightedPos(-1);
-                NPCViewPagerDialogFragment.setSelectedPos(-1);
+                NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
                 myNPCRecyclerView.getAdapter().notifyItemChanged(position);
                 ((NPCViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).setFabVisibility(true);
                 mActionMode = null;
@@ -437,7 +287,7 @@ public class MyNPCTableFragment extends Fragment implements
         fragment = new MyNPCEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.drawer_layout, fragment, "FE_MYNPC")
+                .replace(R.id.ContainerFrame, fragment, "FE_MYNPC")
                 .addToBackStack("FE_MYNPC")
                 .commit();
     }
@@ -489,6 +339,12 @@ public class MyNPCTableFragment extends Fragment implements
     @Subscribe
     public void onMessageEvent(NotifyChange event){
         myNPCAdapter.notifyDataSetChanged();
+    }
+
+    public void dismissActionMode(){
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
     }
 
 

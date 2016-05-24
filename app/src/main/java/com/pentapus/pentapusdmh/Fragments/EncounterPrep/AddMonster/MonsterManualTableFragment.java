@@ -94,7 +94,7 @@ public class MonsterManualTableFragment extends Fragment implements
         myMonsterRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
-        if(isNavMode){
+        if (isNavMode) {
             myMonsterAdapter.statusClicked(-1);
         }
 
@@ -173,99 +173,26 @@ public class MonsterManualTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-      /*  if(!isNavMode){
+        if (!isNavMode) {
             myMonsterAdapter.statusClicked(position);
-        }else{
+        } else {
             myMonsterAdapter.statusClicked(-1);
-        }*/
-        myMonsterAdapter.statusClicked(position);
+        }
+        //myMonsterAdapter.statusClicked(position);
     }
 
     @Override
     public void onItemLongCLick(final int position) {
-      /*  mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
-                String title = "Selected: " + String.valueOf(position);
-                mode.setTitle(title);
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.context_menu, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.delete:
-                        //TODO: ADD DIALOG TO MAKE SURE THE DELETE IS INTENTIONAL
-                        Cursor cursor = myMonsterAdapter.getCursor();
-                        cursor.moveToPosition(position);
-                        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + npcId);
-                        getContext().getContentResolver().delete(uri, null, null);
-                        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                        if (clipboard.hasPrimaryClip()) {
-                            ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
-                            Uri pasteUri = itemPaste.getUri();
-                            if (pasteUri == null) {
-                                pasteUri = Uri.parse(String.valueOf(itemPaste.getText()));
-                            }
-                            if(pasteUri.equals(uri)){
-                                Uri newUri = Uri.parse("");
-                                ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", newUri);
-                                clipboard.setPrimaryClip(clip);
-                                getActivity().invalidateOptionsMenu();
-                            }
-                        }
-                        mode.finish();
-                        return true;
-                    case R.id.edit:
-                       /* cursor = myMonsterAdapter.getCursor();
-                        cursor.moveToPosition(position);
-                        int encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(MODE, true);
-                        bundle.putInt(ENCOUNTER_ID, encounterId);
-                        bundle.putInt(SESSION_ID, sessionId);
-                        editEncounter(bundle);
-                        mode.finish();
-                        return true;*/
-                   /* case R.id.copy:
-                       /* cursor = mEncounterAdapter.getCursor();
-                        cursor.moveToPosition(position);
-                        encounterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-                        uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTER + "/" + encounterId);
-                        clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newUri(getContext().getContentResolver(), "URI", uri);
-                        clipboard.setPrimaryClip(clip);
-                        getActivity().invalidateOptionsMenu();
-                        mode.finish();
-                        return true; */
-                 /*   default:
-                        return false;
-                }
-            }
-
-                /*
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                EncounterAdapter.setSelectedPos(-1);
-                myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
-                mActionMode = null;
-            }
-        });
-    }*/
     }
 
-    public RecyclerView getMyMonsterRecyclerView(){
+    public RecyclerView getMyMonsterRecyclerView() {
         return myMonsterRecyclerView;
+    }
+
+    public void dismissActionMode(){
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
     }
 
     @Override

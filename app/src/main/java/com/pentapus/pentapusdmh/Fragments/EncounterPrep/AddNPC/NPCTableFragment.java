@@ -56,6 +56,7 @@ public class NPCTableFragment extends Fragment implements
     private ActionMode mActionMode;
     private NPCAdapter npcAdapter;
     private static int campaignId;
+    private boolean isNavMode;
 
     public NPCTableFragment() {
         // Required empty public constructor
@@ -65,9 +66,10 @@ public class NPCTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static NPCTableFragment newInstance() {
+    public static NPCTableFragment newInstance(boolean isNavMode) {
         NPCTableFragment fragment = new NPCTableFragment();
         Bundle args = new Bundle();
+        args.putBoolean("navMode", isNavMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +79,9 @@ public class NPCTableFragment extends Fragment implements
         EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (this.getArguments() != null) {
+            isNavMode = this.getArguments().getBoolean("navMode");
+        }
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         npcAdapter = new NPCAdapter(getContext(), this);
     }
@@ -170,7 +175,12 @@ public class NPCTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        npcAdapter.statusClicked(position);
+        if(!isNavMode){
+            npcAdapter.statusClicked(position);
+        }else{
+            npcAdapter.statusClicked(-1);
+        }
+        //npcAdapter.statusClicked(position);
         EventBus.getDefault().post(new NotifyChange());
     }
 
@@ -185,8 +195,18 @@ public class NPCTableFragment extends Fragment implements
     }
 
 
+    public void dismissActionMode(){
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
+    }
+
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();
+    }
+
+    public RecyclerView getMyNPCRecyclerView() {
+        return myNPCRecyclerView;
     }
 }

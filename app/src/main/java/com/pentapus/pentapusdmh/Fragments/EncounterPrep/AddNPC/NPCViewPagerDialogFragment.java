@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,9 @@ public class NPCViewPagerDialogFragment extends Fragment {
     private static final String MODE = "modeUpdate";
     private Button bDone;
 
+    private static int selectedPosUnique = -1;
+    private static int selectedPosAdapter = -1;
     private static int selectedType = -1;
-    private static int selectedPos = -1;
     private static int highlightedPos = -1;
     private static Uri npcUri = null;
 
@@ -75,10 +77,8 @@ public class NPCViewPagerDialogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.npc_viewpager_tab_layout, parent, false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Friends");
         ((MainActivity)getActivity()).setFabVisibility(false);
-        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) view.getLayoutParams();
-        params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
-        view.setBackgroundColor(Color.WHITE);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
@@ -118,9 +118,13 @@ public class NPCViewPagerDialogFragment extends Fragment {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
+                        ((MyNPCTableFragment)pagerAdapter.getRegisteredFragment(0)).getMyNPCRecyclerView().getAdapter().notifyDataSetChanged();
+                        ((NPCTableFragment)pagerAdapter.getRegisteredFragment(1)).dismissActionMode();
                         fabNPCVP.setVisibility(View.VISIBLE);
                         break;
                     case 1:
+                        ((NPCTableFragment)pagerAdapter.getRegisteredFragment(1)).getMyNPCRecyclerView().getAdapter().notifyDataSetChanged();
+                        ((MyNPCTableFragment)pagerAdapter.getRegisteredFragment(0)).dismissActionMode();
                         fabNPCVP.setVisibility(View.GONE);
                         break;
                     default:
@@ -197,7 +201,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        pagerAdapter = new NPCViewPagerAdapter(getChildFragmentManager(), getContext(), id);
+        pagerAdapter = new NPCViewPagerAdapter(getChildFragmentManager(), getContext(), navMode, id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(1);
@@ -220,12 +224,18 @@ public class NPCViewPagerDialogFragment extends Fragment {
         NPCViewPagerDialogFragment.selectedType = selectedType;
     }
 
-    public static int getSelectedPos() {
-        return selectedPos;
+    public static int getSelectedPosUnique() {
+        return selectedPosUnique;
     }
 
-    public static void setSelectedPos(int selectedPos) {
-        NPCViewPagerDialogFragment.selectedPos = selectedPos;
+    public static int getSelectedPosAdapter() {
+        return selectedPosAdapter;
+    }
+
+
+    public static void setSelectedPos(int selectedPosUnique, int selectedPosAdapter) {
+        NPCViewPagerDialogFragment.selectedPosUnique = selectedPosUnique;
+        NPCViewPagerDialogFragment.selectedPosAdapter = selectedPosAdapter;
     }
 
     public static int getHighlightedPos() {

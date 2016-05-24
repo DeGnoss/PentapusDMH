@@ -92,7 +92,10 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
     }
 
     public void statusClicked(int position) {
-        int uniquePosition = (int) getItemId(position);
+        int uniquePosition = -1;
+        if(position >= 0){
+            uniquePosition = (int) getItemId(position);
+        }
         int oldType = MonsterViewPagerDialogFragment.getSelectedType();
         int oldPos = MonsterViewPagerDialogFragment.getSelectedPosAdapter();
         if (MonsterViewPagerDialogFragment.getSelectedType() == 1 && uniquePosition == MonsterViewPagerDialogFragment.getSelectedPosUnique()) {
@@ -110,7 +113,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
                 notifyItemChanged(oldPos);
             }
             notifyItemChanged(position);
-        } else if (uniquePosition == -1) {
+        } else if (position == -1) {
             MonsterViewPagerDialogFragment.setSelectedType(-1);
             MonsterViewPagerDialogFragment.setSelectedPos(-1, -1);
             MonsterViewPagerDialogFragment.setMonsterUri(null);

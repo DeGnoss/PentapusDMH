@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,10 +75,8 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.monster_viewpager_tab_layout, parent, false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Fiends");
         ((MainActivity)getActivity()).setFabVisibility(false);
-        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) view.getLayoutParams();
-        params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
-        view.setBackgroundColor(Color.WHITE);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
@@ -118,10 +117,12 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                 switch (position) {
                     case 0:
                         ((MyMonsterTableFragment)pagerAdapter.getRegisteredFragment(0)).getMyMonsterRecyclerView().getAdapter().notifyDataSetChanged();
+                        ((MonsterManualTableFragment)pagerAdapter.getRegisteredFragment(1)).dismissActionMode();
                         fabMonsterVP.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         ((MonsterManualTableFragment)pagerAdapter.getRegisteredFragment(1)).getMyMonsterRecyclerView().getAdapter().notifyDataSetChanged();
+                        ((MyMonsterTableFragment)pagerAdapter.getRegisteredFragment(0)).dismissActionMode();
                         fabMonsterVP.setVisibility(View.GONE);
                         break;
                     default:

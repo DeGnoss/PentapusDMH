@@ -35,13 +35,6 @@ import android.view.ViewGroup;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
-import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterEditFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageGridAdapter;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.MonsterEditFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 
@@ -54,6 +47,7 @@ public class MyMonsterTableFragment extends Fragment implements
     private static final String MONSTER_ID = "monsterId";
 
     private int sessionId;
+    private boolean isNavMode;
     private String sessionName;
     private RecyclerView myMonsterRecyclerView;
     private ActionMode mActionMode;
@@ -67,9 +61,10 @@ public class MyMonsterTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static MyMonsterTableFragment newInstance() {
+    public static MyMonsterTableFragment newInstance(boolean isNavMode) {
         MyMonsterTableFragment fragment = new MyMonsterTableFragment();
         Bundle args = new Bundle();
+        args.putBoolean("navMode", isNavMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,6 +73,9 @@ public class MyMonsterTableFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (this.getArguments() != null) {
+            isNavMode = this.getArguments().getBoolean("navMode");
+        }
         myMonsterAdapter = new MyMonsterAdapter(getContext(), this);
     }
 
@@ -174,20 +172,26 @@ public class MyMonsterTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        myMonsterAdapter.statusClicked(position);
+        if(!isNavMode){
+            myMonsterAdapter.statusClicked(position);
+        }else{
+            myMonsterAdapter.statusClicked(-1);
+        }
     }
 
 
     @Override
     public void onItemLongCLick(final int position) {
-        MonsterViewPagerDialogFragment.setSelectedType(0);
-        MonsterViewPagerDialogFragment.setHighlightedPos(position);
-        int oldPos = MonsterViewPagerDialogFragment.getSelectedPosAdapter();
-        MonsterViewPagerDialogFragment.setSelectedPos((int)myMonsterAdapter.getItemId(position), position);
+
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
+                MonsterViewPagerDialogFragment.setSelectedType(0);
+                MonsterViewPagerDialogFragment.setHighlightedPos(position);
+                int oldPos = MonsterViewPagerDialogFragment.getSelectedPosAdapter();
+                MonsterViewPagerDialogFragment.setSelectedPos((int)myMonsterAdapter.getItemId(position), position);
+                myMonsterAdapter.notifyItemChanged(position);
+                myMonsterAdapter.notifyItemChanged(oldPos);
                 String title = "Selected: " + String.valueOf(position);
                 ((MonsterViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(false);
                 mode.setTitle(title);
@@ -266,7 +270,7 @@ public class MyMonsterTableFragment extends Fragment implements
         fragment = new MyMonsterEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.drawer_layout, fragment, "FE_MYMONSTER")
+                .replace(R.id.ContainerFrame, fragment, "FE_MYMONSTER")
                 .addToBackStack("FE_MYMONSTER")
                 .commit();
     }
@@ -313,6 +317,12 @@ public class MyMonsterTableFragment extends Fragment implements
                 null,
                 null
         );
+    }
+
+    public void dismissActionMode(){
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
     }
 
     public RecyclerView getMyMonsterRecyclerView(){

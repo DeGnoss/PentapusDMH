@@ -82,26 +82,40 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
     }
 
     public void statusClicked(int position) {
-        int oldPos = NPCViewPagerDialogFragment.getSelectedPos();
-        if (NPCViewPagerDialogFragment.getSelectedType() == 0 && position == NPCViewPagerDialogFragment.getSelectedPos()) {
+        int uniquePosition = -1;
+        if(position >= 0){
+            uniquePosition = (int) getItemId(position);
+        }
+        int oldType = NPCViewPagerDialogFragment.getSelectedType();
+        int oldPos = NPCViewPagerDialogFragment.getSelectedPosAdapter();
+        if (NPCViewPagerDialogFragment.getSelectedType() == 0 && uniquePosition == NPCViewPagerDialogFragment.getSelectedPosUnique()) {
             NPCViewPagerDialogFragment.setSelectedType(-1);
-            NPCViewPagerDialogFragment.setSelectedPos(-1);
+            NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
             NPCViewPagerDialogFragment.setNPCUri(null);
             notifyItemChanged(position);
         } else if (NPCViewPagerDialogFragment.getSelectedType() == 0) {
             Cursor cursor = getCursor();
             cursor.moveToPosition(position);
             int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            NPCViewPagerDialogFragment.setSelectedPos(position);
+            NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
             NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
-            notifyItemChanged(oldPos);
+            if(oldType == 0){
+                notifyItemChanged(oldPos);
+            }
             notifyItemChanged(position);
+        } else if (position == -1) {
+            NPCViewPagerDialogFragment.setSelectedType(-1);
+            NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
+            NPCViewPagerDialogFragment.setNPCUri(null);
+            if (oldType == 0) {
+                notifyItemChanged(oldPos);
+            }
         } else {
             Cursor cursor = getCursor();
             cursor.moveToPosition(position);
             int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
             NPCViewPagerDialogFragment.setSelectedType(0);
-            NPCViewPagerDialogFragment.setSelectedPos(position);
+            NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
             NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
             notifyItemChanged(position);
         }
@@ -158,7 +172,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    NPCViewPagerDialogFragment.setSelectedPos(getAdapterPosition());
+                    NPCViewPagerDialogFragment.setSelectedPos((int)getItemId(), getAdapterPosition());
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
@@ -181,40 +195,8 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
             clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            itemView.setActivated(NPCViewPagerDialogFragment.getSelectedType() == 0 && getAdapterPosition() == NPCViewPagerDialogFragment.getSelectedPos());
+            itemView.setActivated(getItemId() == NPCViewPagerDialogFragment.getSelectedPosUnique());
             identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-
-            /*
-            if (itemsPendingRemoval.contains(String.valueOf(identifier))) {
-                // we need to show the "undo" state of the row
-                itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                vName.setVisibility(View.GONE);
-                vInfo.setVisibility(View.GONE);
-                vInfoDeleted.setVisibility(View.VISIBLE);
-                undoButton.setVisibility(View.VISIBLE);
-                undoButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // user wants to undo the removal, let's cancel the pending task
-                        Runnable pendingRemovalRunnable = pendingRunnables.get(String.valueOf(identifier));
-                        pendingRunnables.remove(String.valueOf(identifier));
-                        if (pendingRemovalRunnable != null)
-                            handler.removeCallbacks(pendingRemovalRunnable);
-                        itemsPendingRemoval.remove(String.valueOf(identifier));
-                        // this will rebind the row in "normal" state
-                        notifyItemChanged(getAdapterPosition());
-                    }
-                });
-            } else {
-                // we need to show the "normal" state
-                itemView.setBackgroundColor(Color.WHITE);
-                vName.setVisibility(View.VISIBLE);
-                vInfo.setVisibility(View.VISIBLE);
-                // viewHolder.titleTextView.setText(item);
-                vInfoDeleted.setVisibility(View.GONE);
-                undoButton.setVisibility(View.GONE);
-                undoButton.setOnClickListener(null);
-            }*/
         }
 
 

@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -97,9 +98,6 @@ public class MyMonsterEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_mymonster_edit, container, false);
-        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) charEditView.getLayoutParams();
-        params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
-        charEditView.setBackgroundColor(Color.WHITE);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
         init_tf = (EditText) charEditView.findViewById(R.id.etInit);
@@ -199,6 +197,8 @@ public class MyMonsterEditFragment extends Fragment {
             wis.setText(myWisdom, TextView.BufferType.EDITABLE);
             charisma.setText(myCharisma, TextView.BufferType.EDITABLE);
             bChooseImage.setImageURI(myFile);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(myName);
+
         }
         assert cursor != null;
         cursor.close();

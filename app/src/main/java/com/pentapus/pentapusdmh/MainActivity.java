@@ -760,8 +760,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     fragmentManager.popBackStack();
                 }
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.remove(fragmentManager.findFragmentByTag(getCurrentFragmentTag()));
-                transaction.replace(R.id.drawer_layout, fragment, "F_MONSTER_PAGER")
+                transaction.replace(R.id.ContainerFrame, fragment, "F_MONSTER_PAGER")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
@@ -779,8 +778,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     fragmentManager.popBackStack();
                 }
                 transaction = fragmentManager.beginTransaction();
-                transaction.remove(fragmentManager.findFragmentByTag(getCurrentFragmentTag()));
-                transaction.replace(R.id.drawer_layout, fragment, "F_NPC_PAGER")
+                transaction.replace(R.id.ContainerFrame, fragment, "F_NPC_PAGER")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
@@ -813,9 +811,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     fragmentManager.popBackStack();
                 }
                 transaction = fragmentManager.beginTransaction();
-                transaction.remove(fragmentManager.findFragmentByTag(getCurrentFragmentTag()));
                 transaction.replace(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
-                        .addToBackStack("F_SPELL_PAGER")
+                        .addToBackStack("NAV_F")
                         .commit();
                 break;
             case R.id.nav_settings:
