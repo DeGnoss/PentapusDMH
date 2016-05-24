@@ -31,7 +31,7 @@ public class DetailSpellFragment extends Fragment {
     private int spellId;
     private String spellName;
 
-    TextView name_tf, info_tf;
+    TextView name_tf, info_tf, subhead_tf, castingtime_tf, range_tf, components_tf, duration_tf;
 
     public DetailSpellFragment() {
         // Required empty public constructor
@@ -70,21 +70,27 @@ public class DetailSpellFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_detail_spell, container, false);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) charEditView.getLayoutParams();
-        params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
+        //FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) charEditView.getLayoutParams();
+        //params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
         charEditView.setBackgroundColor(Color.WHITE);
-        name_tf = (TextView) charEditView.findViewById(R.id.etName);
-        info_tf = (TextView) charEditView.findViewById(R.id.etInfo);
+        name_tf = (TextView) charEditView.findViewById(R.id.spellName);
+        info_tf = (TextView) charEditView.findViewById(R.id.spellInfo);
+        subhead_tf = (TextView) charEditView.findViewById(R.id.spellSubName);
+        castingtime_tf = (TextView) charEditView.findViewById(R.id.spellCastingTime);
+        range_tf = (TextView) charEditView.findViewById(R.id.spellRange);
+        components_tf = (TextView) charEditView.findViewById(R.id.spellComponents);
+        duration_tf = (TextView) charEditView.findViewById(R.id.spellDuration);
 
 
-        loadSpellInfo(name_tf, info_tf, spellId);
+
+        loadSpellInfo(name_tf, info_tf, subhead_tf, castingtime_tf, range_tf, components_tf, duration_tf, spellId);
 
         // Inflate the layout for this fragment
         return charEditView;
     }
 
 
-    private void loadSpellInfo(TextView name, TextView info, int id) {
+    private void loadSpellInfo(TextView name, TextView info, TextView subhead, TextView castingtime, TextView range, TextView components, TextView duration, int id) {
 
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SPELL + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_SPELL, null, null,
@@ -93,8 +99,19 @@ public class DetailSpellFragment extends Fragment {
             cursor.moveToFirst();
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
             String myInfo = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
+            String mySubhead = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCHOOL));
+            String myCastingTime = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TIME));
+            String myRange = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_RANGE));
+            //String myComponents = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
+            String myDuration = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DURATION));
+
+
             name.setText(myName);
             info.setText(myInfo);
+            subhead.setText(mySubhead);
+            castingtime.setText(myCastingTime);
+            range.setText(myRange);
+            duration.setText(myDuration);
         }
         assert cursor != null;
         cursor.close();

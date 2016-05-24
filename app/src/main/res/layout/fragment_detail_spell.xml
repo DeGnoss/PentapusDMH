@@ -7,7 +7,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
         android:paddingBottom="65dp"
         android:isScrollContainer="true"
         android:clipToPadding="false">
@@ -19,20 +18,117 @@
 
 
             <TextView
-                android:id="@+id/etName"
+                android:id="@+id/spellName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
+                android:textStyle="bold"
                 android:layout_alignParentTop="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
-                android:id="@+id/etInfo"
+                android:id="@+id/spellSubName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/etName"
+                android:textStyle="italic"
+                android:layout_below="@+id/spellName"
+                android:layout_margin="2dp" />
+
+            <TextView
+                android:id="@+id/spellLabelCastingTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spellSubName"
+                android:textStyle="bold"
                 android:layout_margin="2dp"
+                android:text="Casting Time:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <TextView
+                android:id="@+id/spellCastingTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/spellLabelCastingTime"
+                android:layout_toEndOf="@+id/spellLabelCastingTime"
+                android:layout_margin="2dp"
+                android:layout_marginStart="5dp" />
+
+            <TextView
+                android:id="@+id/spellLabelRange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spellLabelCastingTime"
+                android:textStyle="bold"
+                android:layout_margin="2dp"
+                android:text="Range:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <TextView
+                android:id="@+id/spellRange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/spellLabelRange"
+                android:layout_toEndOf="@+id/spellLabelRange"
+                android:layout_margin="2dp"
+                android:layout_marginStart="5dp" />
+
+            <TextView
+                android:id="@+id/spellLabelComponents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spellLabelRange"
+                android:textStyle="bold"
+                android:layout_margin="2dp"
+                android:text="Components:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <TextView
+                android:id="@+id/spellComponents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/spellLabelComponents"
+                android:layout_toEndOf="@+id/spellLabelComponents"
+                android:layout_margin="2dp"
+                android:layout_marginStart="5dp" />
+
+            <TextView
+                android:id="@+id/spellLabelDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spellLabelComponents"
+                android:textStyle="bold"
+                android:layout_margin="2dp"
+                android:text="Components:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <TextView
+                android:id="@+id/spellDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/spellLabelDuration"
+                android:layout_toEndOf="@+id/spellLabelDuration"
+                android:layout_margin="2dp"
+                android:layout_marginStart="5dp" />
+
+            <TextView
+                android:id="@+id/spellLabelInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spellLabelDuration"
+                android:textStyle="bold"
+                android:layout_margin="2dp"
+                android:text="Description:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <TextView
+                android:id="@+id/spellInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/spellLabelInfo"
+                android:layout_toEndOf="@+id/spellLabelInfo"
+                android:layout_margin="2dp"
+                android:layout_marginStart="5dp" />
+
 
         </RelativeLayout>
     </ScrollView>
