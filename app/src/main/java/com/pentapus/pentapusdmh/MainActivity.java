@@ -604,6 +604,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         childFM.popBackStack();
                     }
                     fm.popBackStack();
+                    fm.popBackStack();
                     Log.d("FragmentList", getSupportFragmentManager().getFragments().toString());
 
                 } else if ("F_SPELL_PAGER".equals(getCurrentFragmentTag())) {
@@ -706,19 +707,73 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public boolean isNavMode(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
+        String str = backEntry.getName();
+        boolean topBackEntryIsNav = false;
+        if (str.equals("NAV_F_PC")||str.equals("NAV_F")||str.equals("NAV_F")||str.equals("NAV_F")||str.equals("NAV_F")) {
+            topBackEntryIsNav = true;
+        }
+        return topBackEntryIsNav;
+    }
+
+    public void removeNavModeFragments(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
+        String str = backEntry.getName();
+        switch(str){
+            case "NAV_F_MONSTER":
+                Fragment fragment = fragmentManager.findFragmentByTag("F_MONSTER_PAGER");
+                FragmentManager childFM = fragment.getChildFragmentManager();
+                while (childFM.getBackStackEntryCount() > 0) {
+                    childFM.popBackStack();
+                }
+                fragmentManager.popBackStack();
+                removeNavModeFragments();
+                break;
+            case "NAV_F_NPC":
+                fragment = fragmentManager.findFragmentByTag("F_NPC_PAGER");
+                childFM = fragment.getChildFragmentManager();
+                while (childFM.getBackStackEntryCount() > 0) {
+                    childFM.popBackStack();
+                }
+                fragmentManager.popBackStack();
+                removeNavModeFragments();
+                break;
+            case "NAV_F_SPELLS":
+                fragment = fragmentManager.findFragmentByTag("F_SPELL_PAGER");
+                childFM = fragment.getChildFragmentManager();
+                while (childFM.getBackStackEntryCount() > 0) {
+                    childFM.popBackStack();
+                }
+                fragmentManager.popBackStack();
+                removeNavModeFragments();
+                break;
+            case "NAV_F_PC":
+                fragmentManager.popBackStack();
+                removeNavModeFragments();
+                break;
+            case "NAV_F_CAMPAIGN":
+                fragmentManager.popBackStack();
+                removeNavModeFragments();
+                break;
+            case "NAV_F_SETTINGS":
+                fragmentManager.popBackStack();
+                removeNavModeFragments();
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
         Class fragmentClass;
         int id = item.getItemId();
-        FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
-        FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
-        String str = backEntry.getName();
-        boolean topBackEntryIsNav = false;
-        if (str.equals("NAV_F")) {
-            topBackEntryIsNav = true;
-        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         switch (id) {
             case R.id.nav_party:
@@ -731,9 +786,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (topBackEntryIsNav) {
-                    fragmentManager.popBackStack();
-                }
+                removeNavModeFragments();
                 //Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
                 //((SessionTableFragment)f).loadNPCTable(bundle);
 
@@ -743,7 +796,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
                 fragmentManager.beginTransaction()
                         .replace(R.id.ContainerFrame, fragment, "FT_PC")
-                        .addToBackStack("NAV_F")
+                        .addToBackStack("NAV_F_PC")
                         .commit();
                 break;
 
@@ -756,12 +809,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (topBackEntryIsNav) {
-                    fragmentManager.popBackStack();
-                }
+                removeNavModeFragments();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.ContainerFrame, fragment, "F_MONSTER_PAGER")
-                        .addToBackStack("NAV_F")
+                        .addToBackStack("NAV_F_MONSTER")
                         .commit();
                 break;
 
@@ -774,12 +825,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (topBackEntryIsNav) {
-                    fragmentManager.popBackStack();
-                }
+                removeNavModeFragments();
+
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.ContainerFrame, fragment, "F_NPC_PAGER")
-                        .addToBackStack("NAV_F")
+                        .addToBackStack("NAV_F_NPC")
                         .commit();
                 break;
 
@@ -791,11 +841,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (topBackEntryIsNav) {
-                    fragmentManager.popBackStack();
-                }
+                removeNavModeFragments();
+
                 fragmentManager.beginTransaction().replace(R.id.ContainerFrame, fragment, "FT_CAMPAIGN")
-                        .addToBackStack("NAV_F")
+                        .addToBackStack("NAV_F_CAMPAIGN")
                         .commit();
                 break;
             case R.id.nav_spells:
@@ -807,12 +856,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (topBackEntryIsNav) {
-                    fragmentManager.popBackStack();
-                }
+                removeNavModeFragments();
+
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
-                        .addToBackStack("NAV_F")
+                        .addToBackStack("NAV_F_SPELLS")
                         .commit();
                 break;
             case R.id.nav_settings:
@@ -823,11 +871,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (topBackEntryIsNav) {
-                    fragmentManager.popBackStack();
-                }
+                removeNavModeFragments();
+
                 fragmentManager.beginTransaction().replace(R.id.ContainerFrame, fragment, "F_SETTINGS")
-                        .addToBackStack("NAV_F")
+                        .addToBackStack("NAV_F_SETTINGS")
                         .commit();
                 break;
             default:

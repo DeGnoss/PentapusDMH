@@ -121,7 +121,7 @@ public class MonsterManualTableFragment extends Fragment implements
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         //menu.findItem(R.id.campaign_settings).setVisible(true);
-
+        menu.findItem(R.id.action_search).setVisible(true);
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
         if (clipboard.hasPrimaryClip()) {

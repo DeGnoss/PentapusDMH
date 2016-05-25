@@ -41,6 +41,7 @@ public class ImageViewPagerDialogFragment extends Fragment {
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ImageFragmentPagerAdapter pagerAdapter;
@@ -85,9 +86,6 @@ public class ImageViewPagerDialogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_viewpager_tab_layout, parent, false);
-        ((MainActivity)getActivity()).setFabVisibility(false);
-        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) view.getLayoutParams();
-        params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
@@ -172,7 +170,12 @@ public class ImageViewPagerDialogFragment extends Fragment {
         viewPager.setOffscreenPageLimit(1);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
+    }
 
+    @Override
+    public void onResume(){
+        ((MainActivity)getActivity()).setFabVisibility(false);
+        super.onResume();
     }
 
 

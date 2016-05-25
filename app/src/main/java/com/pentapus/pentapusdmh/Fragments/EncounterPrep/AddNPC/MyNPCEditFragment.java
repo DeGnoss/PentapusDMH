@@ -15,9 +15,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -33,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
+import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
@@ -112,8 +116,9 @@ public class MyNPCEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().invalidateOptionsMenu();
         final View charEditView = inflater.inflate(R.layout.fragment_mymonster_edit, container, false);
-        charEditView.setFitsSystemWindows(true);
+        charEditView.setBackgroundColor(Color.WHITE);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
         init_tf = (EditText) charEditView.findViewById(R.id.etInit);
@@ -126,6 +131,26 @@ public class MyNPCEditFragment extends Fragment {
         etWis = (EditText) charEditView.findViewById(R.id.etWis);
         etChar = (EditText) charEditView.findViewById(R.id.etChar);
         bChooseImage = (ImageButton) charEditView.findViewById(R.id.bChooseImage);
+
+
+        name_tf.setText("New Friend");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("New Friend");
+        name_tf.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
 
         if (modeUpdate) {
@@ -180,7 +205,7 @@ public class MyNPCEditFragment extends Fragment {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.replace(R.id.drawer_layout, newFragment, "F_IMAGE_PAGER")
+        transaction.replace(R.id.ContainerFrame, newFragment, "F_IMAGE_PAGER")
                 .addToBackStack(null).commit();
     }
 
@@ -281,6 +306,11 @@ public class MyNPCEditFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

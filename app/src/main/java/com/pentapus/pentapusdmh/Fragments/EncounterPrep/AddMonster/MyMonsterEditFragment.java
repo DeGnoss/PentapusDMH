@@ -13,9 +13,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -29,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.Utils;
 import com.soundcloud.android.crop.Crop;
@@ -40,6 +44,7 @@ public class MyMonsterEditFragment extends Fragment {
     private static final String MODE = "modeUpdate";
     private static final String MONSTER_ID = "monsterId";
     private static final String ENCOUNTER_ID = "encounterId";
+    private static final String NAV_MODE = "navMode";
 
     private static int RESULT_LOAD_IMG = 1;
     private static int RESULT_CHOOSE_IMG = 2;
@@ -51,6 +56,7 @@ public class MyMonsterEditFragment extends Fragment {
     private int monsterId;
     private int encounterId;
     private int px;
+    private boolean navMode;
 
     Button addchar_btn;
     ImageButton bChooseImage;
@@ -85,6 +91,8 @@ public class MyMonsterEditFragment extends Fragment {
         if (this.getArguments() != null) {
             modeUpdate = getArguments().getBoolean(MODE);
             encounterId = getArguments().getInt(ENCOUNTER_ID);
+            navMode= getArguments().getBoolean(NAV_MODE);
+
             //check whether entry gets updated or added
             if (modeUpdate) {
                 monsterId = getArguments().getInt(MONSTER_ID);
@@ -97,7 +105,10 @@ public class MyMonsterEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().invalidateOptionsMenu();
+
         final View charEditView = inflater.inflate(R.layout.fragment_mymonster_edit, container, false);
+        charEditView.setBackgroundColor(Color.WHITE);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
         init_tf = (EditText) charEditView.findViewById(R.id.etInit);
@@ -110,6 +121,25 @@ public class MyMonsterEditFragment extends Fragment {
         etWis = (EditText) charEditView.findViewById(R.id.etWis);
         etChar = (EditText) charEditView.findViewById(R.id.etChar);
         bChooseImage = (ImageButton) charEditView.findViewById(R.id.bChooseImage);
+
+        name_tf.setText("New Fiend");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("New Fiend");
+        name_tf.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
 
         if (modeUpdate) {
@@ -131,29 +161,12 @@ public class MyMonsterEditFragment extends Fragment {
             }
         });
 
-
-
-/*
-        bChooseImage.setOnLongClickListener(new View.OnLongClickListener(){
-
-            @Override
-            public boolean onLongClick(View v) {
-                Glide.clear(bChooseImage);
-                Crop.pickImage(getContext(), getActivity().getSupportFragmentManager().findFragmentByTag("FE_MONSTER"));
-                return true;
-            }
-        });*/
-
-
-
-        // Inflate the layout for this fragment
         return charEditView;
     }
 
 
     public void showViewPager() {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//        MonsterViewPagerDialogFragment newFragment = new MonsterViewPagerDialogFragment();
 
         ImageViewPagerDialogFragment newFragment = new ImageViewPagerDialogFragment();
         newFragment.setTargetFragment(getActivity().getSupportFragmentManager().findFragmentByTag("FE_MYMONSTER"), RESULT_CHOOSE_IMG);
@@ -162,7 +175,7 @@ public class MyMonsterEditFragment extends Fragment {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.add(R.id.drawer_layout, newFragment, "F_IMAGE_PAGER")
+        transaction.replace(R.id.ContainerFrame, newFragment, "F_IMAGE_PAGER")
                 .addToBackStack("F_IMAGE_PAGER").commit();
     }
 
@@ -263,6 +276,18 @@ public class MyMonsterEditFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(false);
     }
 
     @Override

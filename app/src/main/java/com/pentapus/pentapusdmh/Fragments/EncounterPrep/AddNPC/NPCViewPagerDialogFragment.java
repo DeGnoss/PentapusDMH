@@ -34,6 +34,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
 
     private static final String ENCOUNTER_ID = "encounterId";
     private static final String NAV_MODE = "navMode";
+    private static final String ENCOUNTER_NAME = "encounterName";
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -50,6 +51,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
     private static int selectedType = -1;
     private static int highlightedPos = -1;
     private static Uri npcUri = null;
+    private String encounterName;
 
 
     public NPCViewPagerDialogFragment() {
@@ -71,13 +73,13 @@ public class NPCViewPagerDialogFragment extends Fragment {
         if (getArguments() != null) {
             encounterId = getArguments().getInt(ENCOUNTER_ID);
             navMode = getArguments().getBoolean(NAV_MODE);
+            encounterName = getArguments().getString(ENCOUNTER_NAME);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.npc_viewpager_tab_layout, parent, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Friends");
         ((MainActivity)getActivity()).setFabVisibility(false);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
@@ -192,7 +194,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
         fragment = new MyNPCEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.drawer_layout, fragment, "FE_MYNPC")
+                .replace(R.id.ContainerFrame, fragment, "FE_MYNPC")
                 .addToBackStack("FE_MYNPC")
                 .commit();
     }
@@ -208,6 +210,16 @@ public class NPCViewPagerDialogFragment extends Fragment {
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(navMode){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Friends");
+        }else{
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
+        }
     }
 
 

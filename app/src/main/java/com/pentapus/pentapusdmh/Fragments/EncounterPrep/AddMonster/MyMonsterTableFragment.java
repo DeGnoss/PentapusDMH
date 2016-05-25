@@ -84,7 +84,6 @@ public class MyMonsterTableFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_monster_table, container, false);
         // insert a record
-
         myMonsterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -120,9 +119,8 @@ public class MyMonsterTableFragment extends Fragment implements
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         //menu.findItem(R.id.campaign_settings).setVisible(true);
-
+        menu.findItem(R.id.action_search).setVisible(true);
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-
         if (clipboard.hasPrimaryClip()) {
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
@@ -172,9 +170,9 @@ public class MyMonsterTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        if(!isNavMode){
+        if (!isNavMode) {
             myMonsterAdapter.statusClicked(position);
-        }else{
+        } else {
             myMonsterAdapter.statusClicked(-1);
         }
     }
@@ -189,11 +187,11 @@ public class MyMonsterTableFragment extends Fragment implements
                 MonsterViewPagerDialogFragment.setSelectedType(0);
                 MonsterViewPagerDialogFragment.setHighlightedPos(position);
                 int oldPos = MonsterViewPagerDialogFragment.getSelectedPosAdapter();
-                MonsterViewPagerDialogFragment.setSelectedPos((int)myMonsterAdapter.getItemId(position), position);
+                MonsterViewPagerDialogFragment.setSelectedPos((int) myMonsterAdapter.getItemId(position), position);
                 myMonsterAdapter.notifyItemChanged(position);
                 myMonsterAdapter.notifyItemChanged(oldPos);
                 String title = "Selected: " + String.valueOf(position);
-                ((MonsterViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(false);
+                ((MonsterViewPagerDialogFragment) getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(false);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
@@ -259,7 +257,7 @@ public class MyMonsterTableFragment extends Fragment implements
                 MonsterViewPagerDialogFragment.setHighlightedPos(-1);
                 MonsterViewPagerDialogFragment.setSelectedPos(-1, -1);
                 myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
-                ((MonsterViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(true);
+                ((MonsterViewPagerDialogFragment) getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(true);
                 mActionMode = null;
             }
         });
@@ -319,13 +317,13 @@ public class MyMonsterTableFragment extends Fragment implements
         );
     }
 
-    public void dismissActionMode(){
-        if(mActionMode!= null){
+    public void dismissActionMode() {
+        if (mActionMode != null) {
             mActionMode.finish();
         }
     }
 
-    public RecyclerView getMyMonsterRecyclerView(){
+    public RecyclerView getMyMonsterRecyclerView() {
         return myMonsterRecyclerView;
     }
 

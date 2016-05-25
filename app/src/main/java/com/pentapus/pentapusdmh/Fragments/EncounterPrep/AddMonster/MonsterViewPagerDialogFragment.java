@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,6 +33,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
 
     private static final String ENCOUNTER_ID = "encounterId";
     private static final String NAV_MODE = "navMode";
+    private static final String ENCOUNTER_NAME = "encounterName";
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -48,6 +50,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     private static int selectedPosAdapter = -1;
     private static int highlightedPos = -1;
     private static Uri monsterUri = null;
+    private String encounterName;
 
 
     public MonsterViewPagerDialogFragment() {
@@ -69,18 +72,19 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         if (getArguments() != null) {
             encounterId = getArguments().getInt(ENCOUNTER_ID);
             navMode = getArguments().getBoolean(NAV_MODE);
+            encounterName = getArguments().getString(ENCOUNTER_NAME);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.monster_viewpager_tab_layout, parent, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Fiends");
         ((MainActivity)getActivity()).setFabVisibility(false);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
         fabMonsterVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
+
 
         bDone = (Button) view.findViewById(R.id.bDone);
         if(navMode){
@@ -101,6 +105,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(MODE, false);
+                bundle.putBoolean(NAV_MODE, navMode);
                 addMonster(bundle);
             }
         });
@@ -190,10 +195,17 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         Fragment fragment;
         fragment = new MyMonsterEditFragment();
         fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.drawer_layout, fragment, "FE_MYMONSTER")
-                .addToBackStack("FE_MYMONSTER")
-                .commit();
+        if(navMode){
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.ContainerFrame, fragment, "FE_MYMONSTER")
+                    .addToBackStack("NAV_F")
+                    .commit();
+        }else{
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.ContainerFrame, fragment, "FE_MYMONSTER")
+                    .addToBackStack("FE_MYMONSTER")
+                    .commit();
+        }
     }
 
 
@@ -208,6 +220,17 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(navMode){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Fiends");
+        }else{
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
+        }
+    }
+
 
 
     @Override

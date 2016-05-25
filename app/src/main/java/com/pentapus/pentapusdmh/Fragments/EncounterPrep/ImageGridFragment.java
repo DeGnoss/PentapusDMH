@@ -67,7 +67,6 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).setFabVisibility(true);
         View view = inflater.inflate(R.layout.my_icons_grid, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.gridViewMyIcons);
@@ -92,7 +91,6 @@ public class ImageGridFragment extends Fragment implements AdapterNavigationCall
     public void onAttach(Context context){
         super.onAttach(context);
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

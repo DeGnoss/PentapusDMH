@@ -4,7 +4,6 @@
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="30dp"
     android:background="@color/colorPrimaryDark">
 
     <RelativeLayout
