@@ -101,23 +101,8 @@ public class PcTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_pc_table, container, false);
-        ((MainActivity)getActivity()).setFabVisibility(true);
         tableView.setBackgroundColor(Color.WHITE);
-        setExitTransition(new Slide(Gravity.TOP));
 
-        // insert a record
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
-       /* fab = (FloatingActionButton) tableView.findViewById(R.id.fabPc);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(MODE, false);
-                bundle.putInt(CAMPAIGN_ID, campaignId);
-                addPC(bundle);
-            }
-        });*/
         mPCRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewPc);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -146,6 +131,9 @@ public class PcTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).enableNavigationDrawer();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
 
@@ -324,7 +312,7 @@ public class PcTableFragment extends Fragment implements
         fragment = new PcEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.ContainerFrame, fragment, "FE_PC")
+                .replace(R.id.ContainerFrame, fragment, "FE_PC")
                 .addToBackStack("FE_PC")
                 .commit();
     }
@@ -334,7 +322,7 @@ public class PcTableFragment extends Fragment implements
         fragment = new PcEditFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.ContainerFrame, fragment, "FE_PC")
+                .replace(R.id.ContainerFrame, fragment, "FE_PC")
                 .addToBackStack("FE_PC")
                 .commit();
     }

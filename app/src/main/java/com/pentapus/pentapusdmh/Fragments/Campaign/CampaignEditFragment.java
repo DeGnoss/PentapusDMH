@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
 public class CampaignEditFragment extends Fragment {
@@ -151,5 +152,12 @@ public class CampaignEditFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 }

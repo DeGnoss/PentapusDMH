@@ -85,11 +85,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.opendrawer, R.string.closedrawer);
-        drawer.setDrawerListener(toggle);
+        if (drawer != null) {
+            drawer.addDrawerListener(toggle);
+        }
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setItemIconTintList(null);
+        if (navigationView != null) {
+            navigationView.setItemIconTintList(null);
+        }
         navigationView.setNavigationItemSelectedListener(this);
         // tintNavigationViewItems(navigationView);
 
@@ -114,81 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void tintNavigationViewItems(NavigationView navigationView) {
-        //pcs
-        Drawable oldIcon = navigationView
-                .getMenu()
-                .findItem(R.id.nav_party)
-                .getIcon();
-
-        if (!(oldIcon instanceof BitmapDrawable)) {
-            return;
-        }
-
-        Bitmap immutable = ((BitmapDrawable) oldIcon).getBitmap();
-        Bitmap mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas c = new Canvas(mutable);
-        Paint p = new Paint();
-        p.setColor(Color.parseColor("#3F51B5"));
-        p.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#3F51B5"), PorterDuff.Mode.MULTIPLY));
-        c.drawBitmap(mutable, 0.f, 0.f, p);
-        BitmapDrawable newIcon = new BitmapDrawable(getResources(), mutable);
-
-        navigationView
-                .getMenu()
-                .findItem(R.id.nav_party)
-                .setIcon(newIcon);
-
-        //monsters
-        oldIcon = navigationView
-                .getMenu()
-                .findItem(R.id.nav_monsters)
-                .getIcon();
-
-        if (!(oldIcon instanceof BitmapDrawable)) {
-            return;
-        }
-
-        immutable = ((BitmapDrawable) oldIcon).getBitmap();
-        mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
-        c = new Canvas(mutable);
-        p = new Paint();
-        p.setColor(Color.parseColor("#F44336"));
-        p.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#F44336"), PorterDuff.Mode.MULTIPLY));
-        c.drawBitmap(mutable, 0.f, 0.f, p);
-        newIcon = new BitmapDrawable(getResources(), mutable);
-
-        navigationView
-                .getMenu()
-                .findItem(R.id.nav_party)
-                .setIcon(newIcon);
-
-        //npcs
-        oldIcon = navigationView
-                .getMenu()
-                .findItem(R.id.nav_monsters)
-                .getIcon();
-
-        if (!(oldIcon instanceof BitmapDrawable)) {
-            return;
-        }
-
-        immutable = ((BitmapDrawable) oldIcon).getBitmap();
-        mutable = immutable.copy(Bitmap.Config.ARGB_8888, true);
-        c = new Canvas(mutable);
-        p = new Paint();
-        p.setColor(Color.parseColor("#4caf50"));
-        p.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#4caf50"), PorterDuff.Mode.MULTIPLY));
-        c.drawBitmap(mutable, 0.f, 0.f, p);
-        newIcon = new BitmapDrawable(getResources(), mutable);
-
-        navigationView
-                .getMenu()
-                .findItem(R.id.nav_party)
-                .setIcon(newIcon);
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -204,11 +133,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onQueryTextChange(String newText) {
                 filterManager.setQuery(newText);
-               /* if("F_SPELL_PAGER".equals(getCurrentFragmentTag())){
-                    ((PHBSpellTableFragment)((SpellViewPagerDialogFragment)getSupportFragmentManager().findFragmentByTag("F_SPELL_PAGER")).getPagerAdapter().getRegisteredFragment(1)).filterData(newText);
-                    ((MySpellTableFragment)((SpellViewPagerDialogFragment)getSupportFragmentManager().findFragmentByTag("F_SPELL_PAGER")).getPagerAdapter().getRegisteredFragment(0)).filterData(newText);
-
-                }*/
                 return false;
             }
         });
@@ -227,30 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/ /*else if (id == R.id.campaign_settings) {
-            CampaignTableFragment myFragment = (CampaignTableFragment) getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN");
-            if (myFragment != null) {
-                if (!myFragment.isVisible()) {
-                    CampaignTableFragment ftable = new CampaignTableFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.ContainerFrame, ftable, "FT_CAMPAIGN")
-                            .addToBackStack("FT_CAMPAIGN")
-                            .commit();
-                }
-                return true;
-            } else {
-                CampaignTableFragment ftable = new CampaignTableFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ContainerFrame, ftable, "FT_CAMPAIGN")
-                        .addToBackStack("FT_CAMPAIGN")
-                        .commit();
-                return true;
-            }
-
-        }  else*/
         if (id == R.id.play_mode) {
             TrackerFragment ftable = new TrackerFragment();
             getSupportFragmentManager().beginTransaction()
@@ -258,13 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .addToBackStack("F_TRACKER")
                     .commit();
             return true;
-        }/* else if (id == R.id.player_settings) {
-
-            Bundle bundle = new Bundle();
-            bundle.putInt("campaignId", SharedPrefsHelper.loadCampaignId(this));
-            bundle.putString("campaignName", SharedPrefsHelper.loadCampaignName(this));
-            loadPCs(bundle);
-        }*/ else if (id == R.id.menu_paste) {
+        } else if (id == R.id.menu_paste) {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
@@ -648,17 +542,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    private void loadPCs(Bundle bundle) {
-        Fragment fragment;
-        fragment = new PcTableFragment();
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.ContainerFrame, fragment, "FT_PC")
-                .addToBackStack("FT_PC")
-                .commit();
-    }
-
     private void copyAssets() {
         AssetManager assetManager = getAssets();
         String[] files = null;
@@ -707,64 +590,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public boolean isNavMode(){
+    public boolean isNavMode() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
         String str = backEntry.getName();
-        boolean topBackEntryIsNav = false;
-        if (str.equals("NAV_F_PC")||str.equals("NAV_F")||str.equals("NAV_F")||str.equals("NAV_F")||str.equals("NAV_F")) {
-            topBackEntryIsNav = true;
-        }
-        return topBackEntryIsNav;
-    }
-
-    public void removeNavModeFragments(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
-        String str = backEntry.getName();
-        switch(str){
-            case "NAV_F_MONSTER":
-                Fragment fragment = fragmentManager.findFragmentByTag("F_MONSTER_PAGER");
-                FragmentManager childFM = fragment.getChildFragmentManager();
-                while (childFM.getBackStackEntryCount() > 0) {
-                    childFM.popBackStack();
-                }
-                fragmentManager.popBackStack();
-                removeNavModeFragments();
-                break;
-            case "NAV_F_NPC":
-                fragment = fragmentManager.findFragmentByTag("F_NPC_PAGER");
-                childFM = fragment.getChildFragmentManager();
-                while (childFM.getBackStackEntryCount() > 0) {
-                    childFM.popBackStack();
-                }
-                fragmentManager.popBackStack();
-                removeNavModeFragments();
-                break;
-            case "NAV_F_SPELLS":
-                fragment = fragmentManager.findFragmentByTag("F_SPELL_PAGER");
-                childFM = fragment.getChildFragmentManager();
-                while (childFM.getBackStackEntryCount() > 0) {
-                    childFM.popBackStack();
-                }
-                fragmentManager.popBackStack();
-                removeNavModeFragments();
-                break;
-            case "NAV_F_PC":
-                fragmentManager.popBackStack();
-                removeNavModeFragments();
-                break;
-            case "NAV_F_CAMPAIGN":
-                fragmentManager.popBackStack();
-                removeNavModeFragments();
-                break;
-            case "NAV_F_SETTINGS":
-                fragmentManager.popBackStack();
-                removeNavModeFragments();
-                break;
-            default:
-                break;
-        }
+        return str.equals("NAV_F");
     }
 
     @Override
@@ -786,17 +616,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                removeNavModeFragments();
-                //Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
-                //((SessionTableFragment)f).loadNPCTable(bundle);
-
-                //fragment.setSharedElementEnterTransition(new FabTransition());
-                //fragment.setEnterTransition(new Slide(Gravity.TOP));
-                //fragment.setSharedElementReturnTransition(new FabTransition());
-                //Fragment f = getSupportFragmentManager().findFragmentById(R.id.FrameTop);
+                if (isNavMode()) {
+                    fragmentManager.popBackStack();
+                }
                 fragmentManager.beginTransaction()
                         .replace(R.id.ContainerFrame, fragment, "FT_PC")
-                        .addToBackStack("NAV_F_PC")
+                        .addToBackStack("NAV_F")
                         .commit();
                 break;
 
@@ -809,10 +634,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                removeNavModeFragments();
+                if (isNavMode()) {
+                    fragmentManager.popBackStack();
+                }
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.ContainerFrame, fragment, "F_MONSTER_PAGER")
-                        .addToBackStack("NAV_F_MONSTER")
+                        .addToBackStack("NAV_F")
                         .commit();
                 break;
 
@@ -825,11 +652,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                removeNavModeFragments();
-
+                if (isNavMode()) {
+                    fragmentManager.popBackStack();
+                }
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.ContainerFrame, fragment, "F_NPC_PAGER")
-                        .addToBackStack("NAV_F_NPC")
+                        .addToBackStack("NAV_F")
                         .commit();
                 break;
 
@@ -841,10 +669,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                removeNavModeFragments();
-
+                if (isNavMode()) {
+                    fragmentManager.popBackStack();
+                }
                 fragmentManager.beginTransaction().replace(R.id.ContainerFrame, fragment, "FT_CAMPAIGN")
-                        .addToBackStack("NAV_F_CAMPAIGN")
+                        .addToBackStack("NAV_F")
                         .commit();
                 break;
             case R.id.nav_spells:
@@ -856,11 +685,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                removeNavModeFragments();
-
+                if (isNavMode()) {
+                    fragmentManager.popBackStack();
+                }
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
-                        .addToBackStack("NAV_F_SPELLS")
+                        .addToBackStack("NAV_F")
                         .commit();
                 break;
             case R.id.nav_settings:
@@ -871,29 +701,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                removeNavModeFragments();
-
+                if (isNavMode()) {
+                    fragmentManager.popBackStack();
+                }
                 fragmentManager.beginTransaction().replace(R.id.ContainerFrame, fragment, "F_SETTINGS")
-                        .addToBackStack("NAV_F_SETTINGS")
+                        .addToBackStack("NAV_F")
                         .commit();
                 break;
             default:
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 
     public void enableNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        if (drawer != null) {
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
         toggle.setDrawerIndicatorEnabled(true);
     }
 
     public void disableNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        if (drawer != null) {
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
         toggle.setDrawerIndicatorEnabled(false);
     }
 
@@ -923,7 +760,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return instance.filterManager; // return the observable class
     }
 
-    public static void closeSearchView(){
+    public static void closeSearchView() {
         instance.searchView.setIconified(true);
         instance.searchView.setIconified(true);
     }

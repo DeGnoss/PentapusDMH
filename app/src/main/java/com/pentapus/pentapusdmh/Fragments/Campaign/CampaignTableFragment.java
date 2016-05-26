@@ -49,10 +49,7 @@ public class CampaignTableFragment extends Fragment implements
     private ActionMode mActionMode;
 
 
-
-
-
-   // FloatingActionButton fab;
+    // FloatingActionButton fab;
 
     public CampaignTableFragment() {
         // Required empty public constructor
@@ -78,9 +75,7 @@ public class CampaignTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.campaignsFragmentTitle);
         final View tableView = inflater.inflate(R.layout.fragment_campaign_table, container, false);
-        ((MainActivity)getActivity()).setFabVisibility(true);
         //displayListView(tableView);
         // Inflate the layout for this fragment
 
@@ -90,24 +85,8 @@ public class CampaignTableFragment extends Fragment implements
         mCampaignRecyclerView.setLayoutManager(linearLayoutManager);
         mCampaignRecyclerView.setHasFixedSize(true);
         mCampaignRecyclerView.addItemDecoration(
-               new DividerItemDecoration(getActivity()));
+                new DividerItemDecoration(getActivity()));
         mCampaignRecyclerView.setAdapter(mCampaignAdapter);
-
-
-
-
-
-/*
-        fab = (FloatingActionButton) tableView.findViewById(R.id.fabCampaign);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(MODE, false);
-                addCampaign(bundle);
-            }
-        });*/
 
         setUpItemTouchHelper();
         setUpAnimationDecoratorHelper();
@@ -116,7 +95,7 @@ public class CampaignTableFragment extends Fragment implements
         return tableView;
     }
 
-    public void onFabClick(){
+    public void onFabClick() {
         Bundle bundle = new Bundle();
         bundle.putBoolean(MODE, false);
         addCampaign(bundle);
@@ -286,7 +265,6 @@ public class CampaignTableFragment extends Fragment implements
     }
 
 
-
     private void loadPCs(Bundle bundle) {
         Fragment fragment;
         fragment = new PcTableFragment();
@@ -311,7 +289,7 @@ public class CampaignTableFragment extends Fragment implements
     private void loadCampaign(int campaignId, String campaignName) {
         SharedPrefsHelper.saveCampaign(getContext(), campaignId, campaignName);
         int test = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-        while(test>1){
+        while (test > 1) {
             test--;
             getActivity().getSupportFragmentManager().popBackStack();
         }
@@ -327,6 +305,9 @@ public class CampaignTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.campaignsFragmentTitle);
+        ((MainActivity) getActivity()).setFabVisibility(true);
+        ((MainActivity) getActivity()).enableNavigationDrawer();
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
 
@@ -403,7 +384,7 @@ public class CampaignTableFragment extends Fragment implements
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu_campaign, menu);
                 //fab.setVisibility(View.GONE);
-                ((MainActivity)getActivity()).setFabVisibility(false);
+                ((MainActivity) getActivity()).setFabVisibility(false);
                 return true;
             }
 
@@ -455,7 +436,7 @@ public class CampaignTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 CampaignAdapter.setSelectedPos(-1);
                 mCampaignRecyclerView.getAdapter().notifyItemChanged(position);
-                ((MainActivity)getActivity()).setFabVisibility(true);
+                ((MainActivity) getActivity()).setFabVisibility(true);
                 mActionMode = null;
             }
         });

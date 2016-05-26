@@ -58,7 +58,6 @@ public class SessionEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MainActivity)getActivity()).setFabVisibility(false);
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         if (this.getArguments() != null) {
             modeUpdate = getArguments().getBoolean(MODE);
@@ -153,5 +152,12 @@ public class SessionEditFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 }

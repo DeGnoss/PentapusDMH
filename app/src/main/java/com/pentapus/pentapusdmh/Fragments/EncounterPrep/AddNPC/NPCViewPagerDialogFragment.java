@@ -80,7 +80,6 @@ public class NPCViewPagerDialogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.npc_viewpager_tab_layout, parent, false);
-        ((MainActivity)getActivity()).setFabVisibility(false);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
@@ -215,9 +214,12 @@ public class NPCViewPagerDialogFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(false);
         if(navMode){
+            ((MainActivity)getActivity()).enableNavigationDrawer();
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Friends");
         }else{
+            ((MainActivity)getActivity()).disableNavigationDrawer();
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
         }
     }

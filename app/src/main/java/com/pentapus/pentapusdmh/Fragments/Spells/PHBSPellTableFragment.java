@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
@@ -156,14 +157,24 @@ public class PHBSpellTableFragment extends Fragment implements
     }
 
     public void loadSpell(Bundle bundle){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
         Fragment fragment;
         fragment = new DetailSpellFragment();
         fragment.setArguments(bundle);
-        fragment.setEnterTransition(new Explode());
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.ContainerFrame, fragment, "FD_SPELL")
                 .addToBackStack("FD_SPELL")
                 .commit();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

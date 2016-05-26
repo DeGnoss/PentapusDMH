@@ -128,8 +128,6 @@ public class EncounterFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int test = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-        ((MainActivity) getActivity()).setFabVisibility(true);
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
         //setExitTransition(new Slide(Gravity.LEFT));
 
@@ -221,6 +219,8 @@ public class EncounterFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
+        ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).enableNavigationDrawer();
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
         } else {

@@ -88,12 +88,8 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).setFabVisibility(true);
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext()) + " Sessions");
         final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
-        Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
-        getActivity().getWindow().setExitTransition(slide);
         if (campaignId <= 0) {
             new AlertDialog.Builder(getContext()).setTitle("No Campaign Found")
                     .setCancelable(false)
@@ -140,6 +136,9 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).enableNavigationDrawer();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext()) + " Sessions");
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
 

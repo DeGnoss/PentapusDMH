@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
@@ -104,7 +105,7 @@ public class MySpellTableFragment extends Fragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        //menu.findItem(R.id.campaign_settings).setVisible(true);
+        menu.findItem(R.id.action_search).setVisible(true);
 
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -167,6 +168,11 @@ public class MySpellTableFragment extends Fragment implements
     @Override
     public void onItemClick(int position) {
         mySpellAdapter.statusClicked(position);
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 

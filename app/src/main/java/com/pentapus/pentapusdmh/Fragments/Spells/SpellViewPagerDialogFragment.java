@@ -70,14 +70,11 @@ public class SpellViewPagerDialogFragment extends Fragment {
         if (getArguments() != null) {
             navMode = getArguments().getBoolean(NAV_MODE);
         }
-        ((MainActivity) getActivity()).disableNavigationDrawer();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.monster_viewpager_tab_layout, parent, false);
-        ((MainActivity)getActivity()).setFabVisibility(false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Spells");
 
         //FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         //params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
@@ -241,6 +238,14 @@ public class SpellViewPagerDialogFragment extends Fragment {
             }
         }*/
         super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).enableNavigationDrawer();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Spells");
     }
 
 

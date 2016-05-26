@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
+import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.Utils;
 
@@ -87,8 +88,6 @@ public class MySpellEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_mymonster_edit, container, false);
-        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) charEditView.getLayoutParams();
-        params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
         charEditView.setBackgroundColor(Color.WHITE);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
@@ -217,6 +216,13 @@ public class MySpellEditFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 
     @Override

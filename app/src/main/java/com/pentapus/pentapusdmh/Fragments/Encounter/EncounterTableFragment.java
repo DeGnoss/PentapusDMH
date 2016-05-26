@@ -109,11 +109,7 @@ public class EncounterTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //super.onCreateView(inflater, container, savedInstanceState);
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
-        ((MainActivity) getActivity()).setFabVisibility(true);
-        //Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
-       // getActivity().getWindow().setEnterTransition(slide);
 
 
         mEncounterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
@@ -147,6 +143,8 @@ public class EncounterTableFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
+        ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).enableNavigationDrawer();
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
 

@@ -74,7 +74,6 @@ public class EncounterEditFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).setFabVisibility(false);
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_encounter_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
@@ -154,5 +153,12 @@ public class EncounterEditFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 }

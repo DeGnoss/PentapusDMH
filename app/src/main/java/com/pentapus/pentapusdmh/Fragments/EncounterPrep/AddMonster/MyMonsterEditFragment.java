@@ -288,6 +288,7 @@ public class MyMonsterEditFragment extends Fragment {
     public void onResume(){
         super.onResume();
         ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 
     @Override
