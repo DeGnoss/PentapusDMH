@@ -124,8 +124,7 @@
                 android:id="@+id/spellInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/spellLabelInfo"
-                android:layout_toEndOf="@+id/spellLabelInfo"
+                android:layout_below="@+id/spellLabelInfo"
                 android:layout_margin="2dp"
                 android:layout_marginStart="5dp" />
 

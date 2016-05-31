@@ -11,7 +11,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
  */
 public class DataBaseHandler extends SQLiteAssetHelper {
 
-    private static final String DATABASE_NAME ="pentapuslite.sqlite";
+    private static final String DATABASE_NAME ="pentadatabase.sqlite";
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -100,6 +100,9 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_PALADIN = "paladin";
     public static final String KEY_RANGER = "ranger";
     public static final String KEY_WARLOCK = "warlock";
+    public static final String KEY_ISRITUAL = "isritual";
+    public static final String KEY_MATERIALS = "materials";
+
 
 
 
@@ -204,7 +207,9 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_CLERIC,
             DataBaseHandler.KEY_PALADIN,
             DataBaseHandler.KEY_RANGER,
-            DataBaseHandler.KEY_WARLOCK
+            DataBaseHandler.KEY_WARLOCK,
+            DataBaseHandler.KEY_ISRITUAL,
+            DataBaseHandler.KEY_MATERIALS
     };
 
 

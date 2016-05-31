@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -65,7 +66,6 @@ public class DetailSpellFragment extends Fragment {
                 spellId = getArguments().getInt(SPELL_ID);
                 spellName = getArguments().getString(SPELL_NAME);
         }
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(spellName);
 
     }
 
@@ -112,7 +112,7 @@ public class DetailSpellFragment extends Fragment {
 
 
             name.setText(myName);
-            info.setText(myInfo);
+            info.setText(Html.fromHtml(myInfo));
             subhead.setText(mySubhead);
             castingtime.setText(myCastingTime);
             range.setText(myRange);
