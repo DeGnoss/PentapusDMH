@@ -46,6 +46,8 @@ import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignEditFragment;
 import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterEditFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MyMonsterEditFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.MyNPCEditFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
@@ -758,6 +760,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof PcEditFragment) {
             ((PcEditFragment) getSupportFragmentManager().findFragmentByTag("FE_PC")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof MyMonsterEditFragment) {
+            ((MyMonsterEditFragment) getSupportFragmentManager().findFragmentByTag("FE_MYMONSTER")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof MyNPCEditFragment) {
+            ((MyNPCEditFragment) getSupportFragmentManager().findFragmentByTag("FE_MYNPC")).onFabClick();
         }
     }
 

@@ -157,13 +157,6 @@ public class MyNPCEditFragment extends Fragment {
         if (modeUpdate) {
             loadNPCInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar, npcId);
         }
-        addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
-        addchar_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doneButton(modeUpdate);
-            }
-        });
 
         bChooseImage.setOnClickListener(new View.OnClickListener() {
 
@@ -194,6 +187,57 @@ public class MyNPCEditFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return charEditView;
+    }
+
+    public void onFabClick(){
+        // get values from the input text fields
+        String myName = name_tf.getText().toString();
+        String myInfo = info_tf.getText().toString();
+        String myInitiative = init_tf.getText().toString();
+        String myMaxHp = maxHp_tf.getText().toString();
+        String myAc = ac_tf.getText().toString();
+        String myStrength = etStrength.getText().toString();
+        String myDexterity = etDex.getText().toString();
+        String myConstitution = etConst.getText().toString();
+        String myIntelligence = etInt.getText().toString();
+        String myWisdom = etWis.getText().toString();
+        String myCharisma = etChar.getText().toString();
+        ContentValues values = new ContentValues();
+        values.put(DataBaseHandler.KEY_NAME, myName);
+        values.put(DataBaseHandler.KEY_INFO, myInfo);
+        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
+        values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
+        values.put(DataBaseHandler.KEY_AC, myAc);
+        values.put(DataBaseHandler.KEY_STRENGTH, myStrength);
+        values.put(DataBaseHandler.KEY_DEXTERITY, myDexterity);
+        values.put(DataBaseHandler.KEY_CONSTITUTION, myConstitution);
+        values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
+        values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
+        values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
+        if (myFile == null) {
+            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
+        }
+        values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
+        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_NPC);
+
+        // insert a record
+        if (!modeUpdate) {
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_NPC, values);
+        }
+        // update a record
+        else {
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
+            getContext().getContentResolver().update(uri, values, null, null);
+        }
+
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
 
@@ -248,57 +292,6 @@ public class MyNPCEditFragment extends Fragment {
         cursor.close();
     }
 
-    public void doneButton(boolean modeUpdate) {
-        // get values from the input text fields
-        String myName = name_tf.getText().toString();
-        String myInfo = info_tf.getText().toString();
-        String myInitiative = init_tf.getText().toString();
-        String myMaxHp = maxHp_tf.getText().toString();
-        String myAc = ac_tf.getText().toString();
-        String myStrength = etStrength.getText().toString();
-        String myDexterity = etDex.getText().toString();
-        String myConstitution = etConst.getText().toString();
-        String myIntelligence = etInt.getText().toString();
-        String myWisdom = etWis.getText().toString();
-        String myCharisma = etChar.getText().toString();
-        ContentValues values = new ContentValues();
-        values.put(DataBaseHandler.KEY_NAME, myName);
-        values.put(DataBaseHandler.KEY_INFO, myInfo);
-        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
-        values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
-        values.put(DataBaseHandler.KEY_AC, myAc);
-        values.put(DataBaseHandler.KEY_STRENGTH, myStrength);
-        values.put(DataBaseHandler.KEY_DEXTERITY, myDexterity);
-        values.put(DataBaseHandler.KEY_CONSTITUTION, myConstitution);
-        values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
-        values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
-        values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);
-        if (myFile == null) {
-            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
-        }
-        values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
-        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
-        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_NPC);
-
-        // insert a record
-        if (!modeUpdate) {
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_NPC, values);
-        }
-        // update a record
-        else {
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId);
-            getContext().getContentResolver().update(uri, values, null, null);
-        }
-
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-
-        getActivity().getSupportFragmentManager().popBackStack();
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -317,7 +310,8 @@ public class MyNPCEditFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).setFabIcon(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 
