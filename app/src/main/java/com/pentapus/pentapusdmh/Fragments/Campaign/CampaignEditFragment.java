@@ -79,42 +79,12 @@ public class CampaignEditFragment extends Fragment {
         if (modeUpdate) {
             loadCampaignInfo(name_tf, info_tf, campaignId);
         }
-        addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
-        addchar_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doneButton();
-            }
-        });
         // Inflate the layout for this fragment
         return charEditView;
 
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search).setVisible(false);
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    private void loadCampaignInfo(EditText name, EditText info, int id) {
-        String[] projection = {
-                DataBaseHandler.KEY_ROWID,
-                DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO};
-        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + id);
-        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
-                null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-            String myInitiative = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
-            name.setText(myName, TextView.BufferType.EDITABLE);
-            info.setText(myInitiative, TextView.BufferType.EDITABLE);
-        }
-    }
-
-    public void doneButton() {
+    public void onFabClick() {
         // get values from the input text fields
         String myName = name_tf.getText().toString();
         String myInitiative = info_tf.getText().toString();
@@ -145,6 +115,29 @@ public class CampaignEditFragment extends Fragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    private void loadCampaignInfo(EditText name, EditText info, int id) {
+        String[] projection = {
+                DataBaseHandler.KEY_ROWID,
+                DataBaseHandler.KEY_NAME,
+                DataBaseHandler.KEY_INFO};
+        Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_CAMPAIGN + "/" + id);
+        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null,
+                null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
+            String myInitiative = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
+            name.setText(myName, TextView.BufferType.EDITABLE);
+            info.setText(myInitiative, TextView.BufferType.EDITABLE);
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
@@ -157,7 +150,8 @@ public class CampaignEditFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(false);
+        //((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).setFabIcon(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 }

@@ -42,6 +42,7 @@ public class MySpellTableFragment extends Fragment implements
 
     private static final String MODE = "modeUpdate";
     private static final String SPELL_ID = "spellId";
+    private String sourceType;
 
     private RecyclerView mySpellRecyclerView;
     private ActionMode mActionMode;
@@ -55,9 +56,10 @@ public class MySpellTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static MySpellTableFragment newInstance() {
+    public static MySpellTableFragment newInstance(String sourceType) {
         MySpellTableFragment fragment = new MySpellTableFragment();
         Bundle args = new Bundle();
+        args.putString("sourcetype", sourceType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,6 +68,9 @@ public class MySpellTableFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (this.getArguments() != null) {
+            sourceType = this.getArguments().getString("sourcetype");
+        }
         mySpellAdapter = new MySpellAdapter(getContext(), this);
     }
 
@@ -141,12 +146,17 @@ public class MySpellTableFragment extends Fragment implements
         String[] selectionArgs;
 
         if(args != null){
-            selectionArgs = new String[]{"%" + args.getString("filter") + "%"};
+//            selectionArgs = new String[]{"%" + args.getString("filter") + "%"};
+            selectionArgs = new String[]{"%" + sourceType + "%", "%" + args.getString("filter") + "%"};
+            String selection1 = DataBaseHandler.KEY_SOURCE;
+
             String selection2 = DataBaseHandler.KEY_NAME;
-            selection = selection2 + " LIKE ?";
+            selection = selection1 + " LIKE ? AND " + selection2 + " LIKE ?";
         }else{
-            selectionArgs = null;
-            selection = null;
+
+            selectionArgs = new String[]{"%" + sourceType + "%"};
+            String selection1 = DataBaseHandler.KEY_SOURCE;
+            selection = selection1 + " LIKE ?";
         }
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_SPELL, DataBaseHandler.PROJECTION_SPELL, selection, selectionArgs, null);

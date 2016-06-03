@@ -307,6 +307,7 @@ public class CampaignTableFragment extends Fragment implements
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.campaignsFragmentTitle);
         ((MainActivity) getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).setFabIcon(true);
         ((MainActivity) getActivity()).enableNavigationDrawer();
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);

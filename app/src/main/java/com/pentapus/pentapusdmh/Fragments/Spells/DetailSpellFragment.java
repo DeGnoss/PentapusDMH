@@ -107,16 +107,27 @@ public class DetailSpellFragment extends Fragment {
             String mySubhead = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCHOOL));
             String myCastingTime = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TIME));
             String myRange = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_RANGE));
-            //String myComponents = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
+            String myComponents = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MATERIALS));
             String myDuration = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DURATION));
+            int myLevel = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LEVEL));
+            String levelString;
+            if(myLevel == 0){
+                levelString = "cantrip";
+            }else if(myLevel<0 || myLevel > 9){
+                levelString = "";
+            }else{
+                levelString = String.valueOf(myLevel);
+            }
+            String subheadComb = mySubhead + " " + levelString;
 
 
             name.setText(myName);
             info.setText(Html.fromHtml(myInfo));
-            subhead.setText(mySubhead);
+            subhead.setText(subheadComb);
             castingtime.setText(myCastingTime);
             range.setText(myRange);
             duration.setText(myDuration);
+            components.setText(myComponents);
         }
         assert cursor != null;
         cursor.close();

@@ -41,11 +41,11 @@ public class SpellViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                MySpellTableFragment f1 = MySpellTableFragment.newInstance();
+                MySpellTableFragment f1 = MySpellTableFragment.newInstance("PHB");
                 filterManager.addObserver(f1);
                 return f1;
             case 1:
-                PHBSpellTableFragment f2 = PHBSpellTableFragment.newInstance("PHB");
+                PHBSpellTableFragment f2 = PHBSpellTableFragment.newInstance("");
                 filterManager.addObserver(f2);
                 return f2;
             default:

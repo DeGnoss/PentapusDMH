@@ -80,16 +80,44 @@ public class SessionEditFragment extends Fragment {
         if (modeUpdate) {
             loadSessionInfo(name_tf, info_tf, sessionId);
         }
-        addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
+       /* addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
         addchar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doneButton(modeUpdate);
             }
-        });
+        }); */
         // Inflate the layout for this fragment
         return charEditView;
 
+    }
+
+    public void onFabClick(){
+        // get values from the input text fields
+        String myName = name_tf.getText().toString();
+        String myInitiative = info_tf.getText().toString();
+        ContentValues values = new ContentValues();
+        values.put(DataBaseHandler.KEY_NAME, myName);
+        values.put(DataBaseHandler.KEY_INFO, myInitiative);
+        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+
+        // insert a record
+        if (!modeUpdate) {
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_SESSION, values);
+        }
+        // update a record
+        else {
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_SESSION + "/" + sessionId);
+            getContext().getContentResolver().update(uri, values, null, null);
+        }
+
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override
@@ -157,7 +185,8 @@ public class SessionEditFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(false);
+        //((MainActivity)getActivity()).setFabVisibility(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
+        ((MainActivity)getActivity()).setFabIcon(false);
     }
 }

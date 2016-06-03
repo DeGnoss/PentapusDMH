@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -115,16 +118,28 @@ public class PcEditFragment extends Fragment {
         ac_tf = (EditText) charEditView.findViewById(R.id.etAc);
         bChooseImage = (ImageButton) charEditView.findViewById(R.id.bChooseImage);
 
+        name_tf.setText("New player character");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("New player character");
+        name_tf.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         if (modeUpdate) {
             loadCharacterInfo(name_tf, info_tf, init_tf, maxHp_tf, ac_tf, pcId);
         }
-        addchar_btn = (Button) charEditView.findViewById(R.id.bDone);
-        addchar_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doneButton(modeUpdate);
-            }
-        });
 
         bChooseImage.setOnClickListener(new View.OnClickListener() {
 
@@ -137,6 +152,46 @@ public class PcEditFragment extends Fragment {
         // Inflate the layout for this fragment
         return charEditView;
 
+    }
+
+    public void onFabClick(){
+        // get values from the input text fields
+        String myName = name_tf.getText().toString();
+        String myInitiative = init_tf.getText().toString();
+        String myInfo = info_tf.getText().toString();
+        String myMaxHp = maxHp_tf.getText().toString();
+        String myAc = ac_tf.getText().toString();
+        ContentValues values = new ContentValues();
+        values.put(DataBaseHandler.KEY_NAME, myName);
+        values.put(DataBaseHandler.KEY_INFO, myInfo);
+        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
+        values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
+        values.put(DataBaseHandler.KEY_AC, myAc);
+        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_PC);
+        if(myFile == null){
+            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
+        }
+        values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
+        values.put(DataBaseHandler.KEY_DISABLED, 0);
+        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
+
+        // insert a record
+        if (!modeUpdate) {
+            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_PC, values);
+        }
+        // update a record
+        else {
+            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + pcId);
+            getContext().getContentResolver().update(uri, values, null, null);
+        }
+
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override
@@ -155,7 +210,7 @@ public class PcEditFragment extends Fragment {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.add(R.id.drawer_layout, newFragment, "F_IMAGE_PAGER")
+        transaction.replace(R.id.ContainerFrame, newFragment, "F_IMAGE_PAGER")
                 .addToBackStack(null).commit();
     }
 
@@ -181,46 +236,6 @@ public class PcEditFragment extends Fragment {
         }
     }
 
-    public void doneButton(boolean mode) {
-        // get values from the input text fields
-        String myName = name_tf.getText().toString();
-        String myInitiative = init_tf.getText().toString();
-        String myInfo = info_tf.getText().toString();
-        String myMaxHp = maxHp_tf.getText().toString();
-        String myAc = ac_tf.getText().toString();
-        ContentValues values = new ContentValues();
-        values.put(DataBaseHandler.KEY_NAME, myName);
-        values.put(DataBaseHandler.KEY_INFO, myInfo);
-        values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
-        values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
-        values.put(DataBaseHandler.KEY_AC, myAc);
-        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_PC);
-        if(myFile == null){
-            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
-        }
-        values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
-        values.put(DataBaseHandler.KEY_DISABLED, 0);
-        values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
-
-        // insert a record
-        if (!mode) {
-            getContext().getContentResolver().insert(DbContentProvider.CONTENT_URI_PC, values);
-        }
-        // update a record
-        else {
-            Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_PC + "/" + pcId);
-            getContext().getContentResolver().update(uri, values, null, null);
-        }
-
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-
-        getActivity().getSupportFragmentManager().popBackStack();
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -234,7 +249,8 @@ public class PcEditFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(false);
+        ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).setFabIcon(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 

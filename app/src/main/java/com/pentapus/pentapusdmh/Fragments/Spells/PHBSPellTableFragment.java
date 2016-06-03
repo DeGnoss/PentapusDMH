@@ -113,16 +113,13 @@ public class PHBSpellTableFragment extends Fragment implements
         String[] selectionArgs;
 
         if (args != null) {
-            selectionArgs = new String[]{"%" + sourceType + "%", "%" + args.getString("filter") + "%"};
-            String selection1 = DataBaseHandler.KEY_SOURCE;
+            selectionArgs = new String[]{"%" + args.getString("filter") + "%"};
             String selection2 = DataBaseHandler.KEY_NAME;
-            selection = selection1 + " LIKE ? AND " + selection2 + " LIKE ?";
-            //selection = selection2 + " LIKE ?";
+            selection = selection2 + " LIKE ?";
         } else {
             //selectionArgs = new String[]{"%" + "PHB" + "%", "%" + "EE" + "%", "%" + "PHB" + "%"};
-            selectionArgs = new String[]{"%" + sourceType + "%"};
-            String selection1 = DataBaseHandler.KEY_SOURCE;
-            selection = selection1 + " LIKE ?";
+            selectionArgs = null;
+            selection = null;
         }
         CursorLoader cursorLoader = new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_SPELL, DataBaseHandler.PROJECTION_SPELL, selection, selectionArgs, null);

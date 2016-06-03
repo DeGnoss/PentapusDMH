@@ -21,7 +21,9 @@
                 android:id="@+id/spellName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="2dp"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
@@ -32,7 +34,9 @@
                 android:layout_height="wrap_content"
                 android:textStyle="italic"
                 android:layout_below="@+id/spellName"
-                android:layout_margin="2dp" />
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginStart="2dp" />
 
             <TextView
                 android:id="@+id/spellLabelCastingTime"

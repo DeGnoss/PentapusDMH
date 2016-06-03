@@ -132,6 +132,7 @@ public class PcTableFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).setFabIcon(true);
         ((MainActivity)getActivity()).enableNavigationDrawer();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
         if (getLoaderManager().getLoader(0) == null) {

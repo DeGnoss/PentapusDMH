@@ -26,6 +26,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -41,12 +42,16 @@ import android.view.View;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignEditFragment;
 import com.pentapus.pentapusdmh.Fragments.Campaign.CampaignTableFragment;
+import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterEditFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.NPCViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.EncounterFragment;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterTableFragment;
+import com.pentapus.pentapusdmh.Fragments.PC.PcEditFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
+import com.pentapus.pentapusdmh.Fragments.Session.SessionEditFragment;
 import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
 import com.pentapus.pentapusdmh.Fragments.SettingsFragment;
 import com.pentapus.pentapusdmh.Fragments.Spells.MySpellTableFragment;
@@ -737,14 +742,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onFabClick(View view) {
         if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof SessionTableFragment) {
             ((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof SessionEditFragment) {
+            ((SessionEditFragment) getSupportFragmentManager().findFragmentByTag("FE_SESSION")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof EncounterTableFragment) {
             ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof EncounterEditFragment) {
+            ((EncounterEditFragment) getSupportFragmentManager().findFragmentByTag("FE_ENCOUNTER")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof EncounterFragment) {
             ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof CampaignTableFragment) {
             ((CampaignTableFragment) getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof CampaignEditFragment) {
+            ((CampaignEditFragment) getSupportFragmentManager().findFragmentByTag("FE_CAMPAIGN")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof PcTableFragment) {
             ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).onFabClick();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof PcEditFragment) {
+            ((PcEditFragment) getSupportFragmentManager().findFragmentByTag("FE_PC")).onFabClick();
         }
     }
 
@@ -753,6 +766,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fab.setVisibility(View.VISIBLE);
         } else {
             fab.setVisibility(View.GONE);
+        }
+    }
+
+    public void setFabIcon(boolean isAdd){
+        if(isAdd){
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_black));
+        }else{
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_done));
         }
     }
 

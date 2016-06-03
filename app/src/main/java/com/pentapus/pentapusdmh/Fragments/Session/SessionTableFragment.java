@@ -137,6 +137,7 @@ public class SessionTableFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).setFabVisibility(true);
+        ((MainActivity)getActivity()).setFabIcon(true);
         ((MainActivity)getActivity()).enableNavigationDrawer();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext()) + " Sessions");
         if (getLoaderManager().getLoader(0) == null) {

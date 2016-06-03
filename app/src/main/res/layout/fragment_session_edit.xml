@@ -21,13 +21,4 @@
         android:selectAllOnFocus="true"
         android:id="@+id/etInfo" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sDone"
-        android:id="@+id/bDone"
-        android:layout_marginBottom="15dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
 </RelativeLayout>

@@ -11,7 +11,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
  */
 public class DataBaseHandler extends SQLiteAssetHelper {
 
-    private static final String DATABASE_NAME ="pentadatabase.sqlite";
+    private static final String DATABASE_NAME ="pentalite.sqlite";
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -54,11 +54,16 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_HP = "hp";
     public static final String KEY_AC = "ac";
     public static final String KEY_TYPE = "type";
+    public static final String KEY_ACTIONS = "actions";
+    public static final String KEY_ABILITIES = "abilities";
+
 
     //PC Table
-    private static final String KEY_CLASS = "class";
+    public static final String KEY_CLASS = "class";
     public static final String KEY_LEVEL = "level";
-    private static final String KEY_PLAYER = "player";
+    public static final String KEY_PLAYER = "player";
+    public static final String KEY_ISSPELLCASTER = "isspellcaster";
+
     //Stats
     public static final String KEY_STRENGTH = "strength";
     public static final String KEY_DEXTERITY = "dexterity";
@@ -139,7 +144,9 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_CHARISMA,
             DataBaseHandler.KEY_ICON,
             DataBaseHandler.KEY_TYPE,
-            DataBaseHandler.KEY_MM
+            DataBaseHandler.KEY_MM,
+            DataBaseHandler.KEY_ACTIONS,
+            DataBaseHandler.KEY_ABILITIES
     };
 
 
@@ -159,6 +166,8 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_CHARISMA,
             DataBaseHandler.KEY_ICON,
             DataBaseHandler.KEY_TYPE,
+            DataBaseHandler.KEY_ACTIONS,
+            DataBaseHandler.KEY_ABILITIES,
             DataBaseHandler.KEY_BELONGSTO
     };
 
@@ -178,6 +187,9 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_ROWID,
             DataBaseHandler.KEY_NAME,
             DataBaseHandler.KEY_INFO,
+            DataBaseHandler.KEY_CLASS,
+            DataBaseHandler.KEY_LEVEL,
+            DataBaseHandler.KEY_PLAYER,
             DataBaseHandler.KEY_INITIATIVEBONUS,
             DataBaseHandler.KEY_HP,
             DataBaseHandler.KEY_MAXHP,
