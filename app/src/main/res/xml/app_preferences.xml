@@ -11,6 +11,8 @@
             android:summary="When the tracker starts, skip player character initiative input."
             android:title="Auto roll initiative" />
 
+        <Preference
+
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>

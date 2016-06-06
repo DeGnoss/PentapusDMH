@@ -58,7 +58,6 @@ public class MyMonsterEditFragment extends Fragment {
     private int px;
     private boolean navMode;
 
-    Button addchar_btn;
     ImageButton bChooseImage;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar;
 

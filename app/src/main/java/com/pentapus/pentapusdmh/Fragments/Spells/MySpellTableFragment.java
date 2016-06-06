@@ -102,7 +102,6 @@ public class MySpellTableFragment extends Fragment implements
         super.onResume();
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
-
         } else {
             getLoaderManager().restartLoader(0, null, this);
         }
@@ -158,9 +157,8 @@ public class MySpellTableFragment extends Fragment implements
             String selection1 = DataBaseHandler.KEY_SOURCE;
             selection = selection1 + " LIKE ?";
         }
-        CursorLoader cursorLoader = new CursorLoader(this.getContext(),
+        return new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_SPELL, DataBaseHandler.PROJECTION_SPELL, selection, selectionArgs, null);
-        return cursorLoader;
     }
 
     @Override

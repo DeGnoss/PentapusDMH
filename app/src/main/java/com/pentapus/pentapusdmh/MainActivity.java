@@ -11,14 +11,6 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -55,9 +47,7 @@ import com.pentapus.pentapusdmh.Fragments.PC.PcEditFragment;
 import com.pentapus.pentapusdmh.Fragments.PC.PcTableFragment;
 import com.pentapus.pentapusdmh.Fragments.Session.SessionEditFragment;
 import com.pentapus.pentapusdmh.Fragments.Session.SessionTableFragment;
-import com.pentapus.pentapusdmh.Fragments.SettingsFragment;
-import com.pentapus.pentapusdmh.Fragments.Spells.MySpellTableFragment;
-import com.pentapus.pentapusdmh.Fragments.Spells.PHBSpellTableFragment;
+import com.pentapus.pentapusdmh.Fragments.Preferences.SettingsFragment;
 import com.pentapus.pentapusdmh.Fragments.Spells.SpellViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
@@ -504,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     while (childFM.getBackStackEntryCount() > 0) {
                         childFM.popBackStack();
                     }
-                    fm.popBackStack();
+                    enableNavigationDrawer();
                     fm.popBackStack();
                     Log.d("FragmentList", getSupportFragmentManager().getFragments().toString());
 

@@ -105,9 +105,10 @@ public class MonsterManualTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        myMonsterAdapter.statusClicked(-1);
+        ((MonsterViewPagerDialogFragment)getParentFragment()).setFabIcon(true);
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
-
         } else {
             getLoaderManager().restartLoader(0, null, this);
         }
@@ -178,7 +179,6 @@ public class MonsterManualTableFragment extends Fragment implements
         } else {
             myMonsterAdapter.statusClicked(-1);
         }
-        //myMonsterAdapter.statusClicked(position);
     }
 
     @Override

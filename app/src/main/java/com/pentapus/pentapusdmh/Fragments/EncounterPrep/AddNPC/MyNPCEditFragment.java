@@ -71,7 +71,6 @@ public class MyNPCEditFragment extends Fragment {
     private int encounterId;
     private int px;
 
-    Button addchar_btn;
     ImageButton bChooseImage;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar;
 

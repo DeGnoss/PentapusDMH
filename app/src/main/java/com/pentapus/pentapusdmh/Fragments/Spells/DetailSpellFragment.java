@@ -107,6 +107,9 @@ public class DetailSpellFragment extends Fragment {
             String mySubhead = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCHOOL));
             String myCastingTime = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TIME));
             String myRange = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_RANGE));
+            int vocal = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_VOCAL));
+            int somatic = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SOMATIC));
+            int material = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MATERIAL));
             String myComponents = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MATERIALS));
             String myDuration = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DURATION));
             int myLevel = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LEVEL));
@@ -127,7 +130,24 @@ public class DetailSpellFragment extends Fragment {
             castingtime.setText(myCastingTime);
             range.setText(myRange);
             duration.setText(myDuration);
-            components.setText(myComponents);
+            String componentsAppended = "";
+            if(vocal == 1){
+                componentsAppended = "V";
+            }
+            if(somatic == 1) {
+                if (!componentsAppended.equals("")) {
+                    componentsAppended = componentsAppended + ", ";
+                }
+                componentsAppended = componentsAppended + "S";
+            }
+            if(material == 1){
+                if (!componentsAppended.equals("")) {
+                    componentsAppended = componentsAppended + ", ";
+                }
+                componentsAppended = componentsAppended + "M (" + myComponents + ")";
+            }
+
+            components.setText(componentsAppended);
         }
         assert cursor != null;
         cursor.close();
