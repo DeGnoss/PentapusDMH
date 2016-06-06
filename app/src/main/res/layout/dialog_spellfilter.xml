@@ -9,8 +9,23 @@
         android:layout_height="wrap_content"
         android:id="@+id/checkPHB"
         android:layout_marginTop="10dp"
-        android:checked="true"
         android:text="Player's Handbook"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkEE"
+        android:layout_below="@+id/checkPHB"
+        android:layout_marginTop="10dp"
+        android:text="Elemental Evil"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkSCAG"
+        android:layout_below="@+id/checkEE"
+        android:layout_marginTop="10dp"
+        android:text="Sword Coast Adventurer's Guide"/>
 
 
 </RelativeLayout>

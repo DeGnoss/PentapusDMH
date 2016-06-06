@@ -30,10 +30,8 @@ import java.util.List;
  */
 public class SpellFilterFragment extends DialogFragment {
 
-    private int enteredInitiative, currentId;
     Button positiveButton;
-    String name;
-    private int listId, initiativeMod;
+    private boolean phb, ee, scag;
 
     public SpellFilterFragment(){
     }
@@ -57,27 +55,16 @@ public class SpellFilterFragment extends DialogFragment {
         setCancelable(true);
     }
 
-
-
     @Override
     public void onStart() {
         super.onStart();
         AlertDialog d = (AlertDialog) getDialog();
-        if (d != null) {
-            positiveButton = (Button)d.getButton(Dialog.BUTTON_POSITIVE);
-            positiveButton.setEnabled(false);
-        }
-
     }
-
-
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return buildDialog();
     }
-
 
     @Override
     public void onResume() {
@@ -117,13 +104,43 @@ public class SpellFilterFragment extends DialogFragment {
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         View view = inflater.inflate(R.layout.dialog_spellfilter, null);
         CheckBox phbCheckBox = (CheckBox) view.findViewById(R.id.checkPHB);
+        if(SharedPrefsHelper.loadPHBFilter(getContext()))
+            phbCheckBox.setChecked(true);
         phbCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(((CheckBox)v).isChecked()){
-                    SharedPrefsHelper.savePHBFilter(getContext(), true);
+                    phb = true;
                 }else{
-                    SharedPrefsHelper.savePHBFilter(getContext(), false);
+                    phb = false;
+                }
+            }
+        });
+
+        CheckBox eeCheckBox = (CheckBox) view.findViewById(R.id.checkEE);
+        if(SharedPrefsHelper.loadEEFilter(getContext()))
+            eeCheckBox.setChecked(true);
+        eeCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(((CheckBox)v).isChecked()){
+                    ee = true;
+                }else{
+                    ee = false;
+                }
+            }
+        });
+
+        CheckBox scagCheckBox = (CheckBox) view.findViewById(R.id.checkSCAG);
+        if(SharedPrefsHelper.loadSCAGFilter(getContext()))
+            scagCheckBox.setChecked(true);
+        scagCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(((CheckBox)v).isChecked()){
+                    scag = true;
+                }else{
+                    scag = false;
                 }
             }
         });
@@ -134,13 +151,20 @@ public class SpellFilterFragment extends DialogFragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                SharedPrefsHelper.savePHBFilter(getContext(), phb);
+                SharedPrefsHelper.saveEEFilter(getContext(), ee);
+                SharedPrefsHelper.saveSCAGFilter(getContext(), scag);
             }
         });
-        AlertDialog dialog = builder.create();
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which){
+                dialog.dismiss();
+            }
+        });
 
         // Create the AlertDialog object and return it
-        return dialog;
+        return builder.create();
     }
 
 

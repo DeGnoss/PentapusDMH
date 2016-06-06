@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
@@ -12,6 +13,7 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 
+import com.pentapus.pentapusdmh.Fragments.Tracker.EnterInitiativeDialogFragment;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
@@ -20,6 +22,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private static final String PREFS_FILE = "prefFilePentapus";
     private Context myContext;
+    private Preference dialogPreference;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -56,6 +59,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             //getPreferenceScreen().getPreference(i).setOnPreferenceClickListener(this);
             //getPreferenceScreen().getPreference(i).setOnPreferenceChangeListener(this);
         }
+
+        dialogPreference = getPreferenceScreen().findPreference("spell_sources_preference");
+        dialogPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                DialogFragment newFragment = SpellFilterFragment.newInstance();
+                newFragment.show(getActivity().getSupportFragmentManager(), "F_SPELL_SETTINGS");
+                return true;
+            }
+        });
     }
 
     @Override

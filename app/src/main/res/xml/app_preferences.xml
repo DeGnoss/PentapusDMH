@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
-        android:title="Tracker">
+
 
         <android.support.v7.preference.SwitchPreferenceCompat
             android:allowUndo="true"
@@ -11,8 +10,13 @@
             android:summary="When the tracker starts, skip player character initiative input."
             android:title="Auto roll initiative" />
 
-        <Preference
+        <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+            android:title="Spell Sources"
+            android:key="spell_sources_preference"
+            android:summary="Define the spell sources to be used (PHB, EE, SCAG).">
+            <Preference android:key="dialog_preference"
+                />
+        </PreferenceScreen>
 
-    </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>
