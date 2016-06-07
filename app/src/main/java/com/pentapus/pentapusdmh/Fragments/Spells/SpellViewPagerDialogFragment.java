@@ -210,7 +210,7 @@ public class SpellViewPagerDialogFragment extends Fragment {
 
         pagerAdapter = new SpellViewPagerAdapter(getChildFragmentManager(), getContext(), id, MainActivity.getFilterManager());
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(1);
         viewPager.setOffscreenPageLimit(2);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
@@ -220,7 +220,8 @@ public class SpellViewPagerDialogFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_search).setVisible(true);
-        menu.findItem(R.id.play_mode).setVisible(true);
+        menu.findItem(R.id.play_mode).setVisible(false);
+        menu.findItem(R.id.spell_book).setVisible(false).setEnabled(false);
 /*
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -238,6 +239,7 @@ public class SpellViewPagerDialogFragment extends Fragment {
             }
         }*/
         super.onPrepareOptionsMenu(menu);
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -246,6 +248,7 @@ public class SpellViewPagerDialogFragment extends Fragment {
         ((MainActivity)getActivity()).setFabVisibility(false);
         ((MainActivity)getActivity()).enableNavigationDrawer();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Spells");
+        getActivity().invalidateOptionsMenu();
     }
 
 

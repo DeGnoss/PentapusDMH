@@ -31,8 +31,11 @@ import com.pentapus.pentapusdmh.FilterManager;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
 import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterEditFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
+import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -45,6 +48,7 @@ public class PHBSpellTableFragment extends Fragment implements
     private static final String SPELL_ID = "spellId";
     private static final String SPELL_NAME = "spellName";
     private String sourceType;
+    private Bundle filters;
 
 
     private RecyclerView mySpellRecyclerView;
@@ -99,23 +103,69 @@ public class PHBSpellTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        filters = new Bundle();
+        if(SharedPrefsHelper.loadPHBFilter(getContext()))
+            filters.putBoolean("phb", SharedPrefsHelper.loadPHBFilter(getContext()));
+        if(SharedPrefsHelper.loadEEFilter(getContext()))
+            filters.putBoolean("ee", SharedPrefsHelper.loadEEFilter(getContext()));
+        if(SharedPrefsHelper.loadSCAGFilter(getContext()))
+            filters.putBoolean("scag", SharedPrefsHelper.loadSCAGFilter(getContext()));
         if (getLoaderManager().getLoader(0) == null) {
-            getLoaderManager().initLoader(0, null, this);
-
+            getLoaderManager().initLoader(0, filters, this);
         } else {
-            getLoaderManager().restartLoader(0, null, this);
+            getLoaderManager().restartLoader(0, filters, this);
         }
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String selection;
+        String selection = "";
         String[] selectionArgs;
-
+        List<String> selectionList = new ArrayList<>();
+        int size = 0;
         if (args != null) {
-            selectionArgs = new String[]{"%" + args.getString("filter") + "%"};
-            String selection2 = DataBaseHandler.KEY_NAME;
-            selection = selection2 + " LIKE ?";
+
+            if(args.getBoolean("phb")){
+                selectionList.add("%PHB%");
+                size++;
+            }
+            if(args.getBoolean("ee")){
+                selectionList.add("%EE%");
+                size++;
+            }
+
+            if(args.getBoolean("scag")){
+                selectionList.add("%SCAG%");
+                size++;
+            }
+
+
+            if(args.getString("filter") != null){
+                selectionList.add(args.getString("filter"));
+            }
+
+            selectionArgs = new String[ selectionList.size() ];
+            selectionList.toArray( selectionArgs );
+
+            for (int i = 0; i<size ;i++) {
+                if (!selection.isEmpty()) {
+                    selection = selection + " OR ";
+                    selection = selection + DataBaseHandler.KEY_SOURCE + " LIKE ?";
+                } else {
+                    selection = DataBaseHandler.KEY_SOURCE + " LIKE ?";
+                }
+            }
+            if(args.getString("filter") != null){
+                if(!selection.isEmpty()){
+                    selection = selection + " AND " + DataBaseHandler.KEY_NAME + " LIKE ?";
+                }else{
+                    selection = DataBaseHandler.KEY_NAME + " LIKE ?";
+                }
+            }
+
+
+            //fixme: fix search function
+
         } else {
             //selectionArgs = new String[]{"%" + "PHB" + "%", "%" + "EE" + "%", "%" + "PHB" + "%"};
             selectionArgs = null;
@@ -256,10 +306,10 @@ public class PHBSpellTableFragment extends Fragment implements
     }
 
     public void filterData(String filterArgs) {
-        Bundle bundle = new Bundle();
-        bundle.putString("filter", filterArgs);
+        String filterFormatted = "%" + filterArgs + "%";
+        filters.putString("filter", filterFormatted);
         if(isAdded()){
-            getLoaderManager().restartLoader(0, bundle, this);
+            getLoaderManager().restartLoader(0, filters, this);
         }
     }
 

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ import java.util.List;
 public class SpellFilterFragment extends DialogFragment {
 
     Button positiveButton;
-    private boolean phb, ee, scag;
+    private boolean phb=true, ee=true, scag=true;
 
     public SpellFilterFragment(){
     }
@@ -52,6 +53,9 @@ public class SpellFilterFragment extends DialogFragment {
         if(getArguments() != null){
 
         }
+        phb = SharedPrefsHelper.loadPHBFilter(getContext());
+        ee = SharedPrefsHelper.loadEEFilter(getContext());
+        scag = SharedPrefsHelper.loadSCAGFilter(getContext());
         setCancelable(true);
     }
 
@@ -106,10 +110,10 @@ public class SpellFilterFragment extends DialogFragment {
         CheckBox phbCheckBox = (CheckBox) view.findViewById(R.id.checkPHB);
         if(SharedPrefsHelper.loadPHBFilter(getContext()))
             phbCheckBox.setChecked(true);
-        phbCheckBox.setOnClickListener(new View.OnClickListener() {
+        phbCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if(((CheckBox)v).isChecked()){
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
                     phb = true;
                 }else{
                     phb = false;
@@ -120,10 +124,10 @@ public class SpellFilterFragment extends DialogFragment {
         CheckBox eeCheckBox = (CheckBox) view.findViewById(R.id.checkEE);
         if(SharedPrefsHelper.loadEEFilter(getContext()))
             eeCheckBox.setChecked(true);
-        eeCheckBox.setOnClickListener(new View.OnClickListener() {
+        eeCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if(((CheckBox)v).isChecked()){
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
                     ee = true;
                 }else{
                     ee = false;
@@ -134,10 +138,10 @@ public class SpellFilterFragment extends DialogFragment {
         CheckBox scagCheckBox = (CheckBox) view.findViewById(R.id.checkSCAG);
         if(SharedPrefsHelper.loadSCAGFilter(getContext()))
             scagCheckBox.setChecked(true);
-        scagCheckBox.setOnClickListener(new View.OnClickListener() {
+        scagCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if(((CheckBox)v).isChecked()){
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
                     scag = true;
                 }else{
                     scag = false;

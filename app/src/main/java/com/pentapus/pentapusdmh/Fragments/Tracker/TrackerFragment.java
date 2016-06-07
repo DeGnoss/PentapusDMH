@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.Fragments.Preferences.SettingsFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
@@ -91,6 +92,7 @@ public class TrackerFragment extends Fragment implements
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         }
+        setHasOptionsMenu(true);
     }
 
 
@@ -102,7 +104,6 @@ public class TrackerFragment extends Fragment implements
         CustomRecyclerLayoutManager llm = new CustomRecyclerLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
@@ -170,7 +171,9 @@ public class TrackerFragment extends Fragment implements
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.play_mode).setVisible(false);
+        menu.findItem(R.id.spell_book).setVisible(true).setEnabled(true);
         super.onPrepareOptionsMenu(menu);
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -186,6 +189,7 @@ public class TrackerFragment extends Fragment implements
     @Override
     public void onResume(){
         super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
         ((MainActivity)getActivity()).setFabVisibility(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }

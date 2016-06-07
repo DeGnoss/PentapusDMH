@@ -122,7 +122,7 @@ public class EncounterFragment extends Fragment implements
 
     private void setupWindowAnimations() {
         Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
-        getActivity().getWindow().setEnterTransition(slide);
+        //getActivity().getWindow().setEnterTransition(slide);
     }
 
     @Override
@@ -482,6 +482,7 @@ public class EncounterFragment extends Fragment implements
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.play_mode).setVisible(true);
+        menu.findItem(R.id.spell_book).setVisible(false);
 
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 

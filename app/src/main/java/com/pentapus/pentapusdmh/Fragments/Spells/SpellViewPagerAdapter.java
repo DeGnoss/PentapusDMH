@@ -17,7 +17,7 @@ import java.io.File;
  */
 public class SpellViewPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[]{"My Spells", "PHB"};
+    private String tabTitles[] = new String[]{"My Spells", "All Spells"};
     private Context context;
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private int id;

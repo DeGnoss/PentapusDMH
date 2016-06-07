@@ -164,7 +164,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 pasteUri = Uri.parse(pasteString);
             }
             pasteEntry(pasteUri);
-
+            return true;
+        } else if (id == R.id.spell_book) {
+            SpellViewPagerDialogFragment fspells = new SpellViewPagerDialogFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.ContainerFrame, fspells, "F_SPELL_PAGER")
+                    .addToBackStack("F_SPELL_PAGER")
+                    .commit();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -240,6 +247,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 null
         );
     }
+
+
 
     private void pasteEncounter(Uri pasteUri) {
         final String oldUri = pasteUri.getPath();

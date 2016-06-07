@@ -25,4 +25,11 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/spell_book"
+        android:orderInCategory="100"
+        android:title="Spells"
+        android:visible="false"
+        android:icon="@drawable/ic_action_book_white"
+        app:showAsAction="ifRoom" />
+
 </menu>
