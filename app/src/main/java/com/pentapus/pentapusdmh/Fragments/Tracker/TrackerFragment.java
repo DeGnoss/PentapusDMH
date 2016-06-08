@@ -25,17 +25,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.Fragments.Preferences.SettingsFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
+import com.pentapus.pentapusdmh.HelperClasses.UriDeserializer;
+import com.pentapus.pentapusdmh.HelperClasses.UriSerializer;
+import com.pentapus.pentapusdmh.HelperClasses.Utils;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,10 +96,28 @@ public class TrackerFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         encounterId = SharedPrefsHelper.loadEncounterId(getContext());
+
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
+            chars = new TrackerAdapter((AppCompatActivity) getActivity(), getContext());
+        }else{
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Uri.class, new UriDeserializer())
+                    .create();
+            Type type = new TypeToken<List<TrackerInfoCard>>() {
+            }.getType();
+            List<TrackerInfoCard> savedList = gson.fromJson(savedInstanceState.getString("savedList"), type);
+            chars = new TrackerAdapter((AppCompatActivity) getActivity(), getContext(), savedList);
         }
         setHasOptionsMenu(true);
+        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
     }
 
 
@@ -105,10 +130,8 @@ public class TrackerFragment extends Fragment implements
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
 
-        getLoaderManager().initLoader(0, null, this);
-        getLoaderManager().initLoader(1, null, this);
+
         // getLoaderManager().initLoader(2, null, this);
-        chars = new TrackerAdapter((AppCompatActivity) getActivity(), getContext());
         mRecyclerView.setAdapter(chars);
 
         Button next = (Button) tableView.findViewById(R.id.bNext);
@@ -171,9 +194,9 @@ public class TrackerFragment extends Fragment implements
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.play_mode).setVisible(false);
-        menu.findItem(R.id.spell_book).setVisible(true).setEnabled(true);
+        menu.findItem(R.id.spell_book).setVisible(true);
         super.onPrepareOptionsMenu(menu);
-        getActivity().invalidateOptionsMenu();
+        getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -356,4 +379,15 @@ public class TrackerFragment extends Fragment implements
             chars.sortCharacterList();
         }
     }
-}
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //Save the fragment's instance
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriSerializer())
+                .create();
+        String json = gson.toJson(chars.getCharacterList());
+        outState.putString("savedList", json);
+        super.onSaveInstanceState(outState);
+
+    }}

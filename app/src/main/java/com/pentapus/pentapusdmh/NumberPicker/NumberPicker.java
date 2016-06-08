@@ -16,8 +16,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.codetroopers.betterpickers.R;
-import com.codetroopers.betterpickers.numberpicker.NumberPickerErrorTextView;
+
+import com.pentapus.pentapusdmh.R;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,7 +36,7 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
     protected final Context mContext;
 
     private TextView mLabel;
-    private com.codetroopers.betterpickers.numberpicker.NumberPickerErrorTextView mError;
+    private com.pentapus.pentapusdmh.NumberPicker.NumberPickerErrorTextView mError;
     private int mSign;
     private String mLabelText = "";
     private Button mSetButton;
@@ -148,7 +148,7 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
         super.onFinishInflate();
 
         mDivider = findViewById(R.id.divider);
-        mError = (com.codetroopers.betterpickers.numberpicker.NumberPickerErrorTextView) findViewById(R.id.error);
+        mError = (NumberPickerErrorTextView) findViewById(R.id.error);
 
         for (int i = 0; i < mInput.length; i++) {
             mInput[i] = -1;

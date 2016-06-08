@@ -54,7 +54,7 @@ public class StatusFragment extends Fragment {
         gridLayoutManager = new GridLayoutManager(getContext(), 3) {
             @Override
             public boolean canScrollVertically() {
-                return false;
+                return true;
             }
         };
         mRecyclerView.setLayoutManager(gridLayoutManager);

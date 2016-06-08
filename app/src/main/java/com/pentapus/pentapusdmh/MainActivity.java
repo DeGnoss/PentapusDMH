@@ -60,6 +60,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.pentapus.pentapusdmh.R.drawable.abc_ic_ab_back_mtrl_am_alpha;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private boolean pressedTwice = false;
     private ActionBarDrawerToggle toggle;
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FilterManager filterManager;
     private static MainActivity instance;
     private SearchView searchView;
+    private Toolbar toolbar;
 
 
     @Override
@@ -76,8 +79,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         copyAssets();
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //setToolBarBackButton(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
@@ -90,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             navigationView.setItemIconTintList(null);
+            navigationView.setNavigationItemSelectedListener(this);
         }
-        navigationView.setNavigationItemSelectedListener(this);
         // tintNavigationViewItems(navigationView);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -107,11 +111,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
 
-        SessionTableFragment ftable = new SessionTableFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.ContainerFrame, ftable, "FT_SESSION")
-                .addToBackStack("FT_SESSION")
-                .commit();
+        if(savedInstanceState == null){
+            SessionTableFragment ftable = new SessionTableFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.ContainerFrame, ftable, "FT_SESSION")
+                    .addToBackStack("FT_SESSION")
+                    .commit();
+        }else{
+            Fragment fragment = (SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION");
+        }
+
+
     }
 
 
@@ -247,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 null
         );
     }
-
 
 
     private void pasteEncounter(Uri pasteUri) {
@@ -774,10 +783,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void setFabIcon(boolean isAdd){
-        if(isAdd){
+    public void setFabIcon(boolean isAdd) {
+        if (isAdd) {
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_black));
-        }else{
+        } else {
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_done));
         }
     }
@@ -789,5 +798,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static void closeSearchView() {
         instance.searchView.setIconified(true);
         instance.searchView.setIconified(true);
+    }
+
+    public void setToolBarBackButton(boolean isVisible) {
+        if (isVisible) {
+            toolbar.setNavigationIcon(abc_ic_ab_back_mtrl_am_alpha);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        } else {
+
+        }
     }
 }

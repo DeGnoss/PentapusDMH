@@ -76,6 +76,10 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         return characterList.size();
     }
 
+    public List<TrackerInfoCard> getCharacterList(){
+        return characterList;
+    }
+
     @Override
     public void onBindViewHolder(final CharacterViewHolder characterViewHolder, int position) {
         layoutCounter = 0;

@@ -74,7 +74,7 @@ public class SpellViewPagerDialogFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.monster_viewpager_tab_layout, parent, false);
+        View view = inflater.inflate(R.layout.spell_viewpager_tab_layout, parent, false);
 
         //FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         //params.setMargins(0, Utils.getStatusBarHeight(getActivity()), 0, 0);
@@ -83,7 +83,7 @@ public class SpellViewPagerDialogFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
         fabSpellVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
-
+/*
         bDone = (Button) view.findViewById(R.id.bDone);
         if(navMode){
             bDone.setVisibility(View.GONE);
@@ -97,7 +97,7 @@ public class SpellViewPagerDialogFragment extends Fragment {
                     //getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
-        }
+        }*/
 
         fabSpellVP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,7 +221,9 @@ public class SpellViewPagerDialogFragment extends Fragment {
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_search).setVisible(true);
         menu.findItem(R.id.play_mode).setVisible(false);
-        menu.findItem(R.id.spell_book).setVisible(false).setEnabled(false);
+        menu.findItem(R.id.spell_book).setVisible(false);
+        getActivity().supportInvalidateOptionsMenu();
+
 /*
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -239,7 +241,6 @@ public class SpellViewPagerDialogFragment extends Fragment {
             }
         }*/
         super.onPrepareOptionsMenu(menu);
-        getActivity().invalidateOptionsMenu();
     }
 
     @Override

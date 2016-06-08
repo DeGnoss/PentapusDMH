@@ -152,20 +152,18 @@ public class PHBSpellTableFragment extends Fragment implements
                     selection = selection + " OR ";
                     selection = selection + DataBaseHandler.KEY_SOURCE + " LIKE ?";
                 } else {
-                    selection = DataBaseHandler.KEY_SOURCE + " LIKE ?";
+                    selection = "(" + DataBaseHandler.KEY_SOURCE + " LIKE ?";
                 }
             }
             if(args.getString("filter") != null){
                 if(!selection.isEmpty()){
-                    selection = selection + " AND " + DataBaseHandler.KEY_NAME + " LIKE ?";
+                    selection = selection + ")" + " AND " + DataBaseHandler.KEY_NAME + " LIKE ?";
                 }else{
                     selection = DataBaseHandler.KEY_NAME + " LIKE ?";
                 }
+            }else{
+                selection = selection + ")";
             }
-
-
-            //fixme: fix search function
-
         } else {
             //selectionArgs = new String[]{"%" + "PHB" + "%", "%" + "EE" + "%", "%" + "PHB" + "%"};
             selectionArgs = null;
