@@ -363,6 +363,9 @@ public class CampaignTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
         Cursor cursor = mCampaignAdapter.getCursor();
         cursor.moveToPosition(position);
         int campaignId =
@@ -380,11 +383,11 @@ public class CampaignTableFragment extends Fragment implements
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 //mCampaignRecyclerView.getAdapter().notifyItemChanged(position);
+                mCampaignRecyclerView.getAdapter().notifyItemChanged(position);
                 String title = "Selected: " + String.valueOf(position);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu_campaign, menu);
-                //fab.setVisibility(View.GONE);
                 ((MainActivity) getActivity()).setFabVisibility(false);
                 return true;
             }

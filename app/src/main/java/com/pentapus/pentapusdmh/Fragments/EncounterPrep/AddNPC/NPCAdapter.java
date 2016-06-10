@@ -17,7 +17,6 @@ import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorViewHolder
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MonsterViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 import com.pentapus.pentapusdmh.R;
 
@@ -84,14 +83,14 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
         if (NPCViewPagerDialogFragment.getSelectedType() == 1 && uniquePosition == NPCViewPagerDialogFragment.getSelectedPosUnique()) {
             NPCViewPagerDialogFragment.setSelectedType(-1);
             NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
-            NPCViewPagerDialogFragment.setNPCUri(null);
+            NPCViewPagerDialogFragment.addNpcToList(null);
             notifyItemChanged(position);
         } else if (NPCViewPagerDialogFragment.getSelectedType() == 1) {
             Cursor cursor = getCursor();
             cursor.moveToPosition(position);
             int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
             NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
-            NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
+            NPCViewPagerDialogFragment.addNpcToList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
             if(oldType == 1){
                 notifyItemChanged(oldPos);
             }
@@ -99,7 +98,7 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
         } else if (position == -1) {
             NPCViewPagerDialogFragment.setSelectedType(-1);
             NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
-            NPCViewPagerDialogFragment.setNPCUri(null);
+            NPCViewPagerDialogFragment.addNpcToList(null);
             if (oldType == 1) {
                 notifyItemChanged(oldPos);
             }
@@ -109,7 +108,7 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
             int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
             NPCViewPagerDialogFragment.setSelectedType(1);
             NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
-            NPCViewPagerDialogFragment.setNPCUri(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
+            NPCViewPagerDialogFragment.addNpcToList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
             notifyItemChanged(position);
         }
     }

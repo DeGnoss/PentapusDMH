@@ -408,6 +408,9 @@ public class SessionTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
         Cursor cursor = mSessionAdapter.getCursor();
         cursor.moveToPosition(position);
         int sessionId =

@@ -7,29 +7,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import com.pentapus.pentapusdmh.FilterManager;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageGridFragment;
 
 import java.io.File;
 
 /**
  * Created by Koni on 4/4/16.
  */
-public class SpellViewPagerAdapter extends FragmentPagerAdapter {
+public class SpellViewPagerAdapter extends FragmentPagerAdapter{
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[]{"My Spells", "All Spells"};
     private Context context;
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private int id;
     private File[] imageUri;
-    private FilterManager filterManager;
 
 
-    public SpellViewPagerAdapter(FragmentManager fm, Context context, int id, FilterManager filterManager) {
+    public SpellViewPagerAdapter(FragmentManager fm, Context context, int id) {
         super(fm);
         this.context = context;
         this.id = id;
-        this.filterManager = filterManager;
     }
 
     @Override
@@ -41,12 +37,10 @@ public class SpellViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                MySpellTableFragment f1 = MySpellTableFragment.newInstance("PHB");
-                filterManager.addObserver(f1);
+                MySpellTableFragment f1 = MySpellTableFragment.newInstance("CUSTOM");
                 return f1;
             case 1:
                 PHBSpellTableFragment f2 = PHBSpellTableFragment.newInstance("");
-                filterManager.addObserver(f2);
                 return f2;
             default:
                 return null;
@@ -77,10 +71,8 @@ public class SpellViewPagerAdapter extends FragmentPagerAdapter {
         registeredFragments.remove(position);
         if(object instanceof MySpellTableFragment){
             MySpellTableFragment f2 = (MySpellTableFragment) object;
-            filterManager.deleteObserver(f2);
         }else if(object instanceof PHBSpellTableFragment){
             PHBSpellTableFragment f1 = (PHBSpellTableFragment) object;
-            filterManager.deleteObserver(f1);
         }
         super.destroyItem(container, position, object);
     }

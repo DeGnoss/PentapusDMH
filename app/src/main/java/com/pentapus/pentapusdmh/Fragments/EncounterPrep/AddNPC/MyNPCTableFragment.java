@@ -43,6 +43,9 @@ import com.pentapus.pentapusdmh.R;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MyNPCTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
@@ -182,12 +185,14 @@ public class MyNPCTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        if(!isNavMode){
+
+        /*if(!isNavMode){
             myNPCAdapter.statusClicked(position);
         }else{
             myNPCAdapter.statusClicked(-1);
-        }
+        }*/
         //myNPCAdapter.statusClicked(position);
+        myNPCAdapter.onItemAdd(position);
         EventBus.getDefault().post(new NotifyChange());
     }
 

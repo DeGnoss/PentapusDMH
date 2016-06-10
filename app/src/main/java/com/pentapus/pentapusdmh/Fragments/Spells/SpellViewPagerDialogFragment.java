@@ -19,22 +19,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
-import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.Utils;
 
 /**
  * Created by Koni on 4/4/16.
  */
-public class SpellViewPagerDialogFragment extends Fragment {
+public class SpellViewPagerDialogFragment extends Fragment{
 
     private static final String NAV_MODE = "navMode";
 
@@ -120,15 +115,15 @@ public class SpellViewPagerDialogFragment extends Fragment {
                 switch (position) {
                     case 0:
                         fabSpellVP.setVisibility(View.VISIBLE);
-                        MainActivity.closeSearchView();
+                        //((MainActivity)getActivity()).closeSearchView();
                         break;
                     case 1:
                         fabSpellVP.setVisibility(View.GONE);
-                        MainActivity.closeSearchView();
+                        //((MainActivity)getActivity()).closeSearchView();
                         break;
                     default:
                         fabSpellVP.setVisibility(View.GONE);
-                        MainActivity.closeSearchView();
+                        //((MainActivity)getActivity()).closeSearchView();
                         break;
                 }
             }
@@ -208,7 +203,7 @@ public class SpellViewPagerDialogFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        pagerAdapter = new SpellViewPagerAdapter(getChildFragmentManager(), getContext(), id, MainActivity.getFilterManager());
+        pagerAdapter = new SpellViewPagerAdapter(getChildFragmentManager(), getContext(), id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(1);
         viewPager.setOffscreenPageLimit(2);
@@ -247,7 +242,11 @@ public class SpellViewPagerDialogFragment extends Fragment {
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).setFabVisibility(false);
-        ((MainActivity)getActivity()).enableNavigationDrawer();
+        if(navMode){
+            ((MainActivity)getActivity()).enableNavigationDrawer();
+        }else{
+            ((MainActivity)getActivity()).disableNavigationDrawer();
+        }
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Spells");
         getActivity().invalidateOptionsMenu();
     }

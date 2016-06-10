@@ -420,6 +420,9 @@ public class EncounterTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
         Cursor cursor = mEncounterAdapter.getCursor();
         cursor.moveToPosition(position);
         int encounterId =

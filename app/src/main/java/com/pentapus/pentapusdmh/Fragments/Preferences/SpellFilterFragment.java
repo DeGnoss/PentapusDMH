@@ -90,6 +90,7 @@ public class SpellFilterFragment extends DialogFragment {
                     else
                     {
                         Log.d("BackButton", "Up");
+                        getDialog().dismiss();
                         return true; // pretend we've processed it
                     }
                 }

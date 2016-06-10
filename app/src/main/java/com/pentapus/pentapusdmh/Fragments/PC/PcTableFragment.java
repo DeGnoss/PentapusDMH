@@ -389,6 +389,9 @@ public class PcTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
         //TODO: SOMETHING ON CLICK
 
     }

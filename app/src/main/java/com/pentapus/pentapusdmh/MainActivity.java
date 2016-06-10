@@ -66,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean pressedTwice = false;
     private ActionBarDrawerToggle toggle;
     private FloatingActionButton fab;
-    private FilterManager filterManager;
     private static MainActivity instance;
     private SearchView searchView;
     private Toolbar toolbar;
+    private String searchViewQuery;
 
 
     @Override
@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        filterManager = new FilterManager();
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
@@ -127,9 +126,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        final MenuItem item = menu.findItem(R.id.action_search);
+       /* final MenuItem item = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -139,10 +139,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterManager.setQuery(newText);
                 return false;
             }
         });
+        return true;*/
         return true;
     }
 
@@ -176,9 +176,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             pasteEntry(pasteUri);
             return true;
         } else if (id == R.id.spell_book) {
-            SpellViewPagerDialogFragment fspells = new SpellViewPagerDialogFragment();
+            Fragment fragment = null;
+            Class fragmentClass = SpellViewPagerDialogFragment.class;
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("navMode", false);
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+                fragment.setArguments(bundle);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.ContainerFrame, fspells, "F_SPELL_PAGER")
+                    .replace(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
                     .addToBackStack("F_SPELL_PAGER")
                     .commit();
             return true;
@@ -791,13 +800,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public static FilterManager getFilterManager() {
-        return instance.filterManager; // return the observable class
-    }
-
-    public static void closeSearchView() {
-        instance.searchView.setIconified(true);
-        instance.searchView.setIconified(true);
+    public  void closeSearchView() {
+        if(searchView != null){
+            searchView.setIconified(true);
+            searchView.setIconified(true);
+        }
     }
 
     public void setToolBarBackButton(boolean isVisible) {
