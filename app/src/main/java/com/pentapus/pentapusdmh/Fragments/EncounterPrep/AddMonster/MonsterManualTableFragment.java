@@ -94,9 +94,9 @@ public class MonsterManualTableFragment extends Fragment implements
         myMonsterRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
-        if (isNavMode) {
+        /*if (isNavMode) {
             myMonsterAdapter.statusClicked(-1);
-        }
+        }*/
 
         // Inflate the layout for this fragment
         return tableView;
@@ -105,7 +105,7 @@ public class MonsterManualTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        myMonsterAdapter.statusClicked(-1);
+        //myMonsterAdapter.statusClicked(-1);
         ((MonsterViewPagerDialogFragment)getParentFragment()).setFabIcon(true);
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
@@ -174,11 +174,11 @@ public class MonsterManualTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        if (!isNavMode) {
+        /*if (!isNavMode) {
             myMonsterAdapter.statusClicked(position);
         } else {
             myMonsterAdapter.statusClicked(-1);
-        }
+        }*/
     }
 
     @Override

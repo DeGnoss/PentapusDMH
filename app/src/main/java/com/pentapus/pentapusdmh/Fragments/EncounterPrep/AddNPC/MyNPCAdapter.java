@@ -82,7 +82,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
     }
 
     public void statusClicked(int position) {
-        int uniquePosition = -1;
+      /*  int uniquePosition = -1;
         if (position >= 0) {
             uniquePosition = (int) getItemId(position);
         }
@@ -118,7 +118,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
             NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
             NPCViewPagerDialogFragment.addNpcToList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
             notifyItemChanged(position);
-        }
+        }*/
     }
 
     @Override
@@ -137,6 +137,15 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
         NPCViewPagerDialogFragment.addNpcToList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
     }
 
+    public void onItemRemove(int position){
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(position);
+        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        NPCViewPagerDialogFragment.removeNpcFromList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
+    }
+
+
+
     @Override
     public void onItemLongCLick(int position) {
         mAdapterCallback.onItemLongCLick(position);
@@ -144,6 +153,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
 
     @Override
     public void onMenuRefresh() {
+
     }
 
     public Cursor getCursor() {
@@ -193,6 +203,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
                     if(numbers<0)
                         numbers=0;
                     tvNumber.setText(String.valueOf(numbers));
+                    onItemRemove(getAdapterPosition());
                 }
             });
 
@@ -203,7 +214,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
                     if(numbers>99)
                         numbers=99;
                     tvNumber.setText(String.valueOf(numbers));
-                    mAdapterCallback.onItemClick(getAdapterPosition());
+                    onItemAdd(getAdapterPosition());
                 }
             });
 
@@ -228,7 +239,6 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
 
         @Override
         public void bindCursor(Cursor cursor) {
-
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));

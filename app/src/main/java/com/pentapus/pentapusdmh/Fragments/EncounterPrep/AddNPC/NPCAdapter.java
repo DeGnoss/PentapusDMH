@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +39,7 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
         this.mContext = context;
         this.mAdapterCallback = callback;
         setHasStableIds(true);
-        setupCursorAdapter(null, 0, R.layout.card_monster, false);
+        setupCursorAdapter(null, 0, R.layout.card_npc_add, false);
     }
 
     /**
@@ -74,7 +75,7 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
 
 
     public void statusClicked(int position) {
-        int uniquePosition = -1;
+       /* int uniquePosition = -1;
         if(position >= 0){
             uniquePosition = (int) getItemId(position);
         }
@@ -110,12 +111,30 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
             NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
             NPCViewPagerDialogFragment.addNpcToList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
             notifyItemChanged(position);
-        }
+        } */
     }
 
     @Override
     public void onItemClick(int position) {
         mAdapterCallback.onItemClick(position);
+    }
+
+    public void onItemAdd(int position){
+        int uniquePosition = -1;
+        if (position >= 0) {
+            uniquePosition = (int) getItemId(position);
+        }
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(position);
+        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        NPCViewPagerDialogFragment.addNpcToList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
+    }
+
+    public void onItemRemove(int position){
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(position);
+        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        NPCViewPagerDialogFragment.removeNpcFromList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
     }
 
     @Override
@@ -125,6 +144,7 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
 
     @Override
     public void onMenuRefresh() {
+
     }
 
     public Cursor getCursor() {
@@ -142,9 +162,10 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
         public int type;
         private RelativeLayout clicker;
         private AdapterNavigationCallback mAdapterCallback;
-        private Button undoButton;
-        private TextView vInfoDeleted;
+        private ImageButton buttonPlus, buttonMinus;
+        private TextView tvNumber;
         private String identifier;
+        private int numbers = 0;
 
         private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_monster);
 
@@ -158,6 +179,33 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon_monster);
             vInfo = (TextView) v.findViewById(R.id.info_monster);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_monster);
+            buttonMinus = (ImageButton) v.findViewById(R.id.buttonMinus);
+            buttonPlus = (ImageButton) v.findViewById(R.id.buttonPlus);
+            tvNumber = (TextView) v.findViewById(R.id.tvNumber);
+            tvNumber.setText(String.valueOf(numbers));
+
+            buttonMinus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    numbers--;
+                    if(numbers<0)
+                        numbers=0;
+                    tvNumber.setText(String.valueOf(numbers));
+                    onItemRemove(getAdapterPosition());
+                }
+            });
+
+            buttonPlus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    numbers++;
+                    if(numbers>99)
+                        numbers=99;
+                    tvNumber.setText(String.valueOf(numbers));
+                    onItemAdd(getAdapterPosition());
+                }
+            });
+
 
             clicker.setOnTouchListener(rippleForegroundListener);
 

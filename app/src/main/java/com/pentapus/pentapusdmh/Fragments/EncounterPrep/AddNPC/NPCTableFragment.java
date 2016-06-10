@@ -76,7 +76,7 @@ public class NPCTableFragment extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+       // EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (this.getArguments() != null) {
@@ -175,13 +175,13 @@ public class NPCTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        if(!isNavMode){
+        /*if(!isNavMode){
             npcAdapter.statusClicked(position);
         }else{
             npcAdapter.statusClicked(-1);
         }
         //npcAdapter.statusClicked(position);
-        EventBus.getDefault().post(new NotifyChange());
+        EventBus.getDefault().post(new NotifyChange());*/
     }
 
     @Override
@@ -189,22 +189,29 @@ public class NPCTableFragment extends Fragment implements
 
     }
 
-    @Subscribe
-    public void onMessageEvent(NotifyChange event){
-        npcAdapter.notifyDataSetChanged();
-    }
-
-
     public void dismissActionMode(){
         if(mActionMode!= null){
             mActionMode.finish();
         }
     }
+/*
+    @Subscribe
+    public void onMessageEvent(NotifyChange event){
+        npcAdapter.notifyDataSetChanged();
+    }*/
+
+
+   /* public void dismissActionMode(){
+        if(mActionMode!= null){
+            mActionMode.finish();
+        }
+    }*/
 
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();
     }
+
 
     public RecyclerView getMyNPCRecyclerView() {
         return myNPCRecyclerView;

@@ -281,6 +281,10 @@ public class NPCViewPagerDialogFragment extends Fragment {
         npcsToBeAdded.add(npcUri);
     }
 
+    public static void removeNpcFromList(Uri npcUri){
+        npcsToBeAdded.remove(npcUri);
+    }
+
     public void setFabVisibility(boolean visibility) {
         if (visibility) {
             fabNPCVP.setVisibility(View.VISIBLE);

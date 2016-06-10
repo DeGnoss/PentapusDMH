@@ -80,7 +80,7 @@ public class MyNPCTableFragment extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (this.getArguments() != null) {
@@ -192,13 +192,13 @@ public class MyNPCTableFragment extends Fragment implements
             myNPCAdapter.statusClicked(-1);
         }*/
         //myNPCAdapter.statusClicked(position);
-        myNPCAdapter.onItemAdd(position);
-        EventBus.getDefault().post(new NotifyChange());
+        //myNPCAdapter.onItemAdd(position);
+        //EventBus.getDefault().post(new NotifyChange());
     }
 
-    public RecyclerView getMyNPCRecyclerView() {
+    /*public RecyclerView getMyNPCRecyclerView() {
         return myNPCRecyclerView;
-    }
+    }*/
 
     @Override
     public void onItemLongCLick(final int position) {
@@ -352,6 +352,9 @@ public class MyNPCTableFragment extends Fragment implements
         }
     }
 
+    public RecyclerView getMyNPCRecyclerView() {
+        return myNPCRecyclerView;
+    }
 
     @Override
     public void onMenuRefresh() {

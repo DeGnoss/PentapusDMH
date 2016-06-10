@@ -4,7 +4,6 @@ import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,20 +11,19 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Koni on 4/4/16.
@@ -52,6 +50,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     private static int highlightedPos = -1;
     private static Uri monsterUri = null;
     private String encounterName;
+    private static List<Uri> monstersToBeAdded;
 
 
     public MonsterViewPagerDialogFragment() {
@@ -75,6 +74,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
             navMode = getArguments().getBoolean(NAV_MODE);
             encounterName = getArguments().getString(ENCOUNTER_NAME);
         }
+        monstersToBeAdded = new ArrayList<>();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
             bDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    pasteMonster(monsterUri);
+                    pasteMonster();
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
@@ -147,7 +147,12 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     }
 
     //only when not in navmode
-    private void pasteMonster(Uri pasteUri) {
+    private void pasteMonster() {
+        int i = 0;
+        Uri pasteUri;
+        for (Uri element : monstersToBeAdded) {
+            pasteUri = monstersToBeAdded.get(i);
+            i++;
         final AsyncQueryHandler queryHandler = new AsyncQueryHandler(getContext().getContentResolver()) {
 
             @Override
@@ -188,6 +193,8 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                 null,
                 null
         );
+        }
+        monstersToBeAdded.clear();
     }
 
 
@@ -295,6 +302,15 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         }else{
             fabMonsterVP.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_done));
         }
+    }
+
+    public static void addMonsterToList(Uri npcUri) {
+        //NPCViewPagerDialogFragment.npcUri = npcUri;
+        monstersToBeAdded.add(npcUri);
+    }
+
+    public static void removeMonsterFromList(Uri npcUri){
+        monstersToBeAdded.remove(npcUri);
     }
 
     public boolean isNavMode(){
