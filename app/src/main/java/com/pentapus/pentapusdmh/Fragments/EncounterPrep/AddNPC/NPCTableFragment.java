@@ -1,33 +1,21 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC;
 
 
-import android.content.AsyncQueryHandler;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,11 +24,7 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
-import com.pentapus.pentapusdmh.NotifyChange;
 import com.pentapus.pentapusdmh.R;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 
 public class NPCTableFragment extends Fragment implements
@@ -83,7 +67,7 @@ public class NPCTableFragment extends Fragment implements
             isNavMode = this.getArguments().getBoolean("navMode");
         }
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        npcAdapter = new NPCAdapter(getContext(), this);
+        npcAdapter = new NPCAdapter(getContext(), this, isNavMode);
     }
 
     @Override
@@ -100,9 +84,6 @@ public class NPCTableFragment extends Fragment implements
         myNPCRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
         myNPCRecyclerView.setAdapter(npcAdapter);
-
-
-        // Inflate the layout for this fragment
         return tableView;
     }
 

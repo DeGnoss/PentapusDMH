@@ -28,16 +28,18 @@ import com.pentapus.pentapusdmh.R;
 public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHolder> implements AdapterNavigationCallback {
     private AdapterNavigationCallback mAdapterCallback;
     Context mContext;
+    boolean isNavMode;
 
     /**
      * Constructor.
      *
      * @param context The Context the Adapter is displayed in.
      */
-    public NPCAdapter(Context context, AdapterNavigationCallback callback) {
+    public NPCAdapter(Context context, AdapterNavigationCallback callback, boolean isNavMode) {
         super(context);
         this.mContext = context;
         this.mAdapterCallback = callback;
+        this.isNavMode = isNavMode;
         setHasStableIds(true);
         setupCursorAdapter(null, 0, R.layout.card_npc_add, false);
     }
@@ -183,28 +185,33 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
             buttonPlus = (ImageButton) v.findViewById(R.id.buttonPlus);
             tvNumber = (TextView) v.findViewById(R.id.tvNumber);
             tvNumber.setText(String.valueOf(numbers));
+            if(isNavMode){
+                buttonMinus.setVisibility(View.GONE);
+                buttonPlus.setVisibility(View.GONE);
+                tvNumber.setVisibility(View.GONE);
+            }else {
+                buttonMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbers--;
+                        if (numbers < 0)
+                            numbers = 0;
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemRemove(getAdapterPosition());
+                    }
+                });
 
-            buttonMinus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    numbers--;
-                    if(numbers<0)
-                        numbers=0;
-                    tvNumber.setText(String.valueOf(numbers));
-                    onItemRemove(getAdapterPosition());
-                }
-            });
-
-            buttonPlus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    numbers++;
-                    if(numbers>99)
-                        numbers=99;
-                    tvNumber.setText(String.valueOf(numbers));
-                    onItemAdd(getAdapterPosition());
-                }
-            });
+                buttonPlus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbers++;
+                        if (numbers > 99)
+                            numbers = 99;
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemAdd(getAdapterPosition());
+                    }
+                });
+            }
 
 
             clicker.setOnTouchListener(rippleForegroundListener);
@@ -232,7 +239,6 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
-            clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             itemView.setActivated(getItemId() == NPCViewPagerDialogFragment.getSelectedPosUnique());

@@ -137,6 +137,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
                         fabNPCVP.setVisibility(View.GONE);
                         break;
                 }
+                pagerAdapter.notifyDataSetChanged();
             }
 
             @Override

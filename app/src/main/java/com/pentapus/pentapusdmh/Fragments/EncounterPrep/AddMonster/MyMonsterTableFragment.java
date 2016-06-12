@@ -76,7 +76,7 @@ public class MyMonsterTableFragment extends Fragment implements
         if (this.getArguments() != null) {
             isNavMode = this.getArguments().getBoolean("navMode");
         }
-        myMonsterAdapter = new MyMonsterAdapter(getContext(), this);
+        myMonsterAdapter = new MyMonsterAdapter(getContext(), this, isNavMode);
     }
 
     @Override
@@ -92,12 +92,6 @@ public class MyMonsterTableFragment extends Fragment implements
         myMonsterRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
-
-
-        //setUpItemTouchHelper();
-        //setUpAnimationDecoratorHelper();
-
-        // Inflate the layout for this fragment
         return tableView;
     }
 
@@ -170,11 +164,11 @@ public class MyMonsterTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        if (!isNavMode) {
+       /* if (!isNavMode) {
             myMonsterAdapter.statusClicked(position);
         } else {
             myMonsterAdapter.statusClicked(-1);
-        }
+        }*/
     }
 
 

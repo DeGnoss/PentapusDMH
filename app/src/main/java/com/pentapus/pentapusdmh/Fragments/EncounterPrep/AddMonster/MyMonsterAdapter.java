@@ -12,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,19 +41,21 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
     HashMap<String, Runnable> pendingRunnables = new HashMap<>();
     private static final int PENDING_REMOVAL_TIMEOUT = 3000;
     Context mContext;
+    boolean isNavMode;
 
     /**
      * Constructor.
      *
      * @param context The Context the Adapter is displayed in.
      */
-    public MyMonsterAdapter(Context context, AdapterNavigationCallback callback) {
+    public MyMonsterAdapter(Context context, AdapterNavigationCallback callback, boolean isNavMode) {
         super(context);
         this.mContext = context;
         this.mAdapterCallback = callback;
+        this.isNavMode = isNavMode;
         itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
-        setupCursorAdapter(null, 0, R.layout.card_monster, false);
+        setupCursorAdapter(null, 0, R.layout.card_npc_add, false);
     }
 
     /**
@@ -87,7 +90,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
     }
 
     public void statusClicked(int position) {
-        int uniquePosition = -1;
+       /* int uniquePosition = -1;
         if(position >= 0){
             uniquePosition = (int) getItemId(position);
         }
@@ -123,12 +126,30 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             MonsterViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
             MonsterViewPagerDialogFragment.setMonsterUri(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId));
             notifyItemChanged(position);
-        }
+        }*/
     }
 
     @Override
     public void onItemClick(int position) {
         mAdapterCallback.onItemClick(position);
+    }
+
+    public void onItemAdd(int position){
+        int uniquePosition = -1;
+        if (position >= 0) {
+            uniquePosition = (int) getItemId(position);
+        }
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(position);
+        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        MonsterViewPagerDialogFragment.addMonsterToList(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + npcId));
+    }
+
+    public void onItemRemove(int position){
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(position);
+        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        MonsterViewPagerDialogFragment.removeMonsterFromList(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + npcId));
     }
 
     @Override
@@ -155,9 +176,10 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         public int type;
         private RelativeLayout clicker;
         private AdapterNavigationCallback mAdapterCallback;
-        private Button undoButton;
-        private TextView vInfoDeleted;
+        private ImageButton buttonPlus, buttonMinus;
+        private TextView tvNumber;
         private String identifier;
+        private int numbers = 0;
 
         private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_monster);
 
@@ -165,12 +187,44 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         public MyMonsterViewHolder(View v, AdapterNavigationCallback adapterCallback) {
             super(v);
             this.mAdapterCallback = adapterCallback;
-            vIndicatorLine = (View) v.findViewById(R.id.indicator_line_monster);
+            vIndicatorLine = v.findViewById(R.id.indicator_line_monster);
             vName = (TextView) v.findViewById(R.id.name_monster);
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_monster);
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon_monster);
             vInfo = (TextView) v.findViewById(R.id.info_monster);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_monster);
+            buttonMinus = (ImageButton) v.findViewById(R.id.buttonMinus);
+            buttonPlus = (ImageButton) v.findViewById(R.id.buttonPlus);
+            tvNumber = (TextView) v.findViewById(R.id.tvNumber);
+            if(isNavMode){
+                buttonMinus.setVisibility(View.GONE);
+                buttonPlus.setVisibility(View.GONE);
+                tvNumber.setVisibility(View.GONE);
+            }else{
+                tvNumber.setText(String.valueOf(numbers));
+
+                buttonMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbers--;
+                        if(numbers<0)
+                            numbers=0;
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemRemove(getAdapterPosition());
+                    }
+                });
+
+                buttonPlus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbers++;
+                        if(numbers>99)
+                            numbers=99;
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemAdd(getAdapterPosition());
+                    }
+                });
+            }
 
             clicker.setOnTouchListener(rippleForegroundListener);
 

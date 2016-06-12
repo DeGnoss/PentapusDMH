@@ -35,16 +35,18 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
     HashMap<String, Runnable> pendingRunnables = new HashMap<>();
     private static final int PENDING_REMOVAL_TIMEOUT = 3000;
     Context mContext;
+    boolean isNavMode;
 
     /**
      * Constructor.
      *
      * @param context The Context the Adapter is displayed in.
      */
-    public MyNPCAdapter(Context context, AdapterNavigationCallback callback) {
+    public MyNPCAdapter(Context context, AdapterNavigationCallback callback, boolean isNavMode) {
         super(context);
         this.mContext = context;
         this.mAdapterCallback = callback;
+        this.isNavMode = isNavMode;
         itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
         setupCursorAdapter(null, 0, R.layout.card_npc_add, false);
@@ -191,32 +193,37 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
             buttonMinus = (ImageButton) v.findViewById(R.id.buttonMinus);
             buttonPlus = (ImageButton) v.findViewById(R.id.buttonPlus);
             tvNumber = (TextView) v.findViewById(R.id.tvNumber);
-            tvNumber.setText(String.valueOf(numbers));
+            if(isNavMode){
+                buttonMinus.setVisibility(View.GONE);
+                buttonPlus.setVisibility(View.GONE);
+                tvNumber.setVisibility(View.GONE);
+            }else {
+                tvNumber.setText(String.valueOf(numbers));
 
+                //TODO: add touchlistener to detect when button is held down and start counting up/down faster
 
-            //TODO: add touchlistener to detect when button is held down and start counting up/down faster
+                buttonMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbers--;
+                        if (numbers < 0)
+                            numbers = 0;
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemRemove(getAdapterPosition());
+                    }
+                });
 
-            buttonMinus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    numbers--;
-                    if(numbers<0)
-                        numbers=0;
-                    tvNumber.setText(String.valueOf(numbers));
-                    onItemRemove(getAdapterPosition());
-                }
-            });
-
-            buttonPlus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    numbers++;
-                    if(numbers>99)
-                        numbers=99;
-                    tvNumber.setText(String.valueOf(numbers));
-                    onItemAdd(getAdapterPosition());
-                }
-            });
+                buttonPlus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbers++;
+                        if (numbers > 99)
+                            numbers = 99;
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemAdd(getAdapterPosition());
+                    }
+                });
+            }
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -242,7 +249,6 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
-            clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             itemView.setActivated(getItemId() == NPCViewPagerDialogFragment.getSelectedPosUnique());

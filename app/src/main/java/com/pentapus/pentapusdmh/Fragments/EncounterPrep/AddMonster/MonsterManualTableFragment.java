@@ -5,35 +5,23 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.Encounter.EncounterAdapter;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.MonsterEditFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
 
@@ -77,7 +65,7 @@ public class MonsterManualTableFragment extends Fragment implements
         if (this.getArguments() != null) {
             isNavMode = this.getArguments().getBoolean("navMode");
         }
-        myMonsterAdapter = new MonsterManualAdapter(getContext(), this);
+        myMonsterAdapter = new MonsterManualAdapter(getContext(), this, isNavMode);
     }
 
     @Override
@@ -94,11 +82,7 @@ public class MonsterManualTableFragment extends Fragment implements
         myMonsterRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
-        /*if (isNavMode) {
-            myMonsterAdapter.statusClicked(-1);
-        }*/
 
-        // Inflate the layout for this fragment
         return tableView;
     }
 
@@ -124,7 +108,6 @@ public class MonsterManualTableFragment extends Fragment implements
         //menu.findItem(R.id.campaign_settings).setVisible(true);
         menu.findItem(R.id.action_search).setVisible(true);
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-
         if (clipboard.hasPrimaryClip()) {
             ClipData.Item itemPaste = clipboard.getPrimaryClip().getItemAt(0);
             Uri pasteUri = itemPaste.getUri();
@@ -182,7 +165,7 @@ public class MonsterManualTableFragment extends Fragment implements
     }
 
     @Override
-    public void onItemLongCLick(final int position) {
+    public void onItemLongCLick(int position) {
     }
 
     public RecyclerView getMyMonsterRecyclerView() {

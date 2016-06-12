@@ -41,6 +41,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
     private AdapterNavigationCallback mAdapterCallback;
     List<String> itemsPendingRemoval;
     Context mContext;
+    boolean isNavMode;
 
 
     /**
@@ -48,10 +49,11 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
      *
      * @param context The Context the Adapter is displayed in.
      */
-    public MonsterManualAdapter(Context context, AdapterNavigationCallback callback) {
+    public MonsterManualAdapter(Context context, AdapterNavigationCallback callback, boolean isNavMode) {
         super(context);
         this.mContext = context;
         this.mAdapterCallback = callback;
+        this.isNavMode = isNavMode;
         itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
         setupCursorAdapter(null, 0, R.layout.card_npc_add, false);
@@ -201,30 +203,35 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             buttonMinus = (ImageButton) v.findViewById(R.id.buttonMinus);
             buttonPlus = (ImageButton) v.findViewById(R.id.buttonPlus);
             tvNumber = (TextView) v.findViewById(R.id.tvNumber);
-            tvNumber.setText(String.valueOf(numbers));
+            if(isNavMode){
+                buttonMinus.setVisibility(View.GONE);
+                buttonPlus.setVisibility(View.GONE);
+                tvNumber.setVisibility(View.GONE);
+            }else{
+                tvNumber.setText(String.valueOf(numbers));
 
-            buttonMinus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    numbers--;
-                    if(numbers<0)
-                        numbers=0;
-                    tvNumber.setText(String.valueOf(numbers));
-                    onItemRemove(getAdapterPosition());
-                }
-            });
+                buttonMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbers--;
+                        if(numbers<0)
+                            numbers=0;
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemRemove(getAdapterPosition());
+                    }
+                });
 
-            buttonPlus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    numbers++;
-                    if(numbers>99)
-                        numbers=99;
-                    tvNumber.setText(String.valueOf(numbers));
-                    onItemAdd(getAdapterPosition());
-                }
-            });
-
+                buttonPlus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbers++;
+                        if(numbers>99)
+                            numbers=99;
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemAdd(getAdapterPosition());
+                    }
+                });
+            }
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -251,8 +258,6 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
-            //ivIcon.setImageURI(Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight"));
-            clicker.setOnTouchListener(rippleForegroundListener);
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             itemView.setActivated(MonsterViewPagerDialogFragment.getSelectedType() == 1 && getItemId() == MonsterViewPagerDialogFragment.getSelectedPosUnique());

@@ -85,7 +85,6 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
         fabMonsterVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
 
-
         bDone = (Button) view.findViewById(R.id.bDone);
         if(navMode){
             bDone.setVisibility(View.GONE);

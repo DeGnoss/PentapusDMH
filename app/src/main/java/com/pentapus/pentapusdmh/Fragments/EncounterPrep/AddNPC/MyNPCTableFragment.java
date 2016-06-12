@@ -87,7 +87,7 @@ public class MyNPCTableFragment extends Fragment implements
             isNavMode = this.getArguments().getBoolean("navMode");
         }
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
-        myNPCAdapter = new MyNPCAdapter(getContext(), this);
+        myNPCAdapter = new MyNPCAdapter(getContext(), this, isNavMode);
     }
 
     @Override
