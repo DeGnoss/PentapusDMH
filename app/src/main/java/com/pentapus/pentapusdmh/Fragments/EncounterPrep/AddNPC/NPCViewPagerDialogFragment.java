@@ -4,28 +4,24 @@ import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.Utils;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,13 +43,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
     private boolean navMode;
     private int encounterId;
     private static final String MODE = "modeUpdate";
-    private Button bDone;
 
-    private static int selectedPosUnique = -1;
-    private static int selectedPosAdapter = -1;
-    private static int selectedType = -1;
-    private static int highlightedPos = -1;
-    private static Uri npcUri = null;
     private String encounterName;
     private static List<Uri> npcsToBeAdded;
 
@@ -79,6 +69,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
             navMode = getArguments().getBoolean(NAV_MODE);
             encounterName = getArguments().getString(ENCOUNTER_NAME);
         }
+        setHasOptionsMenu(true);
         npcsToBeAdded = new ArrayList<>();
     }
 
@@ -89,20 +80,6 @@ public class NPCViewPagerDialogFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
         fabNPCVP = (FloatingActionButton) view.findViewById(R.id.fabImageVP);
-
-        bDone = (Button) view.findViewById(R.id.bDone);
-        if (navMode) {
-            bDone.setVisibility(View.GONE);
-        } else {
-            bDone.setVisibility(View.VISIBLE);
-            bDone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pasteNPC();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
-            });
-        }
 
         fabNPCVP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,8 +126,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
         return view;
     }
 
-
-    private void pasteNPC() {
+    public void pasteNPC() {
         int i = 0;
         Uri pasteUri;
         for (Uri element : npcsToBeAdded) {
@@ -214,19 +190,18 @@ public class NPCViewPagerDialogFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
         pagerAdapter = new NPCViewPagerAdapter(getChildFragmentManager(), getContext(), navMode, id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(1);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        npcsToBeAdded.clear();
         ((MainActivity) getActivity()).setFabVisibility(false);
         if (navMode) {
             ((MainActivity) getActivity()).enableNavigationDrawer();
@@ -237,52 +212,26 @@ public class NPCViewPagerDialogFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if(npcsToBeAdded.size()>0){
+            menu.findItem(R.id.add_selected).setVisible(true);
+        }else{
+            menu.findItem(R.id.add_selected).setVisible(false);
+        }
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public static int getSelectedType() {
-        return selectedType;
-    }
-
-    public static void setSelectedType(int selectedType) {
-        NPCViewPagerDialogFragment.selectedType = selectedType;
-    }
-
-    public static int getSelectedPosUnique() {
-        return selectedPosUnique;
-    }
-
-    public static int getSelectedPosAdapter() {
-        return selectedPosAdapter;
-    }
-
-
-    public static void setSelectedPos(int selectedPosUnique, int selectedPosAdapter) {
-        NPCViewPagerDialogFragment.selectedPosUnique = selectedPosUnique;
-        NPCViewPagerDialogFragment.selectedPosAdapter = selectedPosAdapter;
-    }
-
-    public static int getHighlightedPos() {
-        return highlightedPos;
-    }
-
-    public static void setHighlightedPos(int highlightedPos) {
-        NPCViewPagerDialogFragment.highlightedPos = highlightedPos;
-    }
-
-    public static Uri getNPCUri() {
-        return npcUri;
-    }
-
     public static void addNpcToList(Uri npcUri) {
-        //NPCViewPagerDialogFragment.npcUri = npcUri;
         npcsToBeAdded.add(npcUri);
     }
 
-    public static void removeNpcFromList(Uri npcUri){
+    public static void removeNpcFromList(Uri npcUri) {
         npcsToBeAdded.remove(npcUri);
     }
 

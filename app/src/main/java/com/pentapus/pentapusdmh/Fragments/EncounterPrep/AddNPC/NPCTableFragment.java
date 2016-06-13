@@ -34,8 +34,6 @@ public class NPCTableFragment extends Fragment implements
     private static final String MODE = "modeUpdate";
     private static final String NPC_ID = "npcId";
 
-    private int sessionId;
-    private String sessionName;
     private RecyclerView myNPCRecyclerView;
     private ActionMode mActionMode;
     private NPCAdapter npcAdapter;
@@ -60,7 +58,6 @@ public class NPCTableFragment extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-       // EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (this.getArguments() != null) {
@@ -74,7 +71,6 @@ public class NPCTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_monster_table, container, false);
-        // insert a record
 
         myNPCRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -90,6 +86,7 @@ public class NPCTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        npcAdapter.setSelectedPos(-1);
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
 
@@ -98,14 +95,8 @@ public class NPCTableFragment extends Fragment implements
         }
     }
 
-
-    public int getSessionId() {
-        return sessionId;
-    }
-
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        //menu.findItem(R.id.campaign_settings).setVisible(true);
         menu.findItem(R.id.action_search).setVisible(true);
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -137,10 +128,8 @@ public class NPCTableFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        CursorLoader cursorLoader = new CursorLoader(this.getContext(),
+        return new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_NPC, DataBaseHandler.PROJECTION_NPC_TEMPLATE, null, null, null);
-        return cursorLoader;
     }
 
     @Override
@@ -156,13 +145,6 @@ public class NPCTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        /*if(!isNavMode){
-            npcAdapter.statusClicked(position);
-        }else{
-            npcAdapter.statusClicked(-1);
-        }
-        //npcAdapter.statusClicked(position);
-        EventBus.getDefault().post(new NotifyChange());*/
     }
 
     @Override
@@ -170,23 +152,11 @@ public class NPCTableFragment extends Fragment implements
 
     }
 
-    public void dismissActionMode(){
-        if(mActionMode!= null){
+    public void dismissActionMode() {
+        if (mActionMode != null) {
             mActionMode.finish();
         }
     }
-/*
-    @Subscribe
-    public void onMessageEvent(NotifyChange event){
-        npcAdapter.notifyDataSetChanged();
-    }*/
-
-
-   /* public void dismissActionMode(){
-        if(mActionMode!= null){
-            mActionMode.finish();
-        }
-    }*/
 
     @Override
     public void onMenuRefresh() {

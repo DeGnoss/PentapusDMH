@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -31,11 +32,9 @@ import java.util.List;
 public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCViewHolder> implements AdapterNavigationCallback {
     private AdapterNavigationCallback mAdapterCallback;
     List<String> itemsPendingRemoval;
-    private Handler handler = new Handler(); // handler for running delayed runnables
-    HashMap<String, Runnable> pendingRunnables = new HashMap<>();
-    private static final int PENDING_REMOVAL_TIMEOUT = 3000;
     Context mContext;
     boolean isNavMode;
+    int selectedPos;
 
     /**
      * Constructor.
@@ -73,54 +72,9 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
      */
     @Override
     public void onBindViewHolder(MyNPCViewHolder holder, int position) {
-        // Move cursor to this position
         mCursorAdapter.getCursor().moveToPosition(position);
-
-        // Set the ViewHolder
         setViewHolder(holder);
-
-        // Bind this view
         mCursorAdapter.bindView(null, mContext, mCursorAdapter.getCursor());
-    }
-
-    public void statusClicked(int position) {
-      /*  int uniquePosition = -1;
-        if (position >= 0) {
-            uniquePosition = (int) getItemId(position);
-        }
-        int oldType = NPCViewPagerDialogFragment.getSelectedType();
-        int oldPos = NPCViewPagerDialogFragment.getSelectedPosAdapter();
-        if (NPCViewPagerDialogFragment.getSelectedType() == 0 && uniquePosition == NPCViewPagerDialogFragment.getSelectedPosUnique()) {
-            NPCViewPagerDialogFragment.setSelectedType(-1);
-            NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
-            NPCViewPagerDialogFragment.addNpcToList(null);
-            notifyItemChanged(position);
-        } else if (position == -1) {
-            NPCViewPagerDialogFragment.setSelectedType(-1);
-            NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
-            NPCViewPagerDialogFragment.addNpcToList(null);
-            if (oldType == 0) {
-                notifyItemChanged(oldPos);
-            }
-        } else if (NPCViewPagerDialogFragment.getSelectedType() == 0) {
-            Cursor cursor = getCursor();
-            cursor.moveToPosition(position);
-            int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
-            NPCViewPagerDialogFragment.addNpcToList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
-            if (oldType == 0) {
-                notifyItemChanged(oldPos);
-            }
-            notifyItemChanged(position);
-        } else {
-            Cursor cursor = getCursor();
-            cursor.moveToPosition(position);
-            int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            NPCViewPagerDialogFragment.setSelectedType(0);
-            NPCViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
-            NPCViewPagerDialogFragment.addNpcToList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
-            notifyItemChanged(position);
-        }*/
     }
 
     @Override
@@ -129,10 +83,6 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
     }
 
     public void onItemAdd(int position){
-        int uniquePosition = -1;
-        if (position >= 0) {
-            uniquePosition = (int) getItemId(position);
-        }
         Cursor cursor = getCursor();
         cursor.moveToPosition(position);
         int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
@@ -146,16 +96,23 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
         NPCViewPagerDialogFragment.removeNpcFromList(Uri.parse(DbContentProvider.CONTENT_URI_NPC + "/" + npcId));
     }
 
-
-
     @Override
     public void onItemLongCLick(int position) {
         mAdapterCallback.onItemLongCLick(position);
     }
 
+    public void setSelectedPos(int position){
+        this.selectedPos = position;
+        notifyItemChanged(position);
+    }
+
+    public int getSelectedPos(){
+        return selectedPos;
+    }
+
     @Override
     public void onMenuRefresh() {
-
+        mAdapterCallback.onMenuRefresh();
     }
 
     public Cursor getCursor() {
@@ -175,7 +132,6 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
         private AdapterNavigationCallback mAdapterCallback;
         private ImageButton buttonPlus, buttonMinus;
         private TextView tvNumber;
-        private String identifier;
         private int numbers = 0;
 
         private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_monster);
@@ -210,6 +166,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
                             numbers = 0;
                         tvNumber.setText(String.valueOf(numbers));
                         onItemRemove(getAdapterPosition());
+                        onMenuRefresh();
                     }
                 });
 
@@ -221,6 +178,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
                             numbers = 99;
                         tvNumber.setText(String.valueOf(numbers));
                         onItemAdd(getAdapterPosition());
+                        onMenuRefresh();
                     }
                 });
             }
@@ -230,7 +188,6 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    NPCViewPagerDialogFragment.setSelectedPos((int) getItemId(), getAdapterPosition());
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
@@ -251,8 +208,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            itemView.setActivated(getItemId() == NPCViewPagerDialogFragment.getSelectedPosUnique());
-            identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            itemView.setActivated(getAdapterPosition() == getSelectedPos());
         }
 
 

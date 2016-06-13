@@ -7,24 +7,16 @@ import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,9 +38,7 @@ public class MyMonsterTableFragment extends Fragment implements
     private static final String MODE = "modeUpdate";
     private static final String MONSTER_ID = "monsterId";
 
-    private int sessionId;
     private boolean isNavMode;
-    private String sessionName;
     private RecyclerView myMonsterRecyclerView;
     private ActionMode mActionMode;
     private MyMonsterAdapter myMonsterAdapter;
@@ -83,7 +73,7 @@ public class MyMonsterTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_monster_table, container, false);
-        // insert a record
+
         myMonsterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -98,6 +88,7 @@ public class MyMonsterTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        myMonsterAdapter.setSelectedPos(-1);
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
 
@@ -106,13 +97,8 @@ public class MyMonsterTableFragment extends Fragment implements
         }
     }
 
-    public int getSessionId() {
-        return sessionId;
-    }
-
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        //menu.findItem(R.id.campaign_settings).setVisible(true);
         menu.findItem(R.id.action_search).setVisible(true);
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboard.hasPrimaryClip()) {
@@ -146,9 +132,8 @@ public class MyMonsterTableFragment extends Fragment implements
 
         String[] selectionArgs = new String[]{String.valueOf(0)};
         String selection = DataBaseHandler.KEY_MM + " = ?";
-        CursorLoader cursorLoader = new CursorLoader(this.getContext(),
+        return new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER_TEMPLATE, selection, selectionArgs, null);
-        return cursorLoader;
     }
 
     @Override
@@ -164,31 +149,20 @@ public class MyMonsterTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-       /* if (!isNavMode) {
-            myMonsterAdapter.statusClicked(position);
-        } else {
-            myMonsterAdapter.statusClicked(-1);
-        }*/
     }
-
 
     @Override
     public void onItemLongCLick(final int position) {
-
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MonsterViewPagerDialogFragment.setSelectedType(0);
-                MonsterViewPagerDialogFragment.setHighlightedPos(position);
-                int oldPos = MonsterViewPagerDialogFragment.getSelectedPosAdapter();
-                MonsterViewPagerDialogFragment.setSelectedPos((int) myMonsterAdapter.getItemId(position), position);
-                myMonsterAdapter.notifyItemChanged(position);
-                myMonsterAdapter.notifyItemChanged(oldPos);
                 String title = "Selected: " + String.valueOf(position);
                 ((MonsterViewPagerDialogFragment) getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(false);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
+                myMonsterAdapter.setSelectedPos(position);
+                myMonsterAdapter.notifyItemChanged(position);
                 return true;
             }
 
@@ -248,9 +222,8 @@ public class MyMonsterTableFragment extends Fragment implements
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                MonsterViewPagerDialogFragment.setHighlightedPos(-1);
-                MonsterViewPagerDialogFragment.setSelectedPos(-1, -1);
-                myMonsterRecyclerView.getAdapter().notifyItemChanged(position);
+                myMonsterAdapter.setSelectedPos(-1);
+                myMonsterAdapter.notifyItemChanged(position);
                 ((MonsterViewPagerDialogFragment) getActivity().getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).setFabVisibility(true);
                 mActionMode = null;
             }

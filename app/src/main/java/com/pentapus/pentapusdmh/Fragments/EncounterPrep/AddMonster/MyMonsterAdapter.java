@@ -1,17 +1,12 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -19,29 +14,21 @@ import android.widget.TextView;
 
 import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorAdapter;
 import com.androidessence.recyclerviewcursoradapter.RecyclerViewCursorViewHolder;
-import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 import com.pentapus.pentapusdmh.R;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Koni on 14/4/16.
  */
 public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter.MyMonsterViewHolder> implements AdapterNavigationCallback {
     private AdapterNavigationCallback mAdapterCallback;
-    List<String> itemsPendingRemoval;
-    private Handler handler = new Handler(); // handler for running delayed runnables
-    HashMap<String, Runnable> pendingRunnables = new HashMap<>();
-    private static final int PENDING_REMOVAL_TIMEOUT = 3000;
     Context mContext;
-    boolean isNavMode;
+    private boolean isNavMode;
+    private int selectedPos;
 
     /**
      * Constructor.
@@ -53,7 +40,6 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         this.mContext = context;
         this.mAdapterCallback = callback;
         this.isNavMode = isNavMode;
-        itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
         setupCursorAdapter(null, 0, R.layout.card_npc_add, false);
     }
@@ -79,54 +65,9 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
      */
     @Override
     public void onBindViewHolder(MyMonsterViewHolder holder, int position) {
-        // Move cursor to this position
         mCursorAdapter.getCursor().moveToPosition(position);
-
-        // Set the ViewHolder
         setViewHolder(holder);
-
-        // Bind this view
         mCursorAdapter.bindView(null, mContext, mCursorAdapter.getCursor());
-    }
-
-    public void statusClicked(int position) {
-       /* int uniquePosition = -1;
-        if(position >= 0){
-            uniquePosition = (int) getItemId(position);
-        }
-        int oldType = MonsterViewPagerDialogFragment.getSelectedType();
-        int oldPos = MonsterViewPagerDialogFragment.getSelectedPosAdapter();
-        if (MonsterViewPagerDialogFragment.getSelectedType() == 0 && uniquePosition == MonsterViewPagerDialogFragment.getSelectedPosUnique()) {
-            MonsterViewPagerDialogFragment.setSelectedType(-1);
-            MonsterViewPagerDialogFragment.setSelectedPos(-1, -1);
-            MonsterViewPagerDialogFragment.setMonsterUri(null);
-            notifyItemChanged(position);
-        } else if (MonsterViewPagerDialogFragment.getSelectedType() == 0) {
-            Cursor cursor = getCursor();
-            cursor.moveToPosition(position);
-            int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            MonsterViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
-            MonsterViewPagerDialogFragment.setMonsterUri(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId));
-            if (oldType == 0) {
-                notifyItemChanged(oldPos);
-            }
-            notifyItemChanged(position);
-        } else if (position == -1) {
-            MonsterViewPagerDialogFragment.setSelectedType(-1);
-            MonsterViewPagerDialogFragment.setSelectedPos(-1, -1);
-            MonsterViewPagerDialogFragment.setMonsterUri(null);
-            if (oldType == 0) {
-                notifyItemChanged(oldPos);
-            }
-        } else {
-            Cursor cursor = getCursor();
-            cursor.moveToPosition(position);
-            int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-            MonsterViewPagerDialogFragment.setSelectedType(0);
-            MonsterViewPagerDialogFragment.setSelectedPos(uniquePosition, position);
-            MonsterViewPagerDialogFragment.setMonsterUri(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + monsterId));
-            notifyItemChanged(position);
-        }*/
     }
 
     @Override
@@ -134,18 +75,14 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         mAdapterCallback.onItemClick(position);
     }
 
-    public void onItemAdd(int position){
-        int uniquePosition = -1;
-        if (position >= 0) {
-            uniquePosition = (int) getItemId(position);
-        }
+    public void onItemAdd(int position) {
         Cursor cursor = getCursor();
         cursor.moveToPosition(position);
         int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
         MonsterViewPagerDialogFragment.addMonsterToList(Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + npcId));
     }
 
-    public void onItemRemove(int position){
+    public void onItemRemove(int position) {
         Cursor cursor = getCursor();
         cursor.moveToPosition(position);
         int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
@@ -157,8 +94,18 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         mAdapterCallback.onItemLongCLick(position);
     }
 
+    public void setSelectedPos(int position) {
+        this.selectedPos = position;
+        notifyItemChanged(position);
+    }
+
+    public int getSelectedPos() {
+        return selectedPos;
+    }
+
     @Override
     public void onMenuRefresh() {
+        mAdapterCallback.onMenuRefresh();
     }
 
     public Cursor getCursor() {
@@ -178,7 +125,6 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         private AdapterNavigationCallback mAdapterCallback;
         private ImageButton buttonPlus, buttonMinus;
         private TextView tvNumber;
-        private String identifier;
         private int numbers = 0;
 
         private RippleForegroundListener rippleForegroundListener = new RippleForegroundListener(R.id.card_view_monster);
@@ -196,21 +142,22 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             buttonMinus = (ImageButton) v.findViewById(R.id.buttonMinus);
             buttonPlus = (ImageButton) v.findViewById(R.id.buttonPlus);
             tvNumber = (TextView) v.findViewById(R.id.tvNumber);
-            if(isNavMode){
+            if (isNavMode) {
                 buttonMinus.setVisibility(View.GONE);
                 buttonPlus.setVisibility(View.GONE);
                 tvNumber.setVisibility(View.GONE);
-            }else{
+            } else {
                 tvNumber.setText(String.valueOf(numbers));
 
                 buttonMinus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         numbers--;
-                        if(numbers<0)
-                            numbers=0;
+                        if (numbers < 0)
+                            numbers = 0;
                         tvNumber.setText(String.valueOf(numbers));
                         onItemRemove(getAdapterPosition());
+                        onMenuRefresh();
                     }
                 });
 
@@ -218,10 +165,11 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
                     @Override
                     public void onClick(View v) {
                         numbers++;
-                        if(numbers>99)
-                            numbers=99;
+                        if (numbers > 99)
+                            numbers = 99;
                         tvNumber.setText(String.valueOf(numbers));
                         onItemAdd(getAdapterPosition());
+                        onMenuRefresh();
                     }
                 });
             }
@@ -231,7 +179,6 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             clicker.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    MonsterViewPagerDialogFragment.setSelectedPos((int)getItemId(), getAdapterPosition());
                     mAdapterCallback.onItemLongCLick(getAdapterPosition());
                     return true;
                 }
@@ -247,14 +194,12 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
 
         @Override
         public void bindCursor(Cursor cursor) {
-
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
-            itemView.setActivated(MonsterViewPagerDialogFragment.getSelectedType() == 0 && getItemId() == MonsterViewPagerDialogFragment.getSelectedPosUnique());
-            identifier = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+            itemView.setActivated(getAdapterPosition() == getSelectedPos());
         }
 
 

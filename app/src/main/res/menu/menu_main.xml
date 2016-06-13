@@ -32,4 +32,11 @@
         android:icon="@drawable/ic_action_book_white"
         app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/add_selected"
+        android:orderInCategory="100"
+        android:title="Done"
+        android:visible="false"
+        android:icon="@drawable/ic_done_white"
+        app:showAsAction="ifRoom" />
+
 </menu>

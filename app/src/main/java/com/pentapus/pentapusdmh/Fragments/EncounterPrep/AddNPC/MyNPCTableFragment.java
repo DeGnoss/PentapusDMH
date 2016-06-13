@@ -7,23 +7,17 @@ import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,15 +30,7 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
-import com.pentapus.pentapusdmh.MainActivity;
-import com.pentapus.pentapusdmh.NotifyChange;
 import com.pentapus.pentapusdmh.R;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MyNPCTableFragment extends Fragment implements
@@ -54,8 +40,6 @@ public class MyNPCTableFragment extends Fragment implements
     private static final String MODE = "modeUpdate";
     private static final String NPC_ID = "npcId";
 
-    private int sessionId;
-    private String sessionName;
     private RecyclerView myNPCRecyclerView;
     private ActionMode mActionMode;
     private MyNPCAdapter myNPCAdapter;
@@ -80,7 +64,6 @@ public class MyNPCTableFragment extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        //EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (this.getArguments() != null) {
@@ -93,8 +76,7 @@ public class MyNPCTableFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View tableView = inflater.inflate(R.layout.fragment_monster_table, container, false);
-        // insert a record
+        View tableView = inflater.inflate(R.layout.fragment_monster_table, container, false);
 
         myNPCRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -104,18 +86,13 @@ public class MyNPCTableFragment extends Fragment implements
         myNPCRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
         myNPCRecyclerView.setAdapter(myNPCAdapter);
-
-
-        //setUpItemTouchHelper();
-       // setUpAnimationDecoratorHelper();
-
-        // Inflate the layout for this fragment
         return tableView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        myNPCAdapter.setSelectedPos(-1);
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
 
@@ -124,14 +101,8 @@ public class MyNPCTableFragment extends Fragment implements
         }
     }
 
-
-    public int getSessionId() {
-        return sessionId;
-    }
-
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        //menu.findItem(R.id.campaign_settings).setVisible(true);
         menu.findItem(R.id.action_search).setVisible(true);
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -163,12 +134,10 @@ public class MyNPCTableFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
         String[] selectionArgs = new String[]{String.valueOf(campaignId)};
         String selection = DataBaseHandler.KEY_BELONGSTO + " = ?";
-        CursorLoader cursorLoader = new CursorLoader(this.getContext(),
+        return new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_NPC, DataBaseHandler.PROJECTION_NPC_TEMPLATE, selection, selectionArgs, null);
-        return cursorLoader;
     }
 
     @Override
@@ -185,20 +154,7 @@ public class MyNPCTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-
-        /*if(!isNavMode){
-            myNPCAdapter.statusClicked(position);
-        }else{
-            myNPCAdapter.statusClicked(-1);
-        }*/
-        //myNPCAdapter.statusClicked(position);
-        //myNPCAdapter.onItemAdd(position);
-        //EventBus.getDefault().post(new NotifyChange());
     }
-
-    /*public RecyclerView getMyNPCRecyclerView() {
-        return myNPCRecyclerView;
-    }*/
 
     @Override
     public void onItemLongCLick(final int position) {
@@ -206,19 +162,13 @@ public class MyNPCTableFragment extends Fragment implements
         mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                NPCViewPagerDialogFragment.setSelectedType(0);
-                NPCViewPagerDialogFragment.setHighlightedPos(position);
-                int oldPos = NPCViewPagerDialogFragment.getSelectedPosAdapter();
-                NPCViewPagerDialogFragment.setSelectedPos((int)myNPCAdapter.getItemId(position), position);
-                myNPCAdapter.notifyItemChanged(position);
-                myNPCAdapter.notifyItemChanged(oldPos);
-
                 ((NPCViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).setFabVisibility(false);
-
                 String title = "Selected: " + String.valueOf(position);
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
+                myNPCAdapter.setSelectedPos(position);
+                myNPCAdapter.notifyItemChanged(position);
                 return true;
             }
 
@@ -278,9 +228,8 @@ public class MyNPCTableFragment extends Fragment implements
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                NPCViewPagerDialogFragment.setHighlightedPos(-1);
-                NPCViewPagerDialogFragment.setSelectedPos(-1, -1);
-                myNPCRecyclerView.getAdapter().notifyItemChanged(position);
+                myNPCAdapter.setSelectedPos(-1);
+                myNPCAdapter.notifyItemChanged(position);
                 ((NPCViewPagerDialogFragment)getActivity().getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).setFabVisibility(true);
                 mActionMode = null;
             }
@@ -330,7 +279,6 @@ public class MyNPCTableFragment extends Fragment implements
                 }
             }
         };
-
         queryHandler.startQuery(
                 1, null,
                 pasteUri,
@@ -339,11 +287,6 @@ public class MyNPCTableFragment extends Fragment implements
                 null,
                 null
         );
-    }
-
-    @Subscribe
-    public void onMessageEvent(NotifyChange event){
-        myNPCAdapter.notifyDataSetChanged();
     }
 
     public void dismissActionMode(){

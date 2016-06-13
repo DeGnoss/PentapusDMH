@@ -32,10 +32,6 @@ public class MonsterManualTableFragment extends Fragment implements
 
     private static final String MODE = "modeUpdate";
 
-
-    private int sessionId;
-    private String sessionName;
-
     private RecyclerView myMonsterRecyclerView;
     private ActionMode mActionMode;
     private boolean isNavMode;
@@ -72,7 +68,6 @@ public class MonsterManualTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_monster_table, container, false);
-        // insert a record
 
         myMonsterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -82,25 +77,19 @@ public class MonsterManualTableFragment extends Fragment implements
         myMonsterRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity()));
         myMonsterRecyclerView.setAdapter(myMonsterAdapter);
-
         return tableView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //myMonsterAdapter.statusClicked(-1);
-        ((MonsterViewPagerDialogFragment)getParentFragment()).setFabIcon(true);
+        myMonsterAdapter.setSelectedPos(-1);
+        ((MonsterViewPagerDialogFragment) getParentFragment()).setFabIcon(true);
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
         } else {
             getLoaderManager().restartLoader(0, null, this);
         }
-    }
-
-
-    public int getSessionId() {
-        return sessionId;
     }
 
     @Override
@@ -139,9 +128,8 @@ public class MonsterManualTableFragment extends Fragment implements
 
         String[] selectionArgs = new String[]{String.valueOf(1)};
         String selection = DataBaseHandler.KEY_MM + " = ?";
-        CursorLoader cursorLoader = new CursorLoader(this.getContext(),
+        return new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER_TEMPLATE, selection, selectionArgs, null);
-        return cursorLoader;
     }
 
     @Override
@@ -157,11 +145,6 @@ public class MonsterManualTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
-        /*if (!isNavMode) {
-            myMonsterAdapter.statusClicked(position);
-        } else {
-            myMonsterAdapter.statusClicked(-1);
-        }*/
     }
 
     @Override
@@ -172,8 +155,8 @@ public class MonsterManualTableFragment extends Fragment implements
         return myMonsterRecyclerView;
     }
 
-    public void dismissActionMode(){
-        if(mActionMode!= null){
+    public void dismissActionMode() {
+        if (mActionMode != null) {
             mActionMode.finish();
         }
     }

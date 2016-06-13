@@ -129,21 +129,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreateOptionsMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-       /* final MenuItem item = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        return true;*/
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -191,6 +182,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .addToBackStack("F_SPELL_PAGER")
                     .commit();
             return true;
+        } else if(id == R.id.add_selected){
+            if(getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER") != null){
+                ((NPCViewPagerDialogFragment)getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).pasteNPC();
+            }else if(getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER") != null){
+                ((MonsterViewPagerDialogFragment)getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).pasteMonster();
+            }
+            getSupportFragmentManager().popBackStack();
         }
 
         return super.onOptionsItemSelected(item);
@@ -794,7 +792,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void setFabIcon(boolean isAdd) {
         if (isAdd) {
-            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_black));
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add));
         } else {
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_done));
         }

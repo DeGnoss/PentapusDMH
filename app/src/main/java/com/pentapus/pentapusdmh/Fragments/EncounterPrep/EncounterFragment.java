@@ -65,12 +65,6 @@ public class EncounterFragment extends Fragment implements
     private static final String MONSTER_ID = "monsterId";
     private static final String NPC_ID = "npcId";
 
-/*
-    @BindView(R.id.loc_item_detail_floatmenu_btn_npc) FloatingActionButton btnNpc;
-    @BindView(R.id.loc_item_detail_floatmenu_btn_monster) FloatingActionButton btnMonster;
-    @BindView(R.id.loc_item_detail_floatmenu_btn_close) FloatingActionButton btnClose;
-    @BindView(R.id.fabEncounter) FloatingActionButton fab;*/
-
     private ActionMode mActionMode;
 
     private int encounterId;

@@ -13,4 +13,8 @@
     <color name="bpBlue">#33b5e5</color>
     <color name="done_text_color_disabled">#cccccc</color>
     <color name="bpTransparent_black">#7f000000</color>
+
+    <color name="default_divider_color_dark">#28ffffff</color>
+    <color name="default_button_background_pressed_dark">#46c5c1ff</color>
+    <color name="default_button_background_dark">#00000000</color>
 </resources>

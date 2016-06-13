@@ -49,7 +49,6 @@ public class MonsterViewPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-
     public void setImageUri(File[] imageUri) {
         this.imageUri = imageUri;
         notifyDataSetChanged();
