@@ -100,6 +100,8 @@ public class TrackerFragment extends Fragment implements
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
             chars = new TrackerAdapter((AppCompatActivity) getActivity(), getContext());
+            getLoaderManager().initLoader(0, null, this);
+            getLoaderManager().initLoader(1, null, this);
         }else{
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Uri.class, new UriDeserializer())
@@ -110,8 +112,6 @@ public class TrackerFragment extends Fragment implements
             chars = new TrackerAdapter((AppCompatActivity) getActivity(), getContext(), savedList);
         }
         setHasOptionsMenu(true);
-        getLoaderManager().initLoader(0, null, this);
-        getLoaderManager().initLoader(1, null, this);
     }
 
     @Override
@@ -215,6 +215,7 @@ public class TrackerFragment extends Fragment implements
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
         ((MainActivity)getActivity()).setFabVisibility(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -310,6 +311,8 @@ public class TrackerFragment extends Fragment implements
 
 
                 }
+
+                //Fixme: save entered initiative while browsing spells
                 if(!SettingsFragment.isAutoRollEnabled(getContext())) {
                     handler.sendEmptyMessage(MSG_SHOW_DIALOG);
                 }else{

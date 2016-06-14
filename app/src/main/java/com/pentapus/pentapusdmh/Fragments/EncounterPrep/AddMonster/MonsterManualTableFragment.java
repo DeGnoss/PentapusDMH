@@ -30,7 +30,7 @@ public class MonsterManualTableFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterNavigationCallback {
 
 
-    private static final String MODE = "modeUpdate";
+    private static final String NPC_ID = "npcId";
 
     private RecyclerView myMonsterRecyclerView;
     private ActionMode mActionMode;
@@ -145,6 +145,13 @@ public class MonsterManualTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
+        dismissActionMode();
+        Cursor cursor = myMonsterAdapter.getCursor();
+        cursor.moveToPosition(position);
+        int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        Bundle bundle = new Bundle();
+        bundle.putInt(NPC_ID, monsterId);
+        displayMonster(bundle);
     }
 
     @Override
@@ -164,5 +171,15 @@ public class MonsterManualTableFragment extends Fragment implements
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();
+    }
+
+    private void displayMonster(Bundle bundle) {
+        Fragment fragment;
+        fragment = new DetailMonsterFragment();
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ContainerFrame, fragment, "F_DETAIL_MONSTER")
+                .addToBackStack("F_DETAIL_MONSTER")
+                .commit();
     }
 }

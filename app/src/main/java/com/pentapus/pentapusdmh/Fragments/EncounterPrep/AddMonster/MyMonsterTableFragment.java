@@ -37,6 +37,7 @@ public class MyMonsterTableFragment extends Fragment implements
 
     private static final String MODE = "modeUpdate";
     private static final String MONSTER_ID = "monsterId";
+    private static final String NPC_ID = "npcId";
 
     private boolean isNavMode;
     private RecyclerView myMonsterRecyclerView;
@@ -149,6 +150,13 @@ public class MyMonsterTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
+        dismissActionMode();
+        Cursor cursor = myMonsterAdapter.getCursor();
+        cursor.moveToPosition(position);
+        int monsterId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        Bundle bundle = new Bundle();
+        bundle.putInt(NPC_ID, monsterId);
+        displayMonster(bundle);
     }
 
     @Override
@@ -237,6 +245,16 @@ public class MyMonsterTableFragment extends Fragment implements
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.ContainerFrame, fragment, "FE_MYMONSTER")
                 .addToBackStack("FE_MYMONSTER")
+                .commit();
+    }
+
+    private void displayMonster(Bundle bundle) {
+        Fragment fragment;
+        fragment = new DetailMonsterFragment();
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ContainerFrame, fragment, "F_DETAIL_MONSTER")
+                .addToBackStack("F_DETAIL_MONSTER")
                 .commit();
     }
 

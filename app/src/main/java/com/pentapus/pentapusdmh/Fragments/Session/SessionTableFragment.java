@@ -337,8 +337,6 @@ public class SessionTableFragment extends Fragment implements
         Fragment fragment;
         fragment = new EncounterTableFragment();
         fragment.setArguments(bundle);
-        fragment.setEnterTransition(new Slide(Gravity.RIGHT));
-        setExitTransition(new Slide(Gravity.LEFT));
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.ContainerFrame, fragment, "FT_ENCOUNTER")
                 .addToBackStack("FT_ENCOUNTER")

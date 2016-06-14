@@ -154,6 +154,13 @@ public class MyNPCTableFragment extends Fragment implements
 
     @Override
     public void onItemClick(int position) {
+        dismissActionMode();
+        Cursor cursor = myNPCAdapter.getCursor();
+        cursor.moveToPosition(position);
+        int npcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        Bundle bundle = new Bundle();
+        bundle.putInt(NPC_ID, npcId);
+        displayNPC(bundle);
     }
 
     @Override
@@ -302,5 +309,15 @@ public class MyNPCTableFragment extends Fragment implements
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();
+    }
+
+    private void displayNPC(Bundle bundle) {
+        Fragment fragment;
+        fragment = new DetailNPCFragment();
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ContainerFrame, fragment, "F_DETAIL_NPC")
+                .addToBackStack("F_DETAIL_NPC")
+                .commit();
     }
 }

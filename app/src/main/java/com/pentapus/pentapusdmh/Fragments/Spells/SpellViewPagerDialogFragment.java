@@ -218,6 +218,7 @@ public class SpellViewPagerDialogFragment extends Fragment{
         menu.findItem(R.id.play_mode).setVisible(false);
         menu.findItem(R.id.spell_book).setVisible(false);
         getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
 
 /*
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);

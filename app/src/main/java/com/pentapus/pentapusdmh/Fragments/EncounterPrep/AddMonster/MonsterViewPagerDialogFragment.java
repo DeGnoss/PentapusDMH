@@ -199,7 +199,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
         pagerAdapter = new MonsterViewPagerAdapter(getChildFragmentManager(), getContext(), navMode, id);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(2);
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
     }

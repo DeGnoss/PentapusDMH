@@ -217,7 +217,7 @@ public class PHBSpellTableFragment extends Fragment implements
         fragment = new DetailSpellFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.ContainerFrame, fragment, "FD_SPELL")
+                .add(R.id.ContainerFrame, fragment, "FD_SPELL")
                 .addToBackStack("FD_SPELL")
                 .commit();
     }

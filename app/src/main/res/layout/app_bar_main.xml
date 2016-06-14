@@ -29,9 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add"
-        android:transitionName="fabTransition"/>
+        app:elevation="4dp"
+        app:srcCompat="@drawable/ic_action_add" />
 
 </android.support.design.widget.CoordinatorLayout>

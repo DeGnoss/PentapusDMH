@@ -98,13 +98,8 @@ public class EncounterTableFragment extends Fragment implements
             sessionName = getArguments().getString(SESSION_NAME);
         }
         mEncounterAdapter = new EncounterAdapter(getContext(), this);
-        setupWindowAnimations();
     }
 
-    private void setupWindowAnimations() {
-        Slide slide = (Slide) TransitionInflater.from(getContext()).inflateTransition(R.transition.slide);
-        getActivity().getWindow().setExitTransition(slide);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -333,7 +328,6 @@ public class EncounterTableFragment extends Fragment implements
         Fragment fragment;
         fragment = new EncounterEditFragment();
         fragment.setArguments(bundle);
-        fragment.setEnterTransition(new Explode());
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.ContainerFrame, fragment, "FE_ENCOUNTER")
                 .addToBackStack("FE_ENCOUNTER")
