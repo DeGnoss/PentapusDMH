@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddNPC.DetailNPCFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.MainActivity;
@@ -392,8 +393,12 @@ public class PcTableFragment extends Fragment implements
         if(mActionMode!= null){
             mActionMode.finish();
         }
-        //TODO: SOMETHING ON CLICK
-
+        Cursor cursor = mPCAdapter.getCursor();
+        cursor.moveToPosition(position);
+        int pcId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        Bundle bundle = new Bundle();
+        bundle.putInt(PC_ID, pcId);
+        displayPC(bundle);
     }
 
     @Override
@@ -480,6 +485,16 @@ public class PcTableFragment extends Fragment implements
     @Override
     public void onMenuRefresh() {
         getActivity().invalidateOptionsMenu();
+    }
+
+    private void displayPC(Bundle bundle) {
+        Fragment fragment;
+        fragment = new DetailPCFragment();
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ContainerFrame, fragment, "F_DETAIL_PC")
+                .addToBackStack("F_DETAIL_PC")
+                .commit();
     }
 
 }

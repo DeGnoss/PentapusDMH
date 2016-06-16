@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 e.printStackTrace();
             }
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
+                    .replace(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
                     .addToBackStack("F_SPELL_PAGER")
                     .commit();
             return true;

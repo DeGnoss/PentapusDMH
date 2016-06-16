@@ -56,7 +56,7 @@ public class TrackerFragment extends Fragment implements
     private static final String HP = "hp";
     private static final String ABILITIES = "abilities";
     private RecyclerView mRecyclerView;
-    private boolean pendingIntroAnimation;
+    private boolean pendingIntroAnimation, firstStartUp;
     private int enteredInitiative;
     private int dialogCounter = 0;
     List<PcListElement> pcList = new ArrayList<>();
@@ -97,11 +97,13 @@ public class TrackerFragment extends Fragment implements
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         encounterId = SharedPrefsHelper.loadEncounterId(getContext());
 
+        if(!firstStartUp){
+            getLoaderManager().initLoader(0, null, this);
+            getLoaderManager().initLoader(1, null, this);
+        }
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
             chars = new TrackerAdapter((AppCompatActivity) getActivity(), getContext());
-            getLoaderManager().initLoader(0, null, this);
-            getLoaderManager().initLoader(1, null, this);
         }else{
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Uri.class, new UriDeserializer())
@@ -111,6 +113,7 @@ public class TrackerFragment extends Fragment implements
             List<TrackerInfoCard> savedList = gson.fromJson(savedInstanceState.getString("savedList"), type);
             chars = new TrackerAdapter((AppCompatActivity) getActivity(), getContext(), savedList);
         }
+        setRetainInstance(true);
         setHasOptionsMenu(true);
     }
 
@@ -313,8 +316,9 @@ public class TrackerFragment extends Fragment implements
                 }
 
                 //Fixme: save entered initiative while browsing spells
-                if(!SettingsFragment.isAutoRollEnabled(getContext())) {
+                if(!SettingsFragment.isAutoRollEnabled(getContext()) && !firstStartUp) {
                     handler.sendEmptyMessage(MSG_SHOW_DIALOG);
+                    firstStartUp = true;
                 }else{
                     chars.sortCharacterList();
                 }

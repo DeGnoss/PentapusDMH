@@ -67,7 +67,6 @@ public class DetailMonsterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(npcName);
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_monster_detail, container, false);
         //FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) charEditView.getLayoutParams();
