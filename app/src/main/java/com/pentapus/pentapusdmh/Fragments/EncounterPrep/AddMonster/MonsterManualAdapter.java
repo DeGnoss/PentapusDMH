@@ -120,7 +120,6 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
     public class MyMonsterViewHolder extends RecyclerViewCursorViewHolder {
         public View view;
         protected TextView vName;
-        protected TextView vInfo;
         protected CardView cardViewTracker;
         protected View vIndicatorLine;
         protected ImageView ivIcon;
@@ -141,7 +140,6 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
             vName = (TextView) v.findViewById(R.id.name_monster);
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_monster);
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon_monster);
-            vInfo = (TextView) v.findViewById(R.id.info_monster);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_monster);
             buttonMinus = (ImageButton) v.findViewById(R.id.buttonMinus);
             buttonPlus = (ImageButton) v.findViewById(R.id.buttonPlus);
@@ -201,9 +199,13 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
 
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
-            ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
+            String uriTemp = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON));
+            if(uriTemp != null && !uriTemp.isEmpty()){
+                ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
+            }else{
+                ivIcon.setImageURI(Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight"));
+            }
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-            vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
         }
 
 

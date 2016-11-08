@@ -43,9 +43,109 @@ public class DataBaseHandler extends SQLiteAssetHelper {
 
 
     //Encounter & NPC Table
-    private static final String KEY_CR = "cr";
-    private static final String KEY_XP = "xp";
+    public static final String KEY_CR = "cr";
+    public static final String KEY_XP = "xp";
     public static final String KEY_INITIATIVEBONUS = "initiativebonus";
+
+
+    //Monsters
+    public static final String KEY_HPROLL = "hproll";
+    public static final String KEY_ACTYPE = "actype";
+    public static final String KEY_AC2 = "ac2";
+    public static final String KEY_AC2TYPE = "ac2type";
+    public static final String KEY_SIZE = "size";
+    public static final String KEY_SPEED = "speed";
+    public static final String KEY_SOURCEPAGE = "sourcepage";
+    public static final String KEY_MULTIATTACK = "multiattack";
+
+    public static final String KEY_ATK1NAME = "atk1name";
+    public static final String KEY_ATK1DESC = "atk1desc";
+    public static final String KEY_ATK1MOD = "atk1mod";
+    public static final String KEY_ATK1DMG1ROLL = "atk1dmg1roll";
+    public static final String KEY_ATK1DMG1TYPE = "atk1dmg1type";
+    public static final String KEY_ATK1DMG2ROLL = "atk1dmg2roll";
+    public static final String KEY_ATK1DMG2TYPE = "atk1dmg2type";
+    public static final String KEY_ATK1AUTOROLL = "atk1autoroll";
+    public static final String KEY_ATK1ADDITIONAL = "atk1additional";
+
+    public static final String KEY_ATK2NAME = "atk2name";
+    public static final String KEY_ATK2DESC = "atk2desc";
+    public static final String KEY_ATK2MOD = "atk2mod";
+    public static final String KEY_ATK2DMG1ROLL = "atk2dmg1roll";
+    public static final String KEY_ATK2DMG1TYPE = "atk2dmg1type";
+    public static final String KEY_ATK2DMG2ROLL = "atk2dmg2roll";
+    public static final String KEY_ATK2DMG2TYPE = "atk2dmg2type";
+    public static final String KEY_ATK2AUTOROLL = "atk2autoroll";
+    public static final String KEY_ATK2ADDITIONAL = "atk2additional";
+
+    public static final String KEY_ATK3NAME = "atk3name";
+    public static final String KEY_ATK3DESC = "atk3desc";
+    public static final String KEY_ATK3MOD = "atk3mod";
+    public static final String KEY_ATK3DMG1ROLL = "atk3dmg1roll";
+    public static final String KEY_ATK3DMG1TYPE = "atk3dmg1type";
+    public static final String KEY_ATK3DMG2ROLL = "atk3dmg2roll";
+    public static final String KEY_ATK3DMG2TYPE = "atk3dmg2type";
+    public static final String KEY_ATK3AUTOROLL = "atk3autoroll";
+    public static final String KEY_ATK3ADDITIONAL = "atk3additional";
+
+    public static final String KEY_ATK4NAME = "atk4name";
+    public static final String KEY_ATK4DESC = "atk4desc";
+    public static final String KEY_ATK4MOD = "atk4mod";
+    public static final String KEY_ATK4DMG1ROLL = "atk4dmg1roll";
+    public static final String KEY_ATK4DMG1TYPE = "atk4dmg1type";
+    public static final String KEY_ATK4DMG2ROLL = "atk4dmg2roll";
+    public static final String KEY_ATK4DMG2TYPE = "atk4dmg2type";
+    public static final String KEY_ATK4AUTOROLL = "atk4autoroll";
+    public static final String KEY_ATK4ADDITIONAL = "atk4additional";
+
+    public static final String KEY_REACTION1NAME = "reaction1name";
+    public static final String KEY_REACTION1DESC = "reaction1desc";
+
+    public static final String KEY_ABILITY1NAME = "ability1name";
+    public static final String KEY_ABILITY1DESC = "ability1desc";
+    public static final String KEY_ABILITY2NAME = "ability2name";
+    public static final String KEY_ABILITY2DESC = "ability2desc";
+    public static final String KEY_ABILITY3NAME = "ability3name";
+    public static final String KEY_ABILITY3DESC = "ability3desc";
+    public static final String KEY_ABILITY4NAME = "ability4name";
+    public static final String KEY_ABILITY4DESC = "ability4desc";
+    public static final String KEY_ABILITY5NAME = "ability5name";
+    public static final String KEY_ABILITY5DESC = "ability5desc";
+
+    public static final String KEY_ACROBATICS = "acrobatics";
+    public static final String KEY_ANIMALHANDLING = "animalhandling";
+    public static final String KEY_ARCANA = "arcana";
+    public static final String KEY_ATHLETICS = "athletics";
+    public static final String KEY_DECEPTION = "deception";
+    public static final String KEY_HISTORY = "history";
+    public static final String KEY_INSIGHT = "insight";
+    public static final String KEY_INTIMIDATION = "intimidation";
+    public static final String KEY_INVESTIGATION = "investigation";
+    public static final String KEY_MEDICINE = "medicine";
+    public static final String KEY_NATURE = "nature";
+    public static final String KEY_PERCEPTION = "perception";
+    public static final String KEY_PERFORMANCE = "performance";
+    public static final String KEY_PERSUASION = "persuasion";
+    public static final String KEY_RELIGION = "religion";
+    public static final String KEY_SLEIGHTOFHAND = "sleightofhand";
+    public static final String KEY_STEALTH = "stealth";
+    public static final String KEY_SURVIVAL = "survival";
+
+    public static final String KEY_STSTR = "ststr";
+    public static final String KEY_STDEX = "stdex";
+    public static final String KEY_STCON = "stcon";
+    public static final String KEY_STINT = "stint";
+    public static final String KEY_STWIS = "stwis";
+    public static final String KEY_STCHA = "stcha";
+
+    public static final String KEY_SENSES = "senses";
+    public static final String KEY_ALIGNMENT = "alignment";
+    public static final String KEY_LANGUAGES = "languages";
+
+    public static final String KEY_DMGRES = "dmgres";
+    public static final String KEY_DMGIM = "dmgim";
+    public static final String KEY_DMGVUL = "dmgvul";
+    public static final String KEY_CONIM = "conim";
 
 
 
@@ -131,26 +231,114 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_TYPE
     };
 
+
+
     public static final String[] PROJECTION_MONSTER_TEMPLATE = new String[]{
             DataBaseHandler.KEY_ROWID,
             DataBaseHandler.KEY_NAME,
-            DataBaseHandler.KEY_INFO,
-            DataBaseHandler.KEY_INITIATIVEBONUS,
+            DataBaseHandler.KEY_CR,
+            DataBaseHandler.KEY_TYPE,
             DataBaseHandler.KEY_MAXHP,
+            DataBaseHandler.KEY_HPROLL,
+            DataBaseHandler.KEY_INITIATIVEBONUS,
             DataBaseHandler.KEY_AC,
+            DataBaseHandler.KEY_ACTYPE,
+            DataBaseHandler.KEY_AC2,
+            DataBaseHandler.KEY_AC2TYPE,
+            DataBaseHandler.KEY_XP,
+            DataBaseHandler.KEY_SIZE,
+            DataBaseHandler.KEY_SPEED,
             DataBaseHandler.KEY_STRENGTH,
             DataBaseHandler.KEY_DEXTERITY,
             DataBaseHandler.KEY_CONSTITUTION,
             DataBaseHandler.KEY_INTELLIGENCE,
             DataBaseHandler.KEY_WISDOM,
             DataBaseHandler.KEY_CHARISMA,
+            DataBaseHandler.KEY_SOURCE,
+            DataBaseHandler.KEY_SOURCEPAGE,
+            DataBaseHandler.KEY_MULTIATTACK,
+            DataBaseHandler.KEY_ATK1NAME,
+            DataBaseHandler.KEY_ATK1DESC,
+            DataBaseHandler.KEY_ATK1MOD,
+            DataBaseHandler.KEY_ATK1DMG1ROLL,
+            DataBaseHandler.KEY_ATK1DMG1TYPE,
+            DataBaseHandler.KEY_ATK1DMG2ROLL,
+            DataBaseHandler.KEY_ATK1DMG2TYPE,
+            DataBaseHandler.KEY_ATK1AUTOROLL,
+            DataBaseHandler.KEY_ATK1ADDITIONAL,
+            DataBaseHandler.KEY_ATK2NAME,
+            DataBaseHandler.KEY_ATK2DESC,
+            DataBaseHandler.KEY_ATK2MOD,
+            DataBaseHandler.KEY_ATK2DMG1ROLL,
+            DataBaseHandler.KEY_ATK2DMG1TYPE,
+            DataBaseHandler.KEY_ATK2DMG2ROLL,
+            DataBaseHandler.KEY_ATK2DMG2TYPE,
+            DataBaseHandler.KEY_ATK2AUTOROLL,
+            DataBaseHandler.KEY_ATK2ADDITIONAL,
+            DataBaseHandler.KEY_ATK3NAME,
+            DataBaseHandler.KEY_ATK3DESC,
+            DataBaseHandler.KEY_ATK3MOD,
+            DataBaseHandler.KEY_ATK3DMG1ROLL,
+            DataBaseHandler.KEY_ATK3DMG1TYPE,
+            DataBaseHandler.KEY_ATK3DMG2ROLL,
+            DataBaseHandler.KEY_ATK3DMG2TYPE,
+            DataBaseHandler.KEY_ATK3AUTOROLL,
+            DataBaseHandler.KEY_ATK3ADDITIONAL,
+            DataBaseHandler.KEY_ATK4NAME,
+            DataBaseHandler.KEY_ATK4DESC,
+            DataBaseHandler.KEY_ATK4MOD,
+            DataBaseHandler.KEY_ATK4DMG1ROLL,
+            DataBaseHandler.KEY_ATK4DMG1TYPE,
+            DataBaseHandler.KEY_ATK4DMG2ROLL,
+            DataBaseHandler.KEY_ATK4DMG2TYPE,
+            DataBaseHandler.KEY_ATK4AUTOROLL,
+            DataBaseHandler.KEY_ATK4ADDITIONAL,
+            DataBaseHandler.KEY_REACTION1NAME,
+            DataBaseHandler.KEY_REACTION1DESC,
+            DataBaseHandler.KEY_ABILITY1NAME,
+            DataBaseHandler.KEY_ABILITY1DESC,
+            DataBaseHandler.KEY_ABILITY2NAME,
+            DataBaseHandler.KEY_ABILITY2DESC,
+            DataBaseHandler.KEY_ABILITY3NAME,
+            DataBaseHandler.KEY_ABILITY3DESC,
+            DataBaseHandler.KEY_ABILITY4NAME,
+            DataBaseHandler.KEY_ABILITY4DESC,
+            DataBaseHandler.KEY_ABILITY5NAME,
+            DataBaseHandler.KEY_ABILITY5DESC,
+            DataBaseHandler.KEY_ACROBATICS,
+            DataBaseHandler.KEY_ANIMALHANDLING,
+            DataBaseHandler.KEY_ARCANA,
+            DataBaseHandler.KEY_ATHLETICS,
+            DataBaseHandler.KEY_DECEPTION,
+            DataBaseHandler.KEY_HISTORY,
+            DataBaseHandler.KEY_INSIGHT,
+            DataBaseHandler.KEY_INTIMIDATION,
+            DataBaseHandler.KEY_INVESTIGATION,
+            DataBaseHandler.KEY_MEDICINE,
+            DataBaseHandler.KEY_NATURE,
+            DataBaseHandler.KEY_PERCEPTION,
+            DataBaseHandler.KEY_PERFORMANCE,
+            DataBaseHandler.KEY_PERSUASION,
+            DataBaseHandler.KEY_RELIGION,
+            DataBaseHandler.KEY_SLEIGHTOFHAND,
+            DataBaseHandler.KEY_STEALTH,
+            DataBaseHandler.KEY_SURVIVAL,
+            DataBaseHandler.KEY_STSTR,
+            DataBaseHandler.KEY_STDEX,
+            DataBaseHandler.KEY_STCON,
+            DataBaseHandler.KEY_STINT,
+            DataBaseHandler.KEY_STWIS,
+            DataBaseHandler.KEY_STCHA,
+            DataBaseHandler.KEY_SENSES,
+            DataBaseHandler.KEY_ALIGNMENT,
+            DataBaseHandler.KEY_LANGUAGES,
+            DataBaseHandler.KEY_DMGRES,
+            DataBaseHandler.KEY_DMGIM,
+            DataBaseHandler.KEY_DMGVUL,
+            DataBaseHandler.KEY_CONIM,
             DataBaseHandler.KEY_ICON,
-            DataBaseHandler.KEY_TYPE,
-            DataBaseHandler.KEY_MM,
-            DataBaseHandler.KEY_ACTIONS,
-            DataBaseHandler.KEY_ABILITIES
+            DataBaseHandler.KEY_MM
     };
-
 
 
     public static final String[] PROJECTION_NPC_TEMPLATE = new String[]{
