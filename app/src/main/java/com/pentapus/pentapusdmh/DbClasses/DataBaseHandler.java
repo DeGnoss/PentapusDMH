@@ -156,6 +156,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_HP = "hp";
     public static final String KEY_AC = "ac";
     public static final String KEY_TYPE = "type";
+    public static final String KEY_MONSTERTYPE = "monstertype";
     public static final String KEY_ACTIONS = "actions";
     public static final String KEY_ABILITIES = "abilities";
 
@@ -217,7 +218,6 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String[] PROJECTION_ENCOUNTERPREP = new String[]{
             DataBaseHandler.KEY_ROWID,
             DataBaseHandler.KEY_NAME,
-            DataBaseHandler.KEY_INFO,
             DataBaseHandler.KEY_INITIATIVEBONUS,
             DataBaseHandler.KEY_MAXHP,
             DataBaseHandler.KEY_AC,
@@ -238,6 +238,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_NAME,
             DataBaseHandler.KEY_CR,
             DataBaseHandler.KEY_TYPE,
+            DataBaseHandler.KEY_MONSTERTYPE,
             DataBaseHandler.KEY_MAXHP,
             DataBaseHandler.KEY_HPROLL,
             DataBaseHandler.KEY_INITIATIVEBONUS,

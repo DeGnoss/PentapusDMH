@@ -171,7 +171,6 @@ public class MyMonsterEditFragment extends Fragment {
         String myCharisma = etChar.getText().toString();
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, myName);
-        values.put(DataBaseHandler.KEY_INFO, myInfo);
         values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
         values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
         values.put(DataBaseHandler.KEY_AC, myAc);

@@ -148,7 +148,7 @@ public class DetailMonsterFragment extends Fragment {
             cursor.moveToFirst();
             //Name & Type
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-            Spanned myType = Html.fromHtml("<i>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)) + ", " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT)) + "</i>");
+            Spanned myType = Html.fromHtml("<i>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE)) + ", " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT)) + "</i>");
 
             //HP, AC & Speed
             Spanned myHp = Html.fromHtml("<b>Hit Points </b>" +cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)) + " (" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_HPROLL)) + ")");

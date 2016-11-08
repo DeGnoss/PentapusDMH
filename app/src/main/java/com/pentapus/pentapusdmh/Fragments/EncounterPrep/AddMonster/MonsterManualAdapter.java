@@ -197,7 +197,7 @@ public class MonsterManualAdapter extends RecyclerViewCursorAdapter<MonsterManua
         @Override
         public void bindCursor(Cursor cursor) {
 
-            type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+            //type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
             String uriTemp = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON));
             if(uriTemp != null && !uriTemp.isEmpty()){
