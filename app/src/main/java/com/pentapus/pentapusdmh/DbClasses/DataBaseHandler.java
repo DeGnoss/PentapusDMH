@@ -48,6 +48,8 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_INITIATIVEBONUS = "initiativebonus";
 
 
+
+
     //PC & NPC Table
     public static final String KEY_MM = "mm";
     public static final String KEY_MAXHP = "maxhp";

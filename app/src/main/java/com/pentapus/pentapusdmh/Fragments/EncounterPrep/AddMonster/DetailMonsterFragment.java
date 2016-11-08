@@ -99,7 +99,7 @@ public class DetailMonsterFragment extends Fragment {
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + id);
         Cursor cursor = getContext().getContentResolver().query(uri, DataBaseHandler.PROJECTION_MONSTER_TEMPLATE, null, null,
                 null);
-        if (cursor != null) {
+        if (cursor != null && cursor.moveToFirst()) {
             cursor.moveToFirst();
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
             String myInfo = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
