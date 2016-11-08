@@ -98,6 +98,7 @@ public class TrackerFragment extends Fragment implements
         encounterId = SharedPrefsHelper.loadEncounterId(getContext());
 
         if(!firstStartUp){
+            SharedPrefsHelper.saveTrackerList(getContext(), "");
             getLoaderManager().initLoader(0, null, this);
             getLoaderManager().initLoader(1, null, this);
         }
@@ -213,12 +214,33 @@ public class TrackerFragment extends Fragment implements
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriSerializer())
+                .create();
+        String json = gson.toJson(chars.getCharacterList());
+        SharedPrefsHelper.saveTrackerList(getContext(), json);
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
         ((MainActivity)getActivity()).setFabVisibility(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
         getActivity().invalidateOptionsMenu();
+        String trackerList = SharedPrefsHelper.loadTrackerList(getContext());
+        if(!trackerList.equals("")){
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Uri.class, new UriDeserializer())
+                    .create();
+            Type type = new TypeToken<List<TrackerInfoCard>>() {
+            }.getType();
+            List<TrackerInfoCard> savedList = gson.fromJson(trackerList, type);
+            chars.setCharacterList(savedList);
+            chars.notifyDataSetChanged();
+        }
     }
 
     @Override

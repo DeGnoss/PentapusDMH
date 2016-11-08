@@ -82,4 +82,16 @@ public class SharedPrefsHelper {
         return sp.getBoolean("spellsource_scag", true); //0 is the default value
     }
 
+    public static void saveTrackerList(Context context, String trackerList){
+        sp = context.getApplicationContext().getSharedPreferences(settings, 0);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("trackerList" ,trackerList);
+        editor.apply();
+    }
+
+    public static String loadTrackerList(Context context){
+        sp = context.getApplicationContext().getSharedPreferences(settings, 0);
+        return sp.getString("trackerList", ""); //0 is the default value
+    }
+
 }

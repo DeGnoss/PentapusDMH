@@ -711,7 +711,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     fragmentManager.popBackStack();
                 }
                 transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
+                transaction.add(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
                         .addToBackStack("NAV_F")
                         .commit();
                 break;
