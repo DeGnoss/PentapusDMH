@@ -28,7 +28,6 @@ import android.widget.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.pentapus.pentapusdmh.AdapterCallback;
 import com.pentapus.pentapusdmh.Fragments.Preferences.SettingsFragment;
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
@@ -36,7 +35,6 @@ import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.HelperClasses.UriDeserializer;
 import com.pentapus.pentapusdmh.HelperClasses.UriSerializer;
-import com.pentapus.pentapusdmh.HelperClasses.Utils;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
@@ -178,7 +176,7 @@ public class TrackerFragment extends Fragment implements
         ViewPagerDialogFragment newFragment = new ViewPagerDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ID, id);
-        bundle.putIntArray(ABILITIES, chars.getAbilities(id));
+        bundle.putIntArray(ABILITIES, chars.getAbilityMods(id));
         newFragment.setArguments(bundle);
         newFragment.setTargetFragment(this, 0);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -284,6 +282,107 @@ public class TrackerFragment extends Fragment implements
                     int wisdom = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
                     int charisma = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
                     int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+
+                    String monsterType = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE));
+                    String acType = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE));
+                    int xp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_XP));
+                    String size = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SIZE));
+                    String source = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SOURCE));
+                    int sourcepage = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SOURCEPAGE));
+                    String speed = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SPEED));
+                    String multiattack = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MULTIATTACK));
+
+                    String atk1name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1NAME));
+                    String atk1desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DESC));
+                    int atk1mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1MOD));
+                    String atk1dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG1ROLL));
+                    String atk1dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG1TYPE));
+                    String atk1dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG2ROLL));
+                    String atk1dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG2TYPE));
+                    int atk1autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1AUTOROLL));
+                    int atk1additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1ADDITIONAL));
+
+                    String atk2name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2NAME));
+                    String atk2desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DESC));
+                    int atk2mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2MOD));
+                    String atk2dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG1ROLL));
+                    String atk2dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG1TYPE));
+                    String atk2dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG2ROLL));
+                    String atk2dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG2TYPE));
+                    int atk2autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2AUTOROLL));
+                    int atk2additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2ADDITIONAL));
+
+                    String atk3name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3NAME));
+                    String atk3desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DESC));
+                    int atk3mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3MOD));
+                    String atk3dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG1ROLL));
+                    String atk3dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG1TYPE));
+                    String atk3dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG2ROLL));
+                    String atk3dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG2TYPE));
+                    int atk3autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3AUTOROLL));
+                    int atk3additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3ADDITIONAL));
+
+                    String atk4name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4NAME));
+                    String atk4desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DESC));
+                    int atk4mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4MOD));
+                    String atk4dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG1ROLL));
+                    String atk4dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG1TYPE));
+                    String atk4dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG2ROLL));
+                    String atk4dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG2TYPE));
+                    int atk4autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4AUTOROLL));
+                    int atk4additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4ADDITIONAL));
+
+                    String reaction1name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1NAME));
+                    String reaction1desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1DESC));
+
+                    String ability1name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1NAME));
+                    String ability1desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1DESC));
+                    String ability2name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY2NAME));
+                    String ability2desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY2DESC));
+                    String ability3name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY3NAME));
+                    String ability3desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY3DESC));
+                    String ability4name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY4NAME));
+                    String ability4desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY4DESC));
+                    String ability5name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY5NAME));
+                    String ability5desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY5DESC));
+
+                    int acrobatics = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ACROBATICS));
+                    int animalhandling = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ANIMALHANDLING));
+                    int arcana = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ARCANA));
+                    int athletics = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATHLETICS));
+                    int deception = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DECEPTION));
+                    int history = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_HISTORY));
+                    int insight = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INSIGHT));
+                    int intimidation = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INTIMIDATION));
+                    int investigation = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INVESTIGATION));
+                    int medicine = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MEDICINE));
+                    int nature = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_NATURE));
+                    int perception = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_PERCEPTION));
+                    int performance = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_PERFORMANCE));
+                    int persuasion = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_PERSUASION));
+                    int religion = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_RELIGION));
+                    int sleightofhand = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SLEIGHTOFHAND));
+                    int stealth = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STEALTH));
+                    int survival = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SURVIVAL));
+
+                    int stStr = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STSTR));
+                    int stDex = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STDEX));
+                    int stCon = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STCON));
+                    int stInt = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STINT));
+                    int stWis = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STWIS));
+                    int stCha = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STCHA));
+
+                    String senses = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SENSES));
+                    String alignment = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT));
+                    String languages = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LANGUAGES));
+                    String dmgRes = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGRES));
+                    String dmgIm = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGIM));
+                    String dmgVul = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGVUL));
+                    String conIm = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CONIM));
+
+
+
+
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
                     initiative = initiative + DiceHelper.d20();
                     TrackerInfoCard ci = new TrackerInfoCard();
@@ -294,6 +393,7 @@ public class TrackerFragment extends Fragment implements
                     ci.maxHp = maxHp;
                     ci.hp = maxHp;
                     ci.type = type;
+                    ci.monsterType = monsterType;
                     ci.dead = false;
                     ci.strength = strength;
                     ci.dexterity = dexterity;
@@ -302,6 +402,104 @@ public class TrackerFragment extends Fragment implements
                     ci.wisdom = wisdom;
                     ci.charisma = charisma;
                     ci.iconUri = iconUri;
+                    ci.acType = acType;
+                    ci.xp = xp;
+                    ci.size = size;
+                    ci.speed = speed;
+                    ci.source = source;
+                    ci.sourcepage = sourcepage;
+                    ci.multiattack = multiattack;
+
+                    ci.atk1name = atk1name;
+                    ci.atk1desc = atk1desc;
+                    ci.atk1mod = atk1mod;
+                    ci.atk1dmg1roll = atk1dmg1roll;
+                    ci.atk1dmg1type = atk1dmg1type;
+                    ci.atk1dmg2roll = atk1dmg2roll;
+                    ci.atk1dmg2type = atk1dmg2type;
+                    ci.atk1autoroll = atk1autoroll;
+                    ci.atk1additional = atk1additional;
+
+                    ci.atk2name = atk2name;
+                    ci.atk2desc = atk2desc;
+                    ci.atk2mod = atk2mod;
+                    ci.atk2dmg1roll = atk2dmg1roll;
+                    ci.atk2dmg1type = atk2dmg1type;
+                    ci.atk2dmg2roll = atk2dmg2roll;
+                    ci.atk2dmg2type = atk2dmg2type;
+                    ci.atk2autoroll = atk2autoroll;
+                    ci.atk2additional = atk2additional;
+
+                    ci.atk3name = atk3name;
+                    ci.atk3desc = atk3desc;
+                    ci.atk3mod = atk3mod;
+                    ci.atk3dmg1roll = atk3dmg1roll;
+                    ci.atk3dmg1type = atk3dmg1type;
+                    ci.atk3dmg2roll = atk3dmg2roll;
+                    ci.atk3dmg2type = atk3dmg2type;
+                    ci.atk3autoroll = atk3autoroll;
+                    ci.atk3additional = atk3additional;
+
+                    ci.atk4name = atk4name;
+                    ci.atk4desc = atk4desc;
+                    ci.atk4mod = atk4mod;
+                    ci.atk4dmg1roll = atk4dmg1roll;
+                    ci.atk4dmg1type = atk4dmg1type;
+                    ci.atk4dmg2roll = atk4dmg2roll;
+                    ci.atk4dmg2type = atk4dmg2type;
+                    ci.atk4autoroll = atk4autoroll;
+                    ci.atk4additional = atk4additional;
+
+                    ci.reaction1name = reaction1name;
+                    ci.reaction1desc = reaction1desc;
+
+                    ci.ability1name = ability1name;
+                    ci.ability1desc = ability1desc;
+                    ci.ability2name = ability2name;
+                    ci.ability2desc = ability2desc;
+                    ci.ability3name = ability3name;
+                    ci.ability3desc = ability3desc;
+                    ci.ability4name = ability4name;
+                    ci.ability4desc = ability4desc;
+                    ci.ability5name = ability5name;
+                    ci.ability5desc = ability5desc;
+
+                    ci.acrobatics = acrobatics;
+                    ci.animalhandling = animalhandling;
+                    ci.arcana = arcana;
+                    ci.athletics = athletics;
+                    ci.deception = deception;
+                    ci.history = history;
+                    ci.insight = insight;
+                    ci.intimidation = intimidation;
+                    ci.investigation = investigation;
+                    ci.medicine = medicine;
+                    ci.nature = nature;
+                    ci.perception = perception;
+                    ci.performance = performance;
+                    ci.persuasion = persuasion;
+                    ci.religion = religion;
+                    ci.sleightofhand = sleightofhand;
+                    ci.stealth = stealth;
+                    ci.survival = survival;
+
+                    ci.stStr = stStr;
+                    ci.stDex = stDex;
+                    ci.stCon = stCon;
+                    ci.stInt = stInt;
+                    ci.stWis = stWis;
+                    ci.stCha = stCha;
+
+                    ci.senses = senses;
+                    ci.alignment = alignment;
+                    ci.languages = languages;
+                    ci.dmgRes = dmgRes;
+                    ci.dmgIm = dmgIm;
+                    ci.dmgVul = dmgVul;
+                    ci.conIm = conIm;
+
+
+
                     chars.addListItem(ci);
                 }
                 break;

@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
+import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.HelperClasses.Utils;
 import com.pentapus.pentapusdmh.R;
@@ -395,14 +396,14 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         return characterList.get(pos).getIconUri();
     }
 
-    public int[] getAbilities(int pos) {
+    public int[] getAbilityMods(int pos) {
         int[] abilities = new int[6];
-        abilities[0] = characterList.get(pos).getStrength();
-        abilities[1] = characterList.get(pos).getDexterity();
-        abilities[2] = characterList.get(pos).getConstitution();
-        abilities[3] = characterList.get(pos).getIntelligence();
-        abilities[4] = characterList.get(pos).getWisdom();
-        abilities[5] = characterList.get(pos).getCharisma();
+        abilities[0] = AbilityModifierCalculator.calculateMod(characterList.get(pos).getStrength());
+        abilities[1] = AbilityModifierCalculator.calculateMod(characterList.get(pos).getDexterity());
+        abilities[2] = AbilityModifierCalculator.calculateMod(characterList.get(pos).getConstitution());
+        abilities[3] = AbilityModifierCalculator.calculateMod(characterList.get(pos).getIntelligence());
+        abilities[4] = AbilityModifierCalculator.calculateMod(characterList.get(pos).getWisdom());
+        abilities[5] = AbilityModifierCalculator.calculateMod(characterList.get(pos).getCharisma());
         return abilities;
     }
 

@@ -234,7 +234,7 @@ public class DetailMonsterFragment extends Fragment {
 
 
             //Senses, Languages & CR
-            Spanned mySenses = Html.fromHtml("<b>Senses</b> " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SENSES)));
+            Spanned mySenses = Html.fromHtml("<b>Senses </b> " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SENSES)));
             String tempLanguages = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LANGUAGES));
             if (tempLanguages == null || tempLanguages.isEmpty()) {
                 tempLanguages = "-";

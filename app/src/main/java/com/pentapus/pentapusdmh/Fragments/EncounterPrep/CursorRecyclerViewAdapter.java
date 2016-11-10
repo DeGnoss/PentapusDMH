@@ -118,7 +118,6 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         }
         final SimpleItemCard simpleItemCard = SimpleItemCard.fromCursor(mCursor);
         viewHolder.vName.setText(simpleItemCard.getName());
-        viewHolder.vInfo.setText(simpleItemCard.getInfo());
         viewHolder.type = simpleItemCard.getType();
         if (viewHolder.type == DataBaseHandler.TYPE_MONSTER) {
             viewHolder.vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
@@ -348,7 +347,6 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
     public static class CharacterViewHolder extends RecyclerViewSubAdapter.ViewHolder {
         public View view;
         protected TextView vName;
-        protected TextView vInfo;
         protected CardView cardViewTracker;
         protected View vIndicatorLine;
         protected ImageView ivIcon;
@@ -370,7 +368,6 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
             vName = (TextView) v.findViewById(R.id.name_enc_prep);
             cardViewTracker = (CardView) v.findViewById(R.id.card_view_enc_prep);
             ivIcon = (ImageView) v.findViewById(R.id.ivIcon_enc_prep);
-            vInfo = (TextView) v.findViewById(R.id.info_enc_prep);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_enc_prep);
             undoButton = (Button) v.findViewById(R.id.undo_enc_prep);
             vInfoDeleted = (TextView) v.findViewById(R.id.deleted_enc_prep);

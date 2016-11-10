@@ -198,7 +198,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
-            vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
+            //vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             itemView.setActivated(getAdapterPosition() == getSelectedPos());
         }
 

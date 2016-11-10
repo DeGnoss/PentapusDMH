@@ -1,13 +1,10 @@
 package com.pentapus.pentapusdmh.ViewpagerClasses;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 /**
@@ -15,9 +12,9 @@ import android.view.ViewGroup;
  */
 public class AdjustFragmentPagerAdapter extends FragmentPagerAdapter {
 final int PAGE_COUNT = 3;
-private String tabTitles[] = new String[] { "Saving Throws", "OverView", "Conditions" };
+private String tabTitles[] = new String[] { "Actions", "OverView", "Conditions" };
 private Context context;
-    private SavingThrowFragment savingThrowFragment;
+    private ActionFragment savingThrowFragment;
     private StatusFragment statusFragment;
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private int id;
@@ -38,7 +35,7 @@ private Context context;
     public Fragment getItem(int position) {
         switch(position){
             case 0:
-                return SavingThrowFragment.newInstance(id);
+                return ActionFragment.newInstance(id);
             case 1:
                 return HpOverviewFragment.newInstance(id);
             case 2:

@@ -11,7 +11,6 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 public class SimpleItemCard {
     public int id;
     public String name;
-    public String info;
     public int type;
     public boolean selected;
     public Uri iconUri;
@@ -33,14 +32,6 @@ public class SimpleItemCard {
         this.name = name;
     }
 
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
     public Uri getIconUri() {
         return iconUri;
     }
@@ -54,7 +45,6 @@ public class SimpleItemCard {
         SimpleItemCard simpleItemCard = new SimpleItemCard();
         simpleItemCard.id = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
         simpleItemCard.name = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_NAME));
-        simpleItemCard.info = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_INFO));
         simpleItemCard.type = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE));
         if (cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE)) == DataBaseHandler.TYPE_PC) {
             simpleItemCard.disabled = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_DISABLED));

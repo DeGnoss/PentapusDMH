@@ -521,7 +521,6 @@ public class EncounterFragment extends Fragment implements
         String[] projectionNPC = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_INFO,
                 DataBaseHandler.KEY_TYPE,
                 DataBaseHandler.KEY_ICON
         };
@@ -728,7 +727,6 @@ public class EncounterFragment extends Fragment implements
                     int oldpos = CursorRecyclerViewAdapter.selectedPos;
                     CursorRecyclerViewAdapter.selectedPos = -1;
                     mergeAdapter.notifyItemChanged(oldpos);
-                    int test = 0;
                 }
             });
         } else if (positionType == 2) {

@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerInfoCard;
+import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
 import com.pentapus.pentapusdmh.NumberPicker.NumberPickerBuilder;
 import com.pentapus.pentapusdmh.NumberPicker.NumberPickerDialogFragment;
 import com.pentapus.pentapusdmh.R;
@@ -21,20 +24,24 @@ import com.pentapus.pentapusdmh.R;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import static com.pentapus.pentapusdmh.R.id.tvAbility1;
+
 /**
  * Created by Koni on 02.04.2016.
  */
-public class HpOverviewFragment extends Fragment implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2{
+public class HpOverviewFragment extends Fragment implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2 {
 
     private int id;
     private View vFrame;
-    private ImageButton bDamage;
+    private ImageButton bDamage, bHealing, bST;
     private ImageView ivIcon;
-    private TextView tvDamage, tvIdentifier, tvName, tvHpCurrent, tvHpMax, tvAc;
+    private TextView tvDamage, tvIdentifier, tvName, tvHpCurrent, tvHpMax, tvAc, tvType, tvStr, tvDex, tvCon, tvInt, tvWis, tvCha, tvSpeed, tvSenses, tvLanguages, tvDmgVul, tvDmgRes, tvDmgIm, tvConIm, tvAbility1, tvAbility2, tvAbility3, tvAbility4, tvAbility5, tvReaction1;
+    private View vLine5;
     private int hpDiff;
     private int hpCurrent;
     private int hpMax;
-    private int ac;
+    private Spanned monstertype, ac, speed, senses, languages, dmgVul, dmgRes, dmgIm, conIm, ability1, ability2, ability3, ability4, ability5, reaction1;
+    private Spanned str, dex, con, intel, wis, cha;
     private String name;
     private Uri iconUri;
     private int type;
@@ -56,14 +63,8 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         if (getArguments() != null) {
             id = getArguments().getInt("id");
         }
-        selectedCharacter = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getItem(id);
+        selectedCharacter = ((TrackerFragment) getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getItem(id);
 
-        hpCurrent = selectedCharacter.getHp();
-        hpMax = selectedCharacter.getMaxHp();
-        ac = selectedCharacter.getAc();
-        name = selectedCharacter.getName();
-        iconUri = selectedCharacter.getIconUri();
-        type = selectedCharacter.getType();
 
     }
 
@@ -77,35 +78,174 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.viewpager_hpoverview, container, false);
 
-        tvDamage = (TextView) view.findViewById(R.id.tvNumber);
-        tvIdentifier = (TextView) view.findViewById(R.id.tvIdent);
+        //tvDamage = (TextView) view.findViewById(R.id.tvNumber);
+        // tvIdentifier = (TextView) view.findViewById(R.id.tvIdent);
         tvName = (TextView) view.findViewById(R.id.tvName);
         tvHpCurrent = (TextView) view.findViewById(R.id.tvHpCurrent);
         tvHpMax = (TextView) view.findViewById(R.id.tvHpMax);
         tvAc = (TextView) view.findViewById(R.id.tvAc);
         ivIcon = (ImageView) view.findViewById(R.id.ivAvatar);
         vFrame = (View) view.findViewById(R.id.vFrame);
+        tvType = (TextView) view.findViewById(R.id.tvType);
+        tvStr = (TextView) view.findViewById(R.id.tvSTR);
+        tvDex = (TextView) view.findViewById(R.id.tvDEX);
+        tvCon = (TextView) view.findViewById(R.id.tvCON);
+        tvInt = (TextView) view.findViewById(R.id.tvINT);
+        tvWis = (TextView) view.findViewById(R.id.tvWIS);
+        tvCha = (TextView) view.findViewById(R.id.tvCHA);
+        tvSpeed = (TextView) view.findViewById(R.id.tvSpeed);
+        tvSenses = (TextView) view.findViewById(R.id.tvSenses);
+        tvLanguages = (TextView) view.findViewById(R.id.tvLanguages);
+        tvDmgVul = (TextView) view.findViewById(R.id.tvDmgVul);
+        tvDmgRes = (TextView) view.findViewById(R.id.tvDmgRes);
+        tvDmgIm = (TextView) view.findViewById(R.id.tvDmgIm);
+        tvConIm = (TextView) view.findViewById(R.id.tvConIm);
+        tvAbility1 = (TextView) view.findViewById(R.id.tvAbility1);
+        tvAbility2 = (TextView) view.findViewById(R.id.tvAbility2);
+        tvAbility3 = (TextView) view.findViewById(R.id.tvAbility3);
+        tvAbility4 = (TextView) view.findViewById(R.id.tvAbility4);
+        tvAbility5 = (TextView) view.findViewById(R.id.tvAbility5);
+        tvReaction1 = (TextView) view.findViewById(R.id.tvReaction1);
+        vLine5 = view.findViewById(R.id.line5);
 
-        tvHpCurrent.setText("HP " + String.valueOf(hpCurrent));
-        tvHpMax.setText(" / " + String.valueOf(hpMax));
-        tvAc.setText("AC " + String.valueOf(ac));
-        tvName.setText(name);
-        ivIcon.setImageURI(iconUri);
 
-        if(type == 1){
-            vFrame.setBackgroundColor(Color.parseColor("#4caf50"));
-        }else if(type == 0){
-            vFrame.setBackgroundColor(Color.parseColor("#F44336"));
-        }else if(type == 2){
-            vFrame.setBackgroundColor(Color.parseColor("#3F51B5"));
-        }else{
-            vFrame.setBackgroundColor(Color.parseColor("#ffffff"));
+
+        hpCurrent = selectedCharacter.getHp();
+        hpMax = selectedCharacter.getMaxHp();
+        monstertype = Html.fromHtml("<i>" + selectedCharacter.getMonsterType() + ", " + selectedCharacter.getAlignment() + "</i>");
+        ac = Html.fromHtml("AC " + selectedCharacter.getAc() + " (" + selectedCharacter.getAcType() + ")");
+        str = Html.fromHtml(String.valueOf(selectedCharacter.getStrength()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getStrength()) + ")");
+        dex = Html.fromHtml(String.valueOf(selectedCharacter.getDexterity()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getDexterity()) + ")");
+        con = Html.fromHtml(String.valueOf(selectedCharacter.getConstitution()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getConstitution()) + ")");
+        intel = Html.fromHtml(String.valueOf(selectedCharacter.getIntelligence()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getIntelligence()) + ")");
+        wis = Html.fromHtml(String.valueOf(selectedCharacter.getWisdom()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getWisdom()) + ")");
+        cha = Html.fromHtml(String.valueOf(selectedCharacter.getCharisma()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getCharisma()) + ")");
+        speed = Html.fromHtml("<b>Speed </b>" + selectedCharacter.getSpeed());
+        senses = Html.fromHtml("<b>Senses </b>" + selectedCharacter.getSenses());
+
+        if (selectedCharacter.getLanguages() == null || selectedCharacter.getLanguages().isEmpty()) {
+            languages = Html.fromHtml("<b>Languages</b> -");
+        } else {
+            languages = Html.fromHtml("<b>Languages</b> " + selectedCharacter.getLanguages());
+        }
+
+        //Damage Vulnerabilities
+        if (selectedCharacter.getDmgVul() != null && !selectedCharacter.getDmgVul().isEmpty()) {
+            dmgVul = Html.fromHtml("<b>Damage Vulnerabilities</b> " + selectedCharacter.getDmgVul());
+        } else {
+            tvDmgVul.setVisibility(View.GONE);
+        }
+
+        //Damage Resistances
+        if (selectedCharacter.getDmgRes() != null && !selectedCharacter.getDmgRes().isEmpty()) {
+            dmgRes = Html.fromHtml("<b>Damage Resistances</b> " + selectedCharacter.getDmgRes());
+        } else {
+            tvDmgRes.setVisibility(View.GONE);
+        }
+
+        //Damage Immunities
+        if (selectedCharacter.getDmgIm() != null && !selectedCharacter.getDmgIm().isEmpty()) {
+            dmgIm = Html.fromHtml("<b>Damage Immunities</b> " + selectedCharacter.getDmgIm());
+        } else {
+            tvDmgIm.setVisibility(View.GONE);
+        }
+
+        //Condition Immunities
+        if (selectedCharacter.getConIm() != null && !selectedCharacter.getConIm().isEmpty()) {
+            conIm = Html.fromHtml("<b>Condition Immunities</b> " + selectedCharacter.getConIm());
+        } else {
+            tvConIm.setVisibility(View.GONE);
         }
 
 
 
+        //Feats
+        if(selectedCharacter.getAbility1name() != null && !selectedCharacter.getAbility1name().isEmpty()){
+            ability1 = Html.fromHtml("<b>" + selectedCharacter.getAbility1name() + "</b>" + ". " + selectedCharacter.getAbility1desc());
+        }else{
+            tvAbility1.setVisibility(View.GONE);
+        }
+        if(selectedCharacter.getAbility2name() != null && !selectedCharacter.getAbility2name().isEmpty()){
+            ability2 = Html.fromHtml("<b>" + selectedCharacter.getAbility2name() + "</b>" + ". " + selectedCharacter.getAbility2desc());
+        }else{
+            tvAbility2.setVisibility(View.GONE);
+        }
+        if(selectedCharacter.getAbility3name() != null && !selectedCharacter.getAbility3name().isEmpty()){
+            ability3 = Html.fromHtml("<b>" + selectedCharacter.getAbility3name() + "</b>" + ". " + selectedCharacter.getAbility3desc());
+        }else{
+            tvAbility3.setVisibility(View.GONE);
+        }
+        if(selectedCharacter.getAbility4name() != null && !selectedCharacter.getAbility4name().isEmpty()){
+            ability4 = Html.fromHtml("<b>" + selectedCharacter.getAbility4name() + "</b>" + ". " + selectedCharacter.getAbility4desc());
+        }else{
+            tvAbility4.setVisibility(View.GONE);
+        }
+        if(selectedCharacter.getAbility5name() != null && !selectedCharacter.getAbility5name().isEmpty()){
+            ability5 = Html.fromHtml("<b>" + selectedCharacter.getAbility5name() + "</b>" + ". " + selectedCharacter.getAbility5desc());
+        }else{
+            tvAbility5.setVisibility(View.GONE);
+        }
+
+        //Reaction
+        if(selectedCharacter.getReaction1name() != null && !selectedCharacter.getReaction1name().isEmpty()){
+            reaction1 = Html.fromHtml("<b>" + selectedCharacter.getReaction1name() + "</b>" + ". " + selectedCharacter.getReaction1desc());
+        }else{
+            tvReaction1.setVisibility(View.GONE);
+            if(ability1 == null){
+                vLine5.setVisibility(View.GONE);
+            }
+        }
+
+
+        name = selectedCharacter.getName();
+        iconUri = selectedCharacter.getIconUri();
+
+
+        tvHpCurrent.setText("HP " + String.valueOf(hpCurrent));
+        tvHpMax.setText(" / " + String.valueOf(hpMax));
+        tvAc.setText(ac);
+        tvName.setText(name);
+        tvType.setText(monstertype);
+        ivIcon.setImageURI(iconUri);
+        //tvType.setText(type);
+        tvStr.setText(String.valueOf(str));
+        tvDex.setText(String.valueOf(dex));
+        tvCon.setText(String.valueOf(con));
+        tvInt.setText(String.valueOf(intel));
+        tvWis.setText(String.valueOf(wis));
+        tvCha.setText(String.valueOf(cha));
+        tvSpeed.setText(speed);
+        tvSenses.setText(senses);
+        tvLanguages.setText(languages);
+        tvDmgVul.setText(dmgVul);
+        tvDmgRes.setText(dmgRes);
+        tvDmgIm.setText(dmgIm);
+        tvConIm.setText(conIm);
+        tvAbility1.setText(ability1);
+        tvAbility2.setText(ability2);
+        tvAbility3.setText(ability3);
+        tvAbility4.setText(ability4);
+        tvAbility5.setText(ability5);
+        tvReaction1.setText(reaction1);
+
+
+        if (type == 1) {
+            vFrame.setBackgroundColor(Color.parseColor("#4caf50"));
+        } else if (type == 0) {
+            vFrame.setBackgroundColor(Color.parseColor("#F44336"));
+        } else if (type == 2) {
+            vFrame.setBackgroundColor(Color.parseColor("#3F51B5"));
+        } else {
+            vFrame.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
+
+
         bDamage = (ImageButton) view.findViewById(R.id.buttonDamage);
         bDamage.setColorFilter(Color.parseColor("#ffffffff"));
+        bHealing = (ImageButton) view.findViewById(R.id.buttonHealing);
+        bHealing.setColorFilter(Color.parseColor("#ffffffff"));
+        bST = (ImageButton) view.findViewById(R.id.buttonST);
+        //bST.setColorFilter(Color.parseColor("#ffffffff"));
 
         bDamage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,8 +263,8 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         return view;
     }
 
-    public void saveChanges(){
-        ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().setHp(id, hpDiff, isTemp, isHeal);
+    public void saveChanges() {
+        ((TrackerFragment) getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().setHp(id, hpDiff, isTemp, isHeal);
     }
 
     @Override
@@ -132,15 +272,15 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         hpDiff = number.intValue();
         isTemp = temporary;
         isHeal = isNegative;
-        tvDamage.setText(String.valueOf(Math.abs(number.intValue())));
-        if(isNegative){
-            if(temporary){
+        //tvDamage.setText(String.valueOf(Math.abs(number.intValue())));
+        /*if (isNegative) {
+            if (temporary) {
                 tvIdentifier.setText("Temp. Hp");
-            }else{
+            } else {
                 tvIdentifier.setText("Heal");
             }
-        }else{
+        } else {
             tvIdentifier.setText("Damage");
-        }
+        }*/
     }
 }

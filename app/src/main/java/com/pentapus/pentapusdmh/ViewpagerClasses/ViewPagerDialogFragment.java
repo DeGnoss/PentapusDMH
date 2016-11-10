@@ -55,6 +55,7 @@ public class ViewPagerDialogFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
 
+        /*
         bDone = (Button) view.findViewById(R.id.bDone);
         bDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +65,7 @@ public class ViewPagerDialogFragment extends Fragment {
                 ((TrackerFragment) getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().notifyDataSetChanged();
             }
         });
+        */
 
 
         return view;

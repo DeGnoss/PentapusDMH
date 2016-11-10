@@ -3,7 +3,6 @@ package com.pentapus.pentapusdmh.ViewpagerClasses;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ public class SpellCastingFragment extends Fragment {
         if (getArguments() != null) {
             id = getArguments().getInt("id");
         }
-        abilities = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getAbilities(id);
+        abilities = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getAbilityMods(id);
 
     }
 
