@@ -39,6 +39,7 @@ dependencies {
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.code-troopers.betterpickers:library:2.5.4'
     compile project(':libs:RecyclerViewCursorAdapterLibrary')
+    compile project(':libs:WizardPager')
 
 
 }

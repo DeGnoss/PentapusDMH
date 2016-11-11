@@ -1,3 +1,3 @@
-include ':app', ':libs:RecyclerViewCursorAdapterLibrary'
+include ':app', ':libs:RecyclerViewCursorAdapterLibrary', ':libs:WizardPager'
 
 

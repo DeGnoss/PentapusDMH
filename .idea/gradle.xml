@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/libs" />
             <option value="$PROJECT_DIR$/libs/RecyclerViewCursorAdapterLibrary" />
+            <option value="$PROJECT_DIR$/libs/WizardPager" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

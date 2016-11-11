@@ -29,4 +29,10 @@
     <string name="number_picker_minus_label">—</string>
     <string name="number_delete">Delete</string>
 
+    <string-array name="alignmentX">
+        <item>Evil</item>
+        <item>Neutral</item>
+        <item>Good</item>
+    </string-array>
+
 </resources>

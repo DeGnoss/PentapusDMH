@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/WizardPageContainer" >
+
+    <TextView style="@style/WizardPageTitle" />
+
+    <ScrollView style="@style/FragmentInfo" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Name" />
+
+            <EditText
+                android:id="@+id/tvMonsterName"
+                style="@style/FragmentInfoName" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Type" />
+
+            <EditText
+                android:id="@+id/tvMonsterType"
+                style="@style/FragmentInfoType" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Alignment" />
+
+            <Spinner
+                android:id="@+id/alignmentX_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/tvMonsterAlignment"
+                style="@style/FragmentInfoAlignment" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

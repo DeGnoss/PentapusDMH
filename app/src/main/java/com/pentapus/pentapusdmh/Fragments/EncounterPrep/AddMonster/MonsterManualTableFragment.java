@@ -43,7 +43,6 @@ public class MonsterManualTableFragment extends Fragment implements
     private ActionMode mActionMode;
     private boolean isNavMode;
     private Bundle filters;
-    private SearchView searchView;
     private String searchViewQuery;
 
     private MonsterManualAdapter myMonsterAdapter;
@@ -142,7 +141,7 @@ public class MonsterManualTableFragment extends Fragment implements
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_main, menu);
         final MenuItem item = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setQueryHint("Name or type");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -170,16 +169,6 @@ public class MonsterManualTableFragment extends Fragment implements
         if (isAdded()) {
             getLoaderManager().restartLoader(0, filters, this);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override
@@ -220,8 +209,8 @@ public class MonsterManualTableFragment extends Fragment implements
                 selection = selection + ")";
             }
         } else {
-            selectionArgs = null;
-            selection = null;
+            selectionArgs = new String[]{"%MM%"};
+            selection = "source LIKE ?";
         }
         return new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER_TEMPLATE, selection, selectionArgs, null);

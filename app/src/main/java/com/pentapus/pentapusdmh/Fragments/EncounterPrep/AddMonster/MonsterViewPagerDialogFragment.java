@@ -18,10 +18,11 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit.MonsterEditWizardFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit.MonsterEditWizardModel;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
@@ -274,7 +275,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
 
     private void addMonster(Bundle bundle) {
         Fragment fragment;
-        fragment = new MyMonsterEditFragment();
+        fragment = new MonsterEditWizardFragment();
         fragment.setArguments(bundle);
         if (navMode) {
             getActivity().getSupportFragmentManager().beginTransaction()

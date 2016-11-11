@@ -148,7 +148,7 @@ public class DetailMonsterFragment extends Fragment {
             cursor.moveToFirst();
             //Name & Type
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-            Spanned myType = Html.fromHtml("<i>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE)) + ", " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT)) + "</i>");
+            Spanned myType = Html.fromHtml("<i>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SIZE)) + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE)) + ", " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT)) + "</i>");
 
             //HP, AC & Speed
             Spanned myHp = Html.fromHtml("<b>Hit Points </b>" +cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)) + " (" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_HPROLL)) + ")");
@@ -157,16 +157,15 @@ public class DetailMonsterFragment extends Fragment {
             String tempAc2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2));
             if(tempAcType != null && !tempAcType.isEmpty()){
                 if(tempAc2 != null && !tempAc2.isEmpty()){
-                    myAc = Html.fromHtml("<b>AC </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + " (" + tempAcType + ")" + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + " (" + tempAcType + ")" + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
                 }else{
-                    myAc = Html.fromHtml("<b>AC </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + " (" + tempAcType + ")");
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + " (" + tempAcType + ")");
                 }
             }else{
-                myAc = Html.fromHtml("<b>AC </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
                 if(tempAc2 != null && !tempAc2.isEmpty()){
-                    myAc = Html.fromHtml("<b>AC </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
                 }else{
-                    myAc = Html.fromHtml("<b>AC </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
                 }
             }
 

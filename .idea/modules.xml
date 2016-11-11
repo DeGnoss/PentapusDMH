@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PentapusDMH.iml" filepath="$PROJECT_DIR$/PentapusDMH.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/RecyclerViewCursorAdapterLibrary/RecyclerViewCursorAdapterLibrary.iml" filepath="$PROJECT_DIR$/libs/RecyclerViewCursorAdapterLibrary/RecyclerViewCursorAdapterLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libs/WizardPager/WizardPager.iml" filepath="$PROJECT_DIR$/libs/WizardPager/WizardPager.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/libs.iml" filepath="$PROJECT_DIR$/libs/libs.iml" />
     </modules>
