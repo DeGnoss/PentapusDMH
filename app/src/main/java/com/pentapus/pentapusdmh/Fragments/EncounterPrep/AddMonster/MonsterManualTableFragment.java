@@ -11,11 +11,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,6 +28,9 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DividerItemDecoration;
 import com.pentapus.pentapusdmh.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MonsterManualTableFragment extends Fragment implements
@@ -35,6 +42,9 @@ public class MonsterManualTableFragment extends Fragment implements
     private RecyclerView myMonsterRecyclerView;
     private ActionMode mActionMode;
     private boolean isNavMode;
+    private Bundle filters;
+    private SearchView searchView;
+    private String searchViewQuery;
 
     private MonsterManualAdapter myMonsterAdapter;
 
@@ -61,6 +71,9 @@ public class MonsterManualTableFragment extends Fragment implements
         if (this.getArguments() != null) {
             isNavMode = this.getArguments().getBoolean("navMode");
         }
+        if (savedInstanceState != null) {
+            searchViewQuery = savedInstanceState.getString("sv1");
+        }
         myMonsterAdapter = new MonsterManualAdapter(getContext(), this, isNavMode);
     }
 
@@ -83,8 +96,18 @@ public class MonsterManualTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        filters = new Bundle();
         myMonsterAdapter.setSelectedPos(-1);
         ((MonsterViewPagerDialogFragment) getParentFragment()).setFabIcon(true);
+        if (getLoaderManager().getLoader(0) == null) {
+            getLoaderManager().initLoader(0, null, this);
+        } else {
+            getLoaderManager().restartLoader(0, null, this);
+        }
+    }
+
+    public void resetSearch(){
+        myMonsterAdapter.setSelectedPos(-1);
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
         } else {
@@ -113,6 +136,42 @@ public class MonsterManualTableFragment extends Fragment implements
         super.onPrepareOptionsMenu(menu);
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setQueryHint("Name or type");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterData(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterData(newText);
+                return false;
+            }
+        });
+        if (searchViewQuery != null) {
+            searchView.setQuery(searchViewQuery, true);
+            searchView.setIconified(false);
+            searchView.clearFocus();
+        }
+    }
+
+    public void filterData(String filterArgs) {
+        String filterFormatted = "%" + filterArgs + "%";
+        filters.putString("filter", filterFormatted);
+        if (isAdded()) {
+            getLoaderManager().restartLoader(0, filters, this);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -125,9 +184,45 @@ public class MonsterManualTableFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String selection = "";
+        String[] selectionArgs;
+        List<String> selectionList = new ArrayList<>();
+        int size = 0;
 
-        String[] selectionArgs = new String[]{String.valueOf(1)};
-        String selection = DataBaseHandler.KEY_MM + " = ?";
+        if (args != null) {
+
+            selectionList.add("%MM%");
+            size++;
+
+            if (args.getString("filter") != null) {
+                selectionList.add(args.getString("filter"));
+                selectionList.add(args.getString("filter"));
+            }
+
+            selectionArgs = new String[selectionList.size()];
+            selectionList.toArray(selectionArgs);
+
+            for (int i = 0; i < size; i++) {
+                if (!selection.isEmpty()) {
+                    selection = selection + " OR ";
+                    selection = selection + DataBaseHandler.KEY_SOURCE + " LIKE ?";
+                } else {
+                    selection = "(" + DataBaseHandler.KEY_SOURCE + " LIKE ?";
+                }
+            }
+            if (args.getString("filter") != null) {
+                if (!selection.isEmpty()) {
+                    selection = selection + ")" + " AND (" + DataBaseHandler.KEY_NAME + " LIKE ? OR " + DataBaseHandler.KEY_MONSTERTYPE + " LIKE ?)";
+                } else {
+                    selection = DataBaseHandler.KEY_NAME + " LIKE ?";
+                }
+            } else {
+                selection = selection + ")";
+            }
+        } else {
+            selectionArgs = null;
+            selection = null;
+        }
         return new CursorLoader(this.getContext(),
                 DbContentProvider.CONTENT_URI_MONSTER, DataBaseHandler.PROJECTION_MONSTER_TEMPLATE, selection, selectionArgs, null);
     }

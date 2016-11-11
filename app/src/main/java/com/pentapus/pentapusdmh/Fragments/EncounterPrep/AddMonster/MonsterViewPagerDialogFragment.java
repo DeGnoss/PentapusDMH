@@ -2,6 +2,7 @@ package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster;
 
 import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
@@ -103,11 +105,17 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                     case 0:
                         ((MyMonsterTableFragment) pagerAdapter.getRegisteredFragment(0)).getMyMonsterRecyclerView().getAdapter().notifyDataSetChanged();
                         ((MonsterManualTableFragment) pagerAdapter.getRegisteredFragment(1)).dismissActionMode();
+                        ((MonsterManualTableFragment) pagerAdapter.getRegisteredFragment(1)).resetSearch();
+                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                         fabMonsterVP.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         ((MonsterManualTableFragment) pagerAdapter.getRegisteredFragment(1)).getMyMonsterRecyclerView().getAdapter().notifyDataSetChanged();
                         ((MyMonsterTableFragment) pagerAdapter.getRegisteredFragment(0)).dismissActionMode();
+                        //((MonsterManualTableFragment) pagerAdapter.getRegisteredFragment(0)).resetSearch();
+                        imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                         fabMonsterVP.setVisibility(View.GONE);
                         break;
                     default:
