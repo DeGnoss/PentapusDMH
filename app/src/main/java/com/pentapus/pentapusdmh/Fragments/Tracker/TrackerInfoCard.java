@@ -12,7 +12,7 @@ public class TrackerInfoCard {
     public String initiativeMod;
     public int maxHp;
     public int tempHp;
-    public int ac;
+    public int ac, ac2;
     public int type;
     public int hp;
     public int strength = 0, dexterity = 0, constitution = 0, intelligence = 0, wisdom = 0, charisma = 0;
@@ -21,13 +21,13 @@ public class TrackerInfoCard {
     public boolean selected;
     public Uri iconUri;
 
-    public String monsterType, acType, size, speed, source, multiattack, senses, alignment, languages, dmgRes, dmgIm, dmgVul, conIm;
+    public String monsterType, acType, acType2, size, speed, source, multiattack, senses, alignment, languages, dmgRes, dmgIm, dmgVul, conIm;
     public String atk1name, atk1desc, atk1dmg1roll, atk1dmg1type, atk1dmg2roll, atk1dmg2type;
     public String atk2name, atk2desc, atk2dmg1roll, atk2dmg1type, atk2dmg2roll, atk2dmg2type;
     public String atk3name, atk3desc, atk3dmg1roll, atk3dmg1type, atk3dmg2roll, atk3dmg2type;
     public String atk4name, atk4desc, atk4dmg1roll, atk4dmg1type, atk4dmg2roll, atk4dmg2type;
     public String reaction1name, reaction1desc;
-    public String ability1name, ability1desc, ability2name, ability2desc,ability3name, ability3desc,ability4name, ability4desc,ability5name, ability5desc;
+    public String ability1name, ability1desc, ability2name, ability2desc, ability3name, ability3desc, ability4name, ability4desc, ability5name, ability5desc;
 
     public int xp, sourcepage;
     public int atk1mod, atk1autoroll, atk1additional;
@@ -38,10 +38,16 @@ public class TrackerInfoCard {
     public int stStr, stDex, stCon, stInt, stWis, stCha;
 
 
-
     protected static final String NAME_PREFIX = "Name_";
     protected static final String INITIATIVE_PREFIX = "Initiative_";
 
+    public int getAc2() {
+        return ac2;
+    }
+
+    public String getAcType2() {
+        return acType2;
+    }
 
     public int getTempHp() {
         return tempHp;
@@ -139,11 +145,11 @@ public class TrackerInfoCard {
         return name;
     }
 
-    public void setStatuses(boolean[] statuses){
+    public void setStatuses(boolean[] statuses) {
         this.statuses = statuses;
     }
 
-    public boolean[] getStatuses(){
+    public boolean[] getStatuses() {
         return statuses;
     }
 

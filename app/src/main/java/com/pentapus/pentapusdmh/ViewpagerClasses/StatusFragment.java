@@ -10,18 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
+import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerInfoCard;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.RecyclerItemClickListener;
 
 /**
  * Created by Koni on 02.04.2016.
  */
-public class StatusFragment extends Fragment {
+public class StatusFragment extends Fragment{
     private StatusAdapter statusAdapter;
     private GridLayoutManager gridLayoutManager;
     private boolean[] statuses;
     private int id;
+    private TrackerInfoCard selectedCharacter;
 
 
     public static StatusFragment newInstance(int id) {
@@ -38,7 +41,8 @@ public class StatusFragment extends Fragment {
         if (getArguments() != null) {
             id = getArguments().getInt("id");
         }
-        statuses = ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getStatuses(id);
+        selectedCharacter = ((TrackerFragment) getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().getItem(id);
+        statuses = selectedCharacter.getStatuses();
     }
 
 
@@ -76,6 +80,8 @@ public class StatusFragment extends Fragment {
 
     private void onClick(int position) {
         statusAdapter.statusClicked(position);
+        selectedCharacter.setStatuses(statusAdapter.getStatuses());
+        ((TrackerFragment) getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().notifyDataSetChanged();
     }
 
     @Override
@@ -91,8 +97,7 @@ public class StatusFragment extends Fragment {
     }
 
     public void saveChanges(){
-        statuses=statusAdapter.getStatuses();
-        ((TrackerFragment)getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().setStatuses(id, statuses);
+        selectedCharacter.setStatuses(statusAdapter.getStatuses());
         //((TrackerFragment)mListener.getTrackerFragment()).getChars().setStatuses(id, statuses);
     }
 }

@@ -18,7 +18,6 @@
 
     <string name="number_picker_seperator">Temp. HP</string>
 
-    <string name="number_picker_plus_minus">Damage</string>
     <string name="picker_cancel">Cancel</string>
     <string name="picker_set">OK</string>
 
@@ -26,7 +25,6 @@
     <string name="opendrawer">Open navigation drawer</string>
     <string name="closedrawer">Close navigation drawer</string>
     <string name="prefs_key_app_initiative_autoroll" translatable="false">pref_key_initiative_autoroll</string>
-    <string name="numberpicker_damage_heal">Damage</string>
 
     <string name="number_picker_minus_label">—</string>
     <string name="number_delete">Delete</string>

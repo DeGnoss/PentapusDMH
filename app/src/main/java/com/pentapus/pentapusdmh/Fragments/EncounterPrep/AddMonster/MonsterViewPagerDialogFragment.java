@@ -146,6 +146,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                             values.put(DataBaseHandler.KEY_INITIATIVEBONUS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS)));
                             values.put(DataBaseHandler.KEY_MAXHP, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)));
                             values.put(DataBaseHandler.KEY_AC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                            values.put(DataBaseHandler.KEY_AC2, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2)));
                             values.put(DataBaseHandler.KEY_STRENGTH, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH)));
                             values.put(DataBaseHandler.KEY_DEXTERITY, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY)));
                             values.put(DataBaseHandler.KEY_CONSTITUTION, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION)));
@@ -156,6 +157,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                             values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
                             values.put(DataBaseHandler.KEY_MONSTERTYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE)));
                             values.put(DataBaseHandler.KEY_ACTYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE)));
+                            values.put(DataBaseHandler.KEY_AC2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
                             values.put(DataBaseHandler.KEY_XP, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_XP)));
                             values.put(DataBaseHandler.KEY_SIZE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SIZE)));
                             values.put(DataBaseHandler.KEY_SPEED, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SPEED)));

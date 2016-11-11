@@ -107,12 +107,25 @@ public class ActionFragment extends Fragment {
         }
 
 
+        cardAction1.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                onAction1();
+            }
+        });
+
+
 
 
 
 
         // Inflate the layout to use as dialog or embedded fragment
         return view;
+    }
+
+
+    public void onAction1(){
     }
 
 

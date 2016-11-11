@@ -4,8 +4,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerInfoCard;
 import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
@@ -113,7 +117,20 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         hpCurrent = selectedCharacter.getHp();
         hpMax = selectedCharacter.getMaxHp();
         monstertype = Html.fromHtml("<i>" + selectedCharacter.getMonsterType() + ", " + selectedCharacter.getAlignment() + "</i>");
-        ac = Html.fromHtml("AC " + selectedCharacter.getAc() + " (" + selectedCharacter.getAcType() + ")");
+        if(!String.valueOf(selectedCharacter.getAc()).isEmpty()){
+            if(selectedCharacter.getAcType2() != null && !selectedCharacter.getAcType2().isEmpty()){
+                ac = Html.fromHtml("<b>AC </b>" + String.valueOf(selectedCharacter.getAc()) + " (" + selectedCharacter.getAcType() + ")" + ", " + String.valueOf(selectedCharacter.getAc2()) + " " + selectedCharacter.getAcType2());
+            }else{
+                ac = Html.fromHtml("<b>AC </b>" + String.valueOf(selectedCharacter.getAc()) + " (" + selectedCharacter.getAcType() + ")");
+            }
+        }else{
+            if(selectedCharacter.getAcType2() != null && !selectedCharacter.getAcType2().isEmpty()){
+                ac = Html.fromHtml("<b>AC </b>" + String.valueOf(selectedCharacter.getAc()) + ", " + String.valueOf(selectedCharacter.getAc2()) + " " + selectedCharacter.getAcType2());
+            }else{
+                ac = Html.fromHtml("<b>AC </b>" + String.valueOf(selectedCharacter.getAc()));
+            }
+        }
+
         str = Html.fromHtml(String.valueOf(selectedCharacter.getStrength()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getStrength()) + ")");
         dex = Html.fromHtml(String.valueOf(selectedCharacter.getDexterity()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getDexterity()) + ")");
         con = Html.fromHtml(String.valueOf(selectedCharacter.getConstitution()) + " (" + AbilityModifierCalculator.calculateModString(selectedCharacter.getConstitution()) + ")");
@@ -201,7 +218,7 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         iconUri = selectedCharacter.getIconUri();
 
 
-        tvHpCurrent.setText("HP " + String.valueOf(hpCurrent));
+        tvHpCurrent.setText(Html.fromHtml("<b>HP</b> " + String.valueOf(hpCurrent)));
         tvHpMax.setText(" / " + String.valueOf(hpMax));
         tvAc.setText(ac);
         tvName.setText(name);
@@ -250,28 +267,131 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         bDamage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NumberPickerBuilder npb = new NumberPickerBuilder()
+                NumberPickerBuilder npbDamage = new NumberPickerBuilder()
                         .setFragmentManager(getChildFragmentManager())
                         .setStyleResId(R.style.BetterPickersDialogFragment)
                         .setLabelText("Damage")
                         .setDecimalVisibility(View.INVISIBLE)
+                        .setPlusMinusVisibility(View.INVISIBLE)
+                        .setReference(1)
                         .setTargetFragment(HpOverviewFragment.this);
-                npb.show();
+                npbDamage.show();
+            }
+        });
+
+        bHealing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NumberPickerBuilder npbHealing = new NumberPickerBuilder()
+                        .setFragmentManager(getChildFragmentManager())
+                        .setStyleResId(R.style.BetterPickersDialogFragment)
+                        .setLabelText("Healing")
+                        .setDecimalVisibility(View.VISIBLE)
+                        .setPlusMinusVisibility(View.INVISIBLE)
+                        .setReference(2)
+                        .setTargetFragment(HpOverviewFragment.this);
+                npbHealing.show();
+            }
+        });
+
+        bST.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            showViewPager();
             }
         });
 
         return view;
     }
 
+    public void showViewPager() {
+
+        /*
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        SavingThrowDialogFragment newFragment = new SavingThrowDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("str", selectedCharacter.getStrength());
+        bundle.putInt("dex", selectedCharacter.getStrength());
+        bundle.putInt("con", selectedCharacter.getStrength());
+        bundle.putInt("intel", selectedCharacter.getStrength());
+        bundle.putInt("wis", selectedCharacter.getStrength());
+        bundle.putInt("cha", selectedCharacter.getStrength());
+        newFragment.setArguments(bundle);
+        newFragment.setTargetFragment(this, 0);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        transaction.add(android.R.id.content, newFragment, "F_ST_DIALOG")
+                .addToBackStack(null).commit();*/
+
+
+        final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        final Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("number_dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        final SavingThrowDialogFragment fragment = SavingThrowDialogFragment
+                .newInstance(selectedCharacter.getStrength(), selectedCharacter.getDexterity(), selectedCharacter.getConstitution(), selectedCharacter.getIntelligence(), selectedCharacter.getWisdom(), selectedCharacter.getCharisma(), selectedCharacter.getStStr(), selectedCharacter.getStDex(), selectedCharacter.getStCon(), selectedCharacter.getStInt(), selectedCharacter.getStWis(), selectedCharacter.getStCha());
+        //fragment.setNumberPickerDialogHandlers(mNumberPickerDialogHandlers);
+        //fragment.setNumberPickerDialogHandlersV2(mNumberPickerDialogHandlersV2);
+        fragment.show(ft, "number_dialog");
+
+    }
+
+    /*
     public void saveChanges() {
         ((TrackerFragment) getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().setHp(id, hpDiff, isTemp, isHeal);
+    } */
+
+    public void setHp(int hpDiff, boolean temporary, boolean isHeal) {
+        if (temporary) {
+            selectedCharacter.setTempHp(hpDiff);
+            selectedCharacter.setHp(selectedCharacter.getHp() + hpDiff);
+        } else {
+            if (isHeal) {
+                selectedCharacter.setHp(selectedCharacter.getHp() + hpDiff);
+                if (selectedCharacter.getHp() > (selectedCharacter.getMaxHp() + selectedCharacter.getTempHp())) {
+                    selectedCharacter.setHp(selectedCharacter.getMaxHp() + selectedCharacter.getTempHp());
+                }
+            } else {
+                if (selectedCharacter.getTempHp() > 0) {
+                    selectedCharacter.setTempHp(selectedCharacter.getTempHp() - hpDiff);
+                    selectedCharacter.setHp(selectedCharacter.getHp() - hpDiff);
+                    if (selectedCharacter.getTempHp() < 0) {
+                        selectedCharacter.setTempHp(0);
+                    }
+                } else {
+                    selectedCharacter.setHp(selectedCharacter.getHp() - hpDiff);
+                }
+            }
+        }
+
+        if (selectedCharacter.getHp() == 0) {
+            selectedCharacter.setDead(true);
+        } else if (selectedCharacter.getHp() < 0) {
+            selectedCharacter.setDead(true);
+            selectedCharacter.setHp(0);
+        }
+        tvHpCurrent.setText(Html.fromHtml("<b>HP</b> " + String.valueOf(selectedCharacter.getHp())));
+        ((TrackerFragment) getParentFragment().getFragmentManager().findFragmentByTag("F_TRACKER")).getChars().notifyDataSetChanged();
     }
+
+
 
     @Override
     public void onDialogNumberSet(int reference, BigInteger number, boolean temporary, boolean isNegative, BigDecimal fullNumber) {
         hpDiff = number.intValue();
+        if(reference == 1){
+            isHeal = false;
+        }else if(reference == 2){
+            isHeal = true;
+        }
         isTemp = temporary;
-        isHeal = isNegative;
+        setHp(hpDiff, isTemp, isHeal);
         //tvDamage.setText(String.valueOf(Math.abs(number.intValue())));
         /*if (isNegative) {
             if (temporary) {

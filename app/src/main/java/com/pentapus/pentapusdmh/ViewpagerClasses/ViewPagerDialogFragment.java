@@ -1,7 +1,9 @@
 package com.pentapus.pentapusdmh.ViewpagerClasses;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -15,7 +17,7 @@ import com.pentapus.pentapusdmh.R;
 /**
  * Created by Koni on 4/4/16.
  */
-public class ViewPagerDialogFragment extends Fragment {
+public class ViewPagerDialogFragment extends DialogFragment {
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
@@ -66,14 +68,7 @@ public class ViewPagerDialogFragment extends Fragment {
             }
         });
         */
-
-
         return view;
-    }
-
-    private void saveData() {
-        ((HpOverviewFragment)pagerAdapter.getRegisteredFragment(1)).saveChanges();
-        ((StatusFragment)pagerAdapter.getRegisteredFragment(2)).saveChanges();
     }
 
     @Override

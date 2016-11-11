@@ -56,7 +56,6 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
     private BigDecimal mMinNumber = null;
     private BigDecimal mMaxNumber = null;
 
-    private boolean heal = false;
     private boolean temporaryHp = false;
 
     /**
@@ -202,6 +201,8 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
         updateKeypad();
     }
 
+
+    /*
     public void togglePlusMinus(){
         if(heal){
             mLeft.setText("Damage");
@@ -216,6 +217,8 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
             heal = !heal;
         }
     }
+
+    */
 
     /**
      * Using View.GONE, View.VISIBILE, or View.INVISIBLE, set the visibility of the plus/minus indicator
@@ -299,7 +302,7 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
             }
         } else if (v == mLeft) {
             onLeftClicked();
-            togglePlusMinus();
+           // togglePlusMinus();
         } else if (v == mRight) {
             onRightClicked();
         }

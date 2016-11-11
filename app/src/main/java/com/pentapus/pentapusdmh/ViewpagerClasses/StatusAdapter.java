@@ -1,5 +1,6 @@
 package com.pentapus.pentapusdmh.ViewpagerClasses;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,12 +21,13 @@ import java.util.List;
  * Created by Koni on 03.04.2016.
  */
 public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.StatusViewHolder> {
+
+    private AdapterNavigationCallback mAdapterCallback;
     private final List<StatusEffect> statusList = Arrays.asList(new StatusEffect("Blinded", R.drawable.status_blinded), new StatusEffect("Charmed", R.drawable.status_charmed), new StatusEffect("Deafened", R.drawable.status_deafened), new StatusEffect("Frightened", R.drawable.status_frightened), new StatusEffect("Grappled", R.drawable.status_grappled), new StatusEffect("Incapacitated", R.drawable.status_incapacitated), new StatusEffect("Invisible", R.drawable.status_invisible),
             new StatusEffect("Paralyzed", R.drawable.status_paralyzed), new StatusEffect("Petrified", R.drawable.status_petrified), new StatusEffect("Poisoned", R.drawable.status_poisoned), new StatusEffect("Prone", R.drawable.status_prone), new StatusEffect("Restrained", R.drawable.status_restrained), new StatusEffect("Stunned", R.drawable.status_stunned), new StatusEffect("Unconscious", R.drawable.status_unconscious), new StatusEffect("Custom", R.drawable.status_custom));
     private final String[] statusNames = {"Blinded", "Charmed", "Deafened", "Frightened", "Grappled", "Incapacitated", "Invisible", "Paralyzed", "Petrified", "Poisoned", "Prone", "Restrained", "Stunned", "Unconscious", "Custom"};
     private final Integer[] statusImageId = {R.drawable.status_blinded, R.drawable.status_charmed, R.drawable.status_deafened, R.drawable.status_frightened, R.drawable.status_grappled, R.drawable.status_incapacitated, R.drawable.status_invisible, R.drawable.status_paralyzed, R.drawable.status_petrified, R.drawable.status_poisoned, R.drawable.status_prone, R.drawable.status_restrained, R.drawable.status_stunned, R.drawable.status_unconscious, R.drawable.status_custom};
     private final boolean[] statuses = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
-
 
     @Override
     public StatusViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,7 +44,6 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.StatusView
         holder.vStatusName.setText(ci.name);
         holder.vStatusImage.setImageResource(ci.imageId);
         holder.vCardView.setCardBackgroundColor(statusList.get(position).isSelected() ? Color.parseColor("#77DCE775") : Color.TRANSPARENT);
-
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.pentapus.pentapusdmh.Fragments.Tracker;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -46,7 +47,7 @@ import java.util.List;
 
 
 public class TrackerFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>{
 
     private int MSG_SHOW_DIALOG = 1000, MSG_FINISH_DIALOG = 1001;
     private static final String ID = "id";
@@ -62,7 +63,6 @@ public class TrackerFragment extends Fragment implements
 
     private TrackerAdapter chars;
     private static int campaignId, encounterId;
-
 
     public class PcListElement {
         public TrackerInfoCard trackerInfoCard;
@@ -176,7 +176,6 @@ public class TrackerFragment extends Fragment implements
         ViewPagerDialogFragment newFragment = new ViewPagerDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ID, id);
-        bundle.putIntArray(ABILITIES, chars.getAbilityMods(id));
         newFragment.setArguments(bundle);
         newFragment.setTargetFragment(this, 0);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -274,6 +273,7 @@ public class TrackerFragment extends Fragment implements
                     int initiative = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int initiativeMod = initiative;
                     int ac = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
+                    int ac2 = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2));
                     int maxHp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
                     int strength = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH));
                     int dexterity = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY));
@@ -285,6 +285,7 @@ public class TrackerFragment extends Fragment implements
 
                     String monsterType = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE));
                     String acType = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE));
+                    String ac2Type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE));
                     int xp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_XP));
                     String size = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SIZE));
                     String source = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SOURCE));
@@ -390,6 +391,7 @@ public class TrackerFragment extends Fragment implements
                     ci.initiative = String.valueOf(initiative);
                     ci.initiativeMod = String.valueOf(initiativeMod);
                     ci.ac = ac;
+                    ci.ac2 = ac2;
                     ci.maxHp = maxHp;
                     ci.hp = maxHp;
                     ci.type = type;
@@ -403,6 +405,7 @@ public class TrackerFragment extends Fragment implements
                     ci.charisma = charisma;
                     ci.iconUri = iconUri;
                     ci.acType = acType;
+                    ci.acType2 = ac2Type;
                     ci.xp = xp;
                     ci.size = size;
                     ci.speed = speed;

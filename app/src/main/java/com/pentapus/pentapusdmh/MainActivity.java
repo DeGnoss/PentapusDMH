@@ -110,13 +110,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             SessionTableFragment ftable = new SessionTableFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.ContainerFrame, ftable, "FT_SESSION")
                     .addToBackStack("FT_SESSION")
                     .commit();
-        }else{
+        } else {
             Fragment fragment = (SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION");
         }
 
@@ -182,11 +182,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .addToBackStack("F_SPELL_PAGER")
                     .commit();
             return true;
-        } else if(id == R.id.add_selected){
-            if(getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER") != null){
-                ((NPCViewPagerDialogFragment)getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).pasteNPC();
-            }else if(getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER") != null){
-                ((MonsterViewPagerDialogFragment)getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).pasteMonster();
+        } else if (id == R.id.add_selected) {
+            if (getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER") != null) {
+                ((NPCViewPagerDialogFragment) getSupportFragmentManager().findFragmentByTag("F_NPC_PAGER")).pasteNPC();
+            } else if (getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER") != null) {
+                ((MonsterViewPagerDialogFragment) getSupportFragmentManager().findFragmentByTag("F_MONSTER_PAGER")).pasteMonster();
             }
             getSupportFragmentManager().popBackStack();
         }
@@ -542,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     fm.popBackStack();
                     Log.d("FragmentList", getSupportFragmentManager().getFragments().toString());
 
-                } else {
+                }else {
                     pressedTwice = false;
                     fm.popBackStack();
                     Log.d("Backstack:", String.valueOf(fm.getBackStackEntryCount()));
@@ -798,8 +798,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public  void closeSearchView() {
-        if(searchView != null){
+    public void closeSearchView() {
+        if (searchView != null) {
             searchView.setIconified(true);
             searchView.setIconified(true);
         }

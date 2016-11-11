@@ -326,39 +326,6 @@ public class TrackerAdapter extends RecyclerView.Adapter<TrackerAdapter.Characte
         }
     }
 
-    public void setHp(int id, int hpDiff, boolean temporary, boolean isHeal) {
-        if (temporary) {
-            characterList.get(id).tempHp = characterList.get(id).tempHp - hpDiff;
-            characterList.get(id).hp = characterList.get(id).hp - hpDiff;
-        } else {
-            if (isHeal) {
-                characterList.get(id).hp = characterList.get(id).hp - hpDiff;
-                if (characterList.get(id).hp > (characterList.get(id).maxHp + characterList.get(id).tempHp)) {
-                    characterList.get(id).hp = characterList.get(id).maxHp + characterList.get(id).tempHp;
-                }
-            } else {
-                if (characterList.get(id).tempHp > 0) {
-                    characterList.get(id).tempHp = characterList.get(id).tempHp - hpDiff;
-                    characterList.get(id).hp = characterList.get(id).hp - hpDiff;
-                    if (characterList.get(id).tempHp < 0) {
-                        characterList.get(id).tempHp = 0;
-                    }
-                } else {
-                    characterList.get(id).hp = characterList.get(id).hp - hpDiff;
-                }
-            }
-        }
-
-
-        if (characterList.get(id).hp == 0) {
-            characterList.get(id).dead = true;
-        } else if (characterList.get(id).hp < 0) {
-            characterList.get(id).dead = true;
-            characterList.get(id).hp = 0;
-        }
-        notifyItemChanged(id);
-    }
-
     public void setStatuses(int id, boolean[] statuses) {
         characterList.get(id).setStatuses(statuses);
         notifyItemChanged(id);

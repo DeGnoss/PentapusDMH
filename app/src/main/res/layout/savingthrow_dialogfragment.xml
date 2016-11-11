@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardSTStrength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="#00000000"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/tvStrength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Strength"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvStrengthResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="5dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvStrengthDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvStrengthResult"
+                android:layout_toStartOf="@+id/tvStrengthResult"
+                android:layout_marginBottom="5dp"
+                android:textColor="#FFFFFFFF" />
+
+            <TextView
+                android:id="@+id/tvLrStrength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/tvStrengthResult"
+                android:textColor="#FFFFFFFF" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/number_view_container"
+        android:background="@color/default_divider_color_dark"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardSTDex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="#00000000"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/tvDex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Dexterity"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvDexResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvDexDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvDexResult"
+                android:layout_toStartOf="@+id/tvDexResult"
+                android:layout_marginBottom="5dp"
+                android:textColor="#FFFFFFFF" />
+
+            <TextView
+                android:id="@+id/tvLrDex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/tvDexResult"
+                android:textColor="#FFFFFFFF" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/number_view_container"
+        android:background="@color/default_divider_color_dark"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardSTCon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="#00000000"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/tvCon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Constitution"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvConResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvConDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvConResult"
+                android:layout_toStartOf="@+id/tvConResult"
+                android:layout_marginBottom="5dp"
+                android:textColor="#FFFFFFFF" />
+
+            <TextView
+                android:id="@+id/tvLrCon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/tvConResult"
+                android:textColor="#FFFFFFFF" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/number_view_container"
+        android:background="@color/default_divider_color_dark"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardSTInt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="#00000000"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/tvInt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Intelligence"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvIntResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvIntDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvIntResult"
+                android:layout_toStartOf="@+id/tvIntResult"
+                android:layout_marginBottom="5dp"
+                android:textColor="#FFFFFFFF" />
+
+            <TextView
+                android:id="@+id/tvLrInt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/tvIntResult"
+                android:textColor="#FFFFFFFF" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/number_view_container"
+        android:background="@color/default_divider_color_dark"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardSTWis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="#00000000"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/tvWis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Wisdom"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvWisResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvWisDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvWisResult"
+                android:layout_toStartOf="@+id/tvWisResult"
+                android:layout_marginBottom="5dp"
+                android:textColor="#FFFFFFFF" />
+
+            <TextView
+                android:id="@+id/tvLrWis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/tvWisResult"
+                android:textColor="#FFFFFFFF" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/number_view_container"
+        android:background="@color/default_divider_color_dark"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardSTCha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="#00000000"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/tvCha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Charisma"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvChaResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="10dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvChaDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvChaResult"
+                android:layout_toStartOf="@+id/tvChaResult"
+                android:layout_marginBottom="5dp"
+                android:textColor="#FFFFFFFF" />
+
+            <TextView
+                android:id="@+id/tvLrCha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/tvChaResult"
+                android:textColor="#FFFFFFFF" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
