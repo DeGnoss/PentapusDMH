@@ -23,6 +23,7 @@ import com.pentapus.pentapusdmh.R;
 import com.wizardpager.wizard.WizardFragment;
 import com.wizardpager.wizard.model.AbstractWizardModel;
 import com.wizardpager.wizard.model.Page;
+import com.wizardpager.wizard.model.SingleFixedChoicePage;
 import com.wizardpager.wizard.ui.StepPagerStrip;
 
 /**
@@ -131,14 +132,19 @@ public class MonsterEditWizardFragment extends WizardFragment {
         String name = mWizardModel.findByKey("Basic Info").getData().getString(BasicInfoPage.NAME_DATA_KEY);
         String type = mWizardModel.findByKey("Basic Info").getData().getString(BasicInfoPage.TYPE_DATA_KEY);
         String alignment = mWizardModel.findByKey("Basic Info").getData().getString(BasicInfoPage.ALIGNMENT_DATA_KEY);
-        saveData(name, type, alignment);
+        String speed = mWizardModel.findByKey("Basic Info").getData().getString(BasicInfoPage.SPEED_DATA_KEY);
+        String imageUri = mWizardModel.findByKey("Basic Info").getData().getString(BasicInfoPage.IMAGEURI_DATA_KEY);
+        String size = mWizardModel.findByKey("Size").getData().getString(SingleFixedChoicePage.SIMPLE_DATA_KEY);
+        saveData(name, type, alignment, speed, imageUri, size);
     }
 
-    private void saveData(String name, String type, String alignment){
+    private void saveData(String name, String type, String alignment, String speed, String imageUri, String size){
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, name);
         values.put(DataBaseHandler.KEY_MONSTERTYPE, type);
         values.put(DataBaseHandler.KEY_ALIGNMENT, alignment);
+        values.put(DataBaseHandler.KEY_SPEED, speed);
+        values.put(DataBaseHandler.KEY_SIZE, size);
        /* values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
         values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
         values.put(DataBaseHandler.KEY_AC, myAc);
@@ -148,10 +154,10 @@ public class MonsterEditWizardFragment extends WizardFragment {
         values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
         values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
         values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);*/
-        if(myFile == null){
-            myFile = Uri.parse("android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
+        if(imageUri == null){
+            imageUri = "android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight";
         }
-        values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
+        values.put(DataBaseHandler.KEY_ICON, imageUri);
         values.put(DataBaseHandler.KEY_SOURCE, "USER");
         values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_MONSTER);
 
@@ -185,7 +191,9 @@ public class MonsterEditWizardFragment extends WizardFragment {
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
             String type = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE));
             String alignment = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT));
-            createBundleBasicInfo(name, type, alignment);
+            String speed = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SPEED));
+            String imageUri = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON));
+            createBundleBasicInfo(name, type, alignment, speed, imageUri);
             //
 
         }
@@ -194,11 +202,13 @@ public class MonsterEditWizardFragment extends WizardFragment {
 
     }
 
-    private void createBundleBasicInfo(String name, String type, String alignment){
+    private void createBundleBasicInfo(String name, String type, String alignment, String speed, String imageUri){
         Bundle bdl1 = new Bundle();
         bdl1.putString("name",name);
         bdl1.putString("type",type);
         bdl1.putString("alignment",alignment);
+        bdl1.putString("speed",speed);
+        bdl1.putString("imageuri",imageUri);
         bundle.putBundle("Basic Info",bdl1);
     }
 

@@ -17,6 +17,8 @@ public class BasicInfoPage extends Page {
     public static final String NAME_DATA_KEY = "name";
     public static final String TYPE_DATA_KEY = "type";
     public static final String ALIGNMENT_DATA_KEY = "alignment";
+    public static final String SPEED_DATA_KEY = "speed";
+    public static final String IMAGEURI_DATA_KEY = "imageuri";
 
     public BasicInfoPage(ModelCallbacks callbacks, String title) {
         super(callbacks, title);
@@ -33,6 +35,12 @@ public class BasicInfoPage extends Page {
         dest.add(new ReviewItem("Name", mData.getString(NAME_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Type", mData.getString(TYPE_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Alignment", mData.getString(ALIGNMENT_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Speed", mData.getString(SPEED_DATA_KEY), getKey(), -1));
+    }
+
+    @Override
+    public String getAvatarUri() {
+        return mData.getString(IMAGEURI_DATA_KEY);
     }
 
     @Override

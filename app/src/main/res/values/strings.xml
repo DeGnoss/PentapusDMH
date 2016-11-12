@@ -30,6 +30,13 @@
     <string name="number_delete">Delete</string>
 
     <string-array name="alignmentX">
+        <item>Chaotic</item>
+        <item>Neutral</item>
+        <item>Lawful</item>
+        <item>Unaligned</item>
+    </string-array>
+
+    <string-array name="alignmentY">
         <item>Evil</item>
         <item>Neutral</item>
         <item>Good</item>
