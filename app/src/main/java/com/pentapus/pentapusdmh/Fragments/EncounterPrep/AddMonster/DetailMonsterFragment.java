@@ -40,7 +40,6 @@ public class DetailMonsterFragment extends Fragment {
     ImageView ivAvatar;
     TextView tvName, tvType, tvHp, tvAc, tvSpeed, tvStr, tvDex, tvCon, tvInt, tvWis, tvCha, tvDmgVul, tvDmgRes, tvDmgIm, tvConIm, tvSenses, tvLanguages, tvCR, tvAbility1, tvAbility2, tvAbility3, tvAbility4, tvAbility5, tvActions, tvMultiattack, tvAction1, tvAction2, tvAction3, tvAction4;
     View vLine4;
-    RelativeLayout.LayoutParams rlp;
 
     public DetailMonsterFragment() {
         // Required empty public constructor
@@ -137,6 +136,9 @@ public class DetailMonsterFragment extends Fragment {
         Spanned myAction2 = null;
         Spanned myAction3 = null;
         Spanned myAction4 = null;
+        Spanned myCR = null;
+        Spanned myHp = null;
+        Spanned myType = null;
 
 
 
@@ -148,28 +150,72 @@ public class DetailMonsterFragment extends Fragment {
             cursor.moveToFirst();
             //Name & Type
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-            Spanned myType = Html.fromHtml("<i>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SIZE)) + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE)) + ", " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT)) + "</i>");
+
+            String tempSize = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SIZE));
+            if(tempSize == null){
+                tempSize = "";
+            }
+            String tempType = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE));
+            if(tempType == null){
+                tempType = "";
+            }
+            String tempAlignment = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT));
+            if(tempAlignment == null){
+                tempAlignment = "";
+            }
+
+            if(tempAlignment == null || tempAlignment.isEmpty()){
+                myType = Html.fromHtml("<i>" + tempSize + " " + tempType + "</i>");
+            }else{
+                myType = Html.fromHtml("<i>" + tempSize + " " + tempType + ", " + tempAlignment + "</i>");
+            }
+
 
             //HP, AC & Speed
-            Spanned myHp = Html.fromHtml("<b>Hit Points </b>" +cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP)) + " (" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_HPROLL)) + ")");
+            String tempHpMax = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
+            String tempHpDice = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_HPROLL));
+            if(tempHpDice == null || tempHpDice.isEmpty()){
+                if(tempHpMax == null || tempHpMax.isEmpty()){
+                    tempHpMax = "-";
+                }
+                myHp = Html.fromHtml("<b>Hit Points</b> " + tempHpMax);
+            }else{
+                if(tempHpMax == null){
+                    tempHpMax = "";
+                }
+                myHp = Html.fromHtml("<b>Hit Points</b> " + tempHpMax + " (" + tempHpDice + ")");
+            }
+
+
 
             String tempAcType = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE));
             String tempAc2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2));
+            String tempAc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
+            if(tempAc == null){
+                tempAc = "";
+            }
             if(tempAcType != null && !tempAcType.isEmpty()){
                 if(tempAc2 != null && !tempAc2.isEmpty()){
-                    myAc = Html.fromHtml("<b>Armor Class </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + " (" + tempAcType + ")" + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc + " (" + tempAcType + ")" + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
                 }else{
-                    myAc = Html.fromHtml("<b>Armor Class </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + " (" + tempAcType + ")");
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc + " (" + tempAcType + ")");
                 }
             }else{
                 if(tempAc2 != null && !tempAc2.isEmpty()){
-                    myAc = Html.fromHtml("<b>Armor Class </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)) + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
                 }else{
-                    myAc = Html.fromHtml("<b>Armor Class </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC)));
+                    if(tempAc == null){
+                        tempAc = "-";
+                    }
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc);
                 }
             }
 
-            Spanned mySpeed = Html.fromHtml("<b>Speed </b>" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SPEED)));
+            String tempSpeed = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SPEED));
+            if(tempSpeed == null){
+                tempSpeed = "-";
+            }
+            Spanned mySpeed = Html.fromHtml("<b>Speed </b>" + tempSpeed);
 
 
             //Abilities
@@ -232,14 +278,35 @@ public class DetailMonsterFragment extends Fragment {
             }
 
 
-            //Senses, Languages & CR
-            Spanned mySenses = Html.fromHtml("<b>Senses </b> " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SENSES)));
+            //Senses
+            String tempSenses = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SENSES));
+            if(tempSenses == null || tempSenses.isEmpty()){
+                tempSenses = "-";
+            }
+            Spanned mySenses = Html.fromHtml("<b>Senses </b> " + tempSenses);
+
+            //Languages
             String tempLanguages = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LANGUAGES));
             if (tempLanguages == null || tempLanguages.isEmpty()) {
                 tempLanguages = "-";
             }
             Spanned myLanguages = Html.fromHtml("<b>Languages</b> " + tempLanguages);
-            Spanned myCR = Html.fromHtml("<b>Challenge</b> " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CR)) + " (" + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_XP)) + " XP" + ")");
+
+            //CR & XP
+            String tempCr = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CR));
+            String tempXP = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_XP));
+
+            if(tempXP == null || tempXP.isEmpty()){
+                if(tempCr == null || tempCr.isEmpty()){
+                    tempCr = "-";
+                }
+                myCR = Html.fromHtml("<b>Challenge</b> " + tempCr);
+            }else{
+                if(tempCr == null){
+                    tempCr = "";
+                }
+                myCR = Html.fromHtml("<b>Challenge</b> " + tempCr + " (" + tempXP + " XP" + ")");
+            }
 
 
             //Feats

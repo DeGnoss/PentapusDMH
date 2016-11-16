@@ -26,6 +26,10 @@ import com.wizardpager.wizard.model.Page;
 import com.wizardpager.wizard.model.SingleFixedChoicePage;
 import com.wizardpager.wizard.ui.StepPagerStrip;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Koni on 11.11.2016.
  */
@@ -134,26 +138,115 @@ public class MonsterEditWizardFragment extends WizardFragment {
         String alignment = mWizardModel.findByKey("Basic Info").getData().getString(BasicInfoPage.ALIGNMENT_DATA_KEY);
         String speed = mWizardModel.findByKey("Basic Info").getData().getString(BasicInfoPage.SPEED_DATA_KEY);
         String imageUri = mWizardModel.findByKey("Basic Info").getData().getString(BasicInfoPage.IMAGEURI_DATA_KEY);
-        String size = mWizardModel.findByKey("Size").getData().getString(SingleFixedChoicePage.SIMPLE_DATA_KEY);
-        saveData(name, type, alignment, speed, imageUri, size);
-    }
 
-    private void saveData(String name, String type, String alignment, String speed, String imageUri, String size){
+        String size = mWizardModel.findByKey("Size").getData().getString(SingleFixedChoicePage.SIMPLE_DATA_KEY);
+
+        String str = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.STR_DATA_KEY);
+        String dex = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.DEX_DATA_KEY);
+        String con = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.CON_DATA_KEY);
+        String intel = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.INT_DATA_KEY);
+        String wis = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.WIS_DATA_KEY);
+        String cha = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.CHA_DATA_KEY);
+        String hp = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.HP_DATA_KEY);
+        String hpdice = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.HITDICE_DATA_KEY);
+        String ac = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.AC_DATA_KEY);
+        String acType = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.ACTYPE_DATA_KEY);
+        String stStr = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.STSTR_DATA_KEY);
+        String stDex = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.STDEX_DATA_KEY);
+        String stCon = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.STCON_DATA_KEY);
+        String stInt = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.STINT_DATA_KEY);
+        String stWis = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.STWIS_DATA_KEY);
+        String stCha = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.STCHA_DATA_KEY);
+
+        String acrobatics = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.ACROBATICS_DATA_KEY);
+        String animalHandling = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.ANIMALHANDLING_DATA_KEY);
+        String arcana = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.ARCANA_DATA_KEY);
+        String athletics = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.ATHLETICS_DATA_KEY);
+        String deception = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.DECEPTION_DATA_KEY);
+        String history = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.HISTORY_DATA_KEY);
+        String insight = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.INSIGHT_DATA_KEY);
+        String intimidation = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.INTIMIDATION_DATA_KEY);
+        String investigation = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.INVESTIGATION_DATA_KEY);
+        String medicine = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.MEDICINE_DATA_KEY);
+        String nature = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.NATURE_DATA_KEY);
+        String perception = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.PERCEPTION_DATA_KEY);
+        String performance = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.PERFORMANCE_DATA_KEY);
+        String persuasion = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.PERSUASION_DATA_KEY);
+        String religion = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.RELIGION_DATA_KEY);
+        String sleightOfHand = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.SLEIGHTOFHAND_DATA_KEY);
+        String stealth = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.STEALTH_DATA_KEY);
+        String survival = mWizardModel.findByKey("Skills").getData().getString(SkillsPage.SURVIVAL_DATA_KEY);
+
+
+
+        String dmgVul = buildString(mWizardModel.findByKey("Damage Vulnerabilities").getData().getStringArrayList(DmgVulChoicePage.SIMPLE_DATA_KEY));
+        String dmgRes = buildString(mWizardModel.findByKey("Damage Resistances").getData().getStringArrayList(DmgVulChoicePage.SIMPLE_DATA_KEY));
+        String dmgIm = buildString(mWizardModel.findByKey("Damage Immunities").getData().getStringArrayList(DmgVulChoicePage.SIMPLE_DATA_KEY));
+        String conIm = buildString(mWizardModel.findByKey("Condition Immunities").getData().getStringArrayList(DmgVulChoicePage.SIMPLE_DATA_KEY));
+
+
+        String t1Name = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T1NAME_DATA_KEY);
+        String t1Desc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T1DESC_DATA_KEY);
+        String t2Name = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T2NAME_DATA_KEY);
+        String t2Desc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T2DESC_DATA_KEY);
+
+
+
+
+
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, name);
         values.put(DataBaseHandler.KEY_MONSTERTYPE, type);
         values.put(DataBaseHandler.KEY_ALIGNMENT, alignment);
         values.put(DataBaseHandler.KEY_SPEED, speed);
         values.put(DataBaseHandler.KEY_SIZE, size);
-       /* values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
-        values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
-        values.put(DataBaseHandler.KEY_AC, myAc);
-        values.put(DataBaseHandler.KEY_STRENGTH, myStrength);
-        values.put(DataBaseHandler.KEY_DEXTERITY, myDexterity);
-        values.put(DataBaseHandler.KEY_CONSTITUTION, myConstitution);
-        values.put(DataBaseHandler.KEY_INTELLIGENCE, myIntelligence);
-        values.put(DataBaseHandler.KEY_WISDOM, myWisdom);
-        values.put(DataBaseHandler.KEY_CHARISMA, myCharisma);*/
+        values.put(DataBaseHandler.KEY_STRENGTH, str);
+        values.put(DataBaseHandler.KEY_DEXTERITY, dex);
+        values.put(DataBaseHandler.KEY_CONSTITUTION, con);
+        values.put(DataBaseHandler.KEY_INTELLIGENCE, intel);
+        values.put(DataBaseHandler.KEY_WISDOM, wis);
+        values.put(DataBaseHandler.KEY_CHARISMA, cha);
+        values.put(DataBaseHandler.KEY_MAXHP, hp);
+        values.put(DataBaseHandler.KEY_HPROLL, hpdice);
+        values.put(DataBaseHandler.KEY_AC, ac);
+        values.put(DataBaseHandler.KEY_ACTYPE, acType);
+        values.put(DataBaseHandler.KEY_STSTR, stStr);
+        values.put(DataBaseHandler.KEY_STDEX, stDex);
+        values.put(DataBaseHandler.KEY_STCON, stCon);
+        values.put(DataBaseHandler.KEY_STINT, stInt);
+        values.put(DataBaseHandler.KEY_STWIS, stWis);
+        values.put(DataBaseHandler.KEY_STCHA, stCha);
+        values.put(DataBaseHandler.KEY_ACROBATICS, acrobatics);
+        values.put(DataBaseHandler.KEY_ANIMALHANDLING, animalHandling);
+        values.put(DataBaseHandler.KEY_ARCANA, arcana);
+        values.put(DataBaseHandler.KEY_ATHLETICS, athletics);
+        values.put(DataBaseHandler.KEY_DECEPTION, deception);
+        values.put(DataBaseHandler.KEY_HISTORY, history);
+        values.put(DataBaseHandler.KEY_INSIGHT, insight);
+        values.put(DataBaseHandler.KEY_INTIMIDATION, intimidation);
+        values.put(DataBaseHandler.KEY_INVESTIGATION, investigation);
+        values.put(DataBaseHandler.KEY_MEDICINE, medicine);
+        values.put(DataBaseHandler.KEY_NATURE, nature);
+        values.put(DataBaseHandler.KEY_PERCEPTION, perception);
+        values.put(DataBaseHandler.KEY_PERFORMANCE, performance);
+        values.put(DataBaseHandler.KEY_PERSUASION, persuasion);
+        values.put(DataBaseHandler.KEY_RELIGION, religion);
+        values.put(DataBaseHandler.KEY_SLEIGHTOFHAND, sleightOfHand);
+        values.put(DataBaseHandler.KEY_STEALTH, stealth);
+        values.put(DataBaseHandler.KEY_SURVIVAL, survival);
+        values.put(DataBaseHandler.KEY_DMGVUL, dmgVul);
+        values.put(DataBaseHandler.KEY_DMGRES, dmgRes);
+        values.put(DataBaseHandler.KEY_DMGIM, dmgIm);
+        values.put(DataBaseHandler.KEY_CONIM, conIm);
+        values.put(DataBaseHandler.KEY_ABILITY1NAME, t1Name);
+        values.put(DataBaseHandler.KEY_ABILITY1DESC, t1Desc);
+        values.put(DataBaseHandler.KEY_ABILITY2NAME, t2Name);
+        values.put(DataBaseHandler.KEY_ABILITY2DESC, t2Desc);
+
+
+
+
+
         if(imageUri == null){
             imageUri = "android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight";
         }
@@ -181,6 +274,8 @@ public class MonsterEditWizardFragment extends WizardFragment {
 
     }
 
+
+
     private void loadMonsterInfo(int id) {
 
         Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_MONSTER + "/" + id);
@@ -193,9 +288,68 @@ public class MonsterEditWizardFragment extends WizardFragment {
             String alignment = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT));
             String speed = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SPEED));
             String imageUri = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON));
-            createBundleBasicInfo(name, type, alignment, speed, imageUri);
-            //
+            String size = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SIZE));
 
+            String str = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STRENGTH));
+            String dex = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DEXTERITY));
+            String con = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONSTITUTION));
+            String intel = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE));
+            String wis = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
+            String cha = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
+            String hp = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
+            String hpdice = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_HPROLL));
+
+            String ac = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
+            String acType = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE));
+
+            String stStr = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STSTR));
+            String stDex = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STDEX));
+            String stCon = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STCON));
+            String stInt = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STINT));
+            String stWis = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STWIS));
+            String stCha = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STCHA));
+
+            String acrobatics = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ACROBATICS));
+            String animalhandling = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ANIMALHANDLING));
+            String arcana = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ARCANA));
+            String athletics = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATHLETICS));
+            String deception = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DECEPTION));
+            String history = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_HISTORY));
+            String insight = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INSIGHT));
+            String intimidation = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INTIMIDATION));
+            String investigation = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INVESTIGATION));
+            String medicine = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MEDICINE));
+            String nature = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NATURE));
+            String perception = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_PERCEPTION));
+            String performance = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_PERFORMANCE));
+            String persuasion = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_PERSUASION));
+            String religion = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_RELIGION));
+            String sleightofhand = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SLEIGHTOFHAND));
+            String stealth = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_STEALTH));
+            String survival = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SURVIVAL));
+
+            String dmgVul = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGVUL));
+            String dmgRes = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGRES));
+            String dmgIm = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGIM));
+            String conIm = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONIM));
+
+            String t1Name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1NAME));
+            String t1Desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1DESC));
+            String t2Name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY2NAME));
+            String t2Desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY2DESC));
+
+
+
+
+            createBundleBasicInfo(name, type, alignment, speed, imageUri);
+            createBundleSize(size);
+            createBundleAbilities(str, dex, con, intel, wis, cha, hp, hpdice, ac, acType, stStr, stDex, stCon, stInt, stWis, stCha);
+            createBundleSkills(acrobatics, animalhandling, arcana, athletics, deception, history, insight, intimidation, investigation, medicine, nature, perception, performance, persuasion, religion, sleightofhand, stealth, survival);
+            createBundleDmgVul(dmgVul);
+            createBundleDmgRes(dmgRes);
+            createBundleDmgIm(dmgIm);
+            createBundleConIm(conIm);
+            createBundleTraits(t1Name, t1Desc, t2Name, t2Desc);
         }
         assert cursor != null;
         cursor.close();
@@ -211,5 +365,119 @@ public class MonsterEditWizardFragment extends WizardFragment {
         bdl1.putString("imageuri",imageUri);
         bundle.putBundle("Basic Info",bdl1);
     }
+
+
+
+    private void createBundleSize(String size){
+        Bundle bdl1 = new Bundle();
+        bdl1.putString("Size",size);
+        bundle.putBundle("Size",bdl1);
+    }
+
+    private void createBundleAbilities(String str, String dex, String con, String intel, String wis, String cha, String hp, String hpdice, String ac, String acType, String stStr, String stDex, String stCon, String stInt, String stWis, String stCha){
+        Bundle bdl1 = new Bundle();
+        bdl1.putString("str",str);
+        bdl1.putString("dex",dex);
+        bdl1.putString("con",con);
+        bdl1.putString("int",intel);
+        bdl1.putString("wis",wis);
+        bdl1.putString("cha",cha);
+        bdl1.putString("hp",hp);
+        bdl1.putString("hitdice",hpdice);
+        bdl1.putString("ac",ac);
+        bdl1.putString("actype",acType);
+        bdl1.putString("ststr", stStr);
+        bdl1.putString("stdex",stDex);
+        bdl1.putString("stcon",stCon);
+        bdl1.putString("stint",stInt);
+        bdl1.putString("stwis",stWis);
+        bdl1.putString("stcha",stCha);
+        bundle.putBundle("Abilities & Hit Points",bdl1);
+    }
+
+    private void createBundleSkills(String acrobatics, String animalhandling, String arcana, String athletics, String deception, String history, String insight, String intimidation, String investigation, String medicine, String nature, String perception, String performance, String persuasion, String religion, String sleightofhand, String stealth, String survival){
+        Bundle bdl1 = new Bundle();
+        bdl1.putString("acrobatics",acrobatics);
+        bdl1.putString("animalhandling",animalhandling);
+        bdl1.putString("arcana",arcana);
+        bdl1.putString("athletics",athletics);
+        bdl1.putString("deception",deception);
+        bdl1.putString("history",history);
+        bdl1.putString("insight",insight);
+        bdl1.putString("intimidation",intimidation);
+        bdl1.putString("investigation",investigation);
+        bdl1.putString("medicine",medicine);
+        bdl1.putString("nature",nature);
+        bdl1.putString("perception",perception);
+        bdl1.putString("performance",performance);
+        bdl1.putString("persuasion",persuasion);
+        bdl1.putString("religion",religion);
+        bdl1.putString("sleightofhand",sleightofhand);
+        bdl1.putString("stealth",stealth);
+        bdl1.putString("survival",survival);
+        bundle.putBundle("Skills",bdl1);
+    }
+
+    private void createBundleDmgVul(String dmgVul){
+        Bundle bdl1 = new Bundle();
+        if(dmgVul != null) {
+            bdl1.putStringArrayList("Damage Vulnerabilities", reconstructArrayList(dmgVul));
+        }
+        bundle.putBundle("Damage Vulnerabilities",bdl1);
+    }
+
+    private void createBundleDmgRes(String dmgRes){
+        Bundle bdl1 = new Bundle();
+        if(dmgRes != null){
+            bdl1.putStringArrayList("Damage Resistances",reconstructArrayList(dmgRes));
+        }
+        bundle.putBundle("Damage Resistances",bdl1);
+    }
+
+    private void createBundleDmgIm(String dmgIm){
+        Bundle bdl1 = new Bundle();
+        if(dmgIm != null){
+            bdl1.putStringArrayList("Damage Immunities",reconstructArrayList(dmgIm));
+        }
+        bundle.putBundle("Damage Immunities",bdl1);
+    }
+
+    private void createBundleConIm(String conIm){
+        Bundle bdl1 = new Bundle();
+        if(conIm != null){
+            bdl1.putStringArrayList("Condition Immunities",reconstructArrayList(conIm));
+        }
+        bundle.putBundle("Condition Immunities",bdl1);
+    }
+
+    private void createBundleTraits(String t1Name, String t1Desc, String t2Name, String t2Desc){
+        Bundle bdl1 = new Bundle();
+        bdl1.putString("t1name",t1Name);
+        bdl1.putString("t1desc",t1Desc);
+        bdl1.putString("t2name",t2Name);
+        bdl1.putString("t2desc",t2Desc);
+        bundle.putBundle("Traits",bdl1);
+    }
+
+
+    private String buildString(ArrayList<String> stringArray){
+        StringBuilder builder = new StringBuilder();
+        if(stringArray == null){
+            return null;
+        }
+        for(String s : stringArray) {
+            if (builder.length() > 0) {
+                builder.append("; ");
+            }
+            builder.append(s);
+        }
+        return builder.toString();
+    }
+
+    private ArrayList<String> reconstructArrayList(String string){
+        ArrayList<String> myList = new ArrayList<String>(Arrays.asList(string.split("; ")));
+        return myList;
+    }
+
 
 }

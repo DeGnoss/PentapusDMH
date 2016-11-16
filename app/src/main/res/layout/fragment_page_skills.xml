@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/WizardPageContainer">
+
+    <TextView style="@style/WizardPageTitle" />
+
+    <ScrollView style="@style/FragmentInfo">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/l1"
+                style="@style/WizardFormSkillLabel"
+                android:layout_alignBottom="@+id/tvAcrobatics"
+                android:text="Acrobatics (Dex)" />
+
+            <TextView
+                android:id="@+id/l2"
+                style="@style/WizardFormSkillLabel"
+                android:layout_alignBottom="@+id/tvAnimalHandling"
+                android:text="Animal Handling (Wis)" />
+
+            <TextView
+                android:id="@+id/l3"
+                android:layout_alignBottom="@+id/tvArcana"
+                style="@style/WizardFormSkillLabel"
+                android:text="Arcana (Int)" />
+
+            <TextView
+                android:id="@+id/l4"
+                android:layout_alignBottom="@+id/tvAthletics"
+                style="@style/WizardFormSkillLabel"
+                android:text="Athletics (Str)" />
+
+            <TextView
+                android:id="@+id/l5"
+                android:layout_alignBottom="@+id/tvDeception"
+                style="@style/WizardFormSkillLabel"
+                android:text="Deception (Cha)" />
+
+            <TextView
+                android:id="@+id/l6"
+                android:layout_alignBottom="@+id/tvHistory"
+                style="@style/WizardFormSkillLabel"
+                android:text="History (Int)" />
+
+            <TextView
+                android:id="@+id/l7"
+                android:layout_alignBottom="@+id/tvInsight"
+                style="@style/WizardFormSkillLabel"
+                android:text="Insight (Wis)" />
+
+            <TextView
+                android:id="@+id/l8"
+                android:layout_alignBottom="@+id/tvIntimidation"
+                style="@style/WizardFormSkillLabel"
+                android:text="Intimidation (Cha)" />
+
+            <TextView
+                android:id="@+id/l9"
+                android:layout_alignBottom="@+id/tvInvestigation"
+                style="@style/WizardFormSkillLabel"
+                android:text="Investigation (Int)" />
+
+            <TextView
+                android:id="@+id/l10"
+                android:layout_alignBottom="@+id/tvMedicine"
+                style="@style/WizardFormSkillLabel"
+                android:text="Medicine (Wis)" />
+
+            <TextView
+                android:id="@+id/l11"
+                android:layout_alignBottom="@+id/tvNature"
+                style="@style/WizardFormSkillLabel"
+                android:text="Nature (Int)" />
+
+            <TextView
+                android:id="@+id/l12"
+                android:layout_alignBottom="@+id/tvPerception"
+                style="@style/WizardFormSkillLabel"
+                android:text="Perception (Wis)" />
+
+            <TextView
+                android:id="@+id/l13"
+                android:layout_alignBottom="@+id/tvPerformance"
+                style="@style/WizardFormSkillLabel"
+                android:text="Performance (Cha)" />
+
+            <TextView
+                android:id="@+id/l14"
+                android:layout_alignBottom="@+id/tvPersuasion"
+                style="@style/WizardFormSkillLabel"
+                android:text="Persuasion (Cha)" />
+
+            <TextView
+                android:id="@+id/l15"
+                android:layout_alignBottom="@+id/tvReligion"
+                style="@style/WizardFormSkillLabel"
+                android:text="Religion (Int)" />
+
+            <TextView
+                android:id="@+id/l16"
+                android:layout_alignBottom="@+id/tvSleightOfHand"
+                style="@style/WizardFormSkillLabel"
+                android:text="Sleight of Hand (Dex)" />
+
+            <TextView
+                android:id="@+id/l17"
+                android:layout_alignBottom="@+id/tvStealth"
+                style="@style/WizardFormSkillLabel"
+                android:text="Stealth (Dex)" />
+
+            <TextView
+                android:id="@+id/l18"
+                android:layout_alignBottom="@+id/tvSurvival"
+                style="@style/WizardFormSkillLabel"
+                android:text="Survival (Wis)" />
+
+
+            <EditText
+                android:id="@+id/tvAcrobatics"
+                android:layout_alignParentTop="true"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvAnimalHandling"
+                android:layout_below="@+id/tvAcrobatics"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvArcana"
+                android:layout_below="@+id/tvAnimalHandling"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvAthletics"
+                android:layout_below="@+id/tvArcana"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvDeception"
+                android:layout_below="@+id/tvAthletics"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvHistory"
+                android:layout_below="@+id/tvDeception"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvInsight"
+                android:layout_below="@+id/tvHistory"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvIntimidation"
+                android:layout_below="@+id/tvInsight"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvInvestigation"
+                android:layout_below="@+id/tvIntimidation"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvMedicine"
+                android:layout_below="@+id/tvInvestigation"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvNature"
+                android:layout_below="@+id/tvMedicine"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvPerception"
+                android:layout_below="@+id/tvNature"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvPerformance"
+                android:layout_below="@+id/tvPerception"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvPersuasion"
+                android:layout_below="@+id/tvPerformance"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvReligion"
+                android:layout_below="@+id/tvPersuasion"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvSleightOfHand"
+                android:layout_below="@+id/tvReligion"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvStealth"
+                android:layout_below="@+id/tvSleightOfHand"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvSurvival"
+                android:layout_below="@+id/tvStealth"
+                style="@style/FragmentInfoSkill" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

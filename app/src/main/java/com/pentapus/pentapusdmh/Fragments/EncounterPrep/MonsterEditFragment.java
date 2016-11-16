@@ -171,7 +171,7 @@ public class MonsterEditFragment extends Fragment {
                 null);
         if (cursor != null && cursor.moveToFirst()) {
             String myName = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-            String myInfo = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
+            //String myInfo = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO));
             String myInitiative = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INITIATIVEBONUS));
             String myMaxHp = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
             String myAc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
@@ -184,7 +184,7 @@ public class MonsterEditFragment extends Fragment {
             myFile = Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
 
             name.setText(myName, TextView.BufferType.EDITABLE);
-            info.setText(myInfo, TextView.BufferType.EDITABLE);
+            //info.setText(myInfo, TextView.BufferType.EDITABLE);
             init.setText(myInitiative, TextView.BufferType.EDITABLE);
             maxHp.setText(myMaxHp, TextView.BufferType.EDITABLE);
             ac.setText(myAc, TextView.BufferType.EDITABLE);

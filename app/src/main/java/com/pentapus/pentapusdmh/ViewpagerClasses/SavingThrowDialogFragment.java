@@ -297,7 +297,7 @@ public class SavingThrowDialogFragment extends DialogFragment {
             }else{
                 tvWisDetail.setText(Html.fromHtml(rolled + " - " + Math.abs(stWis) + " = "));
             }
-            lrWis = rolled + stInt;
+            lrWis = rolled + stWis;
         }else{
             tvWisResult.setText(String.valueOf(rolled + mod));
             if(mod >= 0){
