@@ -3,6 +3,7 @@ package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonste
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,12 +16,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
+import com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView;
 import com.pentapus.pentapusdmh.R;
 import com.wizardpager.wizard.ui.PageFragmentCallbacks;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Koni on 11.11.2016.
@@ -33,7 +40,10 @@ public class AbilitiesFragment extends Fragment {
     private String mKey;
     private AbilitiesPage mPage;
     private TextView mStrView, mDexView, mConView, mIntView, mWisView, mChaView;
-    private TextView mHpView, mHpDiceView, mAcView, mAcTypeView;
+    private TextView mHpView, mHpDiceView, mAcView;
+    private CustomAutoCompleteTextView mAcTypeView;
+    ArrayAdapter<String> mSuggestionAdapter;
+    String[] item;
     private TextView mStStrView, mStDexView, mStConView, mStIntView, mStWisView, mStChaView;
 
 
@@ -94,8 +104,10 @@ public class AbilitiesFragment extends Fragment {
         mAcView = ((TextView) rootView.findViewById(R.id.tvAC));
         mAcView.setText(mPage.getData().getString(AbilitiesPage.AC_DATA_KEY));
 
-        mAcTypeView = ((TextView) rootView.findViewById(R.id.tvACType));
+        mAcTypeView = ((CustomAutoCompleteTextView) rootView.findViewById(R.id.tvACType));
         mAcTypeView.setText(mPage.getData().getString(AbilitiesPage.ACTYPE_DATA_KEY));
+        mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line);
+        mAcTypeView.setAdapter(mSuggestionAdapter);
 
 
 
@@ -139,12 +151,13 @@ public class AbilitiesFragment extends Fragment {
 
         mStrView.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
@@ -308,6 +321,13 @@ public class AbilitiesFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // query the database based on the user input
+                item = getItemsFromDb(charSequence.toString(), "actype");
+
+                // update the adapater
+                mSuggestionAdapter.notifyDataSetChanged();
+                mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, item);
+                mAcTypeView.setAdapter(mSuggestionAdapter);
             }
 
             @Override
@@ -443,5 +463,57 @@ public class AbilitiesFragment extends Fragment {
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }
         }
+    }
+
+    public String[] getItemsFromDb(String searchTerm, String column) {
+
+        // add items on the array dynamically
+        List<String> entries = filterData(searchTerm, column);
+        int rowCount = entries.size();
+
+        String[] item = new String[rowCount];
+        //String[] item = new String[1];
+        int x = 0;
+        //item[x] = "Monstrosity";
+
+        for (String record : entries) {
+
+            item[x] = record;
+            x++;
+        }
+
+        return item;
+    }
+
+
+    public List<String> filterData(String filterArgs, String column) {
+        List<String> results = new ArrayList<String>();
+
+        Uri uri = DbContentProvider.CONTENT_URI_MONSTER;
+        String selection = "";
+        String[] selectionArgs;
+        List<String> selectionList = new ArrayList<>();
+
+        String filter = "%" + filterArgs + "%";
+        selectionList.add(filter);
+        selectionArgs = new String[selectionList.size()];
+        selectionList.toArray(selectionArgs);
+        if (filterArgs != null) {
+            selection = column + " LIKE ?";
+        }
+
+        //String filterFormatted = "%" + filterArgs + "%";
+        //filters.putString("filter", filterFormatted);
+        Cursor cursor = getContext().getContentResolver().query(uri, new String[]{"DISTINCT " + column}, selection, selectionArgs,
+                null);
+
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                results.add(cursor.getString(cursor.getColumnIndexOrThrow(column)));
+            } while (cursor.moveToNext());
+        }
+
+        return results;
     }
 }

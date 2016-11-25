@@ -204,10 +204,11 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
+                android:weightSum="3"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
@@ -226,7 +227,7 @@
 
                     <EditText
                         android:id="@+id/tvHP"
-                        android:layout_width="100dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:hint="e.g. 36"
@@ -236,9 +237,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -255,8 +256,9 @@
 
                     <EditText
                         android:id="@+id/tvHitDice"
-                        android:layout_width="100dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:layout_marginBottom="10dp"
                         android:hint="e.g. 10d8+5"
                         android:nextFocusDown="@+id/tvAC"
@@ -272,10 +274,11 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
+                android:weightSum="3"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
@@ -294,7 +297,7 @@
 
                     <EditText
                         android:id="@+id/tvAC"
-                        android:layout_width="100dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:hint="e.g. 14"
@@ -305,9 +308,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -322,11 +325,12 @@
                         android:textColor="@color/text_light"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView
                         android:id="@+id/tvACType"
-                        android:layout_width="100dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        android:layout_marginStart="10dp"
                         android:hint="e.g. natural armor"
                         android:inputType="text"
                         android:nextFocusDown="@+id/tvStStr"

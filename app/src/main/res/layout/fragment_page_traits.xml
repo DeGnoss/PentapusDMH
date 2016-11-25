@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/WizardPageContainer">
 
     <TextView style="@style/WizardPageTitle" />
@@ -12,22 +13,20 @@
 
 
             <TextView
-                android:id="@+id/l1"
-                style="@style/WizardFormLabel"
-                android:text="Trait 1 Name"
-                android:layout_alignParentTop="true"/>
-
-            <EditText
                 android:id="@+id/tvTrait1Name"
-                android:layout_below="@+id/l1"
-                style="@style/FragmentTraitName" />
+                android:layout_alignParentTop="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                />
 
             <TextView
                 android:id="@+id/l2"
                 style="@style/WizardFormLabel"
                 android:text="Trait 1 Description"
                 android:layout_below="@+id/tvTrait1Name"/>
-
             <EditText
                 android:id="@+id/tvTrait1Description"
                 android:layout_below="@+id/l2"
@@ -39,28 +38,92 @@
                 style="@style/WizardFormLabel"
                 android:text="Trait 2 Name"
                 android:layout_below="@+id/tvTrait1Description"/>
-
             <EditText
                 android:id="@+id/tvTrait2Name"
                 android:layout_below="@+id/l3"
                 style="@style/FragmentTraitName" />
-
             <TextView
                 android:id="@+id/l4"
                 style="@style/WizardFormLabel"
                 android:text="Trait 2 Description"
                 android:layout_below="@+id/tvTrait2Name"/>
-
             <EditText
                 android:id="@+id/tvTrait2Description"
                 android:layout_below="@+id/l4"
                 style="@style/FragmentTraitDescription" />
 
+            <TextView
+                android:id="@+id/l5"
+                style="@style/WizardFormLabel"
+                android:text="Trait 3 Name"
+                android:layout_below="@+id/tvTrait2Description"/>
+            <EditText
+                android:id="@+id/tvTrait3Name"
+                android:layout_below="@+id/l5"
+                style="@style/FragmentTraitName" />
+            <TextView
+                android:id="@+id/l6"
+                style="@style/WizardFormLabel"
+                android:text="Trait 3 Description"
+                android:layout_below="@+id/tvTrait3Name"/>
+            <EditText
+                android:id="@+id/tvTrait3Description"
+                android:layout_below="@+id/l6"
+                style="@style/FragmentTraitName" />
 
 
+            <TextView
+                android:id="@+id/l7"
+                style="@style/WizardFormLabel"
+                android:text="Trait 4 Name"
+                android:layout_below="@+id/tvTrait3Description"/>
+            <EditText
+                android:id="@+id/tvTrait4Name"
+                android:layout_below="@+id/l7"
+                style="@style/FragmentTraitName" />
+            <TextView
+                android:id="@+id/l8"
+                style="@style/WizardFormLabel"
+                android:text="Trait 4 Description"
+                android:layout_below="@+id/tvTrait4Name"/>
+            <EditText
+                android:id="@+id/tvTrait4Description"
+                android:layout_below="@+id/l8"
+                style="@style/FragmentTraitName" />
+
+
+            <TextView
+                android:id="@+id/l9"
+                style="@style/WizardFormLabel"
+                android:text="Trait 5 Name"
+                android:layout_below="@+id/tvTrait4Description"/>
+            <EditText
+                android:id="@+id/tvTrait5Name"
+                android:layout_below="@+id/l9"
+                style="@style/FragmentTraitName" />
+            <TextView
+                android:id="@+id/l10"
+                style="@style/WizardFormLabel"
+                android:text="Trait 5 Description"
+                android:layout_below="@+id/tvTrait5Name"/>
+            <EditText
+                android:id="@+id/tvTrait5Description"
+                android:layout_below="@+id/l10"
+                style="@style/FragmentTraitName" />
 
 
         </RelativeLayout>
     </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabTraits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:elevation="4dp"
+        app:srcCompat="@drawable/ic_action_add" />
 
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.pentapus.pentapusdmh.ViewpagerClasses;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.Html;
@@ -59,16 +60,34 @@ public class ActionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = (View)inflater.inflate(R.layout.viewpager_actions, container, false);
 
-        tvMultiAttack = (TextView) view.findViewById(R.id.tvMultiattack);
-        tvAction1 = (TextView) view.findViewById(R.id.tvAction1);
-        tvAction2 = (TextView) view.findViewById(R.id.tvAction2);
-        tvAction3 = (TextView) view.findViewById(R.id.tvAction3);
-        tvAction4 = (TextView) view.findViewById(R.id.tvAction4);
+
         cardMultiattack = (CardView) view.findViewById(R.id.cardMultiattack);
         cardAction1 = (CardView) view.findViewById(R.id.cardAction1);
         cardAction2 = (CardView) view.findViewById(R.id.cardAction2);
         cardAction3 = (CardView) view.findViewById(R.id.cardAction3);
         cardAction4 = (CardView) view.findViewById(R.id.cardAction4);
+
+        tvMultiAttack = (TextView) view.findViewById(R.id.tvMultiattack);
+        tvAction1 = (TextView) view.findViewById(R.id.tvAction1);
+        tvAction2 = (TextView) view.findViewById(R.id.tvAction2);
+        tvAction3 = (TextView) view.findViewById(R.id.tvAction3);
+        tvAction4 = (TextView) view.findViewById(R.id.tvAction4);
+
+        if(selectedCharacter.getAtk1autoroll()==1){
+            cardAction1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showViewPager();
+                }
+            });
+            tvAction1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showViewPager();
+                }
+            });
+        }
+
 
 
         if(selectedCharacter.getMultiattack() != null && !selectedCharacter.getMultiattack().isEmpty()){
@@ -122,6 +141,23 @@ public class ActionFragment extends Fragment {
 
         // Inflate the layout to use as dialog or embedded fragment
         return view;
+    }
+
+    public void showViewPager() {
+
+        final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        final Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("action_dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        final ActionRollDialogFragment fragment = ActionRollDialogFragment
+                .newInstance(selectedCharacter.getAtk1name(), selectedCharacter.getAtk1desc(), selectedCharacter.getAtk1mod(), selectedCharacter.getAtk1additional(), selectedCharacter.getAtk1dmg1roll(), selectedCharacter.getAtk1dmg1type(), selectedCharacter.getAtk1dmg2roll(), selectedCharacter.getAtk1dmg2type());
+        //fragment.setNumberPickerDialogHandlers(mNumberPickerDialogHandlers);
+        //fragment.setNumberPickerDialogHandlersV2(mNumberPickerDialogHandlersV2);
+        fragment.show(ft, "action_dialog");
+
     }
 
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_centerInParent="true">
+
+    <TextView
+        android:id="@+id/l1"
+        style="@style/WizardFormLabel"
+        android:text="Trait 1 Name"
+        android:layout_alignParentTop="true"/>
+
+    <EditText
+        android:id="@+id/tvTrait1Name"
+        android:layout_below="@+id/l1"
+        style="@style/FragmentTraitName" />
+
+    <TextView
+        android:id="@+id/l2"
+        style="@style/WizardFormLabel"
+        android:text="Trait 1 Description"
+        android:layout_below="@+id/tvTrait1Name"/>
+    <EditText
+        android:id="@+id/tvTrait1Description"
+        android:layout_below="@+id/l2"
+        android:inputType="textMultiLine"
+        style="@style/FragmentTraitDescription" />
+
+
+</RelativeLayout>

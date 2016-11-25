@@ -29,17 +29,35 @@
     <string name="number_picker_minus_label">—</string>
     <string name="number_delete">Delete</string>
 
-    <string-array name="alignmentX">
-        <item>Chaotic</item>
-        <item>Neutral</item>
-        <item>Lawful</item>
+    <string-array name="alignment_array">
         <item>Unaligned</item>
+        <item>Chaotic Evil</item>
+        <item>Chaotic Neutral</item>
+        <item>Chaotic Good</item>
+        <item>Neutral Evil</item>
+        <item>Neutral</item>
+        <item>Neutral Good</item>
+        <item>Lawful Evil</item>
+        <item>Lawful Neutral</item>
+        <item>Lawful Good</item>
     </string-array>
 
-    <string-array name="alignmentY">
-        <item>Evil</item>
-        <item>Neutral</item>
-        <item>Good</item>
+
+
+    <string-array name="damagetypes_array">
+        <item>Bludgeoning</item>
+        <item>Piercing</item>
+        <item>Slashing</item>
+        <item>Acid</item>
+        <item>Cold</item>
+        <item>Fire</item>
+        <item>Force</item>
+        <item>Lightning</item>
+        <item>Necrotic</item>
+        <item>Poison</item>
+        <item>Psychic</item>
+        <item>Radiant</item>
+        <item>Thunder</item>
     </string-array>
 
 </resources>

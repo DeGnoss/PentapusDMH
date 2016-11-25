@@ -306,27 +306,6 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
 
     public void showViewPager() {
 
-        /*
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        SavingThrowDialogFragment newFragment = new SavingThrowDialogFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("str", selectedCharacter.getStrength());
-        bundle.putInt("dex", selectedCharacter.getStrength());
-        bundle.putInt("con", selectedCharacter.getStrength());
-        bundle.putInt("intel", selectedCharacter.getStrength());
-        bundle.putInt("wis", selectedCharacter.getStrength());
-        bundle.putInt("cha", selectedCharacter.getStrength());
-        newFragment.setArguments(bundle);
-        newFragment.setTargetFragment(this, 0);
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        // For a little polish, specify a transition animation
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        // To make it fullscreen, use the 'content' root view as the container
-        // for the fragment, which is always the root view for the activity
-        transaction.add(android.R.id.content, newFragment, "F_ST_DIALOG")
-                .addToBackStack(null).commit();*/
-
-
         final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         final Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("number_dialog");
         if (prev != null) {

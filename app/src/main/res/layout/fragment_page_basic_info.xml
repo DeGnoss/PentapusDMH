@@ -46,7 +46,7 @@
                 style="@style/WizardFormLabel"
                 android:text="Type" />
 
-            <EditText
+            <com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView
                 android:id="@+id/tvMonsterType"
                 style="@style/FragmentInfoType" />
 
@@ -54,7 +54,7 @@
                 style="@style/WizardFormLabel"
                 android:text="Alignment" />
 
-            <EditText
+            <com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView
                 android:id="@+id/tvMonsterAlignment"
                 style="@style/FragmentInfoAlignment" />
 

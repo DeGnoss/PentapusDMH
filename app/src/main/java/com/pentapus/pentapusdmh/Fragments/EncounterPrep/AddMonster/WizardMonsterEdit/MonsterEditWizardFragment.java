@@ -189,6 +189,23 @@ public class MonsterEditWizardFragment extends WizardFragment {
         String t1Desc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T1DESC_DATA_KEY);
         String t2Name = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T2NAME_DATA_KEY);
         String t2Desc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T2DESC_DATA_KEY);
+        String t3Name = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T3NAME_DATA_KEY);
+        String t3Desc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T3DESC_DATA_KEY);
+        String t4Name = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T4NAME_DATA_KEY);
+        String t4Desc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T4DESC_DATA_KEY);
+        String t5Name = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T5NAME_DATA_KEY);
+        String t5Desc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T5DESC_DATA_KEY);
+
+        String a1name = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1NAME_DATA_KEY);
+        String a1desc = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1DESC_DATA_KEY);
+        String a1mod = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1MOD_DATA_KEY);
+        String a1roll1 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1ROLL1_DATA_KEY);
+        String a1roll2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1ROLL2_DATA_KEY);
+        String a1type1 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1TYPE1_DATA_KEY);
+        String a1type2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1TYPE2_DATA_KEY);
+        String a1auto = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1AUTO_DATA_KEY);
+        String a1add = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1ADD_DATA_KEY);
+
 
 
 
@@ -242,8 +259,22 @@ public class MonsterEditWizardFragment extends WizardFragment {
         values.put(DataBaseHandler.KEY_ABILITY1DESC, t1Desc);
         values.put(DataBaseHandler.KEY_ABILITY2NAME, t2Name);
         values.put(DataBaseHandler.KEY_ABILITY2DESC, t2Desc);
+        values.put(DataBaseHandler.KEY_ABILITY3NAME, t3Name);
+        values.put(DataBaseHandler.KEY_ABILITY3DESC, t3Desc);
+        values.put(DataBaseHandler.KEY_ABILITY4NAME, t4Name);
+        values.put(DataBaseHandler.KEY_ABILITY4DESC, t4Desc);
+        values.put(DataBaseHandler.KEY_ABILITY5NAME, t5Name);
+        values.put(DataBaseHandler.KEY_ABILITY5DESC, t5Desc);
 
-
+        values.put(DataBaseHandler.KEY_ATK1NAME, a1name);
+        values.put(DataBaseHandler.KEY_ATK1DESC, a1desc);
+        values.put(DataBaseHandler.KEY_ATK1MOD, a1mod);
+        values.put(DataBaseHandler.KEY_ATK1DMG1ROLL, a1roll1);
+        values.put(DataBaseHandler.KEY_ATK1DMG2ROLL, a1roll2);
+        values.put(DataBaseHandler.KEY_ATK1DMG1TYPE, a1type1);
+        values.put(DataBaseHandler.KEY_ATK1DMG2TYPE, a1type2);
+        values.put(DataBaseHandler.KEY_ATK1AUTOROLL, a1auto);
+        values.put(DataBaseHandler.KEY_ATK1ADDITIONAL, a1add);
 
 
 
@@ -337,8 +368,22 @@ public class MonsterEditWizardFragment extends WizardFragment {
             String t1Desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1DESC));
             String t2Name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY2NAME));
             String t2Desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY2DESC));
+            String t3Name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY3NAME));
+            String t3Desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY3DESC));
+            String t4Name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY4NAME));
+            String t4Desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY4DESC));
+            String t5Name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY5NAME));
+            String t5Desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY5DESC));
 
-
+            String a1name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1NAME));
+            String a1desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DESC));
+            String a1mod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1MOD));
+            String a1roll1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG1ROLL));
+            String a1roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG2ROLL));
+            String a1type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG1TYPE));
+            String a1type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG2TYPE));
+            String a1auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1AUTOROLL));
+            String a1add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1ADDITIONAL));
 
 
             createBundleBasicInfo(name, type, alignment, speed, imageUri);
@@ -349,7 +394,8 @@ public class MonsterEditWizardFragment extends WizardFragment {
             createBundleDmgRes(dmgRes);
             createBundleDmgIm(dmgIm);
             createBundleConIm(conIm);
-            createBundleTraits(t1Name, t1Desc, t2Name, t2Desc);
+            createBundleTraits(t1Name, t1Desc, t2Name, t2Desc, t3Name, t3Desc, t4Name, t4Desc, t5Name, t5Desc);
+            createBundle(a1name, a1desc, a1mod, a1roll1, a1roll2, a1type1, a1type2, a1auto, a1add);
         }
         assert cursor != null;
         cursor.close();
@@ -450,13 +496,33 @@ public class MonsterEditWizardFragment extends WizardFragment {
         bundle.putBundle("Condition Immunities",bdl1);
     }
 
-    private void createBundleTraits(String t1Name, String t1Desc, String t2Name, String t2Desc){
+    private void createBundleTraits(String t1Name, String t1Desc, String t2Name, String t2Desc, String t3Name, String t3Desc, String t4Name, String t4Desc, String t5Name, String t5Desc){
         Bundle bdl1 = new Bundle();
         bdl1.putString("t1name",t1Name);
         bdl1.putString("t1desc",t1Desc);
         bdl1.putString("t2name",t2Name);
         bdl1.putString("t2desc",t2Desc);
+        bdl1.putString("t3name",t3Name);
+        bdl1.putString("t3desc",t3Desc);
+        bdl1.putString("t4name",t4Name);
+        bdl1.putString("t4desc",t4Desc);
+        bdl1.putString("t5name",t5Name);
+        bdl1.putString("t5desc",t5Desc);
         bundle.putBundle("Traits",bdl1);
+    }
+
+    private void createBundle(String a1name, String a1desc, String a1mod, String a1roll1, String a1roll2, String a1type1, String a1type2, String a1auto, String a1add){
+        Bundle bdl1 = new Bundle();
+        bdl1.putString("a1name",a1name);
+        bdl1.putString("a1desc",a1desc);
+        bdl1.putString("a1mod",a1mod);
+        bdl1.putString("a1roll1",a1roll1);
+        bdl1.putString("a1roll2",a1roll2);
+        bdl1.putString("a1type1",a1type1);
+        bdl1.putString("a1type2",a1type2);
+        bdl1.putString("a1auto",a1auto);
+        bdl1.putString("a1add",a1add);
+        bundle.putBundle("Actions",bdl1);
     }
 
 

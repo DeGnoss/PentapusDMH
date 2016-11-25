@@ -37,7 +37,8 @@ public class MonsterEditWizardModel extends AbstractWizardModel {
                         .setChoices("Acid", "Cold", "Fire", "Force", "Lightning", "Necrotic", "Poison",  "Psychic", "Radiant", "Thunder", "Bludgeoning, piercing and slashing from nonmagical weapons", "Bludgeoning, piercing and slashing from nonmagical weapons that aren't silvered"),
                 new DmgVulChoicePage(this, "Condition Immunities")
                         .setChoices("Blinded", "Charmed", "Deafened", "Frightened", "Grappled", "Incapacitated", "Invisible",  "Paralyzed", "Petrified", "Poisoned", "Prone", "Restrained", "Stunned", "Unconscious"),
-                new TraitsPage(this, "Traits")
+                new TraitsPage(this, "Traits"),
+                new ActionPage(this, "Actions")
         );
     }
 }

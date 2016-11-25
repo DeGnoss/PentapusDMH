@@ -17,6 +17,12 @@ public class TraitsPage extends Page {
     public static final String T1DESC_DATA_KEY = "t1desc";
     public static final String T2NAME_DATA_KEY = "t2name";
     public static final String T2DESC_DATA_KEY = "t2desc";
+    public static final String T3NAME_DATA_KEY = "t3name";
+    public static final String T3DESC_DATA_KEY = "t3desc";
+    public static final String T4NAME_DATA_KEY = "t4name";
+    public static final String T4DESC_DATA_KEY = "t4desc";
+    public static final String T5NAME_DATA_KEY = "t5name";
+    public static final String T5DESC_DATA_KEY = "t5desc";
 
 
 
@@ -38,6 +44,12 @@ public class TraitsPage extends Page {
         dest.add(new ReviewItem("Trait 1 Description", mData.getString(T1DESC_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Trait 2 Name", mData.getString(T2NAME_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Trait 2 Description", mData.getString(T2DESC_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Trait 3 Name", mData.getString(T3NAME_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Trait 3 Description", mData.getString(T3DESC_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Trait 4 Name", mData.getString(T4NAME_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Trait 4 Description", mData.getString(T4DESC_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Trait 5 Name", mData.getString(T5NAME_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Trait 5 Description", mData.getString(T5DESC_DATA_KEY), getKey(), -1));
     }
 
     @Override
