@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.R;
+import com.wizardpager.wizard.model.Page;
 
 import java.util.List;
 
@@ -29,18 +30,28 @@ import java.util.List;
 public class AddTraitDialogFragment extends DialogFragment {
 
     Button positiveButton;
-    String name, description;
     EditText tvTrait1Name, tvTrait1Description;
+    int mode = 0, traitNumber;
+    String name, description;
 
 
     public AddTraitDialogFragment(){
     }
 
-    public static AddTraitDialogFragment newInstance() {
+    //mode: 0 = add, 1 = update
+    public static AddTraitDialogFragment newInstance(int mode, String name, String description, int traitNumber) {
         AddTraitDialogFragment f = new AddTraitDialogFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
+        args.putInt("mode", mode);
+        args.putInt("traitNumber", traitNumber);
+        if(name != null){
+            args.putString("name", name);
+        }
+        if(description != null){
+            args.putString("description", description);
+        }
         f.setArguments(args);
 
         return f;
@@ -51,6 +62,10 @@ public class AddTraitDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
+            mode = getArguments().getInt("mode");
+            name = getArguments().getString("name");
+            description = getArguments().getString("description");
+            traitNumber = getArguments().getInt("traitNumber");
         }
         setCancelable(true);
     }
@@ -89,7 +104,8 @@ public class AddTraitDialogFragment extends DialogFragment {
                     }
                     else
                     {
-                        getActivity().getSupportFragmentManager().popBackStack();
+                        dialog.dismiss();
+                        //getActivity().getSupportFragmentManager().popBackStack();
                         return true; // pretend we've processed it
                     }
                 }
@@ -101,9 +117,9 @@ public class AddTraitDialogFragment extends DialogFragment {
 
 
 
-    private void sendResult(String name, String description) {
+    private void sendResult(int mode, String name, String description, int traitNumber) {
         ((TraitsFragment) getTargetFragment()).onDialogResult(
-                getTargetRequestCode(), name, description);
+                getTargetRequestCode(), mode, name, description, traitNumber);
     }
 
 
@@ -116,8 +132,11 @@ public class AddTraitDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_createtrait, null);
         tvTrait1Name = (EditText) view.findViewById(R.id.tvTrait1Name);
         tvTrait1Description = (EditText) view.findViewById(R.id.tvTrait1Description);
+        if(mode == 1){
+            tvTrait1Name.setText(name);
+            tvTrait1Description.setText(description);
+        }
         builder.setView(view);
-
 
         // Set up the buttons
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
@@ -125,13 +144,14 @@ public class AddTraitDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 name = tvTrait1Name.getText().toString();
                 description = tvTrait1Description.getText().toString();
-                sendResult(name, description);
+                sendResult(mode, name, description, traitNumber);
             }
         });
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                getActivity().getSupportFragmentManager().popBackStack();
+                dialog.dismiss();
+                //getActivity().getSupportFragmentManager().popBackStack();
             }
         });
         AlertDialog dialog = builder.create();

@@ -35,6 +35,7 @@ public class TraitsFragment extends Fragment {
     private TextView l2, l3, l4, l5, l6, l7, l8, l9, l10;
     private TextView tvTrait1Name, tvTrait1Description, tvTrait2Name, tvTrait2Description, tvTrait3Name, tvTrait3Description, tvTrait4Name, tvTrait4Description, tvTrait5Name, tvTrait5Description;
     private FloatingActionButton fabTraits;
+    private int traitCounter;
 
     public static TraitsFragment create(String key) {
         Bundle args = new Bundle();
@@ -63,83 +64,85 @@ public class TraitsFragment extends Fragment {
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
         tvTrait1Name = ((TextView) rootView.findViewById(R.id.tvTrait1Name));
-        tvTrait1Name.setText(mPage.getData().getString(TraitsPage.T1NAME_DATA_KEY));
-        //tvTrait1Name.setVisibility(View.GONE);
+        Spanned trait = Html.fromHtml("<b>" + mPage.getData().getString(TraitsPage.T1NAME_DATA_KEY) + ".</b>" + mPage.getData().getString(TraitsPage.T1DESC_DATA_KEY));
+        tvTrait1Name.setText(trait);
+        if (mPage.getData().getString(TraitsPage.T1NAME_DATA_KEY) == null || (mPage.getData().getString(TraitsPage.T1NAME_DATA_KEY).isEmpty())) {
+            tvTrait1Name.setVisibility(View.GONE);
+        }
+        tvTrait1Name.setOnClickListener(new View.OnClickListener() {
 
-        l2 = ((TextView) rootView.findViewById(R.id.l2));
-        l2.setVisibility(View.GONE);
-
-        tvTrait1Description = ((TextView) rootView.findViewById(R.id.tvTrait1Description));
-        tvTrait1Description.setText(mPage.getData().getString(TraitsPage.T1DESC_DATA_KEY));
-        tvTrait1Description.setVisibility(View.GONE);
-
-        l3 = ((TextView) rootView.findViewById(R.id.l3));
-        l3.setVisibility(View.GONE);
+            @Override
+            public void onClick(View view) {
+                onFabClick(1, mPage.getData().getString(TraitsPage.T1NAME_DATA_KEY), mPage.getData().getString(TraitsPage.T1DESC_DATA_KEY), 1);
+            }
+        });
 
         tvTrait2Name = ((TextView) rootView.findViewById(R.id.tvTrait2Name));
-        tvTrait2Name.setText(mPage.getData().getString(TraitsPage.T2NAME_DATA_KEY));
-        tvTrait2Name.setVisibility(View.GONE);
+        trait = Html.fromHtml("<b>" + mPage.getData().getString(TraitsPage.T2NAME_DATA_KEY) + ".</b>" + mPage.getData().getString(TraitsPage.T2DESC_DATA_KEY));
+        tvTrait2Name.setText(trait);
+        if (mPage.getData().getString(TraitsPage.T2NAME_DATA_KEY) == null || (mPage.getData().getString(TraitsPage.T2NAME_DATA_KEY).isEmpty())) {
+            tvTrait2Name.setVisibility(View.GONE);
+        }
+        tvTrait2Name.setOnClickListener(new View.OnClickListener() {
 
-        l4 = ((TextView) rootView.findViewById(R.id.l4));
-        l4.setVisibility(View.GONE);
-
-        tvTrait2Description = ((TextView) rootView.findViewById(R.id.tvTrait2Description));
-        tvTrait2Description.setText(mPage.getData().getString(TraitsPage.T2DESC_DATA_KEY));
-        tvTrait2Description.setVisibility(View.GONE);
-
-        l5 = ((TextView) rootView.findViewById(R.id.l5));
-        l5.setVisibility(View.GONE);
+            @Override
+            public void onClick(View view) {
+                onFabClick(1, mPage.getData().getString(TraitsPage.T2NAME_DATA_KEY), mPage.getData().getString(TraitsPage.T2DESC_DATA_KEY), 2);
+            }
+        });
 
         tvTrait3Name = ((TextView) rootView.findViewById(R.id.tvTrait3Name));
-        tvTrait3Name.setText(mPage.getData().getString(TraitsPage.T3NAME_DATA_KEY));
-        tvTrait3Name.setVisibility(View.GONE);
+        trait = Html.fromHtml("<b>" + mPage.getData().getString(TraitsPage.T3NAME_DATA_KEY) + ".</b>" + mPage.getData().getString(TraitsPage.T3DESC_DATA_KEY));
+        tvTrait3Name.setText(trait);
+        if (mPage.getData().getString(TraitsPage.T3NAME_DATA_KEY) == null || (mPage.getData().getString(TraitsPage.T3NAME_DATA_KEY).isEmpty())) {
+            tvTrait3Name.setVisibility(View.GONE);
+        }
+        tvTrait3Name.setOnClickListener(new View.OnClickListener() {
 
-        l6 = ((TextView) rootView.findViewById(R.id.l6));
-        l6.setVisibility(View.GONE);
-
-        tvTrait3Description = ((TextView) rootView.findViewById(R.id.tvTrait3Description));
-        tvTrait3Description.setText(mPage.getData().getString(TraitsPage.T3DESC_DATA_KEY));
-        tvTrait3Description.setVisibility(View.GONE);
-
-        l7 = ((TextView) rootView.findViewById(R.id.l7));
-        l7.setVisibility(View.GONE);
+            @Override
+            public void onClick(View view) {
+                onFabClick(1, mPage.getData().getString(TraitsPage.T3NAME_DATA_KEY), mPage.getData().getString(TraitsPage.T3DESC_DATA_KEY), 3);
+            }
+        });
 
         tvTrait4Name = ((TextView) rootView.findViewById(R.id.tvTrait4Name));
-        tvTrait4Name.setText(mPage.getData().getString(TraitsPage.T4NAME_DATA_KEY));
-        tvTrait4Name.setVisibility(View.GONE);
+        trait = Html.fromHtml("<b>" + mPage.getData().getString(TraitsPage.T4NAME_DATA_KEY) + ".</b>" + mPage.getData().getString(TraitsPage.T4DESC_DATA_KEY));
+        tvTrait4Name.setText(trait);
+        if (mPage.getData().getString(TraitsPage.T4NAME_DATA_KEY) == null || (mPage.getData().getString(TraitsPage.T4NAME_DATA_KEY).isEmpty())) {
+            tvTrait4Name.setVisibility(View.GONE);
+        }
+        tvTrait4Name.setOnClickListener(new View.OnClickListener() {
 
-        l8 = ((TextView) rootView.findViewById(R.id.l8));
-        l8.setVisibility(View.GONE);
-
-        tvTrait4Description = ((TextView) rootView.findViewById(R.id.tvTrait4Description));
-        tvTrait4Description.setText(mPage.getData().getString(TraitsPage.T4DESC_DATA_KEY));
-        tvTrait4Description.setVisibility(View.GONE);
-
-        l9 = ((TextView) rootView.findViewById(R.id.l9));
-        l9.setVisibility(View.GONE);
+            @Override
+            public void onClick(View view) {
+                onFabClick(1, mPage.getData().getString(TraitsPage.T4NAME_DATA_KEY), mPage.getData().getString(TraitsPage.T4DESC_DATA_KEY), 4);
+            }
+        });
 
         tvTrait5Name = ((TextView) rootView.findViewById(R.id.tvTrait5Name));
-        tvTrait5Name.setText(mPage.getData().getString(TraitsPage.T5NAME_DATA_KEY));
-        tvTrait5Name.setVisibility(View.GONE);
+        trait = Html.fromHtml("<b>" + mPage.getData().getString(TraitsPage.T5NAME_DATA_KEY) + ".</b>" + mPage.getData().getString(TraitsPage.T5DESC_DATA_KEY));
+        tvTrait5Name.setText(trait);
+        if (mPage.getData().getString(TraitsPage.T5NAME_DATA_KEY) == null || (mPage.getData().getString(TraitsPage.T5NAME_DATA_KEY).isEmpty())) {
+            tvTrait5Name.setVisibility(View.GONE);
+        }
+        tvTrait5Name.setOnClickListener(new View.OnClickListener() {
 
-        l10 = ((TextView) rootView.findViewById(R.id.l10));
-        l10.setVisibility(View.GONE);
-
-        tvTrait5Description = ((TextView) rootView.findViewById(R.id.tvTrait5Description));
-        tvTrait5Description.setText(mPage.getData().getString(TraitsPage.T5DESC_DATA_KEY));
-        tvTrait5Description.setVisibility(View.GONE);
+            @Override
+            public void onClick(View view) {
+                onFabClick(1, mPage.getData().getString(TraitsPage.T5NAME_DATA_KEY), mPage.getData().getString(TraitsPage.T5DESC_DATA_KEY), 5);
+            }
+        });
 
         fabTraits = (FloatingActionButton) rootView.findViewById(R.id.fabTraits);
         fabTraits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onFabClick();
+                onFabClick(0, null, null, 0);
             }
         });
 
         return rootView;
     }
-
 
 
     @Override
@@ -157,191 +160,6 @@ public class TraitsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-        tvTrait1Name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T1NAME_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-        tvTrait1Description.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T1DESC_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-        tvTrait2Name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T2NAME_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-        tvTrait2Description.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T2DESC_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-
-        tvTrait3Name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T3NAME_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-        tvTrait3Description.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T3DESC_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-
-        tvTrait4Name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T4NAME_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-        tvTrait4Description.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T4DESC_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-
-        tvTrait5Name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T5NAME_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-        tvTrait5Description.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TraitsPage.T5DESC_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
     }
 
     @Override
@@ -359,16 +177,127 @@ public class TraitsFragment extends Fragment {
         }
     }
 
-    public void onFabClick(){
-        DialogFragment newFragment = AddTraitDialogFragment.newInstance();
+    public void onFabClick(int mode, String name, String description, int traitNumber) {
+        DialogFragment newFragment = AddTraitDialogFragment.newInstance(mode, name, description, traitNumber);
+        newFragment.setTargetFragment(this, MSG_FINISH_DIALOG);
         newFragment.setTargetFragment(this, MSG_FINISH_DIALOG);
         newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDTRAIT_DIALOG");
     }
 
-    public void onDialogResult(int requestCode, String name, String description) {
-        Spanned trait1 = Html.fromHtml("<b>" + name + ". </b> " + description);
-        tvTrait1Name.setText(trait1);
-        //tvTrait1Name.setVisibility(View.VISIBLE);
+    public void onDialogResult(int requestCode, int mode, String name, String description, int traitNumber) {
+        Spanned trait = Html.fromHtml("<b>" + name + ". </b> " + description);
+        if (mode == 0) {
+            switch (traitCounter) {
+                case 0:
+                    tvTrait1Name.setText(trait);
+                    tvTrait1Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T1NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T1DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                case 1:
+                    tvTrait2Name.setText(trait);
+                    tvTrait2Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T2NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T2DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                case 2:
+                    tvTrait3Name.setText(trait);
+                    tvTrait3Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T3NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T3DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                case 3:
+                    tvTrait4Name.setText(trait);
+                    tvTrait4Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T4NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T4DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                case 4:
+                    tvTrait5Name.setText(trait);
+                    tvTrait5Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T5NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T5DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                default:
+                    break;
+            }
+        } else if (mode == 1) {
+            switch (traitNumber) {
+                case 1:
+                    tvTrait1Name.setText(trait);
+                    tvTrait1Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T1NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T1DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                case 2:
+                    tvTrait2Name.setText(trait);
+                    tvTrait2Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T2NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T2DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                case 3:
+                    tvTrait3Name.setText(trait);
+                    tvTrait3Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T3NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T3DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                case 4:
+                    tvTrait4Name.setText(trait);
+                    tvTrait4Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T4NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T4DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                case 5:
+                    tvTrait5Name.setText(trait);
+                    tvTrait5Name.setVisibility(View.VISIBLE);
+                    traitCounter++;
+                    mPage.getData().putString(TraitsPage.T5NAME_DATA_KEY,
+                            name);
+                    mPage.getData().putString(TraitsPage.T5DESC_DATA_KEY,
+                            description);
+                    mPage.notifyDataChanged();
+                    break;
+                default:
+                    break;
+            }
+        }
+
         /*l2.setVisibility(View.VISIBLE);
         tvTrait1Description.setText(description);
         tvTrait1Description.setVisibility(View.VISIBLE);*/
