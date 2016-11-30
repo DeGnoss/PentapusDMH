@@ -154,6 +154,13 @@ public class AddTraitDialogFragment extends DialogFragment {
                 //getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+        builder.setNeutralButton("Remove", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                sendResult(mode, "", "", traitNumber);
+                //getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
         AlertDialog dialog = builder.create();
 
         // Create the AlertDialog object and return it

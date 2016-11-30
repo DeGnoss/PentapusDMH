@@ -36,6 +36,7 @@ public class TraitsFragment extends Fragment {
     private TextView tvTrait1Name, tvTrait1Description, tvTrait2Name, tvTrait2Description, tvTrait3Name, tvTrait3Description, tvTrait4Name, tvTrait4Description, tvTrait5Name, tvTrait5Description;
     private FloatingActionButton fabTraits;
     private int traitCounter;
+    private Spanned trait;
 
     public static TraitsFragment create(String key) {
         Bundle args = new Bundle();
@@ -185,121 +186,163 @@ public class TraitsFragment extends Fragment {
     }
 
     public void onDialogResult(int requestCode, int mode, String name, String description, int traitNumber) {
-        Spanned trait = Html.fromHtml("<b>" + name + ". </b> " + description);
-        if (mode == 0) {
-            switch (traitCounter) {
-                case 0:
-                    tvTrait1Name.setText(trait);
-                    tvTrait1Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T1NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T1DESC_DATA_KEY,
-                            description);
-                    mPage.notifyDataChanged();
-                    break;
-                case 1:
-                    tvTrait2Name.setText(trait);
-                    tvTrait2Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T2NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T2DESC_DATA_KEY,
-                            description);
-                    mPage.notifyDataChanged();
-                    break;
-                case 2:
-                    tvTrait3Name.setText(trait);
-                    tvTrait3Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T3NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T3DESC_DATA_KEY,
-                            description);
-                    mPage.notifyDataChanged();
-                    break;
-                case 3:
-                    tvTrait4Name.setText(trait);
-                    tvTrait4Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T4NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T4DESC_DATA_KEY,
-                            description);
-                    mPage.notifyDataChanged();
-                    break;
-                case 4:
-                    tvTrait5Name.setText(trait);
-                    tvTrait5Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T5NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T5DESC_DATA_KEY,
-                            description);
-                    mPage.notifyDataChanged();
-                    break;
-                default:
-                    break;
+        if (!name.isEmpty() || !description.isEmpty()) {
+            trait = Html.fromHtml("<b>" + name + ". </b> " + description);
+            if (mode == 0) {
+                switch (traitCounter) {
+                    case 0:
+                        tvTrait1Name.setText(trait);
+                        tvTrait1Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T1NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T1DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    case 1:
+                        tvTrait2Name.setText(trait);
+                        tvTrait2Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T2NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T2DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    case 2:
+                        tvTrait3Name.setText(trait);
+                        tvTrait3Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T3NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T3DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    case 3:
+                        tvTrait4Name.setText(trait);
+                        tvTrait4Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T4NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T4DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    case 4:
+                        tvTrait5Name.setText(trait);
+                        tvTrait5Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T5NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T5DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    default:
+                        break;
+                }
+            } else if (mode == 1) {
+                switch (traitNumber) {
+                    case 1:
+                        tvTrait1Name.setText(trait);
+                        tvTrait1Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T1NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T1DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    case 2:
+                        tvTrait2Name.setText(trait);
+                        tvTrait2Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T2NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T2DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    case 3:
+                        tvTrait3Name.setText(trait);
+                        tvTrait3Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T3NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T3DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    case 4:
+                        tvTrait4Name.setText(trait);
+                        tvTrait4Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T4NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T4DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    case 5:
+                        tvTrait5Name.setText(trait);
+                        tvTrait5Name.setVisibility(View.VISIBLE);
+                        traitCounter++;
+                        mPage.getData().putString(TraitsPage.T5NAME_DATA_KEY,
+                                name);
+                        mPage.getData().putString(TraitsPage.T5DESC_DATA_KEY,
+                                description);
+                        mPage.notifyDataChanged();
+                        break;
+                    default:
+                        break;
+                }
             }
-        } else if (mode == 1) {
-            switch (traitNumber) {
+
+        /*l2.setVisibility(View.VISIBLE);
+        tvTrait1Description.setText(description);
+        tvTrait1Description.setVisibility(View.VISIBLE);*/
+        } else{
+            switch (traitCounter) {
                 case 1:
-                    tvTrait1Name.setText(trait);
-                    tvTrait1Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T1NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T1DESC_DATA_KEY,
-                            description);
+                    tvTrait1Name.setVisibility(View.GONE);
+                    traitCounter--;
+                    mPage.getData().remove(TraitsPage.T1NAME_DATA_KEY);
+                    mPage.getData().remove(TraitsPage.T1DESC_DATA_KEY);
                     mPage.notifyDataChanged();
                     break;
                 case 2:
-                    tvTrait2Name.setText(trait);
-                    tvTrait2Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T2NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T2DESC_DATA_KEY,
-                            description);
+                    tvTrait2Name.setVisibility(View.GONE);
+                    traitCounter--;
+                    mPage.getData().remove(TraitsPage.T2NAME_DATA_KEY);
+                    mPage.getData().remove(TraitsPage.T2DESC_DATA_KEY);
                     mPage.notifyDataChanged();
                     break;
                 case 3:
-                    tvTrait3Name.setText(trait);
-                    tvTrait3Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T3NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T3DESC_DATA_KEY,
-                            description);
+                    tvTrait3Name.setVisibility(View.GONE);
+                    traitCounter--;
+                    mPage.getData().remove(TraitsPage.T3NAME_DATA_KEY);
+                    mPage.getData().remove(TraitsPage.T3DESC_DATA_KEY);
                     mPage.notifyDataChanged();
                     break;
                 case 4:
-                    tvTrait4Name.setText(trait);
-                    tvTrait4Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T4NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T4DESC_DATA_KEY,
-                            description);
+                    tvTrait4Name.setVisibility(View.GONE);
+                    traitCounter--;
+                    mPage.getData().remove(TraitsPage.T4NAME_DATA_KEY);
+                    mPage.getData().remove(TraitsPage.T4DESC_DATA_KEY);
                     mPage.notifyDataChanged();
                     break;
                 case 5:
-                    tvTrait5Name.setText(trait);
-                    tvTrait5Name.setVisibility(View.VISIBLE);
-                    traitCounter++;
-                    mPage.getData().putString(TraitsPage.T5NAME_DATA_KEY,
-                            name);
-                    mPage.getData().putString(TraitsPage.T5DESC_DATA_KEY,
-                            description);
+                    tvTrait5Name.setVisibility(View.GONE);
+                    traitCounter--;
+                    mPage.getData().remove(TraitsPage.T5NAME_DATA_KEY);
+                    mPage.getData().remove(TraitsPage.T5DESC_DATA_KEY);
                     mPage.notifyDataChanged();
                     break;
                 default:
                     break;
             }
         }
-
-        /*l2.setVisibility(View.VISIBLE);
-        tvTrait1Description.setText(description);
-        tvTrait1Description.setVisibility(View.VISIBLE);*/
     }
 }

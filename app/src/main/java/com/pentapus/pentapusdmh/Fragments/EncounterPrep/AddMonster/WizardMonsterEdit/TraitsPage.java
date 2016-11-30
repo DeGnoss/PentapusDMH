@@ -40,16 +40,26 @@ public class TraitsPage extends Page {
 
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
-        dest.add(new ReviewItem("Trait 1 Name", mData.getString(T1NAME_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 1 Description", mData.getString(T1DESC_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 2 Name", mData.getString(T2NAME_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 2 Description", mData.getString(T2DESC_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 3 Name", mData.getString(T3NAME_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 3 Description", mData.getString(T3DESC_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 4 Name", mData.getString(T4NAME_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 4 Description", mData.getString(T4DESC_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 5 Name", mData.getString(T5NAME_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Trait 5 Description", mData.getString(T5DESC_DATA_KEY), getKey(), -1));
+        if(mData.getString(T1NAME_DATA_KEY) != null && !mData.getString(T1NAME_DATA_KEY).isEmpty()){
+            dest.add(new ReviewItem(mData.getString(T1NAME_DATA_KEY), mData.getString(T1DESC_DATA_KEY), getKey(), -1));
+        }
+        if(mData.getString(T2NAME_DATA_KEY) != null && !mData.getString(T2NAME_DATA_KEY).isEmpty()){
+            dest.add(new ReviewItem(mData.getString(T2NAME_DATA_KEY), mData.getString(T2DESC_DATA_KEY), getKey(), -1));
+        }
+        if(mData.getString(T3NAME_DATA_KEY) != null && !mData.getString(T3NAME_DATA_KEY).isEmpty()){
+            dest.add(new ReviewItem(mData.getString(T3NAME_DATA_KEY), mData.getString(T3DESC_DATA_KEY), getKey(), -1));
+        }
+        if(mData.getString(T4NAME_DATA_KEY) != null && !mData.getString(T4NAME_DATA_KEY).isEmpty()){
+            dest.add(new ReviewItem(mData.getString(T4NAME_DATA_KEY), mData.getString(T4DESC_DATA_KEY), getKey(), -1));
+        }
+        if(mData.getString(T5NAME_DATA_KEY) != null && !mData.getString(T5NAME_DATA_KEY).isEmpty()){
+            dest.add(new ReviewItem(mData.getString(T5NAME_DATA_KEY), mData.getString(T5DESC_DATA_KEY), getKey(), -1));
+        }
+        //dest.add(new ReviewItem("Trait 1 Description", mData.getString(T1DESC_DATA_KEY), getKey(), -1));
+        //dest.add(new ReviewItem("Trait 2 Description", mData.getString(T2DESC_DATA_KEY), getKey(), -1));
+        //dest.add(new ReviewItem("Trait 3 Description", mData.getString(T3DESC_DATA_KEY), getKey(), -1));
+        //dest.add(new ReviewItem("Trait 4 Description", mData.getString(T4DESC_DATA_KEY), getKey(), -1));
+        //dest.add(new ReviewItem("Trait 5 Description", mData.getString(T5DESC_DATA_KEY), getKey(), -1));
     }
 
     @Override
