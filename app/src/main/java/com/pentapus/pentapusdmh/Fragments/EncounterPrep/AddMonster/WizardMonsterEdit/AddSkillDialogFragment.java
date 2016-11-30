@@ -76,6 +76,7 @@ public class AddSkillDialogFragment extends DialogFragment {
             persuasion = getArguments().getInt("persuasion");
             religion = getArguments().getInt("religion");
             sleightofHand = getArguments().getInt("sleightofHand");
+            stealth = getArguments().getInt("stealth");
             survival = getArguments().getInt("survival");
         }
         setCancelable(true);

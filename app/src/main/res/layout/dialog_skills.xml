@@ -123,86 +123,103 @@
             <EditText
                 android:id="@+id/tvAcrobatics"
                 android:layout_alignParentTop="true"
+                android:nextFocusDown="@+id/tvAnimalHandling"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvAnimalHandling"
                 android:layout_below="@+id/tvAcrobatics"
+                android:nextFocusDown="@+id/tvArcana"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvArcana"
                 android:layout_below="@+id/tvAnimalHandling"
+                android:nextFocusDown="@+id/tvAthletics"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvAthletics"
                 android:layout_below="@+id/tvArcana"
+                android:nextFocusDown="@+id/tvDeception"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvDeception"
                 android:layout_below="@+id/tvAthletics"
+                android:nextFocusDown="@+id/tvHistory"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvHistory"
                 android:layout_below="@+id/tvDeception"
+                android:nextFocusDown="@+id/tvInsight"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvInsight"
                 android:layout_below="@+id/tvHistory"
+                android:nextFocusDown="@+id/tvIntimidation"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvIntimidation"
                 android:layout_below="@+id/tvInsight"
+                android:nextFocusDown="@+id/tvInvestigation"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvInvestigation"
                 android:layout_below="@+id/tvIntimidation"
+                android:nextFocusDown="@+id/tvMedicine"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvMedicine"
                 android:layout_below="@+id/tvInvestigation"
+                android:nextFocusDown="@+id/tvNature"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvNature"
                 android:layout_below="@+id/tvMedicine"
+                android:nextFocusDown="@+id/tvPerception"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvPerception"
                 android:layout_below="@+id/tvNature"
+                android:nextFocusDown="@+id/tvPerformance"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvPerformance"
                 android:layout_below="@+id/tvPerception"
+                android:nextFocusDown="@+id/tvPersuasion"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvPersuasion"
                 android:layout_below="@+id/tvPerformance"
+                android:nextFocusDown="@+id/tvReligion"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvReligion"
                 android:layout_below="@+id/tvPersuasion"
+                android:nextFocusDown="@+id/tvSleightOfHand"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvSleightOfHand"
                 android:layout_below="@+id/tvReligion"
+                android:nextFocusDown="@+id/tvStealth"
                 style="@style/FragmentInfoSkill" />
 
             <EditText
                 android:id="@+id/tvStealth"
                 android:layout_below="@+id/tvSleightOfHand"
+                android:nextFocusDown="@+id/tvSurvival"
                 style="@style/FragmentInfoSkill" />
 
             <EditText

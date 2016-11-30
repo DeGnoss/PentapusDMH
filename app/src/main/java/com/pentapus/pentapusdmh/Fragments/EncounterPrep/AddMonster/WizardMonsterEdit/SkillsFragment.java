@@ -92,7 +92,9 @@ public class SkillsFragment extends Fragment {
 
         String skills = buildSkillString(acrobatics, animalhandling, arcana, athletics, deception, history, insight, intimidation, investigation, medicine, nature, perception, performance, persuasion, religion, sleightofhand, stealth, survival);
         tvSkills = ((TextView) rootView.findViewById(R.id.tvSkills));
-        tvSkills.setText(skills);
+        if(!skills.isEmpty()){
+            tvSkills.setText(skills);
+        }
         tvSkills.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
