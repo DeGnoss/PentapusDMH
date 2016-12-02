@@ -129,9 +129,9 @@ public class AddSkillDialogFragment extends DialogFragment {
 
 
 
-    private void sendResult(int acrobatics, int animalHandling, int arcana, int athletics, int deception, int history, int insight, int intimidation, int investigation, int medicine, int nature, int perception, int performance, int persuasion, int religion, int sleightofHand, int stealth, int survival) {
+    private void sendResult(Bundle results){
         ((SkillsFragment) getTargetFragment()).onDialogResult(
-                getTargetRequestCode(), acrobatics, animalHandling, arcana, athletics, deception, history, insight, intimidation, investigation, medicine, nature, perception, performance, persuasion, religion, sleightofHand, stealth, survival);
+                getTargetRequestCode(), results);
     }
 
 
@@ -202,26 +202,29 @@ public class AddSkillDialogFragment extends DialogFragment {
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                acrobatics = Integer.valueOf(tvAcrobatics.getText().toString());
-                animalHandling = Integer.valueOf(tvAnimalHandling.getText().toString());
-                arcana = Integer.valueOf(tvArcana.getText().toString());
-                athletics = Integer.valueOf(tvAthletics.getText().toString());
-                deception = Integer.valueOf(tvDeception.getText().toString());
-                history = Integer.valueOf(tvHistory.getText().toString());
-                insight = Integer.valueOf(tvInsight.getText().toString());
-                intimidation = Integer.valueOf(tvIntimidation.getText().toString());
-                investigation = Integer.valueOf(tvInvestigation.getText().toString());
-                medicine = Integer.valueOf(tvMedicine.getText().toString());
-                nature = Integer.valueOf(tvNature.getText().toString());
-                perception = Integer.valueOf(tvPerception.getText().toString());
-                performance = Integer.valueOf(tvPerformance.getText().toString());
-                persuasion = Integer.valueOf(tvPersuasion.getText().toString());
-                religion = Integer.valueOf(tvReligion.getText().toString());
-                sleightofHand = Integer.valueOf(tvSleightofHand.getText().toString());
-                stealth = Integer.valueOf(tvStealth.getText().toString());
-                survival = Integer.valueOf(tvSurvival.getText().toString());
+                Bundle results = new Bundle();
+                results.putInt("acrobatics", Integer.valueOf(tvAcrobatics.getText().toString()));
+                results.putInt("animalHandling", Integer.valueOf(tvAnimalHandling.getText().toString()));
+                results.putInt("arcana", Integer.valueOf(tvArcana.getText().toString()));
+                results.putInt("athletics", Integer.valueOf(tvAthletics.getText().toString()));
+                results.putInt("deception", Integer.valueOf(tvDeception.getText().toString()));
+                results.putInt("history", Integer.valueOf(tvHistory.getText().toString()));
+                results.putInt("insight", Integer.valueOf(tvInsight.getText().toString()));
+                results.putInt("intimidation", Integer.valueOf(tvIntimidation.getText().toString()));
+                results.putInt("investigation", Integer.valueOf(tvInvestigation.getText().toString()));
+                results.putInt("medicine", Integer.valueOf(tvMedicine.getText().toString()));
+                results.putInt("nature", Integer.valueOf(tvNature.getText().toString()));
+                results.putInt("perception", Integer.valueOf(tvPerception.getText().toString()));
+                results.putInt("performance", Integer.valueOf(tvPerformance.getText().toString()));
+                results.putInt("persuasion", Integer.valueOf(tvPersuasion.getText().toString()));
+                results.putInt("religion", Integer.valueOf(tvReligion.getText().toString()));
+                results.putInt("sleightofHand", Integer.valueOf(tvSleightofHand.getText().toString()));
+                results.putInt("stealth", Integer.valueOf(tvStealth.getText().toString()));
+                results.putInt("survival", Integer.valueOf(tvSurvival.getText().toString()));
 
-                sendResult(acrobatics, animalHandling, arcana, athletics, deception, history, insight, intimidation, investigation, medicine, nature, perception, performance, persuasion, religion, sleightofHand, stealth, survival);
+
+
+                sendResult(results);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -33,6 +33,13 @@ public class SkillsPage extends Page {
     public static final String STEALTH_DATA_KEY = "stealth";
     public static final String SURVIVAL_DATA_KEY = "survival";
 
+    public static final String DMGVUL_DATA_KEY = "dmgvul";
+    public static final String DMGRES_DATA_KEY = "dmgres";
+    public static final String DMGIM_DATA_KEY = "dmgim";
+    public static final String CONIM_DATA_KEY = "conim";
+
+
+
 
 
 
@@ -70,6 +77,12 @@ public class SkillsPage extends Page {
         String skills = buildSkillString(acrobatics, animalhandling, arcana, athletics, deception, history, insight, intimidation, investigation, medicine, nature, perception, performance, persuasion, religion, sleightofhand, stealth, survival);
 
         dest.add(new ReviewItem("Skills", skills, getKey(), -1));
+        dest.add(new ReviewItem("Damage Vulnerabilities", mData.getString(SkillsPage.DMGVUL_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Damage Resistances", mData.getString(SkillsPage.DMGRES_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Damage Immunities", mData.getString(SkillsPage.DMGIM_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Condition Immunities", mData.getString(SkillsPage.CONIM_DATA_KEY), getKey(), -1));
+
+
     }
 
     @Override

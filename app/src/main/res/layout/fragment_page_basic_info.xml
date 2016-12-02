@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/WizardPageContainer" >
 
-    <TextView style="@style/WizardPageTitle" />
 
     <ScrollView style="@style/FragmentInfo" >
 
@@ -10,6 +9,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+
+            <TextView style="@style/WizardPageTitle" />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -65,6 +67,16 @@
             <EditText
                 android:id="@+id/tvMonsterSpeed"
                 style="@style/FragmentInfoSpeed" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Size" />
+
+            <Spinner
+                android:id="@+id/size_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"/>
         </LinearLayout>
     </ScrollView>
 

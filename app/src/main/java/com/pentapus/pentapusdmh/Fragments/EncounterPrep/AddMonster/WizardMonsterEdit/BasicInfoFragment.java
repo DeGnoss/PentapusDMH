@@ -16,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
@@ -33,7 +35,7 @@ import java.util.List;
  * Created by Koni on 11.11.2016.
  */
 
-public class BasicInfoFragment extends Fragment {
+public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private static final String ARG_KEY = "basicinfo";
 
     private PageFragmentCallbacks mCallbacks;
@@ -42,6 +44,7 @@ public class BasicInfoFragment extends Fragment {
     private TextView mNameView;
     private CustomAutoCompleteTextView mTypeView;
     private CustomAutoCompleteTextView mAlignmentView;
+    private Spinner sizeSpinner;
     private TextView mSpeedView;
     ArrayAdapter<String> mSuggestionAdapter;
     String[] item;
@@ -108,7 +111,15 @@ public class BasicInfoFragment extends Fragment {
             bChooseImage.setImageURI(Uri.parse(mPage.getData().getString(BasicInfoPage.IMAGEURI_DATA_KEY)));
         }
 
-
+        sizeSpinner = (Spinner) rootView.findViewById(R.id.size_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.size, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sizeSpinner.setAdapter(adapter);
+        sizeSpinner.setOnItemSelectedListener(this);
+        if(mPage.getData().getString(BasicInfoPage.SIZE_DATA_KEY) != null && !mPage.getData().getString(BasicInfoPage.SIZE_DATA_KEY).isEmpty()){
+            sizeSpinner.setSelection(adapter.getPosition(mPage.getData().getString(BasicInfoPage.SIZE_DATA_KEY)));
+        }
         return rootView;
     }
 
@@ -320,4 +331,14 @@ public class BasicInfoFragment extends Fragment {
         return results;
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        mPage.getData().putString(BasicInfoPage.SIZE_DATA_KEY, adapterView.getItemAtPosition(i).toString());
+        mPage.notifyDataChanged();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }

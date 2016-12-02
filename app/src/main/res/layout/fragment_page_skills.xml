@@ -26,7 +26,83 @@
                 android:layout_below="@+id/labelSkills"
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="20dp"
+                android:text="None (click to add)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Damage Vulnerabilities"
+                android:layout_below="@+id/tvSkills"
+                android:id="@+id/labelDmgVul"
+                />
+
+
+            <TextView
+                android:id="@+id/tvDmgVul"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/labelDmgVul"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_marginBottom="20dp"
+                android:text="None (click to add)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Damage Resistances"
+                android:layout_below="@+id/tvDmgVul"
+                android:id="@+id/labelDmgRes"
+                />
+
+
+            <TextView
+                android:id="@+id/tvDmgRes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/labelDmgRes"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_marginBottom="20dp"
+                android:text="None (click to add)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Damage Immunities"
+                android:layout_below="@+id/tvDmgRes"
+                android:id="@+id/labelDmgIm"
+                />
+
+
+            <TextView
+                android:id="@+id/tvDmgIm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/labelDmgIm"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_marginBottom="20dp"
+                android:text="None (click to add)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Condition Immunities"
+                android:layout_below="@+id/tvDmgIm"
+                android:id="@+id/labelConIm"
+                />
+
+
+            <TextView
+                android:id="@+id/tvConIm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/labelConIm"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_marginBottom="20dp"
                 android:text="None (click to add)"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
