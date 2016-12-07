@@ -45,10 +45,10 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
     private CustomAutoCompleteTextView mTypeView;
     private CustomAutoCompleteTextView mAlignmentView;
     private Spinner sizeSpinner;
-    private TextView mSpeedView;
     ArrayAdapter<String> mSuggestionAdapter;
     String[] item;
     private Bundle filters;
+    OnSizeChangedListener mOnSizeChangedListener;
 
     private ImageButton bChooseImage;
     private Uri myFile;
@@ -96,9 +96,6 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line);
         mTypeView.setAdapter(mSuggestionAdapter);
 
-        mSpeedView = ((TextView) rootView.findViewById(R.id.tvMonsterSpeed));
-        mSpeedView.setText(mPage.getData().getString(BasicInfoPage.SPEED_DATA_KEY));
-
         bChooseImage = (ImageButton) rootView.findViewById(R.id.bChooseImage);
         bChooseImage.setOnClickListener(new View.OnClickListener() {
 
@@ -119,6 +116,8 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         sizeSpinner.setOnItemSelectedListener(this);
         if(mPage.getData().getString(BasicInfoPage.SIZE_DATA_KEY) != null && !mPage.getData().getString(BasicInfoPage.SIZE_DATA_KEY).isEmpty()){
             sizeSpinner.setSelection(adapter.getPosition(mPage.getData().getString(BasicInfoPage.SIZE_DATA_KEY)));
+        }else{
+            sizeSpinner.setSelection(adapter.getPosition("Medium"));
         }
         return rootView;
     }
@@ -141,6 +140,11 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
     public void onAttach(Context context) {
         super.onAttach(context);
         mCallbacks = (PageFragmentCallbacks) getParentFragment();
+        try {
+            mOnSizeChangedListener = (OnSizeChangedListener)getParentFragment();
+        }catch (ClassCastException e){
+
+        }
     }
 
     @Override
@@ -169,6 +173,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
                 mPage.getData().putString(BasicInfoPage.NAME_DATA_KEY,
                         (editable != null) ? editable.toString() : null);
                 mPage.notifyDataChanged();
+                pageDone();
             }
         });
 
@@ -217,24 +222,6 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
             @Override
             public void afterTextChanged(Editable editable) {
                 mPage.getData().putString(BasicInfoPage.ALIGNMENT_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });
-
-        mSpeedView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(BasicInfoPage.SPEED_DATA_KEY,
                         (editable != null) ? editable.toString() : null);
                 mPage.notifyDataChanged();
             }
@@ -335,10 +322,21 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         mPage.getData().putString(BasicInfoPage.SIZE_DATA_KEY, adapterView.getItemAtPosition(i).toString());
         mPage.notifyDataChanged();
+        mOnSizeChangedListener.onSizeChanged(adapterView.getItemAtPosition(i).toString());
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    public void pageDone(){
+        mOnSizeChangedListener.onSizeChanged(mPage.getData().getString(BasicInfoPage.SIZE_DATA_KEY));
+    }
+
+    public interface OnSizeChangedListener {
+
+        public void onSizeChanged(String size);
 
     }
 }

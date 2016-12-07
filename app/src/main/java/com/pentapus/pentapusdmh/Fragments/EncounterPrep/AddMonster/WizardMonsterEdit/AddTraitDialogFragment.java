@@ -125,7 +125,7 @@ public class AddTraitDialogFragment extends DialogFragment {
 
     public Dialog buildDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("New Trait");
+        builder.setTitle("Trait " + (traitNumber+1));
         LayoutInflater inflater = getActivity().getLayoutInflater();
         // Set up the input
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text

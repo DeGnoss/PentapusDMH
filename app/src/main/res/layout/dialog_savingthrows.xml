@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/WizardPageContainer">
+
+    <TextView style="@style/WizardPageTitle" />
+
+    <ScrollView style="@style/FragmentInfo">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/l1"
+                style="@style/WizardFormSkillLabel"
+                android:layout_alignBottom="@+id/tvStr"
+                android:text="Strength" />
+
+            <TextView
+                android:id="@+id/l2"
+                style="@style/WizardFormSkillLabel"
+                android:layout_alignBottom="@+id/tvDex"
+                android:text="Dexterity" />
+
+            <TextView
+                android:id="@+id/l3"
+                android:layout_alignBottom="@+id/tvCon"
+                style="@style/WizardFormSkillLabel"
+                android:text="Constitution" />
+
+            <TextView
+                android:id="@+id/l4"
+                android:layout_alignBottom="@+id/tvInt"
+                style="@style/WizardFormSkillLabel"
+                android:text="Intelligence" />
+
+            <TextView
+                android:id="@+id/l5"
+                android:layout_alignBottom="@+id/tvWis"
+                style="@style/WizardFormSkillLabel"
+                android:text="Wisdom" />
+
+            <TextView
+                android:id="@+id/l6"
+                android:layout_alignBottom="@+id/tvCha"
+                style="@style/WizardFormSkillLabel"
+                android:text="Charisma" />
+
+
+            <EditText
+                android:id="@+id/tvStr"
+                android:layout_alignParentTop="true"
+                android:nextFocusDown="@+id/tvDex"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvDex"
+                android:layout_below="@+id/tvStr"
+                android:nextFocusDown="@+id/tvCon"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvCon"
+                android:layout_below="@+id/tvDex"
+                android:nextFocusDown="@+id/tvInt"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvInt"
+                android:layout_below="@+id/tvCon"
+                android:nextFocusDown="@+id/tvWis"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvWis"
+                android:layout_below="@+id/tvInt"
+                android:nextFocusDown="@+id/tvCha"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvCha"
+                android:layout_below="@+id/tvWis"
+                style="@style/FragmentInfoSkill" />
+
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

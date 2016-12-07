@@ -38,6 +38,18 @@ public class SkillsPage extends Page {
     public static final String DMGIM_DATA_KEY = "dmgim";
     public static final String CONIM_DATA_KEY = "conim";
 
+    public static final String STSTR_DATA_KEY = "ststr";
+    public static final String STDEX_DATA_KEY = "stdex";
+    public static final String STCON_DATA_KEY = "stcon";
+    public static final String STINT_DATA_KEY = "stint";
+    public static final String STWIS_DATA_KEY = "stwis";
+    public static final String STCHA_DATA_KEY = "stcha";
+
+    public static final String SENSES_DATA_KEY = "senses";
+    public static final String LANGUAGES_DATA_KEY = "languages";
+
+
+
 
 
 
@@ -55,32 +67,42 @@ public class SkillsPage extends Page {
 
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
-        int acrobatics = mData.getInt(SkillsPage.ACROBATICS_DATA_KEY);
-        int animalhandling = mData.getInt(SkillsPage.ANIMALHANDLING_DATA_KEY);
-        int arcana = mData.getInt(SkillsPage.ARCANA_DATA_KEY);
-        int  athletics = mData.getInt(SkillsPage.ATHLETICS_DATA_KEY);
-        int deception = mData.getInt(SkillsPage.DECEPTION_DATA_KEY);
-        int history = mData.getInt(SkillsPage.HISTORY_DATA_KEY);
-        int insight = mData.getInt(SkillsPage.INSIGHT_DATA_KEY);
-        int intimidation = mData.getInt(SkillsPage.INTIMIDATION_DATA_KEY);
-        int investigation = mData.getInt(SkillsPage.INVESTIGATION_DATA_KEY);
-        int medicine = mData.getInt(SkillsPage.MEDICINE_DATA_KEY);
-        int nature = mData.getInt(SkillsPage.NATURE_DATA_KEY);
-        int perception = mData.getInt(SkillsPage.PERCEPTION_DATA_KEY);
-        int performance = mData.getInt(SkillsPage.PERFORMANCE_DATA_KEY);
-        int persuasion = mData.getInt(SkillsPage.PERSUASION_DATA_KEY);
-        int religion = mData.getInt(SkillsPage.RELIGION_DATA_KEY);
-        int sleightofhand = mData.getInt(SkillsPage.SLEIGHTOFHAND_DATA_KEY);
-        int stealth = mData.getInt(SkillsPage.STEALTH_DATA_KEY);
-        int survival = mData.getInt(SkillsPage.SURVIVAL_DATA_KEY);
+        String acrobatics = mData.getString(SkillsPage.ACROBATICS_DATA_KEY);
+        String animalhandling = mData.getString(SkillsPage.ANIMALHANDLING_DATA_KEY);
+        String arcana = mData.getString(SkillsPage.ARCANA_DATA_KEY);
+        String  athletics = mData.getString(SkillsPage.ATHLETICS_DATA_KEY);
+        String deception = mData.getString(SkillsPage.DECEPTION_DATA_KEY);
+        String history = mData.getString(SkillsPage.HISTORY_DATA_KEY);
+        String insight = mData.getString(SkillsPage.INSIGHT_DATA_KEY);
+        String intimidation = mData.getString(SkillsPage.INTIMIDATION_DATA_KEY);
+        String investigation = mData.getString(SkillsPage.INVESTIGATION_DATA_KEY);
+        String medicine = mData.getString(SkillsPage.MEDICINE_DATA_KEY);
+        String nature = mData.getString(SkillsPage.NATURE_DATA_KEY);
+        String perception = mData.getString(SkillsPage.PERCEPTION_DATA_KEY);
+        String performance = mData.getString(SkillsPage.PERFORMANCE_DATA_KEY);
+        String persuasion = mData.getString(SkillsPage.PERSUASION_DATA_KEY);
+        String religion = mData.getString(SkillsPage.RELIGION_DATA_KEY);
+        String sleightofhand = mData.getString(SkillsPage.SLEIGHTOFHAND_DATA_KEY);
+        String stealth = mData.getString(SkillsPage.STEALTH_DATA_KEY);
+        String survival = mData.getString(SkillsPage.SURVIVAL_DATA_KEY);
+
+        String stStr = mData.getString(SkillsPage.STSTR_DATA_KEY);
+        String stDex = mData.getString(SkillsPage.STDEX_DATA_KEY);
+        String stCon = mData.getString(SkillsPage.STCON_DATA_KEY);
+        String stInt = mData.getString(SkillsPage.STINT_DATA_KEY);
+        String stWis = mData.getString(SkillsPage.STWIS_DATA_KEY);
+        String stCha = mData.getString(SkillsPage.STCHA_DATA_KEY);
 
         String skills = buildSkillString(acrobatics, animalhandling, arcana, athletics, deception, history, insight, intimidation, investigation, medicine, nature, perception, performance, persuasion, religion, sleightofhand, stealth, survival);
+        String savingthrows = buildSavingThrowString(stStr, stDex, stCon, stInt, stWis, stCha);
 
+        dest.add(new ReviewItem("Saving Throws", savingthrows, getKey(), -1));
         dest.add(new ReviewItem("Skills", skills, getKey(), -1));
         dest.add(new ReviewItem("Damage Vulnerabilities", mData.getString(SkillsPage.DMGVUL_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Damage Resistances", mData.getString(SkillsPage.DMGRES_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Damage Immunities", mData.getString(SkillsPage.DMGIM_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Condition Immunities", mData.getString(SkillsPage.CONIM_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Senses", mData.getString(SkillsPage.SENSES_DATA_KEY), getKey(), -1));
 
 
     }
@@ -95,220 +117,293 @@ public class SkillsPage extends Page {
         return true;
     }
 
-    private String buildSkillString(int acrobatics, int animalHandling, int arcana, int athletics, int deception, int history, int insight, int intimidation, int investigation, int medicine, int nature, int perception, int performance, int persuasion, int religion, int sleightofHand, int stealth, int survival) {
+    private String buildSkillString(String acrobatics, String animalHandling, String arcana, String athletics, String deception, String history, String insight, String intimidation, String investigation, String medicine, String nature, String perception, String performance, String persuasion, String religion, String sleightofHand, String stealth, String survival) {
         String skills ="";
-        if(acrobatics != 0){
-            skills = "Acrobatics ";
-            if(acrobatics>0){
-                skills = skills + "+" + acrobatics;
-            }else if(acrobatics<0){
-                skills = skills + "-" + acrobatics;
+        if (acrobatics != null && !acrobatics.isEmpty()) {
+            if(Integer.valueOf(acrobatics) >= 0){
+                skills = "Acrobatics +" + acrobatics;
+            }else{
+                skills = "Acrobatics " + acrobatics;
             }
         }
-        if(animalHandling != 0){
-            if(!skills.isEmpty()){
+        if (animalHandling != null && !animalHandling.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Animal Handling ";
-            }else{
+            } else {
                 skills = "Animal Handling ";
             }
-            if(animalHandling>0){
+            if (Integer.valueOf(animalHandling) >= 0) {
                 skills = skills + "+" + animalHandling;
-            }else if(animalHandling<0){
-                skills = skills + "-" + animalHandling;
+            } else{
+                skills = skills + animalHandling;
             }
         }
-        if(arcana != 0){
-            if(!skills.isEmpty()){
+        if (arcana != null && !arcana.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Arcana ";
-            }else{
+            } else {
                 skills = "Arcana ";
             }
-            if(arcana>0){
+            if (Integer.valueOf(arcana) >= 0) {
                 skills = skills + "+" + arcana;
-            }else if(arcana<0){
-                skills = skills + "-" + arcana;
+            } else{
+                skills = skills + arcana;
             }
         }
-        if(athletics != 0){
-            if(!skills.isEmpty()){
+        if (athletics != null && !athletics.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Athletics ";
-            }else{
+            } else {
                 skills = "Athletics ";
             }
-            if(athletics>0){
+            if (Integer.valueOf(athletics) >= 0) {
                 skills = skills + "+" + athletics;
-            }else if(athletics<0){
-                skills = skills + "-" + athletics;
+            } else{
+                skills = skills + athletics;
             }
         }
-        if(deception != 0){
-            if(!skills.isEmpty()){
+        if (deception != null && !deception.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Deception ";
-            }else{
+            } else {
                 skills = "Deception ";
             }
-            if(deception>0){
+            if (Integer.valueOf(deception) >= 0) {
                 skills = skills + "+" + deception;
-            }else if(deception<0){
-                skills = skills + "-" + deception;
+            } else{
+                skills = skills + deception;
             }
         }
-        if(history != 0){
-            if(!skills.isEmpty()){
+        if (history != null && !history.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", History ";
-            }else{
+            } else {
                 skills = "History ";
             }
-            if(history>0){
+            if (Integer.valueOf(history) >= 0) {
                 skills = skills + "+" + history;
-            }else if(history<0){
-                skills = skills + "-" + history;
+            } else{
+                skills = skills + history;
             }
         }
-        if(insight != 0){
-            if(!skills.isEmpty()){
+        if (insight != null && !insight.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Insight ";
-            }else{
+            } else {
                 skills = "Insight ";
             }
-            if(insight>0){
+            if (Integer.valueOf(insight) >= 0) {
                 skills = skills + "+" + insight;
-            }else if(insight<0){
-                skills = skills + "-" + insight;
+            } else{
+                skills = skills + insight;
             }
         }
-        if(intimidation != 0){
-            if(!skills.isEmpty()){
+        if (intimidation != null && !intimidation.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Intimidation ";
-            }else{
+            } else {
                 skills = "Intimidation ";
             }
-            if(intimidation>0){
+            if (Integer.valueOf(intimidation) >= 0) {
                 skills = skills + "+" + intimidation;
-            }else if(intimidation<0){
-                skills = skills + "-" + intimidation;
+            } else{
+                skills = skills + intimidation;
             }
         }
-        if(investigation != 0){
-            if(!skills.isEmpty()){
+        if (investigation != null && !investigation.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Investigation ";
-            }else{
+            } else {
                 skills = "Investigation ";
             }
-            if(investigation>0){
+            if (Integer.valueOf(investigation) >= 0) {
                 skills = skills + "+" + investigation;
-            }else if(investigation<0){
-                skills = skills + "-" + investigation;
+            } else{
+                skills = skills + investigation;
             }
         }
-        if(medicine != 0){
-            if(!skills.isEmpty()){
+        if (medicine != null && !medicine.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Medicine ";
-            }else{
+            } else {
                 skills = "Medicine ";
             }
-            if(medicine>0){
+            if (Integer.valueOf(medicine) >= 0) {
                 skills = skills + "+" + medicine;
-            }else if(medicine<0){
-                skills = skills + "-" + medicine;
+            } else{
+                skills = skills + medicine;
             }
         }
-        if(nature != 0){
-            if(!skills.isEmpty()){
+        if (nature != null && !nature.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Nature ";
-            }else{
+            } else {
                 skills = "Nature ";
             }
-            if(nature>0){
+            if (Integer.valueOf(nature) >= 0) {
                 skills = skills + "+" + nature;
-            }else if(nature<0){
-                skills = skills + "-" + nature;
+            } else{
+                skills = skills + nature;
             }
         }
-        if(perception != 0){
-            if(!skills.isEmpty()){
+        if (perception != null && !perception.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Perception ";
-            }else{
+            } else {
                 skills = "Perception ";
             }
-            if(perception>0){
+            if (Integer.valueOf(perception) >= 0) {
                 skills = skills + "+" + perception;
-            }else if(perception<0){
-                skills = skills + "-" + perception;
+            } else{
+                skills = skills + perception;
             }
         }
-        if(performance != 0){
-            if(!skills.isEmpty()){
+        if (performance != null && !performance.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Performance ";
-            }else{
+            } else {
                 skills = "Performance ";
             }
-            if(performance>0){
+            if (Integer.valueOf(performance) >= 0) {
                 skills = skills + "+" + performance;
-            }else if(performance<0){
-                skills = skills + "-" + performance;
+            } else{
+                skills = skills + performance;
             }
         }
-        if(persuasion != 0){
-            if(!skills.isEmpty()){
+        if (persuasion != null && !persuasion.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Persuasion ";
-            }else{
+            } else {
                 skills = "Persuasion ";
             }
-            if(persuasion>0){
+            if (Integer.valueOf(persuasion) >= 0) {
                 skills = skills + "+" + persuasion;
-            }else if(persuasion<0){
-                skills = skills + "-" + persuasion;
+            } else{
+                skills = skills + persuasion;
             }
         }
-        if(religion != 0){
-            if(!skills.isEmpty()){
+        if (religion != null && !religion.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Religion ";
-            }else{
+            } else {
                 skills = "Religion ";
             }
-            if(religion>0){
+            if (Integer.valueOf(religion) >= 0) {
                 skills = skills + "+" + religion;
-            }else if(religion<0){
-                skills = skills + "-" + religion;
+            } else{
+                skills = skills + religion;
             }
         }
-        if(sleightofHand != 0){
-            if(!skills.isEmpty()){
+        if (sleightofHand != null && !sleightofHand.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Sleight of Hand ";
-            }else{
+            } else {
                 skills = "Sleight of Hand ";
             }
-            if(sleightofHand>0){
+            if (Integer.valueOf(sleightofHand) >= 0) {
                 skills = skills + "+" + sleightofHand;
-            }else if(sleightofHand<0){
-                skills = skills + "-" + sleightofHand;
+            } else{
+                skills = skills + sleightofHand;
             }
         }
-        if(stealth != 0){
-            if(!skills.isEmpty()){
+        if (stealth != null && !stealth.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Stealth ";
-            }else{
+            } else {
                 skills = "Stealth ";
             }
-            if(stealth>0){
+            if (Integer.valueOf(stealth) >= 0) {
                 skills = skills + "+" + stealth;
-            }else if(stealth<0){
-                skills = skills + "-" + stealth;
+            } else{
+                skills = skills + stealth;
             }
         }
-        if(survival != 0){
-            if(!skills.isEmpty()){
+        if (survival != null && !survival.isEmpty()) {
+            if (!skills.isEmpty()) {
                 skills = skills + ", Survival ";
-            }else{
+            } else {
                 skills = "Survival ";
             }
-            if(survival>0){
+            if (Integer.valueOf(survival) >= 0) {
                 skills = skills + "+" + survival;
-            }else if(survival<0){
-                skills = skills + "-" + survival;
+            } else{
+                skills = skills + survival;
             }
         }
         return skills;
+    }
+
+
+    private String buildSavingThrowString(String stStr, String stDex, String stCon, String stInt, String stWis, String stCha){
+        String savingThrows = "";
+        if (stStr != null && !stStr.isEmpty()) {
+            savingThrows = "Str ";
+            if (Integer.valueOf(stStr) >= 0) {
+                savingThrows = savingThrows + "+" + stStr;
+            } else{
+                savingThrows = savingThrows + stStr;
+            }
+        }
+        if (stDex != null && !stDex.isEmpty()) {
+            if (!savingThrows.isEmpty()) {
+                savingThrows = savingThrows + ", Dex ";
+            } else {
+                savingThrows = "Dex ";
+            }
+            if (Integer.valueOf(stDex) >= 0) {
+                savingThrows = savingThrows + "+" + stDex;
+            } else{
+                savingThrows = savingThrows + stDex;
+            }
+        }
+        if (stCon != null && !stCon.isEmpty()) {
+            if (!savingThrows.isEmpty()) {
+                savingThrows = savingThrows + ", Con ";
+            } else {
+                savingThrows = "Con ";
+            }
+            if (Integer.valueOf(stCon) >= 0) {
+                savingThrows = savingThrows + "+" + stCon;
+            } else{
+                savingThrows = savingThrows + stCon;
+            }
+        }
+        if (stInt != null && !stInt.isEmpty()) {
+            if (!savingThrows.isEmpty()) {
+                savingThrows = savingThrows + ", Int ";
+            } else {
+                savingThrows = "Int ";
+            }
+            if (Integer.valueOf(stInt) >= 0) {
+                savingThrows = savingThrows + "+" + stInt;
+            } else{
+                savingThrows = savingThrows + stInt;
+            }
+        }
+        if (stWis != null && !stWis.isEmpty()) {
+            if (!savingThrows.isEmpty()) {
+                savingThrows = savingThrows + ",  Wis ";
+            } else {
+                savingThrows = "Wis ";
+            }
+            if (Integer.valueOf(stWis) >= 0) {
+                savingThrows = savingThrows + "+" + stWis;
+            } else{
+                savingThrows = savingThrows + stWis;
+            }
+        }
+        if (stCha != null && !stCha.isEmpty()) {
+            if (!savingThrows.isEmpty()) {
+                savingThrows = savingThrows + ", Cha ";
+            } else {
+                savingThrows = "Cha ";
+            }
+            if (Integer.valueOf(stCha) >= 0) {
+                savingThrows = savingThrows + "+" + stCha;
+            } else{
+                savingThrows = savingThrows + stCha;
+            }
+        }
+        return savingThrows;
     }
 }

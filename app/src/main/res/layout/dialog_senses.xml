@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/WizardPageContainer">
+
+    <TextView style="@style/WizardPageTitle" />
+
+    <ScrollView style="@style/FragmentInfo">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/l1"
+                style="@style/WizardFormSkillLabel"
+                android:layout_alignBottom="@+id/tvDarkvision"
+                android:text="Darkvision" />
+
+            <TextView
+                android:id="@+id/l2"
+                style="@style/WizardFormSkillLabel"
+                android:layout_alignBottom="@+id/tvBlindsight"
+                android:text="Blindsight" />
+
+            <TextView
+                android:id="@+id/l3"
+                android:layout_alignBottom="@+id/tvTremorsense"
+                style="@style/WizardFormSkillLabel"
+                android:text="Tremorsense" />
+
+            <TextView
+                android:id="@+id/l4"
+                android:layout_alignBottom="@+id/tvTruesight"
+                style="@style/WizardFormSkillLabel"
+                android:text="Truesight" />
+
+            <TextView
+                android:id="@+id/l5"
+                android:layout_alignBottom="@+id/tvPassivePerception"
+                style="@style/WizardFormSkillLabel"
+                android:text="Passive Perception" />
+
+
+
+
+            <EditText
+                android:id="@+id/tvDarkvision"
+                android:layout_alignParentTop="true"
+                android:nextFocusDown="@+id/tvBlindsight"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvBlindsight"
+                android:layout_below="@+id/tvDarkvision"
+                android:nextFocusDown="@+id/tvTremorsense"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvTremorsense"
+                android:layout_below="@+id/tvBlindsight"
+                android:nextFocusDown="@+id/tvTruesight"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvTruesight"
+                android:layout_below="@+id/tvTremorsense"
+                android:nextFocusDown="@+id/tvPassivePerception"
+                style="@style/FragmentInfoSkill" />
+
+            <EditText
+                android:id="@+id/tvPassivePerception"
+                android:layout_below="@+id/tvTruesight"
+                android:nextFocusDown="@+id/tvOther"
+                style="@style/FragmentInfoSkill" />
+
+            <TextView
+                android:id="@+id/l6"
+                android:layout_below="@+id/tvPassivePerception"
+                style="@style/WizardFormSkillLabel"
+                android:text="Other" />
+
+            <EditText
+                android:id="@+id/tvOther"
+                android:layout_below="@+id/l6"
+                style="@style/FragmentSensesOther" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

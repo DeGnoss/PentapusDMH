@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/WizardPageContainer">
+
+    <TextView style="@style/WizardPageTitle" />
+
+    <ScrollView style="@style/FragmentInfo">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/l1"
+                style="@style/WizardFormSkillLabel"
+                android:layout_alignParentTop="true"
+                android:text="Hit Points" />
+
+            <LinearLayout
+                android:id="@+id/llAC1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <EditText
+                    android:id="@+id/tvHP"
+                    style="@style/FragmentInfoAC"
+                    android:layout_weight="1"
+                    android:hint="e.g. 64"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/tvAC1Type" />
+
+                <Button
+                    android:id="@+id/bHP"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:text="Calculate"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/l3"
+                style="@style/WizardFormSkillLabel"
+                android:layout_below="@+id/llAC1"
+                android:text="Hit Dice" />
+
+
+            <LinearLayout
+                android:id="@+id/llAC2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l3"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <EditText
+                    android:id="@+id/tvhdnumber"
+                    style="@style/FragmentInfoAC"
+                    android:hint="e.g. 6"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvhdmod"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

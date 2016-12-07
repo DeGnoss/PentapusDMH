@@ -12,10 +12,31 @@
 
             <TextView
                 style="@style/WizardFormLabel"
-                android:text="Skills"
-                android:id="@+id/labelSkills"
+                android:text="Saving Throws"
+                android:id="@+id/labelSavingThrows"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
+                />
+
+
+            <TextView
+                android:id="@+id/tvSavingThrows"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/labelSavingThrows"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_marginBottom="20dp"
+                android:hint="None (click to add)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Skills"
+                android:id="@+id/labelSkills"
+                android:layout_below="@+id/tvSavingThrows"
                 />
 
 
@@ -27,7 +48,7 @@
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
                 android:layout_marginBottom="20dp"
-                android:text="None (click to add)"
+                android:hint="None (click to add)"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
@@ -46,7 +67,7 @@
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
                 android:layout_marginBottom="20dp"
-                android:text="None (click to add)"
+                android:hint="None (click to add)"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
@@ -65,7 +86,7 @@
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
                 android:layout_marginBottom="20dp"
-                android:text="None (click to add)"
+                android:hint="None (click to add)"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
@@ -84,7 +105,7 @@
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
                 android:layout_marginBottom="20dp"
-                android:text="None (click to add)"
+                android:hint="None (click to add)"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
@@ -103,7 +124,45 @@
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
                 android:layout_marginBottom="20dp"
-                android:text="None (click to add)"
+                android:hint="None (click to add)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Senses"
+                android:layout_below="@+id/tvConIm"
+                android:id="@+id/labelSenses"
+                />
+
+
+            <TextView
+                android:id="@+id/tvSenses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/labelSenses"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_marginBottom="20dp"
+                android:hint="None (click to add)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Languages"
+                android:layout_below="@+id/tvSenses"
+                android:id="@+id/labelLanguages"
+                />
+
+
+            <TextView
+                android:id="@+id/tvLanguages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/labelLanguages"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_marginBottom="20dp"
+                android:hint="None (click to add)"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         </RelativeLayout>

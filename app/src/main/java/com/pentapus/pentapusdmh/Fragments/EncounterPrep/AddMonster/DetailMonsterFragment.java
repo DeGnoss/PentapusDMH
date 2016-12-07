@@ -189,20 +189,21 @@ public class DetailMonsterFragment extends Fragment {
 
 
             String tempAcType = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE));
+            String tempAc2Type = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE));
             String tempAc2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2));
             String tempAc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
             if(tempAc == null){
                 tempAc = "";
             }
             if(tempAcType != null && !tempAcType.isEmpty()){
-                if(tempAc2 != null && !tempAc2.isEmpty()){
-                    myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc + " (" + tempAcType + ")" + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
+                if(tempAc2Type != null && !tempAc2Type.isEmpty()){
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc + " (" + tempAcType + ")" + ", " + tempAc2 + " " + " (" + tempAc2Type + ")");
                 }else{
                     myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc + " (" + tempAcType + ")");
                 }
             }else{
-                if(tempAc2 != null && !tempAc2.isEmpty()){
-                    myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc + ", " + tempAc2 + " " + cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
+                if(tempAc2Type != null && !tempAc2Type.isEmpty()){
+                    myAc = Html.fromHtml("<b>Armor Class </b>" + tempAc + ", " + tempAc2 + " (" + tempAc2Type + ")");
                 }else{
                     if(tempAc == null){
                         tempAc = "-";
@@ -245,7 +246,7 @@ public class DetailMonsterFragment extends Fragment {
             //Damage Vulnerabilities
             String tempDmgVul = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGVUL));
             if(tempDmgVul != null && !tempDmgVul.isEmpty()){
-                myDmgVul = Html.fromHtml("<b>Damage Vulnerabilities</b> " + tempDmgVul);
+                myDmgVul = Html.fromHtml("<b>Damage Vulnerabilities</b> " + tempDmgVul.toLowerCase());
             }else{
                 tvDmgVul.setVisibility(View.GONE);
             }
@@ -254,7 +255,7 @@ public class DetailMonsterFragment extends Fragment {
             //Damage Resistances
             String tempDmgRes = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGRES));
             if(tempDmgRes != null && !tempDmgRes.isEmpty()){
-                myDmgRes = Html.fromHtml("<b>Damage Resistances</b> " + tempDmgRes);
+                myDmgRes = Html.fromHtml("<b>Damage Resistances</b> " + tempDmgRes.toLowerCase());
             }else{
                 tvDmgRes.setVisibility(View.GONE);
             }
@@ -263,7 +264,7 @@ public class DetailMonsterFragment extends Fragment {
             //Damage Immunities
             String tempDmgIm = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGIM));
             if(tempDmgIm != null && !tempDmgIm.isEmpty()){
-                myDmgIm = Html.fromHtml("<b>Damage Immunities</b> " + tempDmgIm);
+                myDmgIm = Html.fromHtml("<b>Damage Immunities</b> " + tempDmgIm.toLowerCase());
             }else{
                 tvDmgIm.setVisibility(View.GONE);
             }
@@ -272,7 +273,7 @@ public class DetailMonsterFragment extends Fragment {
             //Condition Immunities
             String tempConIm = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONIM));
             if(tempConIm != null && !tempConIm.isEmpty()){
-                myConIm = Html.fromHtml("<b>Condition Immunities</b> " + tempConIm);
+                myConIm = Html.fromHtml("<b>Condition Immunities</b> " + tempConIm.toLowerCase());
             }else{
                 tvConIm.setVisibility(View.GONE);
             }

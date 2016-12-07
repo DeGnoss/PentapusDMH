@@ -62,14 +62,6 @@
 
             <TextView
                 style="@style/WizardFormLabel"
-                android:text="Speed" />
-
-            <EditText
-                android:id="@+id/tvMonsterSpeed"
-                style="@style/FragmentInfoSpeed" />
-
-            <TextView
-                style="@style/WizardFormLabel"
                 android:text="Size" />
 
             <Spinner
