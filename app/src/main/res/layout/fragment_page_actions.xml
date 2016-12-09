@@ -1,119 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/WizardPageContainer">
 
     <TextView style="@style/WizardPageTitle" />
 
-    <ScrollView style="@style/FragmentInfo">
+    <TextView
+        style="@style/WizardFormLabel"
+        android:text="Multiattack" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <TextView
-                android:id="@+id/l1"
-                style="@style/WizardFormLabel"
-                android:layout_alignParentTop="true"
-                android:text="Action 1 Name" />
-
-            <EditText
-                android:id="@+id/tvAction1Name"
-                style="@style/FragmentTraitName"
-                android:layout_below="@+id/l1" />
-
-            <TextView
-                android:id="@+id/l2"
-                style="@style/WizardFormLabel"
-                android:layout_below="@+id/tvAction1Name"
-                android:text="Action 1 Description" />
-
-            <EditText
-                android:id="@+id/tvAction1Description"
-                style="@style/FragmentTraitDescription"
-                android:layout_below="@+id/l2" />
-
-            <TextView
-                android:id="@+id/labelActionMod1"
-                style="@style/WizardFormLabel"
-                android:layout_width="wrap_content"
-                android:layout_below="@+id/tvAction1Description"
-                android:text="Action 1 Attack Mod"
-                android:layout_alignBottom="@+id/tvActionMod1"
-                android:layout_toStartOf="@+id/tvActionMod1"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/tvActionMod1"
-                style="@style/FragmentActionMod"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="50dp"
-                android:layout_below="@+id/tvAction1Description"
-                 />
-
-            <TextView
-                android:id="@+id/labelDmg1"
-                style="@style/WizardFormLabel"
-                android:layout_below="@+id/tvActionMod1"
-                android:text="Action 1 Damage Rolls and Types" />
-
-            <LinearLayout
-                android:id="@+id/llA1D1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/labelDmg1"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/tvA1D1"
-                    style="@style/FragmentDmgRoll" />
-
-                <Spinner
-                    android:id="@+id/spinner_a1d1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llA1D2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llA1D1"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/tvA1D2"
-                    style="@style/FragmentDmgRoll" />
-
-                <Spinner
-                    android:id="@+id/spinner_a1d2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
+    <EditText
+        android:id="@+id/tvMultiattack"
+        style="@style/FragmentInfoName"
+        android:inputType="textMultiLine"
+        android:hint="e.g. The Pentapus makes 5 attacks, one with each of its tentacles."
+        />
 
 
-            <CheckBox
-                android:id="@+id/cbAuto1"
-                style="@style/WizardFormLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llA1D2"
-                android:text="Autoroll this action" />
 
-            <CheckBox
-                android:id="@+id/cbAdd1"
-                style="@style/WizardFormLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/cbAuto1"
-                android:text="This attack has additional effects" />
+    <ListView
+        android:id="@+id/list"
+        style="@style/FragmentListView"
+        android:dividerHeight="0dp"
+        android:divider="@null"/>
 
-
-        </RelativeLayout>
-    </ScrollView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabActions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:elevation="4dp"
+        app:srcCompat="@drawable/ic_action_add" />
 
 </LinearLayout>

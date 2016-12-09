@@ -2,8 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/WizardPageContainer">
 
-    <TextView style="@style/WizardPageTitle" />
-
     <ScrollView style="@style/FragmentInfo">
 
         <RelativeLayout

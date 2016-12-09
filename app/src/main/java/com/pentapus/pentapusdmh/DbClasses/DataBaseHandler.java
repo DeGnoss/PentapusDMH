@@ -98,6 +98,16 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_ATK4AUTOROLL = "atk4autoroll";
     public static final String KEY_ATK4ADDITIONAL = "atk4additional";
 
+    public static final String KEY_ATK5NAME = "atk5name";
+    public static final String KEY_ATK5DESC = "atk5desc";
+    public static final String KEY_ATK5MOD = "atk5mod";
+    public static final String KEY_ATK5DMG1ROLL = "atk5dmg1roll";
+    public static final String KEY_ATK5DMG1TYPE = "atk5dmg1type";
+    public static final String KEY_ATK5DMG2ROLL = "atk5dmg2roll";
+    public static final String KEY_ATK5DMG2TYPE = "atk5dmg2type";
+    public static final String KEY_ATK5AUTOROLL = "atk5autoroll";
+    public static final String KEY_ATK5ADDITIONAL = "atk5additional";
+
     public static final String KEY_REACTION1NAME = "reaction1name";
     public static final String KEY_REACTION1DESC = "reaction1desc";
 

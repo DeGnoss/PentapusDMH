@@ -30,7 +30,8 @@ public class MonsterEditWizardModel extends AbstractWizardModel {
                 new SkillsPage(this, "Additional Info")
                         .setRequired(false),
                 new TraitsPage(this, "Traits"),
-                new ActionPage(this, "Actions")
+                new ActionPage(this, "Actions"),
+                new ReactionPage(this, "Reactions")
         );
     }
 }

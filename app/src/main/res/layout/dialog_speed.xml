@@ -2,16 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/WizardPageContainer">
 
-    <TextView style="@style/WizardPageTitle" />
 
     <ScrollView style="@style/FragmentInfo">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -24,7 +20,7 @@
                 <TextView
                     android:id="@+id/l1"
                     style="@style/WizardFormSkillLabel"
-                    android:layout_weight="4"
+                    android:layout_weight="6"
                     android:layout_width="0dp"
                     android:layout_marginTop="0dp"
                     android:text="Speed" />
@@ -34,7 +30,7 @@
                     android:nextFocusDown="@+id/tvAC2"
                     android:nextFocusRight="@+id/tvAC2"
                     android:imeOptions="actionNext"
-                    android:layout_weight="5"
+                    android:layout_weight="3"
                     android:hint="e.g. 30"
                     style="@style/FragmentInfoACType" />
 
@@ -64,7 +60,7 @@
                     style="@style/WizardFormSkillLabel"
                     android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="6"
                     android:text="Burrow" />
 
                 <EditText
@@ -72,7 +68,7 @@
                     android:nextFocusDown="@+id/tvAC2"
                     android:nextFocusRight="@+id/tvAC2"
                     android:imeOptions="actionNext"
-                    android:layout_weight="5"
+                    android:layout_weight="3"
                     android:hint="e.g. 30"
                     style="@style/FragmentInfoACType" />
 
@@ -100,7 +96,7 @@
                     style="@style/WizardFormSkillLabel"
                     android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="6"
                     android:text="Climb" />
 
                 <EditText
@@ -108,7 +104,7 @@
                     android:nextFocusDown="@+id/tvAC2"
                     android:nextFocusRight="@+id/tvAC2"
                     android:imeOptions="actionNext"
-                    android:layout_weight="5"
+                    android:layout_weight="3"
                     android:hint="e.g. 30"
                     style="@style/FragmentInfoACType" />
 
@@ -135,7 +131,7 @@
                     style="@style/WizardFormSkillLabel"
                     android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="6"
                     android:text="Fly" />
 
                 <EditText
@@ -143,7 +139,7 @@
                     android:nextFocusDown="@+id/tvAC2"
                     android:nextFocusRight="@+id/tvAC2"
                     android:imeOptions="actionNext"
-                    android:layout_weight="5"
+                    android:layout_weight="3"
                     android:hint="e.g. 30"
                     style="@style/FragmentInfoACType" />
 
@@ -188,7 +184,7 @@
                     style="@style/WizardFormSkillLabel"
                     android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="6"
                     android:text="Swim" />
 
                 <EditText
@@ -196,7 +192,7 @@
                     android:nextFocusDown="@+id/tvAC2"
                     android:nextFocusRight="@+id/tvAC2"
                     android:imeOptions="actionNext"
-                    android:layout_weight="5"
+                    android:layout_weight="3"
                     android:hint="e.g. 30"
                     style="@style/FragmentInfoACType" />
 

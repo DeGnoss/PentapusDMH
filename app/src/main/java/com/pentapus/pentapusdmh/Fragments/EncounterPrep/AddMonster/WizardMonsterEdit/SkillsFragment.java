@@ -1,19 +1,10 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,19 +12,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
 import com.pentapus.pentapusdmh.R;
 import com.wizardpager.wizard.ui.PageFragmentCallbacks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by Koni on 11.11.2016.
  */
 
-public class SkillsFragment extends Fragment {
+public class SkillsFragment extends Fragment implements AbilitiesFragment.OnWisdomChangedListener {
     private static final String ARG_KEY = "skillfragment";
 
     private PageFragmentCallbacks mCallbacks;
@@ -45,6 +36,7 @@ public class SkillsFragment extends Fragment {
     private String stStr, stDex, stCon, stInt, stWis, stCha;
     private String darkvision, blindsight, tremorsense, truesight, passivePerception, other;
     private String senses, languages;
+    private boolean isNotCalculatedFromWisdom;
     private static final int MSG_SHOW_DIALOG = 1000, MSG_SKILL_DIALOG = 1001, MSG_DMGVUL_DIALOG = 1002, MSG_DMGRES_DIALOG = 1003, MSG_DMGIM_DIALOG = 1004, MSG_CONIM_DIALOG = 1005, MSG_SAVINGTHROW_DIALOG = 1006, MSG_SENSES_DIALOG = 1007, MSG_LANGUAGES_DIALOG = 1008;
     List<String> listDmgVul;
     SkillsFragment fragment;
@@ -112,6 +104,7 @@ public class SkillsFragment extends Fragment {
         stCha = mPage.getData().getString(SkillsPage.STCHA_DATA_KEY);
 
         senses = mPage.getData().getString(SkillsPage.SENSES_DATA_KEY);
+        isNotCalculatedFromWisdom = mPage.getData().getBoolean(SkillsPage.ISCALCULATEDFROMWISDOM_DATA_KEY);
         languages = mPage.getData().getString(SkillsPage.LANGUAGES_DATA_KEY);
 
 
@@ -169,7 +162,7 @@ public class SkillsFragment extends Fragment {
         });
 
         tvDmgVul = ((TextView) rootView.findViewById(R.id.tvDmgVul));
-        if(dmgVul != null && !dmgVul.isEmpty()){
+        if (dmgVul != null && !dmgVul.isEmpty()) {
             tvDmgVul.setText(dmgVul.toLowerCase());
         }
         tvDmgVul.setOnClickListener(new View.OnClickListener() {
@@ -195,13 +188,13 @@ public class SkillsFragment extends Fragment {
         });
 
         tvDmgRes = ((TextView) rootView.findViewById(R.id.tvDmgRes));
-        if(dmgRes != null && !dmgRes.isEmpty()) {
+        if (dmgRes != null && !dmgRes.isEmpty()) {
             tvDmgRes.setText(dmgRes.toLowerCase());
         }
         tvDmgRes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = AddDmgResDialogFragment.newInstance(dmgRes);
+                DialogFragment newFragment = AddDmgResDialogFragment.newInstance(dmgRes, "Damage Resistance");
                 newFragment.setTargetFragment(fragment, MSG_DMGRES_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_DMGRES_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDDMGRES_DIALOG");
@@ -213,7 +206,7 @@ public class SkillsFragment extends Fragment {
         labelDmgRes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = AddDmgResDialogFragment.newInstance(dmgRes);
+                DialogFragment newFragment = AddDmgResDialogFragment.newInstance(dmgRes, "Damage Resistance");
                 newFragment.setTargetFragment(fragment, MSG_DMGRES_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_DMGRES_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDDMGRES_DIALOG");
@@ -221,13 +214,13 @@ public class SkillsFragment extends Fragment {
         });
 
         tvDmgIm = ((TextView) rootView.findViewById(R.id.tvDmgIm));
-        if(dmgIm != null && !dmgIm.isEmpty()) {
+        if (dmgIm != null && !dmgIm.isEmpty()) {
             tvDmgIm.setText(dmgIm.toLowerCase());
         }
         tvDmgIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = AddDmgResDialogFragment.newInstance(dmgIm);
+                DialogFragment newFragment = AddDmgResDialogFragment.newInstance(dmgIm, "Damage Immunities");
                 newFragment.setTargetFragment(fragment, MSG_DMGIM_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_DMGIM_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDDMGRES_DIALOG");
@@ -239,7 +232,7 @@ public class SkillsFragment extends Fragment {
         labelDmgIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = AddDmgResDialogFragment.newInstance(dmgIm);
+                DialogFragment newFragment = AddDmgResDialogFragment.newInstance(dmgIm, "Damage Immunities");
                 newFragment.setTargetFragment(fragment, MSG_DMGIM_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_DMGIM_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDDMGRES_DIALOG");
@@ -247,7 +240,7 @@ public class SkillsFragment extends Fragment {
         });
 
         tvConIm = ((TextView) rootView.findViewById(R.id.tvConIm));
-        if(conIm != null && !conIm.isEmpty()) {
+        if (conIm != null && !conIm.isEmpty()) {
             tvConIm.setText(conIm.toLowerCase());
         }
         tvConIm.setOnClickListener(new View.OnClickListener() {
@@ -274,13 +267,31 @@ public class SkillsFragment extends Fragment {
 
 
         tvSenses = ((TextView) rootView.findViewById(R.id.tvSenses));
-        if(senses != null && !senses.isEmpty()) {
-            tvSenses.setText(senses.toLowerCase());
+        if (!isNotCalculatedFromWisdom) {
+            if (senses != null && !senses.isEmpty()) {
+                if (!senses.contains("passive Perception")) {
+                    if (mPage.getData().getString(SkillsPage.WISDOM_DATA_KEY) != null && !mPage.getData().getString(SkillsPage.WISDOM_DATA_KEY).isEmpty()) {
+                        passivePerception = String.valueOf(10 + AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(SkillsPage.WISDOM_DATA_KEY))));
+                        senses = senses + ", passive Perception " + passivePerception;
+                    }
+                }
+            } else {
+                if (mPage.getData().getString(SkillsPage.WISDOM_DATA_KEY) != null && !mPage.getData().getString(SkillsPage.WISDOM_DATA_KEY).isEmpty()) {
+                    passivePerception = String.valueOf(10 + AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(SkillsPage.WISDOM_DATA_KEY))));
+                    senses = "passive Perception " + passivePerception;
+                }
+            }
+        } else {
+            if (senses != null) {
+                tvSenses.setText(senses);
+            } else {
+                tvSenses.setText("");
+            }
         }
         tvSenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = AddSensesDialogFragment.newInstance(senses);
+                DialogFragment newFragment = AddSensesDialogFragment.newInstance(senses, mPage.getData().getString(SkillsPage.WISDOM_DATA_KEY), isNotCalculatedFromWisdom);
                 newFragment.setTargetFragment(fragment, MSG_SENSES_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_SENSES_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDSENSES_DIALOG");
@@ -292,7 +303,7 @@ public class SkillsFragment extends Fragment {
         labelSenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = AddSensesDialogFragment.newInstance(senses);
+                DialogFragment newFragment = AddSensesDialogFragment.newInstance(senses, mPage.getData().getString(SkillsPage.WISDOM_DATA_KEY), isNotCalculatedFromWisdom);
                 newFragment.setTargetFragment(fragment, MSG_SENSES_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_SENSES_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDSENSES_DIALOG");
@@ -318,6 +329,10 @@ public class SkillsFragment extends Fragment {
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
+        if (mPage != null && senses != null) {
+            mPage.getData().putString(SkillsPage.SENSES_DATA_KEY, senses);
+            mPage.getData().putBoolean(SkillsPage.ISCALCULATEDFROMWISDOM_DATA_KEY, isNotCalculatedFromWisdom);
+        }
 
         // In a future update to the support library, this should override setUserVisibleHint
         // instead of setMenuVisibility.
@@ -404,11 +419,11 @@ public class SkillsFragment extends Fragment {
                         }
                     }
                 }
-                if(dmgVul != null){
+                if (dmgVul != null) {
                     tvDmgVul.setText(dmgVul.toLowerCase());
                     mPage.getData().putString(SkillsPage.DMGVUL_DATA_KEY,
                             dmgVul);
-                }else{
+                } else {
                     tvDmgVul.setText("");
                 }
                 break;
@@ -420,19 +435,19 @@ public class SkillsFragment extends Fragment {
                         if (dmgRes == null) {
                             dmgRes = listDmgVul.get(i);
                         } else {
-                            if(listDmgVul.get(i).equals("Bludgeoning, piercing and slashing from nonmagical weapons") || listDmgVul.get(i).equals("Bludgeoning, piercing and slashing from nonmagical weapons that aren't silvered")){
+                            if (listDmgVul.get(i).equals("Bludgeoning, piercing and slashing from nonmagical weapons") || listDmgVul.get(i).equals("Bludgeoning, piercing and slashing from nonmagical weapons that aren't silvered")) {
                                 dmgRes = dmgRes + "; " + listDmgVul.get(i);
-                            }else{
+                            } else {
                                 dmgRes = dmgRes + ", " + listDmgVul.get(i);
                             }
                         }
                     }
                 }
-                if(dmgRes != null){
+                if (dmgRes != null) {
                     tvDmgRes.setText(dmgRes.toLowerCase());
                     mPage.getData().putString(SkillsPage.DMGRES_DATA_KEY,
                             dmgRes);
-                }else{
+                } else {
                     tvDmgRes.setText("");
                 }
                 break;
@@ -444,19 +459,19 @@ public class SkillsFragment extends Fragment {
                         if (dmgIm == null) {
                             dmgIm = listDmgVul.get(i);
                         } else {
-                            if(listDmgVul.get(i).equals("Bludgeoning, piercing and slashing from nonmagical weapons") || listDmgVul.get(i).equals("Bludgeoning, piercing and slashing from nonmagical weapons that aren't silvered")){
+                            if (listDmgVul.get(i).equals("Bludgeoning, piercing and slashing from nonmagical weapons") || listDmgVul.get(i).equals("Bludgeoning, piercing and slashing from nonmagical weapons that aren't silvered")) {
                                 dmgIm = dmgIm + "; " + listDmgVul.get(i);
-                            }else{
+                            } else {
                                 dmgIm = dmgIm + ", " + listDmgVul.get(i);
                             }
                         }
                     }
                 }
-                if(dmgIm != null){
+                if (dmgIm != null) {
                     tvDmgIm.setText(dmgIm.toLowerCase());
                     mPage.getData().putString(SkillsPage.DMGIM_DATA_KEY,
                             dmgIm);
-                }else{
+                } else {
                     tvDmgIm.setText("");
                 }
                 break;
@@ -472,11 +487,11 @@ public class SkillsFragment extends Fragment {
                         }
                     }
                 }
-                if(conIm != null){
+                if (conIm != null) {
                     tvConIm.setText(conIm.toLowerCase());
                     mPage.getData().putString(SkillsPage.CONIM_DATA_KEY,
                             conIm);
-                }else{
+                } else {
                     tvConIm.setText("");
                 }
                 break;
@@ -505,9 +520,9 @@ public class SkillsFragment extends Fragment {
                 break;
             case MSG_SENSES_DIALOG:
                 senses = results.getString("senses");
-                if(senses != null && !senses.isEmpty()){
-                    tvSenses.setText(senses);
-                }
+                isNotCalculatedFromWisdom = results.getBoolean("isNotCalculatedFromWisdom");
+                tvSenses.setText(senses);
+                mPage.getData().putBoolean(SkillsPage.ISCALCULATEDFROMWISDOM_DATA_KEY, isNotCalculatedFromWisdom);
                 mPage.getData().putString(SkillsPage.SENSES_DATA_KEY, senses);
             default:
                 break;
@@ -518,9 +533,9 @@ public class SkillsFragment extends Fragment {
     private String buildSkillString(String acrobatics, String animalHandling, String arcana, String athletics, String deception, String history, String insight, String intimidation, String investigation, String medicine, String nature, String perception, String performance, String persuasion, String religion, String sleightofHand, String stealth, String survival) {
         String skills = "";
         if (acrobatics != null && !acrobatics.isEmpty()) {
-            if(Integer.valueOf(acrobatics) >= 0){
+            if (Integer.valueOf(acrobatics) >= 0) {
                 skills = "Acrobatics +" + acrobatics;
-            }else{
+            } else {
                 skills = "Acrobatics " + acrobatics;
             }
         }
@@ -532,7 +547,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(animalHandling) >= 0) {
                 skills = skills + "+" + animalHandling;
-            } else{
+            } else {
                 skills = skills + animalHandling;
             }
         }
@@ -544,7 +559,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(arcana) >= 0) {
                 skills = skills + "+" + arcana;
-            } else{
+            } else {
                 skills = skills + arcana;
             }
         }
@@ -556,7 +571,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(athletics) >= 0) {
                 skills = skills + "+" + athletics;
-            } else{
+            } else {
                 skills = skills + athletics;
             }
         }
@@ -568,7 +583,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(deception) >= 0) {
                 skills = skills + "+" + deception;
-            } else{
+            } else {
                 skills = skills + deception;
             }
         }
@@ -580,7 +595,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(history) >= 0) {
                 skills = skills + "+" + history;
-            } else{
+            } else {
                 skills = skills + history;
             }
         }
@@ -592,7 +607,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(insight) >= 0) {
                 skills = skills + "+" + insight;
-            } else{
+            } else {
                 skills = skills + insight;
             }
         }
@@ -604,7 +619,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(intimidation) >= 0) {
                 skills = skills + "+" + intimidation;
-            } else{
+            } else {
                 skills = skills + intimidation;
             }
         }
@@ -616,7 +631,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(investigation) >= 0) {
                 skills = skills + "+" + investigation;
-            } else{
+            } else {
                 skills = skills + investigation;
             }
         }
@@ -628,7 +643,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(medicine) >= 0) {
                 skills = skills + "+" + medicine;
-            } else{
+            } else {
                 skills = skills + medicine;
             }
         }
@@ -640,7 +655,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(nature) >= 0) {
                 skills = skills + "+" + nature;
-            } else{
+            } else {
                 skills = skills + nature;
             }
         }
@@ -652,7 +667,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(perception) >= 0) {
                 skills = skills + "+" + perception;
-            } else{
+            } else {
                 skills = skills + perception;
             }
         }
@@ -664,7 +679,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(performance) >= 0) {
                 skills = skills + "+" + performance;
-            } else{
+            } else {
                 skills = skills + performance;
             }
         }
@@ -676,7 +691,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(persuasion) >= 0) {
                 skills = skills + "+" + persuasion;
-            } else{
+            } else {
                 skills = skills + persuasion;
             }
         }
@@ -688,7 +703,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(religion) >= 0) {
                 skills = skills + "+" + religion;
-            } else{
+            } else {
                 skills = skills + religion;
             }
         }
@@ -700,7 +715,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(sleightofHand) >= 0) {
                 skills = skills + "+" + sleightofHand;
-            } else{
+            } else {
                 skills = skills + sleightofHand;
             }
         }
@@ -712,7 +727,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(stealth) >= 0) {
                 skills = skills + "+" + stealth;
-            } else{
+            } else {
                 skills = skills + stealth;
             }
         }
@@ -724,20 +739,20 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(survival) >= 0) {
                 skills = skills + "+" + survival;
-            } else{
+            } else {
                 skills = skills + survival;
             }
         }
         return skills;
     }
 
-    private String buildSavingThrowString(String stStr, String stDex, String stCon, String stInt, String stWis, String stCha){
+    private String buildSavingThrowString(String stStr, String stDex, String stCon, String stInt, String stWis, String stCha) {
         String savingThrows = "";
         if (stStr != null && !stStr.isEmpty()) {
             savingThrows = "Str ";
             if (Integer.valueOf(stStr) >= 0) {
                 savingThrows = savingThrows + "+" + stStr;
-            } else{
+            } else {
                 savingThrows = savingThrows + stStr;
             }
         }
@@ -749,7 +764,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(stDex) >= 0) {
                 savingThrows = savingThrows + "+" + stDex;
-            } else{
+            } else {
                 savingThrows = savingThrows + stDex;
             }
         }
@@ -761,7 +776,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(stCon) >= 0) {
                 savingThrows = savingThrows + "+" + stCon;
-            } else{
+            } else {
                 savingThrows = savingThrows + stCon;
             }
         }
@@ -773,7 +788,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(stInt) >= 0) {
                 savingThrows = savingThrows + "+" + stInt;
-            } else{
+            } else {
                 savingThrows = savingThrows + stInt;
             }
         }
@@ -785,7 +800,7 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(stWis) >= 0) {
                 savingThrows = savingThrows + "+" + stWis;
-            } else{
+            } else {
                 savingThrows = savingThrows + stWis;
             }
         }
@@ -797,10 +812,67 @@ public class SkillsFragment extends Fragment {
             }
             if (Integer.valueOf(stCha) >= 0) {
                 savingThrows = savingThrows + "+" + stCha;
-            } else{
+            } else {
                 savingThrows = savingThrows + stCha;
             }
         }
         return savingThrows;
+    }
+
+    @Override
+    public void onWisdomChanged(String wisdom) {
+        if (mPage != null) {
+            mPage.getData().putString(SkillsPage.WISDOM_DATA_KEY, wisdom);
+        }
+        if (!isNotCalculatedFromWisdom && wisdom !=null && !wisdom.isEmpty()) {
+            if (senses != null && !senses.isEmpty()) {
+                if (!senses.contains("passive Perception")) {
+                    passivePerception = String.valueOf(10 + AbilityModifierCalculator.calculateMod(Integer.valueOf(wisdom)));
+                    senses = senses + ", passive Perception " + passivePerception;
+                    if (mPage != null) {
+                        mPage.getData().putString(SkillsPage.SENSES_DATA_KEY, senses);
+                    }
+                    tvSenses.setText(senses);
+                } else {
+                    ArrayList<String> selectedItems = splitString(senses);
+                    if (selectedItems != null || selectedItems.size() != 0) {
+                        senses = "";
+                        for (int i = 0; i < selectedItems.size(); i++) {
+                            if (!selectedItems.get(i).contains("passive Perception")) {
+                                senses = senses + selectedItems.get(i) + ", ";
+                            }
+                        }
+                        senses = senses + "passive Perception " + String.valueOf(10 + AbilityModifierCalculator.calculateMod(Integer.valueOf(wisdom)));
+                        mPage.getData().putString(SkillsPage.SENSES_DATA_KEY, senses);
+                        tvSenses.setText(senses);
+                    }
+                }
+            } else {
+                passivePerception = String.valueOf(10 + AbilityModifierCalculator.calculateMod(Integer.valueOf(wisdom)));
+                if (tvSenses != null) {
+                    senses = "passive Perception " + passivePerception;
+                    tvSenses.setText(senses);
+                }
+                if (mPage != null) {
+                    mPage.getData().putString(SkillsPage.SENSES_DATA_KEY, senses);
+                }
+            }
+        }else if(!isNotCalculatedFromWisdom){
+            senses = "";
+            tvSenses.setText(senses);
+            if (mPage != null) {
+                mPage.getData().putString(SkillsPage.SENSES_DATA_KEY, senses);
+            }
+        }
+    }
+
+
+    private ArrayList<String> splitString(String senses) {
+        ArrayList<String> sensesList = new ArrayList<>();
+        StringTokenizer tokens = new StringTokenizer(senses, ",");
+        while (tokens.hasMoreTokens()) {
+            sensesList.add(tokens.nextToken().trim());
+        }
+        return sensesList;
     }
 }

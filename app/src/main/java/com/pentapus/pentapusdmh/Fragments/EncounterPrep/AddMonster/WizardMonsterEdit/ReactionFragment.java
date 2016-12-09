@@ -1,26 +1,20 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.pentapus.pentapusdmh.Fragments.Tracker.EnterInitiativeDialogFragment;
 import com.pentapus.pentapusdmh.R;
 import com.wizardpager.wizard.ui.PageFragmentCallbacks;
 
@@ -30,29 +24,29 @@ import java.util.ArrayList;
  * Created by Koni on 11.11.2016.
  */
 
-public class TraitsFragment extends Fragment {
-    private static final String ARG_KEY = "traits";
+public class ReactionFragment extends Fragment {
+    private static final String ARG_KEY = "reactions";
     private int MSG_SHOW_DIALOG = 1000, MSG_FINISH_DIALOG = 1001;
 
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
-    private TraitsPage mPage;
-    private ListView traitsList;
-    private FloatingActionButton fabTraits;
-    private Spanned trait;
+    private ReactionPage mPage;
+    private ListView reactionList;
+    private FloatingActionButton fabReactions;
+    private Spanned reaction;
     private ArrayList<Spanned> listItems = new ArrayList<Spanned>();
     private ArrayAdapter<Spanned> adapter;
 
 
-    public static TraitsFragment create(String key) {
+    public static ReactionFragment create(String key) {
         Bundle args = new Bundle();
         args.putString(ARG_KEY, key);
-        TraitsFragment fragment = new TraitsFragment();
+        ReactionFragment fragment = new ReactionFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public TraitsFragment() {
+    public ReactionFragment() {
     }
 
     @Override
@@ -61,7 +55,7 @@ public class TraitsFragment extends Fragment {
 
         Bundle args = getArguments();
         mKey = args.getString(ARG_KEY);
-        mPage = (TraitsPage) mCallbacks.onGetPage(mKey);
+        mPage = (ReactionPage) mCallbacks.onGetPage(mKey);
     }
 
     @Override
@@ -70,7 +64,7 @@ public class TraitsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_page_traits, container, false);
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-        traitsList = (ListView) rootView.findViewById(R.id.list);
+        reactionList = (ListView) rootView.findViewById(R.id.list);
 
         for(int i=0; i<5; i++){
             if((mPage.getData().getString(getItemNameKey(i)) != null && !mPage.getData().getString(getItemNameKey(i)).isEmpty()) || mPage.getData().getString(getItemDescKey(i)) != null && !mPage.getData().getString(getItemDescKey(i)).isEmpty()){
@@ -80,25 +74,26 @@ public class TraitsFragment extends Fragment {
         }
 
         adapter = new ArrayAdapter<Spanned>(getContext(), android.R.layout.simple_list_item_1, listItems);
-        traitsList.setAdapter(adapter);
-        traitsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        reactionList.setAdapter(adapter);
+        reactionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 onFabClick(1, mPage.getData().getString(getItemNameKey(i)), mPage.getData().getString(getItemDescKey(i)), i);
             }
         });
 
-        fabTraits = (FloatingActionButton) rootView.findViewById(R.id.fabTraits);
-        fabTraits.setOnClickListener(new View.OnClickListener() {
+
+        fabReactions = (FloatingActionButton) rootView.findViewById(R.id.fabTraits);
+        fabReactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onFabClick(0, null, null, listItems.size());
             }
         });
         if(listItems.size() >= 5){
-            fabTraits.setVisibility(View.GONE);
+            fabReactions.setVisibility(View.GONE);
         }else{
-            fabTraits.setVisibility(View.VISIBLE);
+            fabReactions.setVisibility(View.VISIBLE);
         }
 
         return rootView;
@@ -131,17 +126,17 @@ public class TraitsFragment extends Fragment {
     }
 
     public void onFabClick(int mode, String name, String description, int traitNumber) {
-        DialogFragment newFragment = AddTraitDialogFragment.newInstance(mode, name, description, traitNumber, "Trait");
+        DialogFragment newFragment = AddReactionDialogFragment.newInstance(mode, name, description, traitNumber, "Reaction");
         newFragment.setTargetFragment(this, MSG_FINISH_DIALOG);
-        newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDTRAIT_DIALOG");
+        newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDREACTION_DIALOG");
     }
 
     public void onDialogResult(int requestCode, int mode, String name, String description, int traitNumber) {
-        trait = Html.fromHtml("<b>" + name + ". </b> " + description);
+        reaction = Html.fromHtml("<b>" + name + ". </b> " + description);
         switch (mode) {
             case 0:  //add
                 if (!name.isEmpty() || !description.isEmpty()) {
-                    listItems.add(trait);
+                    listItems.add(reaction);
                     adapter.notifyDataSetChanged();
                     mPage.getData().putString(getItemNameKey(traitNumber),
                             name);
@@ -150,13 +145,13 @@ public class TraitsFragment extends Fragment {
                     mPage.notifyDataChanged();
                 }
                 if(listItems.size() >= 5){
-                    fabTraits.setVisibility(View.GONE);
+                    fabReactions.setVisibility(View.GONE);
                 }
                 break;
             case 1: //update
                 if (!name.isEmpty() || !description.isEmpty()) {
 
-                    listItems.set(traitNumber, trait);
+                    listItems.set(traitNumber, reaction);
                     adapter.notifyDataSetChanged();
                     mPage.getData().putString(getItemNameKey(traitNumber),
                             name);
@@ -170,7 +165,7 @@ public class TraitsFragment extends Fragment {
                     mPage.getData().remove(getItemDescKey(traitNumber));
                     mPage.notifyDataChanged();
                     if(listItems.size() < 5){
-                        fabTraits.setVisibility(View.VISIBLE);
+                        fabReactions.setVisibility(View.VISIBLE);
                     }
                 }
                 break;
@@ -181,7 +176,7 @@ public class TraitsFragment extends Fragment {
                 mPage.getData().remove(getItemDescKey(traitNumber));
                 mPage.notifyDataChanged();
                 if(listItems.size() < 5){
-                    fabTraits.setVisibility(View.VISIBLE);
+                    fabReactions.setVisibility(View.VISIBLE);
                 }
                 break;
             default:
@@ -192,15 +187,15 @@ public class TraitsFragment extends Fragment {
     public String getItemNameKey(int position) {
         switch (position) {
             case 0:
-                return TraitsPage.T1NAME_DATA_KEY;
+                return ReactionPage.R1NAME_DATA_KEY;
             case 1:
-                return TraitsPage.T2NAME_DATA_KEY;
+                return ReactionPage.R2NAME_DATA_KEY;
             case 2:
-                return TraitsPage.T3NAME_DATA_KEY;
+                return ReactionPage.R3NAME_DATA_KEY;
             case 3:
-                return TraitsPage.T4NAME_DATA_KEY;
+                return ReactionPage.R4NAME_DATA_KEY;
             case 4:
-                return TraitsPage.T5NAME_DATA_KEY;
+                return ReactionPage.R5NAME_DATA_KEY;
             default:
                 return null;
         }
@@ -209,15 +204,15 @@ public class TraitsFragment extends Fragment {
     public String getItemDescKey(int position) {
         switch (position) {
             case 0:
-                return TraitsPage.T1DESC_DATA_KEY;
+                return ReactionPage.R1DESC_DATA_KEY;
             case 1:
-                return TraitsPage.T2DESC_DATA_KEY;
+                return ReactionPage.R2DESC_DATA_KEY;
             case 2:
-                return TraitsPage.T3DESC_DATA_KEY;
+                return ReactionPage.R3DESC_DATA_KEY;
             case 3:
-                return TraitsPage.T4DESC_DATA_KEY;
+                return ReactionPage.R4DESC_DATA_KEY;
             case 4:
-                return TraitsPage.T5DESC_DATA_KEY;
+                return ReactionPage.R5DESC_DATA_KEY;
             default:
                 return null;
         }

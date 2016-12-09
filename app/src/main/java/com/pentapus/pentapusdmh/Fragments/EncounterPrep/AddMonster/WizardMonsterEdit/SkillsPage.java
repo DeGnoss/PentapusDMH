@@ -46,6 +46,9 @@ public class SkillsPage extends Page {
     public static final String STCHA_DATA_KEY = "stcha";
 
     public static final String SENSES_DATA_KEY = "senses";
+    public static final String WISDOM_DATA_KEY = "wisdom";
+    public static final String ISCALCULATEDFROMWISDOM_DATA_KEY = "isNotCalculatedFromWisdom";
+
     public static final String LANGUAGES_DATA_KEY = "languages";
 
 

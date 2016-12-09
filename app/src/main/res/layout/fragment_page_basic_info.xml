@@ -50,7 +50,9 @@
 
             <com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView
                 android:id="@+id/tvMonsterType"
-                style="@style/FragmentInfoType" />
+                style="@style/FragmentInfoType"
+                android:completionThreshold="1"
+                />
 
             <TextView
                 style="@style/WizardFormLabel"
@@ -58,17 +60,22 @@
 
             <com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView
                 android:id="@+id/tvMonsterAlignment"
-                style="@style/FragmentInfoAlignment" />
+                style="@style/FragmentInfoAlignment"
+                android:completionThreshold="1"
+                />
 
             <TextView
                 style="@style/WizardFormLabel"
-                android:text="Size" />
+                android:text="Size"
+                />
 
             <Spinner
                 android:id="@+id/size_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"/>
+                android:layout_marginBottom="30dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
         </LinearLayout>
     </ScrollView>
 

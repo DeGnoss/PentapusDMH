@@ -1,6 +1,7 @@
 package com.pentapus.pentapusdmh.HelperClasses;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.AutoCompleteTextView;
 
@@ -28,8 +29,8 @@ public class CustomAutoCompleteTextView extends AutoCompleteTextView {
     // this is how to disable AutoCompleteTextView filter
     @Override
     protected void performFiltering(final CharSequence text, final int keyCode) {
-        String filterText = "";
-        super.performFiltering(filterText, keyCode);
+       // String filterText = "";
+       // super.performFiltering(filterText, keyCode);
     }
 
     /*
@@ -40,4 +41,16 @@ public class CustomAutoCompleteTextView extends AutoCompleteTextView {
         super.replaceText(text);
     }
 
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        if (focused && getAdapter() != null) {
+            performFiltering(getText(), 0);
+        }
+    }
+
+    @Override
+    public boolean enoughToFilter() {
+        return true;
+    }
 }

@@ -54,6 +54,7 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
     String[] item;
     private static final int MSG_AC_DIALOG = 1001, MSG_HP_DIALOG = 1002, MSG_SPEED_DIALOG = 1003;
     AbilitiesFragment fragment;
+    OnWisdomChangedListener mOnWisdomChangedListener;
 
 
     public static AbilitiesFragment create(String key) {
@@ -106,6 +107,7 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
 
         mWisView = ((TextView) rootView.findViewById(R.id.tvWis));
         mWisView.setText(mPage.getData().getString(AbilitiesPage.WIS_DATA_KEY));
+        pageDone();
 
         mChaView = ((TextView) rootView.findViewById(R.id.tvCha));
         mChaView.setText(mPage.getData().getString(AbilitiesPage.CHA_DATA_KEY));
@@ -169,8 +171,13 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
             @Override
             public void onClick(View view) {
 
-                DialogFragment newFragment = AddHPDialogFragment.newInstance(hp, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY))), size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
-                newFragment.setTargetFragment(fragment, MSG_HP_DIALOG);
+                DialogFragment newFragment;
+                if(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY) != null && !mPage.getData().getString(AbilitiesPage.CON_DATA_KEY).isEmpty()){
+                    newFragment = AddHPDialogFragment.newInstance(hp, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY))), size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+                }else{
+                    newFragment = AddHPDialogFragment.newInstance(hp, 0, size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+
+                }                newFragment.setTargetFragment(fragment, MSG_HP_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_HP_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDHP_DIALOG");
             }
@@ -180,7 +187,13 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
         tvHP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = AddHPDialogFragment.newInstance(hp, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY))), size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+                DialogFragment newFragment;
+                if(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY) != null && !mPage.getData().getString(AbilitiesPage.CON_DATA_KEY).isEmpty()){
+                    newFragment = AddHPDialogFragment.newInstance(hp, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY))), size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+                }else{
+                    newFragment = AddHPDialogFragment.newInstance(hp, 0, size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+
+                }
                 newFragment.setTargetFragment(fragment, MSG_HP_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_HP_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDHP_DIALOG");
@@ -232,6 +245,11 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
     public void onAttach(Context context) {
         super.onAttach(context);
         mCallbacks = (PageFragmentCallbacks) getParentFragment();
+        try {
+            mOnWisdomChangedListener = (OnWisdomChangedListener)getParentFragment();
+        }catch (ClassCastException e){
+
+        }
     }
 
     @Override
@@ -305,9 +323,13 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
                 mPage.getData().putString(AbilitiesPage.HP_DATA_KEY, hp);
                 mPage.notifyDataChanged();
                 String conmod = mPage.getData().getString(AbilitiesPage.CON_DATA_KEY);
-                if (hp != null && !hp.isEmpty() && !Objects.equals(hp, "0")) {
+                if (hp != null && !hp.isEmpty() && !hp.equals("0")) {
                     if (conmod != null && !conmod.isEmpty()) {
-                        hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))) + ")";
+                        if(hitdice == 0){
+                            hpString = hp;
+                        }else{
+                            hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))) + ")";
+                        }
                     } else {
                         hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, 0) + ")";
                     }
@@ -355,6 +377,7 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
                 mPage.getData().putString(AbilitiesPage.WIS_DATA_KEY,
                         (editable != null) ? editable.toString() : null);
                 mPage.notifyDataChanged();
+                mOnWisdomChangedListener.onWisdomChanged(mPage.getData().getString(AbilitiesPage.WIS_DATA_KEY));
             }
         });
 
@@ -431,10 +454,18 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
                 mPage.getData().putInt(AbilitiesPage.HITDICE_DATA_KEY,
                         hitdice);
                 String hpString;
-                if (hp != null && !hp.isEmpty() && !Objects.equals(hp, "0")) {
-                    hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))) + ")";
+                if (hp != null && !hp.isEmpty() && !hp.equals("0")) {
+                    if(hitdice == 0){
+                        hpString = hp;
+                    }else{
+                        hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))) + ")";
+                    }
                 } else {
-                    hpString = "";
+                    if(hitdice == 0){
+                        hpString = "";
+                    }else{
+                        hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))) + ")";
+                    }
                 }
                 tvHP.setText(hpString);
                 break;
@@ -452,7 +483,7 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
-
+        pageDone();
         // In a future update to the support library, this should override setUserVisibleHint
         // instead of setMenuVisibility.
         if (mStrView != null) {
@@ -464,69 +495,38 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
         }
     }
 
-    public String[] getItemsFromDb(String searchTerm, String column) {
-
-        // add items on the array dynamically
-        List<String> entries = filterData(searchTerm, column);
-        int rowCount = entries.size();
-
-        String[] item = new String[rowCount];
-        //String[] item = new String[1];
-        int x = 0;
-        //item[x] = "Monstrosity";
-
-        for (String record : entries) {
-
-            item[x] = record;
-            x++;
-        }
-
-        return item;
-    }
-
-
-    public List<String> filterData(String filterArgs, String column) {
-        List<String> results = new ArrayList<String>();
-
-        Uri uri = DbContentProvider.CONTENT_URI_MONSTER;
-        String selection = "";
-        String[] selectionArgs;
-        List<String> selectionList = new ArrayList<>();
-
-        String filter = "%" + filterArgs + "%";
-        selectionList.add(filter);
-        selectionArgs = new String[selectionList.size()];
-        selectionList.toArray(selectionArgs);
-        if (filterArgs != null) {
-            selection = column + " LIKE ?";
-        }
-
-        //String filterFormatted = "%" + filterArgs + "%";
-        //filters.putString("filter", filterFormatted);
-        Cursor cursor = getContext().getContentResolver().query(uri, new String[]{"DISTINCT " + column}, selection, selectionArgs,
-                null);
-
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                results.add(cursor.getString(cursor.getColumnIndexOrThrow(column)));
-            } while (cursor.moveToNext());
-        }
-
-        return results;
-    }
-
     @Override
     public void onSizeChanged(String sizeFromListener) {
         size = sizeFromListener;
         mPage.getData().putString("size", size);
         String hpString;
-        hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))));
-        if (!hp.isEmpty() && !Objects.equals(hp, "0")) {
-            hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))) + ")";
-        } else {
-            hpString = "";
+        if(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY) != null && !mPage.getData().getString(AbilitiesPage.CON_DATA_KEY).isEmpty()){
+            hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))));
+            if (!hp.isEmpty() && !Objects.equals(hp, "0")) {
+                if(hitdice == 0){
+                    hpString = hp;
+                }else{
+                    hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))) + ")";
+                }
+            } else {
+                hpString = "";
+            }
+        }else{
+            hpString = "Enter Constitution Score to calculate HP";
         }
+
         tvHP.setText(hpString);
+    }
+
+    public void pageDone(){
+        if(mPage!= null){
+            mOnWisdomChangedListener.onWisdomChanged(mPage.getData().getString(AbilitiesPage.WIS_DATA_KEY));
+        }
+    }
+
+    public interface OnWisdomChangedListener {
+
+        public void onWisdomChanged(String wisdom);
+
     }
 }

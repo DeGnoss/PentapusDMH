@@ -177,6 +177,21 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
             }
         });
 
+        mTypeView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    item = getItemsFromDb("", "monstertype");
+
+                    // update the adapater
+                    mSuggestionAdapter.notifyDataSetChanged();
+                    mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, item);
+                    mTypeView.setAdapter(mSuggestionAdapter);
+                    mTypeView.showDropDown();
+                }
+            }
+        });
+
         mTypeView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -199,6 +214,21 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
                 mPage.getData().putString(BasicInfoPage.TYPE_DATA_KEY,
                         (editable != null) ? editable.toString() : null);
                 mPage.notifyDataChanged();
+            }
+        });
+
+        mAlignmentView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    item = getItemsFromDb("", "alignment");
+
+                    // update the adapater
+                    mSuggestionAdapter.notifyDataSetChanged();
+                    mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, item);
+                    mAlignmentView.setAdapter(mSuggestionAdapter);
+                    mAlignmentView.showDropDown();
+                }
             }
         });
 

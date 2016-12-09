@@ -143,7 +143,7 @@ public class AddHPDialogFragment extends DialogFragment{
         tvHdMod = (TextView) view.findViewById(R.id.tvhdmod);
         tvHdMod.setText(HitDiceCalculator.calculateHdType(hitdice, size, conmod));
 
-        if (hp != null && !hp.isEmpty()) {
+        if (hp != null && !hp.isEmpty() && !hp.equals("0")) {
             tvhp.setText(hp);
         }
 

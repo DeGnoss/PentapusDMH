@@ -9,13 +9,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 
+import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
 import com.pentapus.pentapusdmh.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -25,20 +25,24 @@ public class AddSensesDialogFragment extends DialogFragment {
 
     Button positiveButton;
     EditText tvDarkvision, tvBlindsight, tvTremorsense, tvTruesight, tvPassivePerception, tvOther;
-    String senses, other;
-    int darkvision, blindsight, tremorsense, truesight, passivePerception;
-
+    String senses, other, wisdom;
+    String darkvision, blindsight, tremorsense, truesight;
+    CheckedTextView ctvCalculateFromWisdom;
+    String passivePerception;
+    boolean isNotCalculatedFromWisdom;
 
     public AddSensesDialogFragment() {
     }
 
     //mode: 0 = add, 1 = update
-    public static AddSensesDialogFragment newInstance(String senses) {
+    public static AddSensesDialogFragment newInstance(String senses, String wisdom, boolean isNotCalculatedFromWisdom) {
         AddSensesDialogFragment f = new AddSensesDialogFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putString("senses", senses);
+        args.putString("wisdom", wisdom);
+        args.putBoolean("isNotCalculatedFromWisdom", isNotCalculatedFromWisdom);
         f.setArguments(args);
 
         return f;
@@ -50,6 +54,8 @@ public class AddSensesDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             senses = getArguments().getString("senses");
+            wisdom = getArguments().getString("wisdom");
+            isNotCalculatedFromWisdom = getArguments().getBoolean("isNotCalculatedFromWisdom");
         }
         if(senses!= null){
             ArrayList<String> selectedItems = splitString(senses);
@@ -57,15 +63,15 @@ public class AddSensesDialogFragment extends DialogFragment {
 
                 for (int i = 0; i < selectedItems.size(); i++) {
                     if (selectedItems.get(i).contains("darkvision")) {
-                        darkvision = getOnlyNumerics(selectedItems.get(i));
+                        darkvision = String.valueOf(getOnlyNumerics(selectedItems.get(i)));
                     }else if(selectedItems.get(i).contains("blindsight")){
-                        blindsight = getOnlyNumerics(selectedItems.get(i));
+                        blindsight = String.valueOf(getOnlyNumerics(selectedItems.get(i)));
                     }else if(selectedItems.get(i).contains("tremorsense")){
-                        tremorsense = getOnlyNumerics(selectedItems.get(i));
+                        tremorsense = String.valueOf(getOnlyNumerics(selectedItems.get(i)));
                     }else if(selectedItems.get(i).contains("truesight")){
-                        truesight = getOnlyNumerics(selectedItems.get(i));
+                        truesight = String.valueOf(getOnlyNumerics(selectedItems.get(i)));
                     }else if(selectedItems.get(i).contains("passive Perception")){
-                        passivePerception = getOnlyNumerics(selectedItems.get(i));
+                        passivePerception = String.valueOf(getOnlyNumerics(selectedItems.get(i)));
                     }else{
                         other = selectedItems.get(i);
                     }
@@ -132,12 +138,56 @@ public class AddSensesDialogFragment extends DialogFragment {
         tvTruesight = (EditText) view.findViewById(R.id.tvTruesight);
         tvPassivePerception = (EditText) view.findViewById(R.id.tvPassivePerception);
         tvOther = (EditText) view.findViewById(R.id.tvOther);
+        ctvCalculateFromWisdom = (CheckedTextView) view.findViewById(R.id.ctvPassivePerception);
+        ctvCalculateFromWisdom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ctvCalculateFromWisdom.isChecked()){
+                    isNotCalculatedFromWisdom = true;
+                    ctvCalculateFromWisdom.setChecked(false);
+                    tvPassivePerception.setEnabled(true);
+                    tvPassivePerception.setHint("e.g. 12");
+                }else{
+                    ctvCalculateFromWisdom.setChecked(true);
+                    isNotCalculatedFromWisdom = false;
+                    tvPassivePerception.setEnabled(false);
+                    if(wisdom != null && !wisdom.isEmpty()){
+                        passivePerception = String.valueOf(AbilityModifierCalculator.calculateMod(Integer.valueOf(wisdom)) + 10);
+                        tvPassivePerception.setHint("e.g. 12");
+                    }else{
+                        passivePerception = "";
+                        tvPassivePerception.setHint("");
+                    }
+                    tvPassivePerception.setText(passivePerception);
+                }
+            }
+        });
+        if(!isNotCalculatedFromWisdom){
+            ctvCalculateFromWisdom.setChecked(true);
+            tvPassivePerception.setEnabled(false);
+            if(wisdom == null || wisdom.isEmpty()){
+                tvPassivePerception.setHint("");
+            }else{
+                tvPassivePerception.setHint("e.g. 12");
+            }
+        }else{
+            ctvCalculateFromWisdom.setChecked(false);
+            tvPassivePerception.setEnabled(true);
+            tvPassivePerception.setHint("e.g. 12");
+        }
 
-        tvDarkvision.setText(String.valueOf(darkvision));
-        tvBlindsight.setText(String.valueOf(blindsight));
-        tvTremorsense.setText(String.valueOf(tremorsense));
-        tvTruesight.setText(String.valueOf(truesight));
-        tvPassivePerception.setText(String.valueOf(passivePerception));
+        tvDarkvision.setText(darkvision);
+        tvBlindsight.setText(blindsight);
+        tvTremorsense.setText(tremorsense);
+        tvTruesight.setText(truesight);
+        if(passivePerception != null && !passivePerception.isEmpty()){
+            tvPassivePerception.setText(passivePerception);
+        }else{
+            if(!isNotCalculatedFromWisdom && wisdom != null && !wisdom.isEmpty()){
+                int tempPassivePerception = AbilityModifierCalculator.calculateMod(Integer.valueOf(wisdom)) + 10;
+                tvPassivePerception.setText(String.valueOf(tempPassivePerception));
+            }
+        }
         if(other != null){
             tvOther.setText(other);
         }
@@ -150,31 +200,32 @@ public class AddSensesDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 Bundle results = new Bundle();
                 if(!tvDarkvision.getText().toString().isEmpty()){
-                    darkvision = Integer.parseInt(tvDarkvision.getText().toString());
+                    darkvision = tvDarkvision.getText().toString();
                 }else{
-                    darkvision = 0;
+                    darkvision = "";
                 }
                 if(!tvBlindsight.getText().toString().isEmpty()){
-                    blindsight = Integer.parseInt(tvBlindsight.getText().toString());
+                    blindsight = tvBlindsight.getText().toString();
                 }else{
-                    blindsight = 0;
+                    blindsight = "";
                 }
                 if(!tvTremorsense.getText().toString().isEmpty()){
-                    tremorsense = Integer.parseInt(tvTremorsense.getText().toString());
+                    tremorsense = tvTremorsense.getText().toString();
                 }else{
-                    tremorsense = 0;
+                    tremorsense = "";
                 }
                 if(!tvTruesight.getText().toString().isEmpty()){
-                    truesight = Integer.parseInt(tvTruesight.getText().toString());
+                    truesight = tvTruesight.getText().toString();
                 }else{
-                    truesight = 0;
+                    truesight = "";
                 }
                 if(!tvPassivePerception.getText().toString().isEmpty()){
-                    passivePerception = Integer.parseInt(tvPassivePerception.getText().toString());
+                    passivePerception = tvPassivePerception.getText().toString();
                 }else{
-                    passivePerception = 0;
+                    passivePerception = "";
                 }
                 results.putString("senses", buildSensesString(darkvision, blindsight, tremorsense, truesight, passivePerception, tvOther.getText().toString()));
+                results.putBoolean("isNotCalculatedFromWisdom", isNotCalculatedFromWisdom);
                 sendResult(results);
             }
         });
@@ -213,33 +264,33 @@ public class AddSensesDialogFragment extends DialogFragment {
         return Integer.valueOf(strBuff.toString());
     }
 
-    public String buildSensesString(int darkvision, int blindsight, int tremorsense, int truesight, int passivePerception, String other){
-        String senses = null;
-        if(darkvision != 0){
+    public String buildSensesString(String darkvision, String blindsight, String tremorsense, String truesight, String passivePerception, String other){
+        String senses = "";
+        if(darkvision != null && !darkvision.isEmpty()){
             senses = "darkvision " + darkvision + " ft.";
         }
-        if(blindsight != 0){
+        if(blindsight != null && !blindsight.isEmpty()){
             if(senses != null && !senses.isEmpty()){
                 senses = senses + ", blindsight " + blindsight + " ft.";
             }else{
                 senses = "blindsight " + blindsight + " ft.";
             }
         }
-        if(tremorsense != 0){
+        if(tremorsense != null && !tremorsense.isEmpty()){
             if(senses != null && !senses.isEmpty()){
                 senses = senses + ", tremorsense " + tremorsense + " ft.";
             }else{
                 senses = "tremorsense " + tremorsense + " ft.";
             }
         }
-        if(truesight != 0){
+        if(truesight != null && !truesight.isEmpty()){
             if(senses != null && !senses.isEmpty()){
                 senses = senses + ", truesight " + truesight + " ft.";
             }else{
                 senses = "truesight " + truesight + " ft.";
             }
         }
-        if(passivePerception != 0){
+        if(passivePerception != null && !passivePerception.isEmpty()){
             if(senses != null && !senses.isEmpty()){
                 senses = senses + ", passive Perception " + passivePerception;
             }else{

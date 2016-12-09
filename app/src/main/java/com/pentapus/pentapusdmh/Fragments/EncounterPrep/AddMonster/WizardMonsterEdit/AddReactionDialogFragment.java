@@ -4,30 +4,19 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
-import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.R;
-import com.wizardpager.wizard.model.Page;
-
-import java.util.List;
 
 /**
  * Created by konrad.fellmann on 12.05.2016.
  */
-public class AddTraitDialogFragment extends DialogFragment {
+public class AddReactionDialogFragment extends DialogFragment {
 
     Button positiveButton;
     EditText tvTrait1Name, tvTrait1Description;
@@ -35,12 +24,12 @@ public class AddTraitDialogFragment extends DialogFragment {
     String name, description, title;
 
 
-    public AddTraitDialogFragment(){
+    public AddReactionDialogFragment(){
     }
 
     //mode: 0 = add, 1 = update
-    public static AddTraitDialogFragment newInstance(int mode, String name, String description, int traitNumber, String title) {
-        AddTraitDialogFragment f = new AddTraitDialogFragment();
+    public static AddReactionDialogFragment newInstance(int mode, String name, String description, int traitNumber, String title) {
+        AddReactionDialogFragment f = new AddReactionDialogFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
@@ -120,7 +109,7 @@ public class AddTraitDialogFragment extends DialogFragment {
 
 
     private void sendResult(int mode, String name, String description, int traitNumber) {
-        ((TraitsFragment) getTargetFragment()).onDialogResult(
+        ((ReactionFragment) getTargetFragment()).onDialogResult(
                 getTargetRequestCode(), mode, name, description, traitNumber);
     }
 
@@ -131,7 +120,7 @@ public class AddTraitDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         // Set up the input
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        View view = inflater.inflate(R.layout.dialog_createtrait, null);
+        View view = inflater.inflate(R.layout.dialog_createreaction, null);
         tvTrait1Name = (EditText) view.findViewById(R.id.tvTrait1Name);
         tvTrait1Description = (EditText) view.findViewById(R.id.tvTrait1Description);
         if(mode == 1){

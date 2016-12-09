@@ -29,19 +29,20 @@ import java.util.StringTokenizer;
 public class AddDmgResDialogFragment extends DialogFragment {
 
     Button positiveButton;
-    String dmgRes;
+    String dmgRes, title;
 
 
     public AddDmgResDialogFragment(){
     }
 
     //mode: 0 = add, 1 = update
-    public static AddDmgResDialogFragment newInstance(String dmgRes) {
+    public static AddDmgResDialogFragment newInstance(String dmgRes, String title) {
         AddDmgResDialogFragment f = new AddDmgResDialogFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putString("dmgRes", dmgRes);
+        args.putString("title", title);
 
         f.setArguments(args);
 
@@ -54,6 +55,7 @@ public class AddDmgResDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
             dmgRes = getArguments().getString("dmgRes");
+            title = getArguments().getString("title");
         }
         setCancelable(true);
     }
@@ -113,7 +115,7 @@ public class AddDmgResDialogFragment extends DialogFragment {
 
     public Dialog buildDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Damage Resistances");
+        builder.setTitle(title);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         // Set up the input
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text

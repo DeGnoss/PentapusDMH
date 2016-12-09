@@ -113,7 +113,7 @@ public class AddSavingThrowDialogFragment extends DialogFragment {
 
     public Dialog buildDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Skills");
+        builder.setTitle("Saving Throw");
         LayoutInflater inflater = getActivity().getLayoutInflater();
         // Set up the input
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text

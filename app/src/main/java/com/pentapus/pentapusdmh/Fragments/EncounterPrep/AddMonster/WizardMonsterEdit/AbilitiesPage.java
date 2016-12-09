@@ -63,25 +63,29 @@ public class AbilitiesPage extends Page {
         String ac1type = mData.getString(AC1TYPE_DATA_KEY);
         String ac2 = mData.getString(AC2_DATA_KEY);
         String ac2type = mData.getString(AC2TYPE_DATA_KEY);
-        if (ac1type == null || ac1type.isEmpty()) {
-            ac = String.valueOf(ac1);
-        } else {
-            ac = ac1 + " (" + ac1type + ") ";
-        }
-        if (ac2 != null && !ac2.isEmpty()) {
-            if(ac2type != null && !ac2type.isEmpty()){
-                if(ac == null || ac.isEmpty()){
-                    ac = ac2 + " (" + ac2type + ")";
-                }else{
-                    ac = ac + ", " + ac2 + " (" + ac2type + ")";
-                }
-            }else{
-                if(ac == null || ac.isEmpty()){
-                    ac = ac2;
-                }else{
-                    ac = ac + ", " + ac2;
+        if(ac1 != null) {
+            if (ac1type == null || ac1type.isEmpty()) {
+                ac = String.valueOf(ac1);
+            } else {
+                ac = ac1 + " (" + ac1type + ") ";
+            }
+            if (ac2 != null && !ac2.isEmpty()) {
+                if (ac2type != null && !ac2type.isEmpty()) {
+                    if (ac == null || ac.isEmpty()) {
+                        ac = ac2 + " (" + ac2type + ")";
+                    } else {
+                        ac = ac + ", " + ac2 + " (" + ac2type + ")";
+                    }
+                } else {
+                    if (ac == null || ac.isEmpty()) {
+                        ac = ac2;
+                    } else {
+                        ac = ac + ", " + ac2;
+                    }
                 }
             }
+        }else{
+            ac =null;
         }
         dest.add(new ReviewItem("Armor Class", ac, getKey(), -1));
 
@@ -94,7 +98,7 @@ public class AbilitiesPage extends Page {
         if (hp != null && !hp.isEmpty() && !Objects.equals(hp, "0")) {
             hpString = hp + " (" + hitdice + HitDiceCalculator.calculateHdType(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mData.getString(AbilitiesPage.CON_DATA_KEY)))) + ")";
         } else {
-            hpString = "0, click to add";
+            hpString = null;
         }
 
         dest.add(new ReviewItem("Hit Points", hpString, getKey(), -1));
