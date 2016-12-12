@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,16 +27,18 @@ public class MySpellAdapter extends RecyclerViewCursorAdapter<MySpellAdapter.MyS
     private AdapterNavigationCallback mAdapterCallback;
     List<String> itemsPendingRemoval;
     Context mContext;
+    int mode;
 
     /**
      * Constructor.
      *
      * @param context The Context the Adapter is displayed in.
      */
-    public MySpellAdapter(Context context, AdapterNavigationCallback callback) {
+    public MySpellAdapter(Context context, AdapterNavigationCallback callback, int mode) {
         super(context);
         this.mContext = context;
         this.mAdapterCallback = callback;
+        this.mode = mode;
         itemsPendingRemoval = new ArrayList<>();
         setHasStableIds(true);
         setupCursorAdapter(null, 0, R.layout.card_spell, false);
@@ -122,6 +125,7 @@ public class MySpellAdapter extends RecyclerViewCursorAdapter<MySpellAdapter.MyS
         protected TextView vLevel, vSchool;
         protected CardView cardViewTracker;
         protected ImageView ivIcon;
+        protected CheckBox cbSpell;
         public int type;
         private RelativeLayout clicker;
         private AdapterNavigationCallback mAdapterCallback;
@@ -138,6 +142,7 @@ public class MySpellAdapter extends RecyclerViewCursorAdapter<MySpellAdapter.MyS
             vLevel = (TextView) v.findViewById(R.id.level_spell);
             clicker = (RelativeLayout) v.findViewById(R.id.clicker_spell);
             vSchool = (TextView) v.findViewById(R.id.school_spell);
+            cbSpell = (CheckBox) v.findViewById(R.id.cbSpell);
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -156,6 +161,14 @@ public class MySpellAdapter extends RecyclerViewCursorAdapter<MySpellAdapter.MyS
                     mAdapterCallback.onItemClick(getAdapterPosition());
                 }
             });
+
+            if(mode == 1){
+                cbSpell.setVisibility(View.VISIBLE);
+                vLevel.setVisibility(View.GONE);
+            }else{
+                cbSpell.setVisibility(View.GONE);
+                vLevel.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override

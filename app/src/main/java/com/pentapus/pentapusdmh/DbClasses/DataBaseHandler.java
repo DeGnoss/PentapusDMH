@@ -108,6 +108,59 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_ATK5AUTOROLL = "atk5autoroll";
     public static final String KEY_ATK5ADDITIONAL = "atk5additional";
 
+    public static final String KEY_LMULTIATTACK = "lmultiattack";
+
+
+    public static final String KEY_LATK1NAME = "latk1name";
+    public static final String KEY_LATK1DESC = "latk1desc";
+    public static final String KEY_LATK1MOD = "latk1mod";
+    public static final String KEY_LATK1DMG1ROLL = "latk1dmg1roll";
+    public static final String KEY_LATK1DMG1TYPE = "latk1dmg1type";
+    public static final String KEY_LATK1DMG2ROLL = "latk1dmg2roll";
+    public static final String KEY_LATK1DMG2TYPE = "latk1dmg2type";
+    public static final String KEY_LATK1AUTOROLL = "latk1autoroll";
+    public static final String KEY_LATK1ADDITIONAL = "latk1additional";
+
+    public static final String KEY_LATK2NAME = "latk2name";
+    public static final String KEY_LATK2DESC = "latk2desc";
+    public static final String KEY_LATK2MOD = "latk2mod";
+    public static final String KEY_LATK2DMG1ROLL = "latk2dmg1roll";
+    public static final String KEY_LATK2DMG1TYPE = "latk2dmg1type";
+    public static final String KEY_LATK2DMG2ROLL = "latk2dmg2roll";
+    public static final String KEY_LATK2DMG2TYPE = "latk2dmg2type";
+    public static final String KEY_LATK2AUTOROLL = "latk2autoroll";
+    public static final String KEY_LATK2ADDITIONAL = "latk2additional";
+
+    public static final String KEY_LATK3NAME = "latk3name";
+    public static final String KEY_LATK3DESC = "latk3desc";
+    public static final String KEY_LATK3MOD = "latk3mod";
+    public static final String KEY_LATK3DMG1ROLL = "latk3dmg1roll";
+    public static final String KEY_LATK3DMG1TYPE = "latk3dmg1type";
+    public static final String KEY_LATK3DMG2ROLL = "latk3dmg2roll";
+    public static final String KEY_LATK3DMG2TYPE = "latk3dmg2type";
+    public static final String KEY_LATK3AUTOROLL = "latk3autoroll";
+    public static final String KEY_LATK3ADDITIONAL = "latk3additional";
+
+    public static final String KEY_LATK4NAME = "latk4name";
+    public static final String KEY_LATK4DESC = "latk4desc";
+    public static final String KEY_LATK4MOD = "latk4mod";
+    public static final String KEY_LATK4DMG1ROLL = "latk4dmg1roll";
+    public static final String KEY_LATK4DMG1TYPE = "latk4dmg1type";
+    public static final String KEY_LATK4DMG2ROLL = "latk4dmg2roll";
+    public static final String KEY_LATK4DMG2TYPE = "latk4dmg2type";
+    public static final String KEY_LATK4AUTOROLL = "latk4autoroll";
+    public static final String KEY_LATK4ADDITIONAL = "latk4additional";
+
+    public static final String KEY_LATK5NAME = "latk5name";
+    public static final String KEY_LATK5DESC = "latk5desc";
+    public static final String KEY_LATK5MOD = "latk5mod";
+    public static final String KEY_LATK5DMG1ROLL = "latk5dmg1roll";
+    public static final String KEY_LATK5DMG1TYPE = "latk5dmg1type";
+    public static final String KEY_LATK5DMG2ROLL = "latk5dmg2roll";
+    public static final String KEY_LATK5DMG2TYPE = "latk5dmg2type";
+    public static final String KEY_LATK5AUTOROLL = "latk5autoroll";
+    public static final String KEY_LATK5ADDITIONAL = "latk5additional";
+
     public static final String KEY_REACTION1NAME = "reaction1name";
     public static final String KEY_REACTION1DESC = "reaction1desc";
 

@@ -1,6 +1,7 @@
 package com.pentapus.pentapusdmh.Fragments.Spells;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Koni on 4/4/16.
@@ -20,12 +22,20 @@ public class SpellViewPagerAdapter extends FragmentPagerAdapter{
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private int id;
     private File[] imageUri;
+    private int mode;
+    private ArrayList<String> spellsKnown = new ArrayList<String>();
+    Bundle bundle = new Bundle();
+    private String level, scclass;
 
 
-    public SpellViewPagerAdapter(FragmentManager fm, Context context, int id) {
+    public SpellViewPagerAdapter(FragmentManager fm, Context context, int id, int mode, Bundle args, String level, String scclass) {
         super(fm);
         this.context = context;
         this.id = id;
+        this.mode = mode;
+        this.bundle = args;
+        this.level = level;
+        this.scclass = scclass;
     }
 
     @Override
@@ -37,10 +47,10 @@ public class SpellViewPagerAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                MySpellTableFragment f1 = MySpellTableFragment.newInstance("CUSTOM");
+                MySpellTableFragment f1 = MySpellTableFragment.newInstance("CUSTOM", mode);
                 return f1;
             case 1:
-                PHBSpellTableFragment f2 = PHBSpellTableFragment.newInstance("");
+                PHBSpellTableFragment f2 = PHBSpellTableFragment.newInstance("", mode, bundle, level, scclass);
                 return f2;
             default:
                 return null;

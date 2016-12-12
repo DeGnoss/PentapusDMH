@@ -24,6 +24,31 @@ public class TraitsPage extends Page {
     public static final String T5NAME_DATA_KEY = "t5name";
     public static final String T5DESC_DATA_KEY = "t5desc";
 
+    public static final String SC_DATA_KEY = "spellcasting";
+    public static final String SCDESCRIPTION_DATA_KEY = "scdescription";
+    public static final String SClEVEL_DATA_KEY = "sclevel";
+    public static final String SCABILITY_DATA_KEY = "scability";
+    public static final String SCMOD_DATA_KEY = "scmod";
+    public static final String SCDC_DATA_KEY = "scdc";
+    public static final String SCCLASS_DATA_KEY = "scclass";
+    public static final String SCSPELLSKNOWNSTRING_DATA_KEY = "scspellsknownstring";
+    public static final String SCSPELLSKNOWN_DATA_KEY = "scspellsknown";
+    public static final String SCSLOTS_DATA_KEY = "scslots";
+
+
+    public static final String INNATE_DATA_KEY = "innate";
+    public static final String INNATEDESCRIPTION_DATA_KEY = "innatedescription";
+    public static final String INNATEABILITY_DATA_KEY = "innateability";
+    public static final String INNATEMOD_DATA_KEY = "innatemod";
+    public static final String INNATEDC_DATA_KEY = "innatedc";
+    public static final String INNATESPELLSKNOWNSTRING_DATA_KEY = "innatespellsknownstring";
+    public static final String INNATESPELLSKNOWN_DATA_KEY = "innatespellsknown";
+
+    public static final String NAME_DATA_KEY = "name";
+
+
+
+
 
 
 

@@ -48,7 +48,7 @@ public class AddTraitDialogFragment extends DialogFragment {
         args.putInt("traitNumber", traitNumber);
         args.putString("title", title);
         if(name != null){
-            args.putString("name", name);
+            args.putString("monstername", name);
         }
         if(description != null){
             args.putString("description", description);
@@ -64,7 +64,7 @@ public class AddTraitDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
             mode = getArguments().getInt("mode");
-            name = getArguments().getString("name");
+            name = getArguments().getString("monstername");
             description = getArguments().getString("description");
             traitNumber = getArguments().getInt("traitNumber");
             title = getArguments().getString("title");
@@ -119,9 +119,9 @@ public class AddTraitDialogFragment extends DialogFragment {
 
 
 
-    private void sendResult(int mode, String name, String description, int traitNumber) {
+    private void sendResult(int mode, Bundle results) {
         ((TraitsFragment) getTargetFragment()).onDialogResult(
-                getTargetRequestCode(), mode, name, description, traitNumber);
+                getTargetRequestCode(), mode, results);
     }
 
 
@@ -146,7 +146,11 @@ public class AddTraitDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 name = tvTrait1Name.getText().toString();
                 description = tvTrait1Description.getText().toString();
-                sendResult(mode, name, description, traitNumber);
+                Bundle results = new Bundle();
+                results.putString("monstername", name);
+                results.putString("description", description);
+                results.putInt("traitNumber", traitNumber);
+                sendResult(mode, results);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -159,7 +163,11 @@ public class AddTraitDialogFragment extends DialogFragment {
         builder.setNeutralButton("Remove", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sendResult(2, "", "", traitNumber);
+                Bundle results = new Bundle();
+                results.putString("monstername", "");
+                results.putString("description", "");
+                results.putInt("traitNumber", traitNumber);
+                sendResult(2, results);
                 //getActivity().getSupportFragmentManager().popBackStack();
             }
         });

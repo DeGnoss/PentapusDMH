@@ -42,7 +42,7 @@ public class AddActionDialogFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putInt("mode", mode);
         args.putInt("actionNumber", actionNumber);
-        args.putString("name", name);
+        args.putString("monstername", name);
         args.putString("description", description);
         args.putString("atkmod", atkmod);
         args.putString("dmg1", dmg1);
@@ -63,7 +63,7 @@ public class AddActionDialogFragment extends DialogFragment {
         if(getArguments() != null){
             mode = getArguments().getInt("mode");
             actionNumber = getArguments().getInt("actionNumber");
-            name = getArguments().getString("name");
+            name = getArguments().getString("monstername");
             description = getArguments().getString("description");
             atkmod = getArguments().getString("atkmod");
             dmg1 = getArguments().getString("dmg1");

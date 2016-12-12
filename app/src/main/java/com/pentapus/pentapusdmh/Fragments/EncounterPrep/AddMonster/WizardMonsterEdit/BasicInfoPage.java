@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 
 public class BasicInfoPage extends Page {
-    public static final String NAME_DATA_KEY = "name";
+    public static final String NAME_DATA_KEY = "monstername";
     public static final String TYPE_DATA_KEY = "type";
     public static final String ALIGNMENT_DATA_KEY = "alignment";
     public static final String IMAGEURI_DATA_KEY = "imageuri";

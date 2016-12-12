@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/WizardPageContainer" >
+
+    <TextView style="@style/WizardPageTitle" />
+
+    <ScrollView style="@style/FragmentInfo" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Challenge Rating" />
+
+            <EditText
+                android:id="@+id/tvCR"
+                style="@style/FragmentInfoType"
+                android:hint="e.g. 8"
+                />
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="XP" />
+
+            <EditText
+                android:id="@+id/tvXP"
+                style="@style/FragmentInfoAlignment"
+                android:hint="e.g. 3900"
+                />
+
+            <CheckedTextView
+                android:id="@+id/ctvSpellcaster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/text_light"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="Spellcaster"
+                android:checkMark="?android:attr/listChoiceIndicatorMultiple" />
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bAddSpells"
+                android:text="Add Spells"/>
+
+            <TextView
+                android:id="@+id/tvSpells"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_marginBottom="20dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

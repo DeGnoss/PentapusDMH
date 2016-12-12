@@ -35,7 +35,7 @@ import java.util.List;
  * Created by Koni on 11.11.2016.
  */
 
-public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSelectedListener{
     private static final String ARG_KEY = "basicinfo";
 
     private PageFragmentCallbacks mCallbacks;
@@ -49,6 +49,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
     String[] item;
     private Bundle filters;
     OnSizeChangedListener mOnSizeChangedListener;
+    OnNameChangedListener mOnNameChangedListener;
 
     private ImageButton bChooseImage;
     private Uri myFile;
@@ -131,7 +132,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         // For a little polish, specify a transition animation
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
-        // for the fragment, which is always the root view for the activity
+        // for the targetFragment, which is always the root view for the activity
         transaction.replace(R.id.ContainerFrame, newFragment, "F_IMAGE_PAGER")
                 .addToBackStack("F_IMAGE_PAGER").commit();
     }
@@ -142,6 +143,11 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         mCallbacks = (PageFragmentCallbacks) getParentFragment();
         try {
             mOnSizeChangedListener = (OnSizeChangedListener)getParentFragment();
+        }catch (ClassCastException e){
+
+        }
+        try {
+            mOnNameChangedListener = (OnNameChangedListener) getParentFragment();
         }catch (ClassCastException e){
 
         }
@@ -172,6 +178,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
             public void afterTextChanged(Editable editable) {
                 mPage.getData().putString(BasicInfoPage.NAME_DATA_KEY,
                         (editable != null) ? editable.toString() : null);
+                mOnNameChangedListener.onNameChanged((editable != null) ? editable.toString() : null);
                 mPage.notifyDataChanged();
                 pageDone();
             }
@@ -182,7 +189,6 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
             public void onFocusChange(View view, boolean b) {
                 if(b){
                     item = getItemsFromDb("", "monstertype");
-
                     // update the adapater
                     mSuggestionAdapter.notifyDataSetChanged();
                     mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, item);
@@ -281,7 +287,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
                 if (value != null) {
                     Uri uri = Uri.parse(value);
                     myFile = uri;
-                    Log.v("MonsterEdit", "Data passed from Child fragment = " + uri);
+                    Log.v("MonsterEdit", "Data passed from Child targetFragment = " + uri);
                     bChooseImage.post(new Runnable() {
                         @Override
                         public void run() {
@@ -369,4 +375,11 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         public void onSizeChanged(String size);
 
     }
+
+    public interface OnNameChangedListener {
+
+        public void onNameChanged(String size);
+
+    }
+
 }

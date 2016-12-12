@@ -5,20 +5,6 @@
 
     <TextView style="@style/WizardPageTitle" />
 
-    <TextView
-        style="@style/WizardFormLabel"
-        android:text="Multiattack"
-        android:id="@+id/tvTitleMultiattack"/>
-
-    <EditText
-        android:id="@+id/tvMultiattack"
-        style="@style/FragmentInfoName"
-        android:inputType="textMultiLine"
-        android:hint="e.g. The Pentapus makes 5 attacks, one with each of its tentacles."
-        />
-
-
-
     <ListView
         android:id="@+id/list"
         style="@style/FragmentListView"
@@ -26,7 +12,7 @@
         android:divider="@null"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabActions"
+        android:id="@+id/fabTraits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

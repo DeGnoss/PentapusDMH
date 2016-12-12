@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/WizardPageContainer">
+
+    <ScrollView style="@style/FragmentInfo">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/llSC0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/l0"
+                    style="@style/WizardFormSkillLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_marginTop="0dp"
+                    android:text="Spellcaster level" />
+
+                <Spinner
+                    android:id="@+id/spSpellCasterLevel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llSC1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llSC0"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/l2"
+                    style="@style/WizardFormSkillLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_marginTop="0dp"
+                    android:text="Spellcasting ability" />
+
+                <Spinner
+                    android:id="@+id/spSpellcastingAbility"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llSC2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llSC1"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/l3"
+                    style="@style/WizardFormSkillLabel"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="3"
+                    android:text="Spell attack modifier" />
+
+                <EditText
+                    android:id="@+id/tvSpellMod"
+                    style="@style/FragmentInfoAC"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="numberSigned" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llSC3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llSC2"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/l4"
+                    style="@style/WizardFormSkillLabel"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="3"
+                    android:text="Spell save DC" />
+
+                <EditText
+                    android:id="@+id/tvSpellDC"
+                    style="@style/FragmentInfoAC"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 16"
+                    android:inputType="number" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llSC4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llSC3"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/l5"
+                    style="@style/WizardFormSkillLabel"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="2"
+                    android:text="Spells chosen from" />
+
+                <Spinner
+                    android:id="@+id/spSpellcastingClass"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/labelslots"
+                style="@style/WizardFormSkillLabel"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/llSC4"
+                android:text="Spellslots" />
+
+            <LinearLayout
+                android:id="@+id/llSC6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/labelslots"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots1"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="1:" />
+
+                <EditText
+                    android:id="@+id/tvSlots1"
+                    style="@style/FragmentInfoAC"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots2"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="2:" />
+
+                <EditText
+                    android:id="@+id/tvSlots2"
+                    style="@style/FragmentInfoAC"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots3"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="3:" />
+
+                <EditText
+                    android:id="@+id/tvSlots3"
+                    style="@style/FragmentInfoAC"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llSC7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llSC6"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots4"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="4:" />
+
+                <EditText
+                    android:id="@+id/tvSlots4"
+                    style="@style/FragmentInfoAC"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots5"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="5:" />
+
+                <EditText
+                    android:id="@+id/tvSlots5"
+                    style="@style/FragmentInfoAC"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots6"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="6:" />
+
+                <EditText
+                    android:id="@+id/tvSlots6"
+                    style="@style/FragmentInfoAC"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llSC8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llSC7"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots7"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="7:" />
+
+                <EditText
+                    android:id="@+id/tvSlots7"
+                    style="@style/FragmentInfoAC"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots8"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="8:" />
+
+                <EditText
+                    android:id="@+id/tvSlots8"
+                    style="@style/FragmentInfoAC"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/WizardFormSkillLabel"
+                    android:id="@+id/labelSlots9"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="9:" />
+
+                <EditText
+                    android:id="@+id/tvSlots9"
+                    style="@style/FragmentInfoAC"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:hint="e.g. 4"
+                    android:inputType="number" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

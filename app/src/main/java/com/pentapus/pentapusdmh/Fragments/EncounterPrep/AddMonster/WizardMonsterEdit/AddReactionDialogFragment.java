@@ -37,7 +37,7 @@ public class AddReactionDialogFragment extends DialogFragment {
         args.putInt("traitNumber", traitNumber);
         args.putString("title", title);
         if(name != null){
-            args.putString("name", name);
+            args.putString("monstername", name);
         }
         if(description != null){
             args.putString("description", description);
@@ -53,7 +53,7 @@ public class AddReactionDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
             mode = getArguments().getInt("mode");
-            name = getArguments().getString("name");
+            name = getArguments().getString("monstername");
             description = getArguments().getString("description");
             traitNumber = getArguments().getInt("traitNumber");
             title = getArguments().getString("title");

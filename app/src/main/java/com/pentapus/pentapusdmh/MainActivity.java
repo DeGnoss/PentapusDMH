@@ -701,6 +701,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_spells:
                 fragmentClass = SpellViewPagerDialogFragment.class;
                 bundle.putBoolean("navMode", true);
+                bundle.putInt("mode", 0);
                 try {
                     fragment = (Fragment) fragmentClass.newInstance();
                     fragment.setArguments(bundle);

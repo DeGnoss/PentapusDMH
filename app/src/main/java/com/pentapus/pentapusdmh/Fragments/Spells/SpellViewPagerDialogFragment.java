@@ -23,8 +23,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit.CrFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit.TraitsFragment;
+import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit.TraitsPage;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Koni on 4/4/16.
@@ -37,24 +43,32 @@ public class SpellViewPagerDialogFragment extends Fragment{
     private ViewPager viewPager;
     private SpellViewPagerAdapter pagerAdapter;
     private FloatingActionButton fabSpellVP;
-    private int id;
+    private int id, mode;
     private boolean navMode;
     private static final String MODE = "modeUpdate";
     private Button bDone;
+    private String level, scclass;
 
     private static int selectedType = -1;
     private static int selectedPos = -1;
     private static int highlightedPos = -1;
+
+    private ArrayList<String> selectionList = new ArrayList<>();
+    private HashMap<Integer, Integer> selectedspells = new HashMap<>();
 
 
     public SpellViewPagerDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
-    public static SpellViewPagerDialogFragment newInstance(boolean navMode) {
+    public static SpellViewPagerDialogFragment newInstance(boolean navMode, int mode, ArrayList<String> selectionList, String level, String scClass) {
         SpellViewPagerDialogFragment fragment = new SpellViewPagerDialogFragment();
         Bundle args = new Bundle();
         args.putBoolean(NAV_MODE, navMode);
+        args.putInt("mode", mode);
+        args.putStringArrayList("selectionList", selectionList);
+        args.putString("level", level);
+        args.putString("scclass", scClass);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,6 +78,14 @@ public class SpellViewPagerDialogFragment extends Fragment{
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             navMode = getArguments().getBoolean(NAV_MODE);
+            mode = getArguments().getInt("mode");
+            if(mode == 1){
+                selectionList = getArguments().getStringArrayList("selectionList");
+            }else if(mode == 2){
+                selectedspells = (HashMap<Integer, Integer>)getArguments().getSerializable("selectedspells");
+            }
+            level = getArguments().getString("level");
+            scclass = getArguments().getString("scclass");
         }
     }
 
@@ -139,6 +161,17 @@ public class SpellViewPagerDialogFragment extends Fragment{
     @Override
     public void onDestroy(){
         ((MainActivity) getActivity()).enableNavigationDrawer();
+        if(mode == 1){
+            Bundle results = new Bundle();
+            results.putStringArrayList("selectedspells", ((PHBSpellTableFragment)pagerAdapter.getRegisteredFragment(1)).getSelectedSpells());
+            ((TraitsFragment) getTargetFragment()).onDialogResult(
+                    getTargetRequestCode(), -2, results);
+        }else if(mode == 2){
+            Bundle results = new Bundle();
+            results.putSerializable("spellcounter", ((PHBSpellTableFragment)pagerAdapter.getRegisteredFragment(1)).getSpellCounter());
+            ((TraitsFragment) getTargetFragment()).onDialogResult(
+                    getTargetRequestCode(), -2, results);
+        }
         super.onDestroy();
     }
 
@@ -202,8 +235,13 @@ public class SpellViewPagerDialogFragment extends Fragment{
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        pagerAdapter = new SpellViewPagerAdapter(getChildFragmentManager(), getContext(), id);
+        Bundle args = new Bundle();
+        if(mode == 1){
+            args.putStringArrayList("selectionList", selectionList);
+        }else if(mode == 2){
+            args.putSerializable("selectedspells", selectedspells);
+        }
+        pagerAdapter = new SpellViewPagerAdapter(getChildFragmentManager(), getContext(), id, mode, args, level, scclass);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(1);
         viewPager.setOffscreenPageLimit(2);

@@ -35,7 +35,7 @@ import java.util.List;
  * Created by Koni on 11.11.2016.
  */
 
-public class MonsterEditWizardFragment extends WizardFragment implements BasicInfoFragment.OnSizeChangedListener, AbilitiesFragment.OnWisdomChangedListener{
+public class MonsterEditWizardFragment extends WizardFragment implements BasicInfoFragment.OnSizeChangedListener, BasicInfoFragment.OnNameChangedListener, AbilitiesFragment.OnWisdomChangedListener{
     private AbstractWizardModel mWizardModel = new MonsterEditWizardModel(getActivity());
     private static final String MODE = "modeUpdate";
     private static final String MONSTER_ID = "monsterId";
@@ -47,6 +47,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
     private int encounterId;
     private boolean navMode;
     private String mName, mType, mAlignment;
+    private String name;
     private Bundle bundle;
 
 
@@ -241,6 +242,58 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String r1desc = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R1DESC_DATA_KEY);
 
 
+        String lmultiAttack = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LMULTIATTACK_DATA_KEY);
+
+        String la1name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1NAME_DATA_KEY);
+        String la1desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1DESC_DATA_KEY);
+        String la1mod = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1MOD_DATA_KEY);
+        String la1roll1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1ROLL1_DATA_KEY);
+        String la1roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1ROLL2_DATA_KEY);
+        String la1type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1TYPE1_DATA_KEY);
+        String la1type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1TYPE2_DATA_KEY);
+        String la1auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1AUTO_DATA_KEY);
+        String la1add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1ADD_DATA_KEY);
+
+        String la2name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2NAME_DATA_KEY);
+        String la2desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2DESC_DATA_KEY);
+        String la2mod = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2MOD_DATA_KEY);
+        String la2roll1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2ROLL1_DATA_KEY);
+        String la2roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2ROLL2_DATA_KEY);
+        String la2type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2TYPE1_DATA_KEY);
+        String la2type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2TYPE2_DATA_KEY);
+        String la2auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2AUTO_DATA_KEY);
+        String la2add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2ADD_DATA_KEY);
+
+        String la3name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3NAME_DATA_KEY);
+        String la3desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3DESC_DATA_KEY);
+        String la3mod = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3MOD_DATA_KEY);
+        String la3roll1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3ROLL1_DATA_KEY);
+        String la3roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3ROLL2_DATA_KEY);
+        String la3type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3TYPE1_DATA_KEY);
+        String la3type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3TYPE2_DATA_KEY);
+        String la3auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3AUTO_DATA_KEY);
+        String la3add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3ADD_DATA_KEY);
+
+        String la4name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4NAME_DATA_KEY);
+        String la4desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4DESC_DATA_KEY);
+        String la4mod = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4MOD_DATA_KEY);
+        String la4roll1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4ROLL1_DATA_KEY);
+        String la4roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4ROLL2_DATA_KEY);
+        String la4type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4TYPE1_DATA_KEY);
+        String la4type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4TYPE2_DATA_KEY);
+        String la4auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4AUTO_DATA_KEY);
+        String la4add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4ADD_DATA_KEY);
+
+        String la5name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5NAME_DATA_KEY);
+        String la5desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5DESC_DATA_KEY);
+        String la5mod = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5MOD_DATA_KEY);
+        String la5roll1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5ROLL1_DATA_KEY);
+        String la5roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5ROLL2_DATA_KEY);
+        String la5type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5TYPE1_DATA_KEY);
+        String la5type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5TYPE2_DATA_KEY);
+        String la5auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5AUTO_DATA_KEY);
+        String la5add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5ADD_DATA_KEY);
+
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, name);
         values.put(DataBaseHandler.KEY_MONSTERTYPE, type);
@@ -346,6 +399,10 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_REACTION1NAME, r1name);
         values.put(DataBaseHandler.KEY_REACTION1DESC, r1desc);
 
+        /*TODO
+        Add Action 5
+        Add Legendary Actions
+         */
 
         /*
         values.put(DataBaseHandler.KEY_ATK5NAME, a5name);
@@ -358,6 +415,61 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_ATK5AUTOROLL, a5auto);
         values.put(DataBaseHandler.KEY_ATK5ADDITIONAL, a5add);
 */
+
+/*
+        values.put(DataBaseHandler.KEY_LMULTIATTACK, lmultiAttack);
+
+        values.put(DataBaseHandler.KEY_LATK1NAME, la1name);
+        values.put(DataBaseHandler.KEY_LATK1DESC, la1desc);
+        values.put(DataBaseHandler.KEY_LATK1MOD, la1mod);
+        values.put(DataBaseHandler.KEY_LATK1DMG1ROLL, la1roll1);
+        values.put(DataBaseHandler.KEY_LATK1DMG2ROLL, la1roll2);
+        values.put(DataBaseHandler.KEY_LATK1DMG1TYPE, la1type1);
+        values.put(DataBaseHandler.KEY_LATK1DMG2TYPE, la1type2);
+        values.put(DataBaseHandler.KEY_LATK1AUTOROLL, la1auto);
+        values.put(DataBaseHandler.KEY_LATK1ADDITIONAL, la1add);
+
+        values.put(DataBaseHandler.KEY_LATK2NAME, la2name);
+        values.put(DataBaseHandler.KEY_LATK2DESC, la2desc);
+        values.put(DataBaseHandler.KEY_LATK2MOD, la2mod);
+        values.put(DataBaseHandler.KEY_LATK2DMG1ROLL, la2roll1);
+        values.put(DataBaseHandler.KEY_LATK2DMG2ROLL, la2roll2);
+        values.put(DataBaseHandler.KEY_LATK2DMG1TYPE, la2type1);
+        values.put(DataBaseHandler.KEY_LATK2DMG2TYPE, la2type2);
+        values.put(DataBaseHandler.KEY_LATK2AUTOROLL, la2auto);
+        values.put(DataBaseHandler.KEY_LATK2ADDITIONAL, la2add);
+
+        values.put(DataBaseHandler.KEY_LATK3NAME, la3name);
+        values.put(DataBaseHandler.KEY_LATK3DESC, la3desc);
+        values.put(DataBaseHandler.KEY_LATK3MOD, la3mod);
+        values.put(DataBaseHandler.KEY_LATK3DMG1ROLL, la3roll1);
+        values.put(DataBaseHandler.KEY_LATK3DMG2ROLL, la3roll2);
+        values.put(DataBaseHandler.KEY_LATK3DMG1TYPE, la3type1);
+        values.put(DataBaseHandler.KEY_LATK3DMG2TYPE, la3type2);
+        values.put(DataBaseHandler.KEY_LATK3AUTOROLL, la3auto);
+        values.put(DataBaseHandler.KEY_LATK3ADDITIONAL, la3add);
+
+        values.put(DataBaseHandler.KEY_LATK4NAME, la4name);
+        values.put(DataBaseHandler.KEY_LATK4DESC, la4desc);
+        values.put(DataBaseHandler.KEY_LATK4MOD, la4mod);
+        values.put(DataBaseHandler.KEY_LATK4DMG1ROLL, la4roll1);
+        values.put(DataBaseHandler.KEY_LATK4DMG2ROLL, la4roll2);
+        values.put(DataBaseHandler.KEY_LATK4DMG1TYPE, la4type1);
+        values.put(DataBaseHandler.KEY_LATK4DMG2TYPE, la4type2);
+        values.put(DataBaseHandler.KEY_LATK4AUTOROLL, la4auto);
+        values.put(DataBaseHandler.KEY_LATK4ADDITIONAL, la4add);
+
+        values.put(DataBaseHandler.KEY_LATK5NAME, la5name);
+        values.put(DataBaseHandler.KEY_LATK5DESC, la5desc);
+        values.put(DataBaseHandler.KEY_LATK5MOD, la5mod);
+        values.put(DataBaseHandler.KEY_LATK5DMG1ROLL, la5roll1);
+        values.put(DataBaseHandler.KEY_LATK5DMG2ROLL, la5roll2);
+        values.put(DataBaseHandler.KEY_LATK5DMG1TYPE, la5type1);
+        values.put(DataBaseHandler.KEY_LATK5DMG2TYPE, la5type2);
+        values.put(DataBaseHandler.KEY_LATK5AUTOROLL, la5auto);
+        values.put(DataBaseHandler.KEY_LATK5ADDITIONAL, la5add);
+*/
+
 
         if (imageUri == null) {
             imageUri = "android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight";
@@ -517,7 +629,59 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String a5add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5ADDITIONAL));
 */
 
+/*
+            String lmultiAttack = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LMULTIATTACK));
 
+            String la1name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1NAME));
+            String la1desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DESC));
+            String la1mod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1MOD));
+            String la1roll1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG1ROLL));
+            String la1roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG2ROLL));
+            String la1type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG1TYPE));
+            String la1type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG2TYPE));
+            String la1auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1AUTOROLL));
+            String la1add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1ADDITIONAL));
+
+            String la2name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2NAME));
+            String la2desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DESC));
+            String la2mod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2MOD));
+            String la2roll1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG1ROLL));
+            String la2roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG2ROLL));
+            String la2type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG1TYPE));
+            String la2type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG2TYPE));
+            String la2auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2AUTOROLL));
+            String la2add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2ADDITIONAL));
+
+            String la3name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3NAME));
+            String la3desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DESC));
+            String la3mod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3MOD));
+            String la3roll1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG1ROLL));
+            String la3roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG2ROLL));
+            String la3type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG1TYPE));
+            String la3type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG2TYPE));
+            String la3auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3AUTOROLL));
+            String la3add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3ADDITIONAL));
+
+            String la4name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4NAME));
+            String la4desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DESC));
+            String la4mod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4MOD));
+            String la4roll1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG1ROLL));
+            String la4roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG2ROLL));
+            String la4type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG1TYPE));
+            String la4type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG2TYPE));
+            String la4auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4AUTOROLL));
+            String la4add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4ADDITIONAL));
+
+            String la5name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5NAME));
+            String la5desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DESC));
+            String la5mod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5MOD));
+            String la5roll1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG1ROLL));
+            String la5roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG2ROLL));
+            String la5type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG1TYPE));
+            String la5type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG2TYPE));
+            String la5auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5AUTOROLL));
+            String la5add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5ADDITIONAL));
+*/
 
             createBundleBasicInfo(name, type, alignment, imageUri, size);
             createBundleAbilities(str, dex, con, intel, wis, cha, hp, hpdice, ac1, ac1Type, ac2, ac2Type, speed);
@@ -525,6 +689,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             createBundleTraits(t1Name, t1Desc, t2Name, t2Desc, t3Name, t3Desc, t4Name, t4Desc, t5Name, t5Desc);
            // createBundleActions(a1name, a1desc, a1mod, a1roll1, a1roll2, a1type1, a1type2, a1auto, a1add, a2name, a2desc, a2mod, a2roll1, a2roll2, a2type1, a2type2, a2auto, a2add, a3name, a3desc, a3mod, a3roll1, a3roll2, a3type1, a3type2, a3auto, a3add, a4name, a4desc, a4mod, a4roll1, a4roll2, a4type1, a4type2, a4auto, a4add, a5name, a5desc, a5mod, a5roll1, a5roll2, a5type1, a5type2, a5auto, a5add);
             createBundleActions(multiAttack, a1name, a1desc, a1mod, a1roll1, a1roll2, a1type1, a1type2, a1auto, a1add, a2name, a2desc, a2mod, a2roll1, a2roll2, a2type1, a2type2, a2auto, a2add, a3name, a3desc, a3mod, a3roll1, a3roll2, a3type1, a3type2, a3auto, a3add, a4name, a4desc, a4mod, a4roll1, a4roll2, a4type1, a4type2, a4auto, a4add);
+            //createBundleLegendaryActions(lmultiAttack, la1name, la1desc, la1mod, la1roll1, la1roll2, la1type1, la1type2, la1auto, la1add, la2name, la2desc, la2mod, la2roll1, la2roll2, la2type1, la2type2, la2auto, la2add, la3name, la3desc, la3mod, la3roll1, la3roll2, la3type1, la3type2, la3auto, la3add, la4name, la4desc, la4mod, la4roll1, la4roll2, la4type1, la4type2, la4auto, la4add);
             createBundleReactions(r1name, r1desc);
         }
         assert cursor != null;
@@ -673,6 +838,68 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bundle.putBundle("Actions", bdl1);
     }
 
+/*
+    private void createBundleActions(String multiattack, String a1name, String a1desc, String a1mod, String a1roll1, String a1roll2, String a1type1, String a1type2, String a1auto, String a1add, String a2name, String a2desc, String a2mod, String a2roll1, String a2roll2, String a2type1, String a2type2, String a2auto, String a2add, String a3name, String a3desc, String a3mod, String a3roll1, String a3roll2, String a3type1, String a3type2, String a3auto, String a3add, String a4name, String a4desc, String a4mod, String a4roll1, String a4roll2, String a4type1, String a4type2, String a4auto, String a4add) {
+        Bundle bdl1 = new Bundle();
+
+        bdl1.putString(LegendaryActionPage.LMULTIATTACK_DATA_KEY, lmultiattack);
+
+        bdl1.putString(LegendaryActionPage.LA1NAME_DATA_KEY, la1name);
+        bdl1.putString(LegendaryActionPage.LA1DESC_DATA_KEY, la1desc);
+        bdl1.putString(LegendaryActionPage.LA1MOD_DATA_KEY, la1mod);
+        bdl1.putString(LegendaryActionPage.LA1ROLL1_DATA_KEY, la1roll1);
+        bdl1.putString(LegendaryActionPage.LA1ROLL2_DATA_KEY, la1roll2);
+        bdl1.putString(LegendaryActionPage.LA1TYPE1_DATA_KEY, la1type1);
+        bdl1.putString(LegendaryActionPage.LA1TYPE2_DATA_KEY, la1type2);
+        bdl1.putString(LegendaryActionPage.LA1AUTO_DATA_KEY, la1auto);
+        bdl1.putString(LegendaryActionPage.LA1ADD_DATA_KEY, la1add);
+
+        bdl1.putString(LegendaryActionPage.LA2NAME_DATA_KEY, la2name);
+        bdl1.putString(LegendaryActionPage.LA2DESC_DATA_KEY, la2desc);
+        bdl1.putString(LegendaryActionPage.LA2MOD_DATA_KEY, la2mod);
+        bdl1.putString(LegendaryActionPage.LA2ROLL1_DATA_KEY, la2roll1);
+        bdl1.putString(LegendaryActionPage.LA2ROLL2_DATA_KEY, la2roll2);
+        bdl1.putString(LegendaryActionPage.LA2TYPE1_DATA_KEY, la2type1);
+        bdl1.putString(LegendaryActionPage.LA2TYPE2_DATA_KEY, la2type2);
+        bdl1.putString(LegendaryActionPage.LA2AUTO_DATA_KEY, la2auto);
+        bdl1.putString(LegendaryActionPage.LA2ADD_DATA_KEY, la2add);
+
+        bdl1.putString(LegendaryActionPage.LA3NAME_DATA_KEY, la3name);
+        bdl1.putString(LegendaryActionPage.LA3DESC_DATA_KEY, la3desc);
+        bdl1.putString(LegendaryActionPage.LA3MOD_DATA_KEY, la3mod);
+        bdl1.putString(LegendaryActionPage.LA3ROLL1_DATA_KEY, la3roll1);
+        bdl1.putString(LegendaryActionPage.LA3ROLL2_DATA_KEY, la3roll2);
+        bdl1.putString(LegendaryActionPage.LA3TYPE1_DATA_KEY, la3type1);
+        bdl1.putString(LegendaryActionPage.LA3TYPE2_DATA_KEY, la3type2);
+        bdl1.putString(LegendaryActionPage.LA3AUTO_DATA_KEY, la3auto);
+        bdl1.putString(LegendaryActionPage.LA3ADD_DATA_KEY, la3add);
+
+        bdl1.putString(LegendaryActionPage.LA4NAME_DATA_KEY, la4name);
+        bdl1.putString(LegendaryActionPage.LA4DESC_DATA_KEY, la4desc);
+        bdl1.putString(LegendaryActionPage.LA4MOD_DATA_KEY, la4mod);
+        bdl1.putString(LegendaryActionPage.LA4ROLL1_DATA_KEY, la4roll1);
+        bdl1.putString(LegendaryActionPage.LA4ROLL2_DATA_KEY, la4roll2);
+        bdl1.putString(LegendaryActionPage.LA4TYPE1_DATA_KEY, la4type1);
+        bdl1.putString(LegendaryActionPage.LA4TYPE2_DATA_KEY, la4type2);
+        bdl1.putString(LegendaryActionPage.LA4AUTO_DATA_KEY, la4auto);
+        bdl1.putString(LegendaryActionPage.LA4ADD_DATA_KEY, la4add);
+
+        bdl1.putString(LegendaryActionPage.LA5NAME_DATA_KEY, la5name);
+        bdl1.putString(LegendaryActionPage.LA5DESC_DATA_KEY, la5desc);
+        bdl1.putString(LegendaryActionPage.LA5MOD_DATA_KEY, la5mod);
+        bdl1.putString(LegendaryActionPage.LA5ROLL1_DATA_KEY, la5roll1);
+        bdl1.putString(LegendaryActionPage.LA5ROLL2_DATA_KEY, la5roll2);
+        bdl1.putString(LegendaryActionPage.LA5TYPE1_DATA_KEY, la5type1);
+        bdl1.putString(LegendaryActionPage.LA5TYPE2_DATA_KEY, la5type2);
+        bdl1.putString(LegendaryActionPage.LA5AUTO_DATA_KEY, la5auto);
+        bdl1.putString(LegendaryActionPage.LA5ADD_DATA_KEY, la5add);
+
+
+        bundle.putBundle("Legendary Actions", bdl1);
+    }
+
+    */
+
     private void createBundleReactions(String r1name, String r1desc) {
         Bundle bdl1 = new Bundle();
         bdl1.putString(ReactionPage.R1NAME_DATA_KEY, r1name);
@@ -693,5 +920,14 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         if(getmPagerAdapter().getRegisteredFragment(2) != null){
             ((SkillsFragment)getmPagerAdapter().getRegisteredFragment(2)).onWisdomChanged(wisdom);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void onNameChanged(String size) {
+        this.name = size;
     }
 }

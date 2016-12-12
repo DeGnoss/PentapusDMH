@@ -36,6 +36,7 @@ import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -46,10 +47,13 @@ public class PHBSpellTableFragment extends Fragment implements
 
     private static final String SPELL_ID = "spellId";
     private static final String SPELL_NAME = "spellName";
-    private String sourceType;
+    private String sourceType, level, scclass;
     private Bundle filters;
     private SearchView searchView;
     private String searchViewQuery;
+    private int mode;
+    private ArrayList<String> spellsKnown = new ArrayList<String>();
+    private Bundle bundle = new Bundle();
 
 
     private RecyclerView mySpellRecyclerView;
@@ -65,10 +69,14 @@ public class PHBSpellTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static PHBSpellTableFragment newInstance(String sourceType) {
+    public static PHBSpellTableFragment newInstance(String sourceType, int mode, Bundle bundle, String level, String scclass) {
         PHBSpellTableFragment fragment = new PHBSpellTableFragment();
         Bundle args = new Bundle();
         args.putString("sourcetype", sourceType);
+        args.putInt("mode", mode);
+        args.putBundle("bundle", bundle);
+        args.putString("level", level);
+        args.putString("scclass", scclass);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,11 +87,15 @@ public class PHBSpellTableFragment extends Fragment implements
         setHasOptionsMenu(true);
         if (this.getArguments() != null) {
             sourceType = this.getArguments().getString("sourcetype");
+            mode = this.getArguments().getInt("mode");
+            level = this.getArguments().getString("level");
+            scclass = this.getArguments().getString("scclass");
+            bundle = this.getArguments().getBundle("bundle");
         }
         if(savedInstanceState != null){
             searchViewQuery = savedInstanceState.getString("sv1");
         }
-        mySpellAdapter = new PHBSpellAdapter(getContext(), this);
+        mySpellAdapter = new PHBSpellAdapter(getContext(), this, mode, bundle);
     }
 
     @Override
@@ -114,6 +126,12 @@ public class PHBSpellTableFragment extends Fragment implements
             filters.putBoolean("ee", SharedPrefsHelper.loadEEFilter(getContext()));
         if(SharedPrefsHelper.loadSCAGFilter(getContext()))
             filters.putBoolean("scag", SharedPrefsHelper.loadSCAGFilter(getContext()));
+        if(level != null && !level.isEmpty()){
+            filters.putString("level", level);
+        }
+        if(scclass != null && !scclass.isEmpty()){
+            filters.putString("scclass", scclass);
+        }
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, filters, this);
         } else {
@@ -124,6 +142,7 @@ public class PHBSpellTableFragment extends Fragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String selection = "";
+        boolean paranthesis = false;
         String[] selectionArgs;
         List<String> selectionList = new ArrayList<>();
         int size = 0;
@@ -142,6 +161,13 @@ public class PHBSpellTableFragment extends Fragment implements
                 size++;
             }
 
+            if(args.getString("level") != null && !args.getString("level").isEmpty()){
+                selectionList.add(String.valueOf(((int) Math.ceil(Integer.valueOf(args.getString("level"))/2))));
+            }
+
+            if(args.getString("scclass") != null && !args.getString("scclass").isEmpty() && !args.getString("scclass").toLowerCase().equals("all")){
+                selectionList.add("1");
+            }
 
             if(args.getString("filter") != null){
                 selectionList.add(args.getString("filter"));
@@ -158,14 +184,40 @@ public class PHBSpellTableFragment extends Fragment implements
                     selection = "(" + DataBaseHandler.KEY_SOURCE + " LIKE ?";
                 }
             }
+            if(args.getString("level") != null){
+                if(!selection.isEmpty()){
+                    selection = selection + ")" + " AND " + DataBaseHandler.KEY_LEVEL + " <= ?";
+                    paranthesis = true;
+                }else{
+                    selection = DataBaseHandler.KEY_LEVEL + " <= ?";
+                }
+            }
+            if(args.getString("scclass") != null && !args.getString("scclass").toLowerCase().equals("all")){
+                if(!selection.isEmpty()){
+                    if(!paranthesis) {
+                        selection = selection + ")" + " AND " + args.getString("scclass").toLowerCase() + " = ?";
+                        paranthesis = true;
+                    }else{
+                        selection = selection + " AND " + args.getString("scclass").toLowerCase() + " = ?";
+                    }
+                }else{
+                    selection = args.getString("scclass").toLowerCase() + " = ?";
+                }
+            }
             if(args.getString("filter") != null){
                 if(!selection.isEmpty()){
-                    selection = selection + ")" + " AND " + DataBaseHandler.KEY_NAME + " LIKE ?";
+                    if(!paranthesis){
+                        selection = selection + ")" + " AND " + DataBaseHandler.KEY_NAME + " LIKE ?";
+                    }else{
+                        selection = selection + " AND " + DataBaseHandler.KEY_NAME + " LIKE ?";
+                    }
                 }else{
                     selection = DataBaseHandler.KEY_NAME + " LIKE ?";
                 }
             }else{
-                selection = selection + ")";
+                if(!paranthesis){
+                    selection = selection + ")";
+                }
             }
 
         } else {
@@ -274,6 +326,14 @@ public class PHBSpellTableFragment extends Fragment implements
             searchView.setIconified(false);
             searchView.clearFocus();
         }
+    }
+
+    public ArrayList<String> getSelectedSpells(){
+        return getAdapter().getCheckedStatus();
+    }
+
+    public HashMap<Integer, Integer> getSpellCounter(){
+        return getAdapter().getSpellCounter();
     }
 
 

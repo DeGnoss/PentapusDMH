@@ -50,6 +50,7 @@ public class MySpellTableFragment extends Fragment implements
     private RecyclerView mySpellRecyclerView;
     private ActionMode mActionMode;
     private MySpellAdapter mySpellAdapter;
+    private int mode;
 
     public MySpellTableFragment() {
         // Required empty public constructor
@@ -59,10 +60,11 @@ public class MySpellTableFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static MySpellTableFragment newInstance(String sourceType) {
+    public static MySpellTableFragment newInstance(String sourceType, int mode) {
         MySpellTableFragment fragment = new MySpellTableFragment();
         Bundle args = new Bundle();
         args.putString("sourcetype", sourceType);
+        args.putInt("mode", mode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,11 +75,12 @@ public class MySpellTableFragment extends Fragment implements
         setHasOptionsMenu(true);
         if (this.getArguments() != null) {
             sourceType = this.getArguments().getString("sourcetype");
+            mode = this.getArguments().getInt("mode");
         }
         if(savedInstanceState != null){
             searchViewQuery = savedInstanceState.getString("sv2");
         }
-        mySpellAdapter = new MySpellAdapter(getContext(), this);
+        mySpellAdapter = new MySpellAdapter(getContext(), this, mode);
     }
 
     @Override
