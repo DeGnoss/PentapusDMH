@@ -3,10 +3,8 @@ package com.pentapus.pentapusdmh.Fragments.EncounterPrep;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,22 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.signature.StringSignature;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.soundcloud.android.crop.Crop;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.UUID;
 
 
 public class NPCEditFragment extends Fragment {
@@ -241,7 +230,7 @@ public class NPCEditFragment extends Fragment {
         }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
-        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_NPC);
+        values.put(DataBaseHandler.KEY_IDENTIFIER, DataBaseHandler.TYPE_NPC);
 
         // insert a record
         if (!modeUpdate) {

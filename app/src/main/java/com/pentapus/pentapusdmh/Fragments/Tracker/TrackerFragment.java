@@ -1,7 +1,6 @@
 package com.pentapus.pentapusdmh.Fragments.Tracker;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -281,9 +280,9 @@ public class TrackerFragment extends Fragment implements
                     int intelligence = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INTELLIGENCE));
                     int wisdom = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
                     int charisma = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
-                    int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+                    int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER));
 
-                    String monsterType = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE));
+                    String monsterType = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
                     String acType = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE));
                     String ac2Type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE));
                     int xp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_XP));
@@ -514,7 +513,7 @@ public class TrackerFragment extends Fragment implements
                     int initiativeMod = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_INITIATIVEBONUS));
                     int ac = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_AC));
                     int hp = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_HP));
-                    int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+                    int type = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER));
                     int maxHp = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_MAXHP));
                     int disabled = data.getInt(data.getColumnIndex(DataBaseHandler.KEY_DISABLED));
                     Uri iconUri = Uri.parse(data.getString(data.getColumnIndex(DataBaseHandler.KEY_ICON)));

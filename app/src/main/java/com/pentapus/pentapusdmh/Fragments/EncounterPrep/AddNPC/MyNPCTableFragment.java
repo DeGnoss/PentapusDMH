@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -278,7 +277,7 @@ public class MyNPCTableFragment extends Fragment implements
                         values.put(DataBaseHandler.KEY_WISDOM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
                         values.put(DataBaseHandler.KEY_CHARISMA, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
                         values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
-                        values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
+                        values.put(DataBaseHandler.KEY_IDENTIFIER, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_BELONGSTO)));
                         startInsert(1, null, DbContentProvider.CONTENT_URI_NPC, values);
                     }

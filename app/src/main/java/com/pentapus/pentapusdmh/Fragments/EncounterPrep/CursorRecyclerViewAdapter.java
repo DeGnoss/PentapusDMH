@@ -173,7 +173,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
     public void pendingRemoval(final int position, final int notifyPosition) {
         mCursor.moveToPosition(position);
-        final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)) + ":" + mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
+        final String identifier = mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER)) + ":" + mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
 
         if (!itemsPendingRemoval.contains(identifier)) {
             itemsPendingRemoval.add(identifier);
@@ -196,7 +196,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
 
     public boolean isPendingRemoval(int position) {
         mCursor.moveToPosition(position);
-        return itemsPendingRemoval.contains(mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)) + ":" + mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)));
+        return itemsPendingRemoval.contains(mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER)) + ":" + mCursor.getString(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)));
     }
 
 
@@ -206,7 +206,7 @@ public class CursorRecyclerViewAdapter extends RecyclerViewSubAdapter<CursorRecy
         }
         mCursor.moveToPosition(position);
         int characterId = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID));
-        int characterType = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+        int characterType = mCursor.getInt(mCursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER));
         switch (characterType) {
             case 0:
                 Uri uri = Uri.parse(DbContentProvider.CONTENT_URI_ENCOUNTERPREP + "/" + characterId);

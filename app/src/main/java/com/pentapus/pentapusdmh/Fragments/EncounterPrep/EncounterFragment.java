@@ -521,14 +521,14 @@ public class EncounterFragment extends Fragment implements
         String[] projectionNPC = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
-                DataBaseHandler.KEY_TYPE,
+                DataBaseHandler.KEY_IDENTIFIER,
                 DataBaseHandler.KEY_ICON
         };
         String[] projectionPC = {
                 DataBaseHandler.KEY_ROWID,
                 DataBaseHandler.KEY_NAME,
                 DataBaseHandler.KEY_INFO,
-                DataBaseHandler.KEY_TYPE,
+                DataBaseHandler.KEY_IDENTIFIER,
                 DataBaseHandler.KEY_ICON,
                 DataBaseHandler.KEY_DISABLED
         };
@@ -752,7 +752,7 @@ public class EncounterFragment extends Fragment implements
                 values.put(DataBaseHandler.KEY_INITIATIVEBONUS, myInitiative);
                 values.put(DataBaseHandler.KEY_MAXHP, myMaxHp);
                 values.put(DataBaseHandler.KEY_AC, myAc);
-                values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_PC);
+                values.put(DataBaseHandler.KEY_IDENTIFIER, DataBaseHandler.TYPE_PC);
                 values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
                 values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
 

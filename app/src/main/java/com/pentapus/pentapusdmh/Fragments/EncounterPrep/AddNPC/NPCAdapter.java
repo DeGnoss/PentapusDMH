@@ -197,7 +197,7 @@ public class NPCAdapter extends RecyclerViewCursorAdapter<NPCAdapter.MyNPCViewHo
         @Override
         public void bindCursor(Cursor cursor) {
 
-            type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+            type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));

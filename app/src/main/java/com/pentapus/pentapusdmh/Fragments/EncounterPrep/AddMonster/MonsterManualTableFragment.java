@@ -201,7 +201,7 @@ public class MonsterManualTableFragment extends Fragment implements
             }
             if (args.getString("filter") != null) {
                 if (!selection.isEmpty()) {
-                    selection = selection + ")" + " AND (" + DataBaseHandler.KEY_NAME + " LIKE ? OR " + DataBaseHandler.KEY_MONSTERTYPE + " LIKE ?)";
+                    selection = selection + ")" + " AND (" + DataBaseHandler.KEY_NAME + " LIKE ? OR " + DataBaseHandler.KEY_TYPE + " LIKE ?)";
                 } else {
                     selection = DataBaseHandler.KEY_NAME + " LIKE ?";
                 }

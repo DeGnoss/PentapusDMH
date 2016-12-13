@@ -6,30 +6,19 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.MyMonsterEditFragment;
 import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
 import com.pentapus.pentapusdmh.R;
 import com.wizardpager.wizard.WizardFragment;
 import com.wizardpager.wizard.model.AbstractWizardModel;
-import com.wizardpager.wizard.model.Page;
-import com.wizardpager.wizard.model.SingleFixedChoicePage;
 import com.wizardpager.wizard.ui.StepPagerStrip;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Koni on 11.11.2016.
@@ -296,7 +285,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
 
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, name);
-        values.put(DataBaseHandler.KEY_MONSTERTYPE, type);
+        values.put(DataBaseHandler.KEY_TYPE, type);
         values.put(DataBaseHandler.KEY_ALIGNMENT, alignment);
         values.put(DataBaseHandler.KEY_SPEED, speed);
         values.put(DataBaseHandler.KEY_SIZE, size);
@@ -476,7 +465,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         }
         values.put(DataBaseHandler.KEY_ICON, imageUri);
         values.put(DataBaseHandler.KEY_SOURCE, "USER");
-        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_MONSTER);
+        values.put(DataBaseHandler.KEY_IDENTIFIER, DataBaseHandler.TYPE_MONSTER);
 
         // insert a record
         if (!modeUpdate) {
@@ -507,7 +496,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         if (cursor != null && cursor.moveToFirst()) {
             //Basic Info
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME));
-            String type = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE));
+            String type = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             String alignment = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ALIGNMENT));
             String speed = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SPEED));
             String imageUri = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON));

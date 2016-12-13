@@ -45,8 +45,8 @@ public class SimpleItemCard {
         SimpleItemCard simpleItemCard = new SimpleItemCard();
         simpleItemCard.id = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_ROWID));
         simpleItemCard.name = cursor.getString(cursor.getColumnIndex(DataBaseHandler.KEY_NAME));
-        simpleItemCard.type = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE));
-        if (cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_TYPE)) == DataBaseHandler.TYPE_PC) {
+        simpleItemCard.type = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_IDENTIFIER));
+        if (cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_IDENTIFIER)) == DataBaseHandler.TYPE_PC) {
             simpleItemCard.disabled = cursor.getInt(cursor.getColumnIndex(DataBaseHandler.KEY_DISABLED));
         }
         if (cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)) != null && !cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)).isEmpty()) {

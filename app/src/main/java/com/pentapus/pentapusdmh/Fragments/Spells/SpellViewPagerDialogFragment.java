@@ -200,7 +200,7 @@ public class SpellViewPagerDialogFragment extends Fragment{
                         values.put(DataBaseHandler.KEY_WISDOM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
                         values.put(DataBaseHandler.KEY_CHARISMA, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
                         values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
-                        values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
+                        values.put(DataBaseHandler.KEY_IDENTIFIER, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER)));
                         values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
                         startInsert(1, null, DbContentProvider.CONTENT_URI_ENCOUNTERPREP, values); */
                     }

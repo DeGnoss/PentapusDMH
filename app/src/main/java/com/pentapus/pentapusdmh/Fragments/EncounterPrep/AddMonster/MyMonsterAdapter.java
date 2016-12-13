@@ -194,7 +194,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
 
         @Override
         public void bindCursor(Cursor cursor) {
-            type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+            type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));

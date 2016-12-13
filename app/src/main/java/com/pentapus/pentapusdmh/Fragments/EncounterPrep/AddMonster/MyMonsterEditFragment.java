@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,20 +21,15 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.Utils;
-import com.soundcloud.android.crop.Crop;
 
 
 public class MyMonsterEditFragment extends Fragment {
@@ -185,7 +179,7 @@ public class MyMonsterEditFragment extends Fragment {
         }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_MM, 0);
-        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_MONSTER);
+        values.put(DataBaseHandler.KEY_IDENTIFIER, DataBaseHandler.TYPE_MONSTER);
 
         // insert a record
         if (!modeUpdate) {

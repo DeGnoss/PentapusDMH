@@ -207,7 +207,7 @@ public class MyMonsterTableFragment extends Fragment implements
             }
             if (args.getString("filter") != null) {
                 if (!selection.isEmpty()) {
-                    selection = selection + ")" + " AND (" + DataBaseHandler.KEY_NAME + " LIKE ? OR " + DataBaseHandler.KEY_MONSTERTYPE + " LIKE ?)";
+                    selection = selection + ")" + " AND (" + DataBaseHandler.KEY_NAME + " LIKE ? OR " + DataBaseHandler.KEY_TYPE + " LIKE ?)";
                 } else {
                     selection = DataBaseHandler.KEY_NAME + " LIKE ?";
                 }
@@ -367,7 +367,7 @@ public class MyMonsterTableFragment extends Fragment implements
                         values.put(DataBaseHandler.KEY_WISDOM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
                         values.put(DataBaseHandler.KEY_CHARISMA, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
                         values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
-                        values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
+                        values.put(DataBaseHandler.KEY_IDENTIFIER, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER)));
                         values.put(DataBaseHandler.KEY_MM, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MM)));
                         startInsert(1, null, DbContentProvider.CONTENT_URI_MONSTER, values);
                     }

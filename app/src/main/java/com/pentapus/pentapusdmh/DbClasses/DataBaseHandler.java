@@ -2,7 +2,6 @@ package com.pentapus.pentapusdmh.DbClasses;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -161,8 +160,34 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_LATK5AUTOROLL = "latk5autoroll";
     public static final String KEY_LATK5ADDITIONAL = "latk5additional";
 
+    public static final String KEY_SPELLCASTER = "spellcaster";
+    public static final String KEY_SCLEVEL = "sclevel";
+    public static final String KEY_SCABILITY = "scability";
+    public static final String KEY_SCMOD = "scmod";
+    public static final String KEY_SCDC = "scdc";
+    public static final String KEY_SCCLASS = "scclass";
+    public static final String KEY_SCSLOTS = "scslots";
+    public static final String KEY_SCSPELLS = "scspells";
+
+
+    public static final String KEY_INNATE = "innate";
+    public static final String KEY_INABILITY = "inability";
+    public static final String KEY_INMOD = "inmod";
+    public static final String KEY_INDC = "indc";
+    public static final String KEY_INPSIONICS = "inpsionics";
+    public static final String KEY_INSPELLS = "inspells";
+
+
     public static final String KEY_REACTION1NAME = "reaction1name";
     public static final String KEY_REACTION1DESC = "reaction1desc";
+    public static final String KEY_REACTION2NAME = "reaction2name";
+    public static final String KEY_REACTION2DESC = "reaction2desc";
+    public static final String KEY_REACTION3NAME = "reaction3name";
+    public static final String KEY_REACTION3DESC = "reaction3desc";
+    public static final String KEY_REACTION4NAME = "reaction4name";
+    public static final String KEY_REACTION4DESC = "reaction4desc";
+    public static final String KEY_REACTION5NAME = "reaction5name";
+    public static final String KEY_REACTION5DESC = "reaction5desc";
 
     public static final String KEY_ABILITY1NAME = "ability1name";
     public static final String KEY_ABILITY1DESC = "ability1desc";
@@ -218,8 +243,8 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_MAXHP = "maxhp";
     public static final String KEY_HP = "hp";
     public static final String KEY_AC = "ac";
+    public static final String KEY_IDENTIFIER = "identifier";
     public static final String KEY_TYPE = "type";
-    public static final String KEY_MONSTERTYPE = "monstertype";
     public static final String KEY_ACTIONS = "actions";
     public static final String KEY_ABILITIES = "abilities";
 
@@ -292,8 +317,8 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_WISDOM,
             DataBaseHandler.KEY_CHARISMA,
             DataBaseHandler.KEY_ICON,
+            DataBaseHandler.KEY_IDENTIFIER,
             DataBaseHandler.KEY_TYPE,
-            DataBaseHandler.KEY_MONSTERTYPE,
             DataBaseHandler.KEY_ACTYPE,
             DataBaseHandler.KEY_AC2TYPE,
             DataBaseHandler.KEY_XP,
@@ -338,6 +363,61 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_ATK4DMG2TYPE,
             DataBaseHandler.KEY_ATK4AUTOROLL,
             DataBaseHandler.KEY_ATK4ADDITIONAL,
+            DataBaseHandler.KEY_ATK5NAME,
+            DataBaseHandler.KEY_ATK5DESC,
+            DataBaseHandler.KEY_ATK5MOD,
+            DataBaseHandler.KEY_ATK5DMG1ROLL,
+            DataBaseHandler.KEY_ATK5DMG1TYPE,
+            DataBaseHandler.KEY_ATK5DMG2ROLL,
+            DataBaseHandler.KEY_ATK5DMG2TYPE,
+            DataBaseHandler.KEY_ATK5AUTOROLL,
+            DataBaseHandler.KEY_ATK5ADDITIONAL,
+            DataBaseHandler.KEY_LMULTIATTACK,
+            DataBaseHandler.KEY_LATK1NAME,
+            DataBaseHandler.KEY_LATK1DESC,
+            DataBaseHandler.KEY_LATK1MOD,
+            DataBaseHandler.KEY_LATK1DMG1ROLL,
+            DataBaseHandler.KEY_LATK1DMG1TYPE,
+            DataBaseHandler.KEY_LATK1DMG2ROLL,
+            DataBaseHandler.KEY_LATK1DMG2TYPE,
+            DataBaseHandler.KEY_LATK1AUTOROLL,
+            DataBaseHandler.KEY_LATK1ADDITIONAL,
+            DataBaseHandler.KEY_LATK2NAME,
+            DataBaseHandler.KEY_LATK2DESC,
+            DataBaseHandler.KEY_LATK2MOD,
+            DataBaseHandler.KEY_LATK2DMG1ROLL,
+            DataBaseHandler.KEY_LATK2DMG1TYPE,
+            DataBaseHandler.KEY_LATK2DMG2ROLL,
+            DataBaseHandler.KEY_LATK2DMG2TYPE,
+            DataBaseHandler.KEY_LATK2AUTOROLL,
+            DataBaseHandler.KEY_LATK2ADDITIONAL,
+            DataBaseHandler.KEY_LATK3NAME,
+            DataBaseHandler.KEY_LATK3DESC,
+            DataBaseHandler.KEY_LATK3MOD,
+            DataBaseHandler.KEY_LATK3DMG1ROLL,
+            DataBaseHandler.KEY_LATK3DMG1TYPE,
+            DataBaseHandler.KEY_LATK3DMG2ROLL,
+            DataBaseHandler.KEY_LATK3DMG2TYPE,
+            DataBaseHandler.KEY_LATK3AUTOROLL,
+            DataBaseHandler.KEY_LATK3ADDITIONAL,
+            DataBaseHandler.KEY_LATK4NAME,
+            DataBaseHandler.KEY_LATK4DESC,
+            DataBaseHandler.KEY_LATK4MOD,
+            DataBaseHandler.KEY_LATK4DMG1ROLL,
+            DataBaseHandler.KEY_LATK4DMG1TYPE,
+            DataBaseHandler.KEY_LATK4DMG2ROLL,
+            DataBaseHandler.KEY_LATK4DMG2TYPE,
+            DataBaseHandler.KEY_LATK4AUTOROLL,
+            DataBaseHandler.KEY_LATK4ADDITIONAL,
+            DataBaseHandler.KEY_LATK5NAME,
+            DataBaseHandler.KEY_LATK5DESC,
+            DataBaseHandler.KEY_LATK5MOD,
+            DataBaseHandler.KEY_LATK5DMG1ROLL,
+            DataBaseHandler.KEY_LATK5DMG1TYPE,
+            DataBaseHandler.KEY_LATK5DMG2ROLL,
+            DataBaseHandler.KEY_LATK5DMG2TYPE,
+            DataBaseHandler.KEY_LATK5AUTOROLL,
+            DataBaseHandler.KEY_LATK5ADDITIONAL,
             DataBaseHandler.KEY_REACTION1NAME,
             DataBaseHandler.KEY_REACTION1DESC,
             DataBaseHandler.KEY_ABILITY1NAME,
@@ -381,6 +461,20 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_DMGIM,
             DataBaseHandler.KEY_DMGVUL,
             DataBaseHandler.KEY_CONIM,
+            DataBaseHandler.KEY_SPELLCASTER,
+            DataBaseHandler.KEY_SCLEVEL,
+            DataBaseHandler.KEY_SCABILITY,
+            DataBaseHandler.KEY_SCMOD,
+            DataBaseHandler.KEY_SCDC,
+            DataBaseHandler.KEY_SCCLASS,
+            DataBaseHandler.KEY_SCSLOTS,
+            DataBaseHandler.KEY_SCSPELLS,
+            DataBaseHandler.KEY_INNATE,
+            DataBaseHandler.KEY_INABILITY,
+            DataBaseHandler.KEY_INMOD,
+            DataBaseHandler.KEY_INDC,
+            DataBaseHandler.KEY_INPSIONICS,
+            DataBaseHandler.KEY_INSPELLS
     };
 
 
@@ -389,8 +483,8 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_ROWID,
             DataBaseHandler.KEY_NAME,
             DataBaseHandler.KEY_CR,
+            DataBaseHandler.KEY_IDENTIFIER,
             DataBaseHandler.KEY_TYPE,
-            DataBaseHandler.KEY_MONSTERTYPE,
             DataBaseHandler.KEY_MAXHP,
             DataBaseHandler.KEY_HPROLL,
             DataBaseHandler.KEY_INITIATIVEBONUS,
@@ -446,8 +540,71 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_ATK4DMG2TYPE,
             DataBaseHandler.KEY_ATK4AUTOROLL,
             DataBaseHandler.KEY_ATK4ADDITIONAL,
+            DataBaseHandler.KEY_ATK5NAME,
+            DataBaseHandler.KEY_ATK5DESC,
+            DataBaseHandler.KEY_ATK5MOD,
+            DataBaseHandler.KEY_ATK5DMG1ROLL,
+            DataBaseHandler.KEY_ATK5DMG1TYPE,
+            DataBaseHandler.KEY_ATK5DMG2ROLL,
+            DataBaseHandler.KEY_ATK5DMG2TYPE,
+            DataBaseHandler.KEY_ATK5AUTOROLL,
+            DataBaseHandler.KEY_ATK5ADDITIONAL,
+            DataBaseHandler.KEY_LMULTIATTACK,
+            DataBaseHandler.KEY_LATK1NAME,
+            DataBaseHandler.KEY_LATK1DESC,
+            DataBaseHandler.KEY_LATK1MOD,
+            DataBaseHandler.KEY_LATK1DMG1ROLL,
+            DataBaseHandler.KEY_LATK1DMG1TYPE,
+            DataBaseHandler.KEY_LATK1DMG2ROLL,
+            DataBaseHandler.KEY_LATK1DMG2TYPE,
+            DataBaseHandler.KEY_LATK1AUTOROLL,
+            DataBaseHandler.KEY_LATK1ADDITIONAL,
+            DataBaseHandler.KEY_LATK2NAME,
+            DataBaseHandler.KEY_LATK2DESC,
+            DataBaseHandler.KEY_LATK2MOD,
+            DataBaseHandler.KEY_LATK2DMG1ROLL,
+            DataBaseHandler.KEY_LATK2DMG1TYPE,
+            DataBaseHandler.KEY_LATK2DMG2ROLL,
+            DataBaseHandler.KEY_LATK2DMG2TYPE,
+            DataBaseHandler.KEY_LATK2AUTOROLL,
+            DataBaseHandler.KEY_LATK2ADDITIONAL,
+            DataBaseHandler.KEY_LATK3NAME,
+            DataBaseHandler.KEY_LATK3DESC,
+            DataBaseHandler.KEY_LATK3MOD,
+            DataBaseHandler.KEY_LATK3DMG1ROLL,
+            DataBaseHandler.KEY_LATK3DMG1TYPE,
+            DataBaseHandler.KEY_LATK3DMG2ROLL,
+            DataBaseHandler.KEY_LATK3DMG2TYPE,
+            DataBaseHandler.KEY_LATK3AUTOROLL,
+            DataBaseHandler.KEY_LATK3ADDITIONAL,
+            DataBaseHandler.KEY_LATK4NAME,
+            DataBaseHandler.KEY_LATK4DESC,
+            DataBaseHandler.KEY_LATK4MOD,
+            DataBaseHandler.KEY_LATK4DMG1ROLL,
+            DataBaseHandler.KEY_LATK4DMG1TYPE,
+            DataBaseHandler.KEY_LATK4DMG2ROLL,
+            DataBaseHandler.KEY_LATK4DMG2TYPE,
+            DataBaseHandler.KEY_LATK4AUTOROLL,
+            DataBaseHandler.KEY_LATK4ADDITIONAL,
+            DataBaseHandler.KEY_LATK5NAME,
+            DataBaseHandler.KEY_LATK5DESC,
+            DataBaseHandler.KEY_LATK5MOD,
+            DataBaseHandler.KEY_LATK5DMG1ROLL,
+            DataBaseHandler.KEY_LATK5DMG1TYPE,
+            DataBaseHandler.KEY_LATK5DMG2ROLL,
+            DataBaseHandler.KEY_LATK5DMG2TYPE,
+            DataBaseHandler.KEY_LATK5AUTOROLL,
+            DataBaseHandler.KEY_LATK5ADDITIONAL,
             DataBaseHandler.KEY_REACTION1NAME,
             DataBaseHandler.KEY_REACTION1DESC,
+            DataBaseHandler.KEY_REACTION2NAME,
+            DataBaseHandler.KEY_REACTION2DESC,
+            DataBaseHandler.KEY_REACTION3NAME,
+            DataBaseHandler.KEY_REACTION3DESC,
+            DataBaseHandler.KEY_REACTION4NAME,
+            DataBaseHandler.KEY_REACTION4DESC,
+            DataBaseHandler.KEY_REACTION5NAME,
+            DataBaseHandler.KEY_REACTION5DESC,
             DataBaseHandler.KEY_ABILITY1NAME,
             DataBaseHandler.KEY_ABILITY1DESC,
             DataBaseHandler.KEY_ABILITY2NAME,
@@ -490,7 +647,21 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_DMGVUL,
             DataBaseHandler.KEY_CONIM,
             DataBaseHandler.KEY_ICON,
-            DataBaseHandler.KEY_MM
+            DataBaseHandler.KEY_MM,
+            DataBaseHandler.KEY_SPELLCASTER,
+            DataBaseHandler.KEY_SCLEVEL,
+            DataBaseHandler.KEY_SCABILITY,
+            DataBaseHandler.KEY_SCMOD,
+            DataBaseHandler.KEY_SCDC,
+            DataBaseHandler.KEY_SCCLASS,
+            DataBaseHandler.KEY_SCSLOTS,
+            DataBaseHandler.KEY_SCSPELLS,
+            DataBaseHandler.KEY_INNATE,
+            DataBaseHandler.KEY_INABILITY,
+            DataBaseHandler.KEY_INMOD,
+            DataBaseHandler.KEY_INDC,
+            DataBaseHandler.KEY_INPSIONICS,
+            DataBaseHandler.KEY_INSPELLS
     };
 
 
@@ -508,7 +679,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_WISDOM,
             DataBaseHandler.KEY_CHARISMA,
             DataBaseHandler.KEY_ICON,
-            DataBaseHandler.KEY_TYPE,
+            DataBaseHandler.KEY_IDENTIFIER,
             DataBaseHandler.KEY_ACTIONS,
             DataBaseHandler.KEY_ABILITIES,
             DataBaseHandler.KEY_BELONGSTO
@@ -536,7 +707,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_INITIATIVEBONUS,
             DataBaseHandler.KEY_HP,
             DataBaseHandler.KEY_MAXHP,
-            DataBaseHandler.KEY_TYPE,
+            DataBaseHandler.KEY_IDENTIFIER,
             DataBaseHandler.KEY_AC,
             DataBaseHandler.KEY_ICON,
             DataBaseHandler.KEY_DISABLED
@@ -612,7 +783,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
         String CREATE_ENCOUNTERPREP_LINKER_TABLE =
                 "CREATE TABLE if not exists " + TABLE_ENCOUNTER_PREP_LINKER + " (" +
                         KEY_ROWID + " integer PRIMARY KEY autoincrement, " +
-                        KEY_TYPE + " INTEGER, " +
+                        KEY_IDENTIFIER + " INTEGER, " +
                         KEY_BELONGSTO + " integer NOT NULL);";
         db.execSQL(CREATE_ENCOUNTERPREP_LINKER_TABLE);
 
@@ -634,7 +805,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
                         KEY_WISDOM + " INTEGER, " +
                         KEY_CHARISMA + " INTEGER, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
-                        KEY_TYPE + " INTEGER, " +
+                        KEY_IDENTIFIER + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_ENCOUNTER + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
@@ -659,7 +830,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
                         KEY_WISDOM + " INTEGER, " +
                         KEY_CHARISMA + " INTEGER, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
-                        KEY_TYPE + " INTEGER, " +
+                        KEY_IDENTIFIER + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
                         KEY_MM + " INTEGER);";
         db.execSQL(CREATE_MONSTER_TABLE);
@@ -683,7 +854,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
                         KEY_WISDOM + " INTEGER, " +
                         KEY_CHARISMA + " INTEGER, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
-                        KEY_TYPE + " INTEGER, " +
+                        KEY_IDENTIFIER + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +
                         "FOREIGN KEY (" + KEY_BELONGSTO + ") REFERENCES " + TABLE_CAMPAIGN + "(" + KEY_ROWID + ") ON DELETE CASCADE);";
@@ -724,7 +895,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
                         KEY_CUSTOM + " INTEGER, " +
                         KEY_INFO + " TEXT, " +
                         KEY_INITIATIVEBONUS + " INTEGER, " +
-                        KEY_TYPE + " INTEGER, " +
+                        KEY_IDENTIFIER + " INTEGER, " +
                         KEY_ICON + " TEXT, " +
                         KEY_DISABLED + " INTEGER, " +
                         KEY_BELONGSTO + " integer NOT NULL, " +

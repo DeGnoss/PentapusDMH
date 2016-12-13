@@ -22,7 +22,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit.MonsterEditWizardFragment;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit.MonsterEditWizardModel;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
@@ -163,8 +162,8 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                             values.put(DataBaseHandler.KEY_WISDOM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM)));
                             values.put(DataBaseHandler.KEY_CHARISMA, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA)));
                             values.put(DataBaseHandler.KEY_ICON, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON)));
-                            values.put(DataBaseHandler.KEY_TYPE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
-                            values.put(DataBaseHandler.KEY_MONSTERTYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE)));
+                            values.put(DataBaseHandler.KEY_IDENTIFIER, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER)));
+                            values.put(DataBaseHandler.KEY_TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE)));
                             values.put(DataBaseHandler.KEY_ACTYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE)));
                             values.put(DataBaseHandler.KEY_AC2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC2TYPE)));
                             values.put(DataBaseHandler.KEY_XP, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_XP)));

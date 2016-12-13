@@ -2,7 +2,6 @@ package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,13 +10,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
@@ -155,7 +152,7 @@ public class DetailMonsterFragment extends Fragment {
             if(tempSize == null){
                 tempSize = "";
             }
-            String tempType = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MONSTERTYPE));
+            String tempType = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
             if(tempType == null){
                 tempType = "";
             }

@@ -4,9 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -23,7 +21,6 @@ import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 import com.pentapus.pentapusdmh.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -203,7 +200,7 @@ public class MyNPCAdapter extends RecyclerViewCursorAdapter<MyNPCAdapter.MyNPCVi
 
         @Override
         public void bindCursor(Cursor cursor) {
-            type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_TYPE));
+            type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#4caf50"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));

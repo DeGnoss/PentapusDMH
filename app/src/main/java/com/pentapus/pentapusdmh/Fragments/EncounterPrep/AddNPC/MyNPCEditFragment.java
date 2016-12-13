@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,11 +22,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,14 +32,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
-import com.pentapus.pentapusdmh.AdapterNavigationCallback;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
-import com.pentapus.pentapusdmh.Utils;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -218,7 +212,7 @@ public class MyNPCEditFragment extends Fragment {
         }
         values.put(DataBaseHandler.KEY_ICON, String.valueOf(myFile));
         values.put(DataBaseHandler.KEY_BELONGSTO, campaignId);
-        values.put(DataBaseHandler.KEY_TYPE, DataBaseHandler.TYPE_NPC);
+        values.put(DataBaseHandler.KEY_IDENTIFIER, DataBaseHandler.TYPE_NPC);
 
         // insert a record
         if (!modeUpdate) {
