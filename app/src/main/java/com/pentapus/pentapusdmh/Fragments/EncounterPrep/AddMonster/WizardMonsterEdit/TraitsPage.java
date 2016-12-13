@@ -43,6 +43,7 @@ public class TraitsPage extends Page {
     public static final String INNATEDC_DATA_KEY = "innatedc";
     public static final String INNATESPELLSKNOWNSTRING_DATA_KEY = "innatespellsknownstring";
     public static final String INNATESPELLSKNOWN_DATA_KEY = "innatespellsknown";
+    public static final String INNATEPSIONICS_DATA_KEY = "innatepsionics";
 
     public static final String NAME_DATA_KEY = "name";
 
@@ -55,7 +56,6 @@ public class TraitsPage extends Page {
 
     public TraitsPage(ModelCallbacks callbacks, String title) {
         super(callbacks, title);
-
     }
 
     @Override
@@ -65,6 +65,17 @@ public class TraitsPage extends Page {
 
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
+        if(mData.getBoolean(SC_DATA_KEY)){
+            dest.add(new ReviewItem("Spellcasting", mData.getString(SCDESCRIPTION_DATA_KEY), getKey(), -1));
+        }
+        if(mData.getBoolean(INNATE_DATA_KEY)){
+            if(mData.getBoolean(INNATEPSIONICS_DATA_KEY)){
+                dest.add(new ReviewItem("Innate Spellcasting", mData.getString(INNATEDESCRIPTION_DATA_KEY), getKey(), -1));
+            }else{
+                dest.add(new ReviewItem("Innate Spellcasting (Psionics)", mData.getString(INNATEDESCRIPTION_DATA_KEY), getKey(), -1));
+            }
+        }
+
         if(mData.getString(T1NAME_DATA_KEY) != null && !mData.getString(T1NAME_DATA_KEY).isEmpty()){
             dest.add(new ReviewItem(mData.getString(T1NAME_DATA_KEY), mData.getString(T1DESC_DATA_KEY), getKey(), -1));
         }

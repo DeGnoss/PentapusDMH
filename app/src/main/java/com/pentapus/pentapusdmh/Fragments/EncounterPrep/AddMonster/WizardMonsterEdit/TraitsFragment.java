@@ -174,6 +174,12 @@ public class TraitsFragment extends Fragment implements
             }
         });
 
+        if(mPage.getData().getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY)){
+            labelInnateSpellcasting.setText("Innate Spellcasting (Psionics)");
+        }else{
+            labelInnateSpellcasting.setText("Innate Spellcasting");
+        }
+
         if (mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY).isEmpty()) {
             innateDescription = mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY);
             tvInnateSpellcasting.setText(innateDescription);
@@ -187,7 +193,7 @@ public class TraitsFragment extends Fragment implements
         labelInnateSpellcasting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = InnateSpellcastingDialog.newInstance(mPage.getData().getString(TraitsPage.INNATEABILITY_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEDC_DATA_KEY));
+                DialogFragment newFragment = InnateSpellcastingDialog.newInstance(mPage.getData().getString(TraitsPage.INNATEABILITY_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEDC_DATA_KEY), mPage.getData().getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY));
                 newFragment.setTargetFragment(targetFragment, MSG_INNATESPELLCASTING_DIALOG);
                 newFragment.setTargetFragment(targetFragment, MSG_INNATESPELLCASTING_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_INNATESPELLCASTING_DIALOG");
@@ -197,7 +203,7 @@ public class TraitsFragment extends Fragment implements
         tvInnateSpellcasting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = InnateSpellcastingDialog.newInstance(mPage.getData().getString(TraitsPage.INNATEABILITY_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEDC_DATA_KEY));
+                DialogFragment newFragment = InnateSpellcastingDialog.newInstance(mPage.getData().getString(TraitsPage.INNATEABILITY_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEDC_DATA_KEY), mPage.getData().getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY));
                 newFragment.setTargetFragment(targetFragment, MSG_INNATESPELLCASTING_DIALOG);
                 newFragment.setTargetFragment(targetFragment, MSG_INNATESPELLCASTING_DIALOG);
                 newFragment.show(getActivity().getSupportFragmentManager(), "F_INNATESPELLCASTING_DIALOG");
@@ -444,6 +450,12 @@ public class TraitsFragment extends Fragment implements
                         }
                         scdescription = scdescription + " It can innately cast the following spells, requiring no material components:";
                         mPage.getData().putString(TraitsPage.INNATEDESCRIPTION_DATA_KEY, scdescription);
+                        mPage.getData().putBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY, results.getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY));
+                        if(results.getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY)){
+                            labelInnateSpellcasting.setText("Innate Spellcasting (Psionics)");
+                        }else{
+                            labelInnateSpellcasting.setText("Innate Spellcasting");
+                        }
                         tvInnateSpellcasting.setText(scdescription);
                         tvInnateSpellsKnown.setVisibility(View.VISIBLE);
 

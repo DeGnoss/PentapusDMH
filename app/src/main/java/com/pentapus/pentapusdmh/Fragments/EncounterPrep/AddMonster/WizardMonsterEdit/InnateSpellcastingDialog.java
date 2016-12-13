@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -25,12 +26,14 @@ public class InnateSpellcastingDialog extends DialogFragment implements AdapterV
     Spinner spSpellcastingAbility;
     Fragment targetFragment;
     String innateability, innatemod, innatedc;
+    CheckedTextView ctvPsionics;
+    boolean isPsionics;
 
     public InnateSpellcastingDialog() {
     }
 
     //mode: 0 = add, 1 = update
-    public static InnateSpellcastingDialog newInstance(String scability, String scmod, String scdc) {
+    public static InnateSpellcastingDialog newInstance(String scability, String scmod, String scdc, boolean psionics) {
         InnateSpellcastingDialog f = new InnateSpellcastingDialog();
 
         // Supply num input as an argument.
@@ -38,6 +41,7 @@ public class InnateSpellcastingDialog extends DialogFragment implements AdapterV
         args.putString("innateability", scability);
         args.putString("innatemod", scmod);
         args.putString("innatedc", scdc);
+        args.putBoolean("psionics", psionics);
         f.setArguments(args);
 
         return f;
@@ -51,6 +55,7 @@ public class InnateSpellcastingDialog extends DialogFragment implements AdapterV
             innateability = getArguments().getString("innateability");
             innatemod = getArguments().getString("innatemod");
             innatedc = getArguments().getString("innatedc");
+            isPsionics = getArguments().getBoolean("psionics");
         }
         targetFragment = this;
         setCancelable(true);
@@ -129,6 +134,26 @@ public class InnateSpellcastingDialog extends DialogFragment implements AdapterV
             innateability = spSpellcastingAbility.getItemAtPosition(0).toString();
         }
 
+        ctvPsionics = (CheckedTextView) view.findViewById(R.id.ctvPsionics);
+        ctvPsionics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ctvPsionics.isChecked()){
+                    isPsionics = false;
+                    ctvPsionics.setChecked(false);
+                }else{
+                    ctvPsionics.setChecked(true);
+                    isPsionics = true;
+                }
+            }
+        });
+
+        if(isPsionics){
+            ctvPsionics.setChecked(true);
+        }else{
+            ctvPsionics.setChecked(false);
+        }
+
         builder.setView(view);
 
         // Set up the buttons
@@ -143,7 +168,8 @@ public class InnateSpellcastingDialog extends DialogFragment implements AdapterV
                     results.putString(TraitsPage.INNATEDC_DATA_KEY, tvSpellDC.getText().toString());
                 }
                 results.putString(TraitsPage.INNATEABILITY_DATA_KEY, innateability);
-
+                results.putBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY, isPsionics);
+                results.putBoolean(TraitsPage.INNATE_DATA_KEY, true);
                 sendResult(-1, results);
             }
         });
@@ -161,6 +187,8 @@ public class InnateSpellcastingDialog extends DialogFragment implements AdapterV
                 results.putIntArray(TraitsPage.INNATEMOD_DATA_KEY, null);
                 results.putString(TraitsPage.INNATEDC_DATA_KEY, "");
                 results.putString(TraitsPage.INNATEABILITY_DATA_KEY, "");
+                results.putBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY, false);
+                results.putBoolean(TraitsPage.INNATE_DATA_KEY, false);
                 sendResult(-3, results);
                 //getActivity().getSupportFragmentManager().popBackStack();
             }

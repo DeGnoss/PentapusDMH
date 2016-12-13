@@ -54,10 +54,7 @@ public class CrFragment extends Fragment{
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
     private CrPage mPage;
-    private TextView tvSpells;
     private EditText tvCR, tvXP;
-    private CheckedTextView ctvSpellcaster;
-    private Button bAddSpells;
     CrFragment targetFragment;
 
     private String cr, xp;
@@ -97,63 +94,6 @@ public class CrFragment extends Fragment{
 
         tvCR = (EditText) rootView.findViewById(R.id.tvCR);
         tvXP = (EditText) rootView.findViewById(R.id.tvXP);
-
-        tvSpells = (TextView) rootView.findViewById(R.id.tvSpells);
-
-        ctvSpellcaster = (CheckedTextView) rootView.findViewById(R.id.ctvSpellcaster);
-
-        ctvSpellcaster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ctvSpellcaster.isChecked()) {
-                    isSpellCaster = false;
-                    ctvSpellcaster.setChecked(false);
-                    tvSpells.setEnabled(false);
-                    tvSpells.setText("Spells will show here.");
-                } else {
-                    ctvSpellcaster.setChecked(true);
-                    isSpellCaster = true;
-                    tvSpells.setEnabled(true);
-                }
-            }
-        });
-        if (isSpellCaster) {
-            ctvSpellcaster.setChecked(true);
-            tvSpells.setEnabled(true);
-        } else {
-            ctvSpellcaster.setChecked(false);
-            tvSpells.setEnabled(false);
-            tvSpells.setText("Spells will show here.");
-        }
-
-        bAddSpells = (Button) rootView.findViewById(R.id.bAddSpells);
-        bAddSpells.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = null;
-                Class fragmentClass;
-                Bundle bundle = new Bundle();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentClass = SpellViewPagerDialogFragment.class;
-                bundle.putBoolean("navMode", true);
-                bundle.putInt("mode", 1);
-                try {
-                    fragment = (Fragment) fragmentClass.newInstance();
-                    fragment.setTargetFragment(targetFragment, MSG_SPELL_DIALOG);
-                    fragment.setArguments(bundle);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-             /*   if (isNavMode()) {
-                    fragmentManager.popBackStack();
-                }*/
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.add(R.id.ContainerFrame, fragment, "F_SPELL_PAGER")
-                        .addToBackStack("NAV_F")
-                        .commit();
-            }
-        });
-
 
         return rootView;
     }
@@ -219,11 +159,4 @@ public class CrFragment extends Fragment{
         // In a future update to the support library, this should override setUserVisibleHint
         // instead of setMenuVisibility.
     }
-
-
-    public void onDialogResult(int requestCode, Bundle results) {
-
-    }
-
-
 }
