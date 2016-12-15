@@ -6,19 +6,29 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
+import com.pentapus.pentapusdmh.HelperClasses.Utils;
 import com.pentapus.pentapusdmh.R;
 import com.wizardpager.wizard.WizardFragment;
 import com.wizardpager.wizard.model.AbstractWizardModel;
 import com.wizardpager.wizard.ui.StepPagerStrip;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Koni on 11.11.2016.
@@ -107,7 +117,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String wis = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.WIS_DATA_KEY);
         String cha = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.CHA_DATA_KEY);
         String hp = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.HP_DATA_KEY);
-        String hpdice = String.valueOf(mWizardModel.findByKey("Abilities & Hit Points").getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+        int hpdice = mWizardModel.findByKey("Abilities & Hit Points").getData().getInt(AbilitiesPage.HITDICE_DATA_KEY);
         String ac1 = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.AC1_DATA_KEY);
         String ac1Type = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.AC1TYPE_DATA_KEY);
         String ac2 = mWizardModel.findByKey("Abilities & Hit Points").getData().getString(AbilitiesPage.AC2_DATA_KEY);
@@ -173,6 +183,27 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String t5Name = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T5NAME_DATA_KEY);
         String t5Desc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.T5DESC_DATA_KEY);
 
+        boolean spellcaster = mWizardModel.findByKey("Traits").getData().getBoolean(TraitsPage.SC_DATA_KEY);
+        String scdescription = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.SCDESCRIPTION_DATA_KEY);
+        String sclevel = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.SClEVEL_DATA_KEY);
+        String scability = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.SCABILITY_DATA_KEY);
+        String scmod = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.SCMOD_DATA_KEY);
+        String scdc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.SCDC_DATA_KEY);
+        String scclass = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.SCCLASS_DATA_KEY);
+        ArrayList<String> scspells = mWizardModel.findByKey("Traits").getData().getStringArrayList(TraitsPage.SCSPELLSKNOWN_DATA_KEY);
+        int[] scslots = mWizardModel.findByKey("Traits").getData().getIntArray(TraitsPage.SCSLOTS_DATA_KEY);
+        String scspellsstring = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY);
+
+        boolean innate = mWizardModel.findByKey("Traits").getData().getBoolean(TraitsPage.INNATE_DATA_KEY);
+        String indescription = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY);
+        String inability = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.INNATEABILITY_DATA_KEY);
+        String inmod = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.INNATEMOD_DATA_KEY);
+        String indc = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.INNATEDC_DATA_KEY);
+        boolean inpsionics = mWizardModel.findByKey("Traits").getData().getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY);
+        HashMap<Integer, Integer> inspells = (HashMap<Integer, Integer>) mWizardModel.findByKey("Traits").getData().getSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY);
+        String inspellstring = mWizardModel.findByKey("Traits").getData().getString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY);
+
+
         String multiAttack = mWizardModel.findByKey("Actions").getData().getString(ActionPage.MULTIATTACK_DATA_KEY);
 
         String a1name = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1NAME_DATA_KEY);
@@ -182,8 +213,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String a1roll2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1ROLL2_DATA_KEY);
         String a1type1 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1TYPE1_DATA_KEY);
         String a1type2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1TYPE2_DATA_KEY);
-        String a1auto = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1AUTO_DATA_KEY);
-        String a1add = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A1ADD_DATA_KEY);
+        boolean a1auto = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A1AUTO_DATA_KEY);
+        boolean a1add = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A1ADD_DATA_KEY);
 
         String a2name = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A2NAME_DATA_KEY);
         String a2desc = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A2DESC_DATA_KEY);
@@ -192,8 +223,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String a2roll2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A2ROLL2_DATA_KEY);
         String a2type1 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A2TYPE1_DATA_KEY);
         String a2type2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A2TYPE2_DATA_KEY);
-        String a2auto = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A2AUTO_DATA_KEY);
-        String a2add = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A2ADD_DATA_KEY);
+        boolean a2auto = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A2AUTO_DATA_KEY);
+        boolean a2add = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A2ADD_DATA_KEY);
 
         String a3name = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A3NAME_DATA_KEY);
         String a3desc = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A3DESC_DATA_KEY);
@@ -202,8 +233,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String a3roll2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A3ROLL2_DATA_KEY);
         String a3type1 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A3TYPE1_DATA_KEY);
         String a3type2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A3TYPE2_DATA_KEY);
-        String a3auto = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A3AUTO_DATA_KEY);
-        String a3add = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A3ADD_DATA_KEY);
+        boolean a3auto = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A3AUTO_DATA_KEY);
+        boolean a3add = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A3ADD_DATA_KEY);
 
         String a4name = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A4NAME_DATA_KEY);
         String a4desc = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A4DESC_DATA_KEY);
@@ -212,10 +243,10 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String a4roll2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A4ROLL2_DATA_KEY);
         String a4type1 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A4TYPE1_DATA_KEY);
         String a4type2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A4TYPE2_DATA_KEY);
-        String a4auto = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A4AUTO_DATA_KEY);
-        String a4add = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A4ADD_DATA_KEY);
+        boolean a4auto = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A4AUTO_DATA_KEY);
+        boolean a4add = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A4ADD_DATA_KEY);
 
-        /*
+
         String a5name = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A5NAME_DATA_KEY);
         String a5desc = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A5DESC_DATA_KEY);
         String a5mod = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A5MOD_DATA_KEY);
@@ -223,12 +254,20 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String a5roll2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A5ROLL2_DATA_KEY);
         String a5type1 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A5TYPE1_DATA_KEY);
         String a5type2 = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A5TYPE2_DATA_KEY);
-        String a5auto = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A5AUTO_DATA_KEY);
-        String a5add = mWizardModel.findByKey("Actions").getData().getString(ActionPage.A5ADD_DATA_KEY);
-*/
+        boolean a5auto = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A5AUTO_DATA_KEY);
+        boolean a5add = mWizardModel.findByKey("Actions").getData().getBoolean(ActionPage.A5ADD_DATA_KEY);
+
 
         String r1name = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R1NAME_DATA_KEY);
         String r1desc = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R1DESC_DATA_KEY);
+        String r2name = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R2NAME_DATA_KEY);
+        String r2desc = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R2DESC_DATA_KEY);
+        String r3name = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R3NAME_DATA_KEY);
+        String r3desc = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R3DESC_DATA_KEY);
+        String r4name = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R4NAME_DATA_KEY);
+        String r4desc = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R4DESC_DATA_KEY);
+        String r5name = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R5NAME_DATA_KEY);
+        String r5desc = mWizardModel.findByKey("Reactions").getData().getString(ReactionPage.R5DESC_DATA_KEY);
 
 
         String lmultiAttack = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LMULTIATTACK_DATA_KEY);
@@ -240,8 +279,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String la1roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1ROLL2_DATA_KEY);
         String la1type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1TYPE1_DATA_KEY);
         String la1type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1TYPE2_DATA_KEY);
-        String la1auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1AUTO_DATA_KEY);
-        String la1add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA1ADD_DATA_KEY);
+        boolean la1auto = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA1AUTO_DATA_KEY);
+        boolean la1add = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA1ADD_DATA_KEY);
 
         String la2name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2NAME_DATA_KEY);
         String la2desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2DESC_DATA_KEY);
@@ -250,8 +289,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String la2roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2ROLL2_DATA_KEY);
         String la2type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2TYPE1_DATA_KEY);
         String la2type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2TYPE2_DATA_KEY);
-        String la2auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2AUTO_DATA_KEY);
-        String la2add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA2ADD_DATA_KEY);
+        boolean la2auto = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA2AUTO_DATA_KEY);
+        boolean la2add = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA2ADD_DATA_KEY);
 
         String la3name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3NAME_DATA_KEY);
         String la3desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3DESC_DATA_KEY);
@@ -260,8 +299,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String la3roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3ROLL2_DATA_KEY);
         String la3type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3TYPE1_DATA_KEY);
         String la3type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3TYPE2_DATA_KEY);
-        String la3auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3AUTO_DATA_KEY);
-        String la3add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA3ADD_DATA_KEY);
+        boolean la3auto = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA3AUTO_DATA_KEY);
+        boolean la3add = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA3ADD_DATA_KEY);
 
         String la4name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4NAME_DATA_KEY);
         String la4desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4DESC_DATA_KEY);
@@ -270,8 +309,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String la4roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4ROLL2_DATA_KEY);
         String la4type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4TYPE1_DATA_KEY);
         String la4type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4TYPE2_DATA_KEY);
-        String la4auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4AUTO_DATA_KEY);
-        String la4add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA4ADD_DATA_KEY);
+        boolean la4auto = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA4AUTO_DATA_KEY);
+        boolean la4add = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA4ADD_DATA_KEY);
 
         String la5name = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5NAME_DATA_KEY);
         String la5desc = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5DESC_DATA_KEY);
@@ -280,8 +319,14 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         String la5roll2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5ROLL2_DATA_KEY);
         String la5type1 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5TYPE1_DATA_KEY);
         String la5type2 = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5TYPE2_DATA_KEY);
-        String la5auto = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5AUTO_DATA_KEY);
-        String la5add = mWizardModel.findByKey("Legendary Actions").getData().getString(LegendaryActionPage.LA5ADD_DATA_KEY);
+        boolean la5auto = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA5AUTO_DATA_KEY);
+        boolean la5add = mWizardModel.findByKey("Legendary Actions").getData().getBoolean(LegendaryActionPage.LA5ADD_DATA_KEY);
+
+        String cr = mWizardModel.findByKey("Challenge Rating").getData().getString(CrPage.CR_DATA_KEY);
+        String xp = mWizardModel.findByKey("Challenge Rating").getData().getString(CrPage.XP_DATA_KEY);
+
+
+
 
         ContentValues values = new ContentValues();
         values.put(DataBaseHandler.KEY_NAME, name);
@@ -345,6 +390,42 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_ABILITY5NAME, t5Name);
         values.put(DataBaseHandler.KEY_ABILITY5DESC, t5Desc);
 
+        if(spellcaster){
+            values.put(DataBaseHandler.KEY_SPELLCASTER, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_SPELLCASTER, 0);
+        }
+        values.put(DataBaseHandler.KEY_SCDESCRIPTION, scdescription);
+        values.put(DataBaseHandler.KEY_SCLEVEL, sclevel);
+        values.put(DataBaseHandler.KEY_SCABILITY, scability);
+        values.put(DataBaseHandler.KEY_SCMOD, scmod);
+        values.put(DataBaseHandler.KEY_SCDC, scdc);
+        values.put(DataBaseHandler.KEY_SCCLASS, scclass);
+        values.put(DataBaseHandler.KEY_SCSLOTS, Arrays.toString(scslots));
+        if(scspells != null){
+            values.put(DataBaseHandler.KEY_SCSPELLS, TextUtils.join(";", scspells));
+        }else{
+            values.put(DataBaseHandler.KEY_SCSPELLS, "");
+        }
+        values.put(DataBaseHandler.KEY_SCSPELLSSTRING, scspellsstring);
+        if(innate){
+            values.put(DataBaseHandler.KEY_INNATE, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_INNATE, 0);
+        }
+        values.put(DataBaseHandler.KEY_INDESCRIPTION, indescription);
+        values.put(DataBaseHandler.KEY_INABILITY, inability);
+        values.put(DataBaseHandler.KEY_INMOD, inmod);
+        values.put(DataBaseHandler.KEY_INDC, indc);
+        if(inpsionics){
+            values.put(DataBaseHandler.KEY_INPSIONICS, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_INPSIONICS, 0);
+        }
+        values.put(DataBaseHandler.KEY_INSPELLS, new Gson().toJson(inspells));
+        values.put(DataBaseHandler.KEY_INSPELLSSTRING, inspellstring);
+
+
         values.put(DataBaseHandler.KEY_ATK1NAME, a1name);
         values.put(DataBaseHandler.KEY_ATK1DESC, a1desc);
         values.put(DataBaseHandler.KEY_ATK1MOD, a1mod);
@@ -352,8 +433,16 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_ATK1DMG2ROLL, a1roll2);
         values.put(DataBaseHandler.KEY_ATK1DMG1TYPE, a1type1);
         values.put(DataBaseHandler.KEY_ATK1DMG2TYPE, a1type2);
-        values.put(DataBaseHandler.KEY_ATK1AUTOROLL, a1auto);
-        values.put(DataBaseHandler.KEY_ATK1ADDITIONAL, a1add);
+        if(a1auto){
+            values.put(DataBaseHandler.KEY_ATK1AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK1AUTOROLL, 0);
+        }
+        if(a1add){
+            values.put(DataBaseHandler.KEY_ATK1ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK1ADDITIONAL, 0);
+        }
 
         values.put(DataBaseHandler.KEY_ATK2NAME, a2name);
         values.put(DataBaseHandler.KEY_ATK2DESC, a2desc);
@@ -362,8 +451,16 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_ATK2DMG2ROLL, a2roll2);
         values.put(DataBaseHandler.KEY_ATK2DMG1TYPE, a2type1);
         values.put(DataBaseHandler.KEY_ATK2DMG2TYPE, a2type2);
-        values.put(DataBaseHandler.KEY_ATK2AUTOROLL, a2auto);
-        values.put(DataBaseHandler.KEY_ATK2ADDITIONAL, a2add);
+        if(a2auto){
+            values.put(DataBaseHandler.KEY_ATK2AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK2AUTOROLL, 0);
+        }
+        if(a2add){
+            values.put(DataBaseHandler.KEY_ATK2ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK2ADDITIONAL, 0);
+        }
 
         values.put(DataBaseHandler.KEY_ATK3NAME, a3name);
         values.put(DataBaseHandler.KEY_ATK3DESC, a3desc);
@@ -372,8 +469,17 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_ATK3DMG2ROLL, a3roll2);
         values.put(DataBaseHandler.KEY_ATK3DMG1TYPE, a3type1);
         values.put(DataBaseHandler.KEY_ATK3DMG2TYPE, a3type2);
-        values.put(DataBaseHandler.KEY_ATK3AUTOROLL, a3auto);
-        values.put(DataBaseHandler.KEY_ATK3ADDITIONAL, a3add);
+
+        if(a3auto){
+            values.put(DataBaseHandler.KEY_ATK3AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK3AUTOROLL, 0);
+        }
+        if(a3add){
+            values.put(DataBaseHandler.KEY_ATK3ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK3ADDITIONAL, 0);
+        }
 
         values.put(DataBaseHandler.KEY_ATK4NAME, a4name);
         values.put(DataBaseHandler.KEY_ATK4DESC, a4desc);
@@ -382,18 +488,30 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_ATK4DMG2ROLL, a4roll2);
         values.put(DataBaseHandler.KEY_ATK4DMG1TYPE, a4type1);
         values.put(DataBaseHandler.KEY_ATK4DMG2TYPE, a4type2);
-        values.put(DataBaseHandler.KEY_ATK4AUTOROLL, a4auto);
-        values.put(DataBaseHandler.KEY_ATK4ADDITIONAL, a4add);
+
+        if(a4auto){
+            values.put(DataBaseHandler.KEY_ATK4AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK4AUTOROLL, 0);
+        }
+        if(a4add){
+            values.put(DataBaseHandler.KEY_ATK4ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK4ADDITIONAL, 0);
+        }
 
         values.put(DataBaseHandler.KEY_REACTION1NAME, r1name);
         values.put(DataBaseHandler.KEY_REACTION1DESC, r1desc);
+        values.put(DataBaseHandler.KEY_REACTION2NAME, r2name);
+        values.put(DataBaseHandler.KEY_REACTION2DESC, r2desc);
+        values.put(DataBaseHandler.KEY_REACTION3NAME, r3name);
+        values.put(DataBaseHandler.KEY_REACTION3DESC, r3desc);
+        values.put(DataBaseHandler.KEY_REACTION4NAME, r4name);
+        values.put(DataBaseHandler.KEY_REACTION4DESC, r4desc);
+        values.put(DataBaseHandler.KEY_REACTION5NAME, r5name);
+        values.put(DataBaseHandler.KEY_REACTION5DESC, r5desc);
 
-        /*TODO
-        Add Action 5
-        Add Legendary Actions
-         */
 
-        /*
         values.put(DataBaseHandler.KEY_ATK5NAME, a5name);
         values.put(DataBaseHandler.KEY_ATK5DESC, a5desc);
         values.put(DataBaseHandler.KEY_ATK5MOD, a5mod);
@@ -401,11 +519,20 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_ATK5DMG2ROLL, a5roll2);
         values.put(DataBaseHandler.KEY_ATK5DMG1TYPE, a5type1);
         values.put(DataBaseHandler.KEY_ATK5DMG2TYPE, a5type2);
-        values.put(DataBaseHandler.KEY_ATK5AUTOROLL, a5auto);
-        values.put(DataBaseHandler.KEY_ATK5ADDITIONAL, a5add);
-*/
 
-/*
+        if(a5auto){
+            values.put(DataBaseHandler.KEY_ATK5AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK5AUTOROLL, 0);
+        }
+        if(a5add){
+            values.put(DataBaseHandler.KEY_ATK5ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_ATK5ADDITIONAL, 0);
+        }
+
+
+
         values.put(DataBaseHandler.KEY_LMULTIATTACK, lmultiAttack);
 
         values.put(DataBaseHandler.KEY_LATK1NAME, la1name);
@@ -415,8 +542,17 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_LATK1DMG2ROLL, la1roll2);
         values.put(DataBaseHandler.KEY_LATK1DMG1TYPE, la1type1);
         values.put(DataBaseHandler.KEY_LATK1DMG2TYPE, la1type2);
-        values.put(DataBaseHandler.KEY_LATK1AUTOROLL, la1auto);
-        values.put(DataBaseHandler.KEY_LATK1ADDITIONAL, la1add);
+
+        if(la1auto){
+            values.put(DataBaseHandler.KEY_LATK1AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK1AUTOROLL, 0);
+        }
+        if(la1add){
+            values.put(DataBaseHandler.KEY_LATK1ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK1ADDITIONAL, 0);
+        }
 
         values.put(DataBaseHandler.KEY_LATK2NAME, la2name);
         values.put(DataBaseHandler.KEY_LATK2DESC, la2desc);
@@ -425,8 +561,17 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_LATK2DMG2ROLL, la2roll2);
         values.put(DataBaseHandler.KEY_LATK2DMG1TYPE, la2type1);
         values.put(DataBaseHandler.KEY_LATK2DMG2TYPE, la2type2);
-        values.put(DataBaseHandler.KEY_LATK2AUTOROLL, la2auto);
-        values.put(DataBaseHandler.KEY_LATK2ADDITIONAL, la2add);
+
+        if(la2auto){
+            values.put(DataBaseHandler.KEY_LATK2AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK2AUTOROLL, 0);
+        }
+        if(la2add){
+            values.put(DataBaseHandler.KEY_LATK2ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK2ADDITIONAL, 0);
+        }
 
         values.put(DataBaseHandler.KEY_LATK3NAME, la3name);
         values.put(DataBaseHandler.KEY_LATK3DESC, la3desc);
@@ -435,8 +580,17 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_LATK3DMG2ROLL, la3roll2);
         values.put(DataBaseHandler.KEY_LATK3DMG1TYPE, la3type1);
         values.put(DataBaseHandler.KEY_LATK3DMG2TYPE, la3type2);
-        values.put(DataBaseHandler.KEY_LATK3AUTOROLL, la3auto);
-        values.put(DataBaseHandler.KEY_LATK3ADDITIONAL, la3add);
+
+        if(la3auto){
+            values.put(DataBaseHandler.KEY_LATK3AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK3AUTOROLL, 0);
+        }
+        if(la3add){
+            values.put(DataBaseHandler.KEY_LATK3ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK3ADDITIONAL, 0);
+        }
 
         values.put(DataBaseHandler.KEY_LATK4NAME, la4name);
         values.put(DataBaseHandler.KEY_LATK4DESC, la4desc);
@@ -445,8 +599,17 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_LATK4DMG2ROLL, la4roll2);
         values.put(DataBaseHandler.KEY_LATK4DMG1TYPE, la4type1);
         values.put(DataBaseHandler.KEY_LATK4DMG2TYPE, la4type2);
-        values.put(DataBaseHandler.KEY_LATK4AUTOROLL, la4auto);
-        values.put(DataBaseHandler.KEY_LATK4ADDITIONAL, la4add);
+
+        if(la4auto){
+            values.put(DataBaseHandler.KEY_LATK4AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK4AUTOROLL, 0);
+        }
+        if(la4add){
+            values.put(DataBaseHandler.KEY_LATK4ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK4ADDITIONAL, 0);
+        }
 
         values.put(DataBaseHandler.KEY_LATK5NAME, la5name);
         values.put(DataBaseHandler.KEY_LATK5DESC, la5desc);
@@ -455,9 +618,21 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_LATK5DMG2ROLL, la5roll2);
         values.put(DataBaseHandler.KEY_LATK5DMG1TYPE, la5type1);
         values.put(DataBaseHandler.KEY_LATK5DMG2TYPE, la5type2);
-        values.put(DataBaseHandler.KEY_LATK5AUTOROLL, la5auto);
-        values.put(DataBaseHandler.KEY_LATK5ADDITIONAL, la5add);
-*/
+
+        if(la5auto){
+            values.put(DataBaseHandler.KEY_LATK5AUTOROLL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK5AUTOROLL, 0);
+        }
+        if(la5add){
+            values.put(DataBaseHandler.KEY_LATK5ADDITIONAL, 1);
+        }else{
+            values.put(DataBaseHandler.KEY_LATK5ADDITIONAL, 0);
+        }
+
+        values.put(DataBaseHandler.KEY_CR, cr);
+        values.put(DataBaseHandler.KEY_XP, xp);
+
 
 
         if (imageUri == null) {
@@ -509,7 +684,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String wis = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_WISDOM));
             String cha = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CHARISMA));
             String hp = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MAXHP));
-            String hpdice = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_HPROLL));
+            int hpdice = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_HPROLL));
 
             String ac1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_AC));
             String ac1Type = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ACTYPE));
@@ -561,6 +736,31 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String t5Name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY5NAME));
             String t5Desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY5DESC));
 
+            boolean spellcasting = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SPELLCASTER)) > 0;
+            String scdescription = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCDESCRIPTION));
+            String sclevel = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCLEVEL));
+            String scability = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCABILITY));
+            String scmod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCMOD));
+            String scdc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCDC));
+            String scclass = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCCLASS));
+            String[] tempspellsknown = TextUtils.split(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLS)), ";");
+            ArrayList<String> scspellsknown = new ArrayList<String>(Arrays.asList(tempspellsknown));
+            int[] scslots = Utils.fromString(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSLOTS)));
+            String scspellsstring = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLSSTRING));
+
+            boolean innate = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INNATE)) > 0;
+            String indescription = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INDESCRIPTION));
+            //String indescription = null;
+            String innateability = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INABILITY));
+            String innatemod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INMOD));
+            String innatedc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INDC));
+            Gson gson = new Gson();
+            Type innatespellsknownToken = new TypeToken<HashMap<String, String>>(){}.getType();
+            HashMap<Integer, Integer> innatespellsknown = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INSPELLS)), innatespellsknownToken);
+                    //fromString(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INSPELLS)));
+            boolean innatepsionics = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INPSIONICS)) > 0;
+            String inspellstring = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INSPELLSSTRING));
+
             String multiAttack = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_MULTIATTACK));
 
             String a1name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1NAME));
@@ -570,8 +770,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String a1roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG2ROLL));
             String a1type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG1TYPE));
             String a1type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG2TYPE));
-            String a1auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1AUTOROLL));
-            String a1add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1ADDITIONAL));
+            boolean a1auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1AUTOROLL)) > 0;
+            boolean a1add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1ADDITIONAL)) > 0;
 
             String a2name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2NAME));
             String a2desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DESC));
@@ -580,8 +780,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String a2roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG2ROLL));
             String a2type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG1TYPE));
             String a2type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG2TYPE));
-            String a2auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2AUTOROLL));
-            String a2add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2ADDITIONAL));
+            boolean a2auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2AUTOROLL)) > 0;
+            boolean a2add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2ADDITIONAL)) > 0;
 
             String a3name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3NAME));
             String a3desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DESC));
@@ -590,8 +790,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String a3roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG2ROLL));
             String a3type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG1TYPE));
             String a3type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG2TYPE));
-            String a3auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3AUTOROLL));
-            String a3add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3ADDITIONAL));
+            boolean a3auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3AUTOROLL)) > 0;
+            boolean a3add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3ADDITIONAL)) > 0;
 
             String a4name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4NAME));
             String a4desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DESC));
@@ -600,13 +800,9 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String a4roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG2ROLL));
             String a4type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG1TYPE));
             String a4type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG2TYPE));
-            String a4auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4AUTOROLL));
-            String a4add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4ADDITIONAL));
+            boolean a4auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4AUTOROLL)) > 0;
+            boolean a4add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4ADDITIONAL)) > 0;
 
-            String r1name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1NAME));
-            String r1desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1DESC));
-
-            /*
             String a5name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5NAME));
             String a5desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DESC));
             String a5mod = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5MOD));
@@ -614,11 +810,21 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String a5roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG2ROLL));
             String a5type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG1TYPE));
             String a5type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG2TYPE));
-            String a5auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5AUTOROLL));
-            String a5add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5ADDITIONAL));
-*/
+            boolean a5auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5AUTOROLL)) > 0;
+            boolean a5add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5ADDITIONAL)) > 0;
 
-/*
+            String r1name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1NAME));
+            String r1desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1DESC));
+            String r2name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION2NAME));
+            String r2desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION2DESC));
+            String r3name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION3NAME));
+            String r3desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION3DESC));
+            String r4name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION4NAME));
+            String r4desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION4DESC));
+            String r5name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION5NAME));
+            String r5desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION5DESC));
+
+
             String lmultiAttack = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LMULTIATTACK));
 
             String la1name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1NAME));
@@ -628,8 +834,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String la1roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG2ROLL));
             String la1type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG1TYPE));
             String la1type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG2TYPE));
-            String la1auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1AUTOROLL));
-            String la1add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1ADDITIONAL));
+            boolean la1auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1AUTOROLL)) > 0;
+            boolean la1add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1ADDITIONAL)) > 0;
 
             String la2name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2NAME));
             String la2desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DESC));
@@ -638,8 +844,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String la2roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG2ROLL));
             String la2type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG1TYPE));
             String la2type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG2TYPE));
-            String la2auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2AUTOROLL));
-            String la2add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2ADDITIONAL));
+            boolean la2auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2AUTOROLL)) > 0;
+            boolean la2add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2ADDITIONAL)) > 0;
 
             String la3name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3NAME));
             String la3desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DESC));
@@ -648,8 +854,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String la3roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG2ROLL));
             String la3type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG1TYPE));
             String la3type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG2TYPE));
-            String la3auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3AUTOROLL));
-            String la3add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3ADDITIONAL));
+            boolean la3auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3AUTOROLL)) > 0;
+            boolean la3add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3ADDITIONAL)) > 0;
 
             String la4name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4NAME));
             String la4desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DESC));
@@ -658,8 +864,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String la4roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG2ROLL));
             String la4type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG1TYPE));
             String la4type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG2TYPE));
-            String la4auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4AUTOROLL));
-            String la4add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4ADDITIONAL));
+            boolean la4auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4AUTOROLL)) > 0;
+            boolean la4add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4ADDITIONAL)) > 0;
 
             String la5name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5NAME));
             String la5desc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DESC));
@@ -668,18 +874,21 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String la5roll2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG2ROLL));
             String la5type1 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG1TYPE));
             String la5type2 = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG2TYPE));
-            String la5auto = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5AUTOROLL));
-            String la5add = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5ADDITIONAL));
-*/
+            boolean la5auto = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5AUTOROLL)) > 0;
+            boolean la5add = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5ADDITIONAL)) > 0;
+
+            String cr = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CR));
+            String xp = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_XP));
+
 
             createBundleBasicInfo(name, type, alignment, imageUri, size);
             createBundleAbilities(str, dex, con, intel, wis, cha, hp, hpdice, ac1, ac1Type, ac2, ac2Type, speed);
             createBundleSkills(acrobatics, animalhandling, arcana, athletics, deception, history, insight, intimidation, investigation, medicine, nature, perception, performance, persuasion, religion, sleightofhand, stealth, survival, dmgVul, dmgRes, dmgIm, conIm, stStr, stDex, stCon, stInt, stWis, stCha, senses, languages);
-            createBundleTraits(t1Name, t1Desc, t2Name, t2Desc, t3Name, t3Desc, t4Name, t4Desc, t5Name, t5Desc);
-           // createBundleActions(a1name, a1desc, a1mod, a1roll1, a1roll2, a1type1, a1type2, a1auto, a1add, a2name, a2desc, a2mod, a2roll1, a2roll2, a2type1, a2type2, a2auto, a2add, a3name, a3desc, a3mod, a3roll1, a3roll2, a3type1, a3type2, a3auto, a3add, a4name, a4desc, a4mod, a4roll1, a4roll2, a4type1, a4type2, a4auto, a4add, a5name, a5desc, a5mod, a5roll1, a5roll2, a5type1, a5type2, a5auto, a5add);
-            createBundleActions(multiAttack, a1name, a1desc, a1mod, a1roll1, a1roll2, a1type1, a1type2, a1auto, a1add, a2name, a2desc, a2mod, a2roll1, a2roll2, a2type1, a2type2, a2auto, a2add, a3name, a3desc, a3mod, a3roll1, a3roll2, a3type1, a3type2, a3auto, a3add, a4name, a4desc, a4mod, a4roll1, a4roll2, a4type1, a4type2, a4auto, a4add);
-            //createBundleLegendaryActions(lmultiAttack, la1name, la1desc, la1mod, la1roll1, la1roll2, la1type1, la1type2, la1auto, la1add, la2name, la2desc, la2mod, la2roll1, la2roll2, la2type1, la2type2, la2auto, la2add, la3name, la3desc, la3mod, la3roll1, la3roll2, la3type1, la3type2, la3auto, la3add, la4name, la4desc, la4mod, la4roll1, la4roll2, la4type1, la4type2, la4auto, la4add);
-            createBundleReactions(r1name, r1desc);
+            createBundleTraits(t1Name, t1Desc, t2Name, t2Desc, t3Name, t3Desc, t4Name, t4Desc, t5Name, t5Desc, spellcasting, scdescription, sclevel, scability, scmod, scdc, scclass, scspellsknown, scslots, scspellsstring, innate, indescription, innateability, innatemod, innatedc, innatespellsknown, innatepsionics, inspellstring);
+            createBundleActions(multiAttack, a1name, a1desc, a1mod, a1roll1, a1roll2, a1type1, a1type2, a1auto, a1add, a2name, a2desc, a2mod, a2roll1, a2roll2, a2type1, a2type2, a2auto, a2add, a3name, a3desc, a3mod, a3roll1, a3roll2, a3type1, a3type2, a3auto, a3add, a4name, a4desc, a4mod, a4roll1, a4roll2, a4type1, a4type2, a4auto, a4add, a5name, a5desc, a5mod, a5roll1, a5roll2, a5type1, a5type2, a5auto, a5add);
+            createBundleLegendaryActions(lmultiAttack, la1name, la1desc, la1mod, la1roll1, la1roll2, la1type1, la1type2, la1auto, la1add, la2name, la2desc, la2mod, la2roll1, la2roll2, la2type1, la2type2, la2auto, la2add, la3name, la3desc, la3mod, la3roll1, la3roll2, la3type1, la3type2, la3auto, la3add, la4name, la4desc, la4mod, la4roll1, la4roll2, la4type1, la4type2, la4auto, la4add, la5name, la5desc, la5mod, la5roll1, la5roll2, la5type1, la5type2, la5auto, la5add);
+            createBundleReactions(r1name, r1desc, r2name, r2desc, r3name, r3desc, r4name, r4desc, r5name, r5desc);
+            createBundleCR(cr, xp);
         }
         assert cursor != null;
         cursor.close();
@@ -697,7 +906,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
     }
 
 
-    private void createBundleAbilities(String str, String dex, String con, String intel, String wis, String cha, String hp, String hpdice, String ac1, String ac1Type, String ac2, String ac2Type, String speed) {
+    private void createBundleAbilities(String str, String dex, String con, String intel, String wis, String cha, String hp, int hpdice, String ac1, String ac1Type, String ac2, String ac2Type, String speed) {
         Bundle bdl1 = new Bundle();
         bdl1.putString(AbilitiesPage.STR_DATA_KEY, str);
         bdl1.putString(AbilitiesPage.DEX_DATA_KEY, dex);
@@ -706,7 +915,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(AbilitiesPage.WIS_DATA_KEY, wis);
         bdl1.putString(AbilitiesPage.CHA_DATA_KEY, cha);
         bdl1.putString(AbilitiesPage.HP_DATA_KEY, hp);
-        bdl1.putString(AbilitiesPage.HITDICE_DATA_KEY, hpdice);
+        bdl1.putInt(AbilitiesPage.HITDICE_DATA_KEY, hpdice);
         bdl1.putString(AbilitiesPage.AC1_DATA_KEY, ac1);
         bdl1.putString(AbilitiesPage.AC1TYPE_DATA_KEY, ac1Type);
         bdl1.putString(AbilitiesPage.AC2_DATA_KEY, ac2);
@@ -751,7 +960,7 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
     }
 
 
-    private void createBundleTraits(String t1Name, String t1Desc, String t2Name, String t2Desc, String t3Name, String t3Desc, String t4Name, String t4Desc, String t5Name, String t5Desc) {
+    private void createBundleTraits(String t1Name, String t1Desc, String t2Name, String t2Desc, String t3Name, String t3Desc, String t4Name, String t4Desc, String t5Name, String t5Desc, boolean spellcasting, String scdescription, String sclevel, String scability, String scmod, String scdc, String scclass, ArrayList<String> scspellsknown, int[] scslots, String scspellsstring, boolean innate, String indescription, String innateability, String innatemod, String innatedc, HashMap<Integer, Integer> innatespellsknown, boolean innatepsionics, String inspellsstring) {
         Bundle bdl1 = new Bundle();
         bdl1.putString(TraitsPage.T1NAME_DATA_KEY, t1Name);
         bdl1.putString(TraitsPage.T1DESC_DATA_KEY, t1Desc);
@@ -763,11 +972,31 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(TraitsPage.T4DESC_DATA_KEY, t4Desc);
         bdl1.putString(TraitsPage.T5NAME_DATA_KEY, t5Name);
         bdl1.putString(TraitsPage.T5DESC_DATA_KEY, t5Desc);
+
+        bdl1.putBoolean(TraitsPage.SC_DATA_KEY, spellcasting);
+        bdl1.putString(TraitsPage.SCDESCRIPTION_DATA_KEY, scdescription);
+        bdl1.putString(TraitsPage.SClEVEL_DATA_KEY, sclevel);
+        bdl1.putString(TraitsPage.SCABILITY_DATA_KEY, scability);
+        bdl1.putString(TraitsPage.SCMOD_DATA_KEY, scmod);
+        bdl1.putString(TraitsPage.SCDC_DATA_KEY, scdc);
+        bdl1.putString(TraitsPage.SCCLASS_DATA_KEY, scclass);
+        bdl1.putStringArrayList(TraitsPage.SCSPELLSKNOWN_DATA_KEY, scspellsknown);
+        bdl1.putIntArray(TraitsPage.SCSLOTS_DATA_KEY, scslots);
+        bdl1.putString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY, scspellsstring);
+
+        bdl1.putBoolean(TraitsPage.INNATE_DATA_KEY, innate);
+        bdl1.putString(TraitsPage.INNATEDESCRIPTION_DATA_KEY, indescription);
+        bdl1.putString(TraitsPage.INNATEABILITY_DATA_KEY, innateability);
+        bdl1.putString(TraitsPage.INNATEMOD_DATA_KEY, innatemod);
+        bdl1.putString(TraitsPage.INNATEDC_DATA_KEY, innatedc);
+        bdl1.putSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY, innatespellsknown);
+        bdl1.putBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY, innatepsionics);
+        bdl1.putString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY, inspellsstring);
+
         bundle.putBundle("Traits", bdl1);
     }
-//    private void createBundleActions(String a1name, String a1desc, String a1mod, String a1roll1, String a1roll2, String a1type1, String a1type2, String a1auto, String a1add, String a2name, String a2desc, String a2mod, String a2roll1, String a2roll2, String a2type1, String a2type2, String a2auto, String a2add, String a3name, String a3desc, String a3mod, String a3roll1, String a3roll2, String a3type1, String a3type2, String a3auto, String a3add, String a4name, String a4desc, String a4mod, String a4roll1, String a4roll2, String a4type1, String a4type2, String a4auto, String a4add, String a5name, String a5desc, String a5mod, String a5roll1, String a5roll2, String a5type1, String a5type2, String a5auto, String a5add) {
+    private void createBundleActions(String multiattack, String a1name, String a1desc, String a1mod, String a1roll1, String a1roll2, String a1type1, String a1type2, boolean a1auto, boolean a1add, String a2name, String a2desc, String a2mod, String a2roll1, String a2roll2, String a2type1, String a2type2, boolean a2auto, boolean a2add, String a3name, String a3desc, String a3mod, String a3roll1, String a3roll2, String a3type1, String a3type2, boolean a3auto, boolean a3add, String a4name, String a4desc, String a4mod, String a4roll1, String a4roll2, String a4type1, String a4type2, boolean a4auto, boolean a4add, String a5name, String a5desc, String a5mod, String a5roll1, String a5roll2, String a5type1, String a5type2, boolean a5auto, boolean a5add) {
 
-    private void createBundleActions(String multiattack, String a1name, String a1desc, String a1mod, String a1roll1, String a1roll2, String a1type1, String a1type2, String a1auto, String a1add, String a2name, String a2desc, String a2mod, String a2roll1, String a2roll2, String a2type1, String a2type2, String a2auto, String a2add, String a3name, String a3desc, String a3mod, String a3roll1, String a3roll2, String a3type1, String a3type2, String a3auto, String a3add, String a4name, String a4desc, String a4mod, String a4roll1, String a4roll2, String a4type1, String a4type2, String a4auto, String a4add) {
         Bundle bdl1 = new Bundle();
 
         bdl1.putString(ActionPage.MULTIATTACK_DATA_KEY, multiattack);
@@ -779,8 +1008,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(ActionPage.A1ROLL2_DATA_KEY, a1roll2);
         bdl1.putString(ActionPage.A1TYPE1_DATA_KEY, a1type1);
         bdl1.putString(ActionPage.A1TYPE2_DATA_KEY, a1type2);
-        bdl1.putString(ActionPage.A1AUTO_DATA_KEY, a1auto);
-        bdl1.putString(ActionPage.A1ADD_DATA_KEY, a1add);
+        bdl1.putBoolean(ActionPage.A1AUTO_DATA_KEY, a1auto);
+        bdl1.putBoolean(ActionPage.A1ADD_DATA_KEY, a1add);
 
         bdl1.putString(ActionPage.A2NAME_DATA_KEY, a2name);
         bdl1.putString(ActionPage.A2DESC_DATA_KEY, a2desc);
@@ -789,8 +1018,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(ActionPage.A2ROLL2_DATA_KEY, a2roll2);
         bdl1.putString(ActionPage.A2TYPE1_DATA_KEY, a2type1);
         bdl1.putString(ActionPage.A2TYPE2_DATA_KEY, a2type2);
-        bdl1.putString(ActionPage.A2AUTO_DATA_KEY, a2auto);
-        bdl1.putString(ActionPage.A2ADD_DATA_KEY, a2add);
+        bdl1.putBoolean(ActionPage.A2AUTO_DATA_KEY, a2auto);
+        bdl1.putBoolean(ActionPage.A2ADD_DATA_KEY, a2add);
 
         bdl1.putString(ActionPage.A3NAME_DATA_KEY, a3name);
         bdl1.putString(ActionPage.A3DESC_DATA_KEY, a3desc);
@@ -799,8 +1028,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(ActionPage.A3ROLL2_DATA_KEY, a3roll2);
         bdl1.putString(ActionPage.A3TYPE1_DATA_KEY, a3type1);
         bdl1.putString(ActionPage.A3TYPE2_DATA_KEY, a3type2);
-        bdl1.putString(ActionPage.A3AUTO_DATA_KEY, a3auto);
-        bdl1.putString(ActionPage.A3ADD_DATA_KEY, a3add);
+        bdl1.putBoolean(ActionPage.A3AUTO_DATA_KEY, a3auto);
+        bdl1.putBoolean(ActionPage.A3ADD_DATA_KEY, a3add);
 
         bdl1.putString(ActionPage.A4NAME_DATA_KEY, a4name);
         bdl1.putString(ActionPage.A4DESC_DATA_KEY, a4desc);
@@ -809,26 +1038,24 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(ActionPage.A4ROLL2_DATA_KEY, a4roll2);
         bdl1.putString(ActionPage.A4TYPE1_DATA_KEY, a4type1);
         bdl1.putString(ActionPage.A4TYPE2_DATA_KEY, a4type2);
-        bdl1.putString(ActionPage.A4AUTO_DATA_KEY, a4auto);
-        bdl1.putString(ActionPage.A4ADD_DATA_KEY, a4add);
+        bdl1.putBoolean(ActionPage.A4AUTO_DATA_KEY, a4auto);
+        bdl1.putBoolean(ActionPage.A4ADD_DATA_KEY, a4add);
 
-        /*
-        bdl1.putString("a5name", a5name);
-        bdl1.putString("a5desc", a5desc);
-        bdl1.putString("a5mod", a5mod);
-        bdl1.putString("a5roll1", a5roll1);
-        bdl1.putString("a5roll2", a5roll2);
-        bdl1.putString("a5type1", a5type1);
-        bdl1.putString("a5type2", a5type2);
-        bdl1.putString("a5auto", a5auto);
-        bdl1.putString("a5add", a5add);
-        */
+        bdl1.putString(ActionPage.A5NAME_DATA_KEY, a5name);
+        bdl1.putString(ActionPage.A5DESC_DATA_KEY, a5desc);
+        bdl1.putString(ActionPage.A5MOD_DATA_KEY, a5mod);
+        bdl1.putString(ActionPage.A5ROLL1_DATA_KEY, a5roll1);
+        bdl1.putString(ActionPage.A5ROLL2_DATA_KEY, a5roll2);
+        bdl1.putString(ActionPage.A5TYPE1_DATA_KEY, a5type1);
+        bdl1.putString(ActionPage.A5TYPE2_DATA_KEY, a5type2);
+        bdl1.putBoolean(ActionPage.A5AUTO_DATA_KEY, a5auto);
+        bdl1.putBoolean(ActionPage.A5ADD_DATA_KEY, a5add);
 
         bundle.putBundle("Actions", bdl1);
     }
 
-/*
-    private void createBundleActions(String multiattack, String a1name, String a1desc, String a1mod, String a1roll1, String a1roll2, String a1type1, String a1type2, String a1auto, String a1add, String a2name, String a2desc, String a2mod, String a2roll1, String a2roll2, String a2type1, String a2type2, String a2auto, String a2add, String a3name, String a3desc, String a3mod, String a3roll1, String a3roll2, String a3type1, String a3type2, String a3auto, String a3add, String a4name, String a4desc, String a4mod, String a4roll1, String a4roll2, String a4type1, String a4type2, String a4auto, String a4add) {
+
+    private void createBundleLegendaryActions(String lmultiattack, String la1name, String la1desc, String la1mod, String la1roll1, String la1roll2, String la1type1, String la1type2, boolean la1auto, boolean la1add, String la2name, String la2desc, String la2mod, String la2roll1, String la2roll2, String la2type1, String la2type2, boolean la2auto, boolean la2add, String la3name, String la3desc, String la3mod, String la3roll1, String la3roll2, String la3type1, String la3type2, boolean la3auto, boolean la3add, String la4name, String la4desc, String la4mod, String la4roll1, String la4roll2, String la4type1, String la4type2, boolean la4auto, boolean la4add, String la5name, String la5desc, String la5mod, String la5roll1, String la5roll2, String la5type1, String la5type2, boolean la5auto, boolean la5add) {
         Bundle bdl1 = new Bundle();
 
         bdl1.putString(LegendaryActionPage.LMULTIATTACK_DATA_KEY, lmultiattack);
@@ -840,8 +1067,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(LegendaryActionPage.LA1ROLL2_DATA_KEY, la1roll2);
         bdl1.putString(LegendaryActionPage.LA1TYPE1_DATA_KEY, la1type1);
         bdl1.putString(LegendaryActionPage.LA1TYPE2_DATA_KEY, la1type2);
-        bdl1.putString(LegendaryActionPage.LA1AUTO_DATA_KEY, la1auto);
-        bdl1.putString(LegendaryActionPage.LA1ADD_DATA_KEY, la1add);
+        bdl1.putBoolean(LegendaryActionPage.LA1AUTO_DATA_KEY, la1auto);
+        bdl1.putBoolean(LegendaryActionPage.LA1ADD_DATA_KEY, la1add);
 
         bdl1.putString(LegendaryActionPage.LA2NAME_DATA_KEY, la2name);
         bdl1.putString(LegendaryActionPage.LA2DESC_DATA_KEY, la2desc);
@@ -850,8 +1077,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(LegendaryActionPage.LA2ROLL2_DATA_KEY, la2roll2);
         bdl1.putString(LegendaryActionPage.LA2TYPE1_DATA_KEY, la2type1);
         bdl1.putString(LegendaryActionPage.LA2TYPE2_DATA_KEY, la2type2);
-        bdl1.putString(LegendaryActionPage.LA2AUTO_DATA_KEY, la2auto);
-        bdl1.putString(LegendaryActionPage.LA2ADD_DATA_KEY, la2add);
+        bdl1.putBoolean(LegendaryActionPage.LA2AUTO_DATA_KEY, la2auto);
+        bdl1.putBoolean(LegendaryActionPage.LA2ADD_DATA_KEY, la2add);
 
         bdl1.putString(LegendaryActionPage.LA3NAME_DATA_KEY, la3name);
         bdl1.putString(LegendaryActionPage.LA3DESC_DATA_KEY, la3desc);
@@ -860,8 +1087,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(LegendaryActionPage.LA3ROLL2_DATA_KEY, la3roll2);
         bdl1.putString(LegendaryActionPage.LA3TYPE1_DATA_KEY, la3type1);
         bdl1.putString(LegendaryActionPage.LA3TYPE2_DATA_KEY, la3type2);
-        bdl1.putString(LegendaryActionPage.LA3AUTO_DATA_KEY, la3auto);
-        bdl1.putString(LegendaryActionPage.LA3ADD_DATA_KEY, la3add);
+        bdl1.putBoolean(LegendaryActionPage.LA3AUTO_DATA_KEY, la3auto);
+        bdl1.putBoolean(LegendaryActionPage.LA3ADD_DATA_KEY, la3add);
 
         bdl1.putString(LegendaryActionPage.LA4NAME_DATA_KEY, la4name);
         bdl1.putString(LegendaryActionPage.LA4DESC_DATA_KEY, la4desc);
@@ -870,8 +1097,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(LegendaryActionPage.LA4ROLL2_DATA_KEY, la4roll2);
         bdl1.putString(LegendaryActionPage.LA4TYPE1_DATA_KEY, la4type1);
         bdl1.putString(LegendaryActionPage.LA4TYPE2_DATA_KEY, la4type2);
-        bdl1.putString(LegendaryActionPage.LA4AUTO_DATA_KEY, la4auto);
-        bdl1.putString(LegendaryActionPage.LA4ADD_DATA_KEY, la4add);
+        bdl1.putBoolean(LegendaryActionPage.LA4AUTO_DATA_KEY, la4auto);
+        bdl1.putBoolean(LegendaryActionPage.LA4ADD_DATA_KEY, la4add);
 
         bdl1.putString(LegendaryActionPage.LA5NAME_DATA_KEY, la5name);
         bdl1.putString(LegendaryActionPage.LA5DESC_DATA_KEY, la5desc);
@@ -880,20 +1107,35 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         bdl1.putString(LegendaryActionPage.LA5ROLL2_DATA_KEY, la5roll2);
         bdl1.putString(LegendaryActionPage.LA5TYPE1_DATA_KEY, la5type1);
         bdl1.putString(LegendaryActionPage.LA5TYPE2_DATA_KEY, la5type2);
-        bdl1.putString(LegendaryActionPage.LA5AUTO_DATA_KEY, la5auto);
-        bdl1.putString(LegendaryActionPage.LA5ADD_DATA_KEY, la5add);
+        bdl1.putBoolean(LegendaryActionPage.LA5AUTO_DATA_KEY, la5auto);
+        bdl1.putBoolean(LegendaryActionPage.LA5ADD_DATA_KEY, la5add);
 
 
         bundle.putBundle("Legendary Actions", bdl1);
     }
 
-    */
 
-    private void createBundleReactions(String r1name, String r1desc) {
+    private void createBundleReactions(String r1name, String r1desc, String r2name, String r2desc, String r3name, String r3desc, String r4name, String r4desc, String r5name, String r5desc) {
         Bundle bdl1 = new Bundle();
         bdl1.putString(ReactionPage.R1NAME_DATA_KEY, r1name);
         bdl1.putString(ReactionPage.R1DESC_DATA_KEY, r1desc);
+        bdl1.putString(ReactionPage.R2NAME_DATA_KEY, r2name);
+        bdl1.putString(ReactionPage.R2DESC_DATA_KEY, r2desc);
+        bdl1.putString(ReactionPage.R3NAME_DATA_KEY, r3name);
+        bdl1.putString(ReactionPage.R3DESC_DATA_KEY, r3desc);
+        bdl1.putString(ReactionPage.R4NAME_DATA_KEY, r4name);
+        bdl1.putString(ReactionPage.R4DESC_DATA_KEY, r4desc);
+        bdl1.putString(ReactionPage.R5NAME_DATA_KEY, r5name);
+        bdl1.putString(ReactionPage.R5DESC_DATA_KEY, r5desc);
         bundle.putBundle("Reactions", bdl1);
+    }
+
+
+    private void createBundleCR(String cr, String xp) {
+        Bundle bdl1 = new Bundle();
+        bdl1.putString(CrPage.CR_DATA_KEY, cr);
+        bdl1.putString(CrPage.XP_DATA_KEY, xp);
+        bundle.putBundle("Challenge Rating", bdl1);
     }
 
     @Override
@@ -918,5 +1160,14 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
     @Override
     public void onNameChanged(String size) {
         this.name = size;
+    }
+
+    private static int[] fromString(String string) {
+        String[] strings = string.replace("[", "").replace("]", "").split(", ");
+        int result[] = new int[strings.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = Integer.parseInt(strings[i]);
+        }
+        return result;
     }
 }

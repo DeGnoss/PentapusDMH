@@ -7,10 +7,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:isScrollContainer="true"
-        android:clipToPadding="false"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:clipToPadding="false"
+        android:isScrollContainer="true"
         android:paddingBottom="10dp">
 
 
@@ -19,127 +19,127 @@
             android:layout_height="wrap_content">
 
             <ImageView
-            android:id="@+id/ivAvatar"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/avatar_knight" />
+                android:id="@+id/ivAvatar"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/avatar_knight" />
 
             <TextView
                 android:id="@+id/tvName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:selectAllOnFocus="true"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:layout_alignParentTop="true"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="20dp"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/ivAvatar" />
+                android:layout_toEndOf="@+id/ivAvatar"
+                android:selectAllOnFocus="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
             <TextView
                 android:id="@+id/tvType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:selectAllOnFocus="true"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:layout_alignStart="@+id/tvName"
                 android:layout_below="@+id/tvName"
-                android:layout_alignStart="@+id/tvName" />
+                android:selectAllOnFocus="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
             <View
                 android:id="@+id/line1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:background="#000000"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/ivAvatar"/>
+                android:layout_below="@id/ivAvatar"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#000000" />
 
 
             <TextView
                 android:id="@+id/tvAc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/line1"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/line1" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
             <TextView
                 android:id="@+id/tvHp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAc"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAc" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
             <TextView
                 android:id="@+id/tvSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvHp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvHp" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
             <View
                 android:id="@+id/line2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:background="#000000"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/tvSpeed"/>
+                android:layout_below="@id/tvSpeed"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#000000" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ll_statblock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_alignStart="@+id/ivAvatar"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_below="@id/line2"
-                android:id="@+id/ll_statblock">
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/llSTR"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tvLabelSTR"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginTop="5dp"
-                        android:text="STR" />
+                        android:text="STR"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
                         android:id="@+id/tvSTR"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
-                        android:text="14 (+2)" />
+                        android:text="14 (+2)"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 </LinearLayout>
 
@@ -148,27 +148,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tvLabelDEX"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginTop="5dp"
-                        android:text="DEX" />
+                        android:text="DEX"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
                         android:id="@+id/tvDEX"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
-                        android:text="11 (+0)" />
+                        android:text="11 (+0)"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 </LinearLayout>
 
@@ -177,27 +177,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tvLabelCON"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginTop="5dp"
-                        android:text="CON" />
+                        android:text="CON"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
                         android:id="@+id/tvCON"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
-                        android:text="13 (+1)" />
+                        android:text="13 (+1)"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 </LinearLayout>
 
@@ -206,27 +206,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tvLabelINT"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginTop="5dp"
-                        android:text="INT" />
+                        android:text="INT"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
                         android:id="@+id/tvINT"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
-                        android:text="1 (-5)" />
+                        android:text="1 (-5)"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 </LinearLayout>
 
@@ -235,27 +235,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tvLabelWIS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginTop="5dp"
-                        android:text="WIS" />
+                        android:text="WIS"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
                         android:id="@+id/tvWIS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
-                        android:text="3 (-4)" />
+                        android:text="3 (-4)"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 </LinearLayout>
 
@@ -264,27 +264,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tvLabelCHA"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginTop="5dp"
-                        android:text="CHA" />
+                        android:text="CHA"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
                         android:id="@+id/tvCHA"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
-                        android:text="1 (-5)" />
+                        android:text="1 (-5)"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 </LinearLayout>
 
@@ -294,158 +294,362 @@
                 android:id="@+id/line3"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:background="#000000"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/ll_statblock"/>
+                android:layout_below="@id/ll_statblock"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#000000" />
+
+            <TextView
+                android:id="@+id/tvSkills"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/line3"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvDmgVul"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvSkills"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/line3" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvDmgRes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvDmgVul"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvDmgVul" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvDmgIm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvDmgRes"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvDmgRes" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvConIm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvDmgIm"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvDmgIm" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvSenses"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvConIm"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvConIm" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvLanguages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvSenses"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvSenses" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvCR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvLanguages"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvLanguages" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <View
                 android:id="@+id/line4"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:background="#000000"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/tvCR"/>
+                android:layout_below="@id/tvCR"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#000000" />
+
+            <TextView
+                android:id="@+id/tvInnate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/line4"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvSpellcasting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvInnate"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvAbility1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvSpellcasting"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/line4" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvAbility2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAbility1"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAbility1" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvAbility3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAbility2"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAbility2" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvAbility4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAbility3"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAbility3" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvAbility5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAbility4"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAbility4" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/tvActions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/ivAvatar"
+                android:layout_below="@id/tvAbility5"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:selectAllOnFocus="true"
+                android:text="Actions"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <View
+                android:id="@+id/line5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tvActions"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#000000" />
+
+            <TextView
+                android:id="@+id/tvMultiattack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/line5"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+            <TextView
+                android:id="@+id/tvAction1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvMultiattack"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvAction2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAction1"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvAction3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAction2"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvAction4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAction3"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvAction5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvAction4"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/ivAvatar"
+                android:layout_below="@id/tvAction5"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:selectAllOnFocus="true"
+                android:text="Reactions"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <View
+                android:id="@+id/line6"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tvReactions"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#000000" />
+
+            <TextView
+                android:id="@+id/tvReaction1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/line6"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReaction2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvReaction1"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReaction3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvReaction2"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReaction4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvReaction3"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReaction5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvReaction4"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+            <TextView
+                android:id="@+id/tvLActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:selectAllOnFocus="true"
@@ -453,13 +657,13 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="15dp"
-                android:text="Actions"
+                android:text="Legendary Actions"
                 android:layout_alignStart="@+id/ivAvatar"
-                android:layout_below="@id/tvAbility5"
+                android:layout_below="@id/tvReaction5"
                 />
 
             <View
-                android:id="@+id/line5"
+                android:id="@+id/line7"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="5dp"
@@ -467,22 +671,10 @@
                 android:layout_marginEnd="5dp"
                 android:background="#000000"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/tvActions"/>
+                android:layout_below="@id/tvLActions"/>
 
             <TextView
-            android:id="@+id/tvMultiattack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginTop="5dp"
-            android:layout_alignStart="@id/ivAvatar"
-            android:layout_below="@id/line5" />
-
-
-            <TextView
-                android:id="@+id/tvAction1"
+                android:id="@+id/tvLMultiattack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -490,10 +682,11 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
                 android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvMultiattack" />
+                android:layout_below="@id/line7" />
+
 
             <TextView
-                android:id="@+id/tvAction2"
+                android:id="@+id/tvLAction1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -501,10 +694,10 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
                 android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAction1" />
+                android:layout_below="@id/tvLMultiattack" />
 
             <TextView
-                android:id="@+id/tvAction3"
+                android:id="@+id/tvLAction2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -512,10 +705,10 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
                 android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAction2" />
+                android:layout_below="@id/tvLAction1" />
 
             <TextView
-                android:id="@+id/tvAction4"
+                android:id="@+id/tvLAction3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -523,7 +716,29 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
                 android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAction3" />
+                android:layout_below="@id/tvLAction2" />
+
+            <TextView
+                android:id="@+id/tvLAction4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvLAction3" />
+
+            <TextView
+                android:id="@+id/tvLAction5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvLAction4" />
 
         </RelativeLayout>
     </ScrollView>

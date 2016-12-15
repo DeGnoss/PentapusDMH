@@ -64,6 +64,8 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_ATK1DMG1TYPE = "atk1dmg1type";
     public static final String KEY_ATK1DMG2ROLL = "atk1dmg2roll";
     public static final String KEY_ATK1DMG2TYPE = "atk1dmg2type";
+    //TODO
+    //Make boolean in database
     public static final String KEY_ATK1AUTOROLL = "atk1autoroll";
     public static final String KEY_ATK1ADDITIONAL = "atk1additional";
 
@@ -161,6 +163,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_LATK5ADDITIONAL = "latk5additional";
 
     public static final String KEY_SPELLCASTER = "spellcaster";
+    public static final String KEY_SCDESCRIPTION = "scdescription";
     public static final String KEY_SCLEVEL = "sclevel";
     public static final String KEY_SCABILITY = "scability";
     public static final String KEY_SCMOD = "scmod";
@@ -168,14 +171,17 @@ public class DataBaseHandler extends SQLiteAssetHelper {
     public static final String KEY_SCCLASS = "scclass";
     public static final String KEY_SCSLOTS = "scslots";
     public static final String KEY_SCSPELLS = "scspells";
+    public static final String KEY_SCSPELLSSTRING = "scspellsstring";
 
 
     public static final String KEY_INNATE = "innate";
+    public static final String KEY_INDESCRIPTION = "indescription";
     public static final String KEY_INABILITY = "inability";
     public static final String KEY_INMOD = "inmod";
     public static final String KEY_INDC = "indc";
     public static final String KEY_INPSIONICS = "inpsionics";
     public static final String KEY_INSPELLS = "inspells";
+    public static final String KEY_INSPELLSSTRING = "inspellsstring";
 
 
     public static final String KEY_REACTION1NAME = "reaction1name";
@@ -462,6 +468,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_DMGVUL,
             DataBaseHandler.KEY_CONIM,
             DataBaseHandler.KEY_SPELLCASTER,
+            DataBaseHandler.KEY_SCDESCRIPTION,
             DataBaseHandler.KEY_SCLEVEL,
             DataBaseHandler.KEY_SCABILITY,
             DataBaseHandler.KEY_SCMOD,
@@ -469,12 +476,15 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_SCCLASS,
             DataBaseHandler.KEY_SCSLOTS,
             DataBaseHandler.KEY_SCSPELLS,
+            DataBaseHandler.KEY_SCSPELLSSTRING,
             DataBaseHandler.KEY_INNATE,
+            DataBaseHandler.KEY_INDESCRIPTION,
             DataBaseHandler.KEY_INABILITY,
             DataBaseHandler.KEY_INMOD,
             DataBaseHandler.KEY_INDC,
             DataBaseHandler.KEY_INPSIONICS,
-            DataBaseHandler.KEY_INSPELLS
+            DataBaseHandler.KEY_INSPELLS,
+            DataBaseHandler.KEY_INSPELLSSTRING
     };
 
 
@@ -649,6 +659,7 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_ICON,
             DataBaseHandler.KEY_MM,
             DataBaseHandler.KEY_SPELLCASTER,
+            DataBaseHandler.KEY_SCDESCRIPTION,
             DataBaseHandler.KEY_SCLEVEL,
             DataBaseHandler.KEY_SCABILITY,
             DataBaseHandler.KEY_SCMOD,
@@ -656,12 +667,15 @@ public class DataBaseHandler extends SQLiteAssetHelper {
             DataBaseHandler.KEY_SCCLASS,
             DataBaseHandler.KEY_SCSLOTS,
             DataBaseHandler.KEY_SCSPELLS,
+            DataBaseHandler.KEY_SCSPELLSSTRING,
             DataBaseHandler.KEY_INNATE,
+            DataBaseHandler.KEY_INDESCRIPTION,
             DataBaseHandler.KEY_INABILITY,
             DataBaseHandler.KEY_INMOD,
             DataBaseHandler.KEY_INDC,
             DataBaseHandler.KEY_INPSIONICS,
-            DataBaseHandler.KEY_INSPELLS
+            DataBaseHandler.KEY_INSPELLS,
+            DataBaseHandler.KEY_INSPELLSSTRING
     };
 
 

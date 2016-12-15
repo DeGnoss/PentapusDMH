@@ -130,6 +130,8 @@ public class AddACDialogFragment extends DialogFragment {
         }
         mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line);
         tvAC1Type.setAdapter(mSuggestionAdapter);
+        tvAC2Type.setAdapter(mSuggestionAdapter);
+
 
         if (ac1 != null && !ac1.isEmpty()) {
             tvAC1.setText(String.valueOf(ac1));
@@ -213,7 +215,7 @@ public class AddACDialogFragment extends DialogFragment {
                 // update the adapater
                 mSuggestionAdapter.notifyDataSetChanged();
                 mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, item);
-                tvAC1Type.setAdapter(mSuggestionAdapter);
+                tvAC2Type.setAdapter(mSuggestionAdapter);
             }
             @Override
             public void afterTextChanged(Editable editable) {

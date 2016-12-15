@@ -85,12 +85,24 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
         View rootView = inflater.inflate(R.layout.fragment_page_abilities, container, false);
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-        mPage.getData().putString(AbilitiesPage.STR_DATA_KEY, "10");
-        mPage.getData().putString(AbilitiesPage.DEX_DATA_KEY, "10");
-        mPage.getData().putString(AbilitiesPage.CON_DATA_KEY, "10");
-        mPage.getData().putString(AbilitiesPage.INT_DATA_KEY, "10");
-        mPage.getData().putString(AbilitiesPage.WIS_DATA_KEY, "10");
-        mPage.getData().putString(AbilitiesPage.CHA_DATA_KEY, "10");
+        if(mPage.getData().getString(AbilitiesPage.STR_DATA_KEY) == null || mPage.getData().getString(AbilitiesPage.STR_DATA_KEY).isEmpty()){
+            mPage.getData().putString(AbilitiesPage.STR_DATA_KEY, "10");
+        }
+        if(mPage.getData().getString(AbilitiesPage.DEX_DATA_KEY) == null || mPage.getData().getString(AbilitiesPage.STR_DATA_KEY).isEmpty()){
+            mPage.getData().putString(AbilitiesPage.DEX_DATA_KEY, "10");
+        }
+        if(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY) == null || mPage.getData().getString(AbilitiesPage.STR_DATA_KEY).isEmpty()){
+            mPage.getData().putString(AbilitiesPage.CON_DATA_KEY, "10");
+        }
+        if(mPage.getData().getString(AbilitiesPage.INT_DATA_KEY) == null || mPage.getData().getString(AbilitiesPage.STR_DATA_KEY).isEmpty()){
+            mPage.getData().putString(AbilitiesPage.INT_DATA_KEY, "10");
+        }
+        if(mPage.getData().getString(AbilitiesPage.WIS_DATA_KEY) == null || mPage.getData().getString(AbilitiesPage.STR_DATA_KEY).isEmpty()){
+            mPage.getData().putString(AbilitiesPage.WIS_DATA_KEY, "10");
+        }
+        if(mPage.getData().getString(AbilitiesPage.CHA_DATA_KEY) == null || mPage.getData().getString(AbilitiesPage.STR_DATA_KEY).isEmpty()){
+            mPage.getData().putString(AbilitiesPage.CHA_DATA_KEY, "10");
+        }
 
 
         mStrView = ((TextView) rootView.findViewById(R.id.tvStrength));
@@ -201,7 +213,7 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
         });
 
         size = mPage.getData().getString(AbilitiesPage.SIZE_DATA_KEY);
-        hp = mPage.getData().getString(AbilitiesPage.HP_DATA_KEY);
+        hp = String.valueOf(mPage.getData().getInt(AbilitiesPage.HP_DATA_KEY));
         hitdice = mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY);
         String hpString;
         if (hp != null && !hp.isEmpty() && !Objects.equals(hp, "0") && size != null) {
@@ -315,7 +327,7 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
                 mPage.getData().putString(AbilitiesPage.CON_DATA_KEY,
                         (editable != null) ? editable.toString() : null);
                 String hpString;
-                if (editable != null && !editable.toString().isEmpty()) {
+                if (editable != null && !editable.toString().isEmpty() && size != null) {
                     hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf((editable != null) ? editable.toString() : null))));
                 } else {
                     hp = "0";

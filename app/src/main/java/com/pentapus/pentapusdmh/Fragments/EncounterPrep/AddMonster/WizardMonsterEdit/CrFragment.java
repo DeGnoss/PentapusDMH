@@ -49,7 +49,7 @@ import java.util.List;
  */
 
 public class CrFragment extends Fragment{
-    private static final String ARG_KEY = "cr&spellcasting";
+    private static final String ARG_KEY = "cr";
 
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
@@ -93,7 +93,14 @@ public class CrFragment extends Fragment{
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
         tvCR = (EditText) rootView.findViewById(R.id.tvCR);
+        if(mPage.getData().getString(CrPage.CR_DATA_KEY) != null && !mPage.getData().getString(CrPage.CR_DATA_KEY).isEmpty()){
+            tvCR.setText(mPage.getData().getString(CrPage.CR_DATA_KEY));
+        }
         tvXP = (EditText) rootView.findViewById(R.id.tvXP);
+
+        if(mPage.getData().getString(CrPage.XP_DATA_KEY) != null && !mPage.getData().getString(CrPage.XP_DATA_KEY).isEmpty()) {
+            tvXP.setText(mPage.getData().getString(CrPage.XP_DATA_KEY));
+        }
 
         return rootView;
     }

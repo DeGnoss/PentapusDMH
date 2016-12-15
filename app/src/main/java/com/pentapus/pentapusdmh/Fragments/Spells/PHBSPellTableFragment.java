@@ -162,7 +162,7 @@ public class PHBSpellTableFragment extends Fragment implements
             }
 
             if(args.getString("level") != null && !args.getString("level").isEmpty()){
-                selectionList.add(String.valueOf(((int) Math.ceil(Integer.valueOf(args.getString("level"))/2))));
+                selectionList.add(String.valueOf(((int) Math.ceil(Integer.valueOf(args.getString("level"))/2.0))));
             }
 
             if(args.getString("scclass") != null && !args.getString("scclass").isEmpty() && !args.getString("scclass").toLowerCase().equals("all")){
@@ -332,7 +332,7 @@ public class PHBSpellTableFragment extends Fragment implements
         return getAdapter().getCheckedStatus();
     }
 
-    public HashMap<Integer, Integer> getSpellCounter(){
+    public HashMap<String, String> getSpellCounter(){
         return getAdapter().getSpellCounter();
     }
 

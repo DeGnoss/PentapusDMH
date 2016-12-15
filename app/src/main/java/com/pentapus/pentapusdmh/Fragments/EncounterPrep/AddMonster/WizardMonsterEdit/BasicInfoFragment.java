@@ -73,8 +73,10 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         Bundle args = getArguments();
         mKey = args.getString(ARG_KEY);
         mPage = (BasicInfoPage) mCallbacks.onGetPage(mKey);
-
-        mPage.getData().putString(BasicInfoPage.IMAGEURI_DATA_KEY, "android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
+        if(mPage.getData().getString(BasicInfoPage.IMAGEURI_DATA_KEY) != null){
+            myFile = Uri.parse(mPage.getData().getString(BasicInfoPage.IMAGEURI_DATA_KEY));
+        }
+        //mPage.getData().putString(BasicInfoPage.IMAGEURI_DATA_KEY, "android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
         mPage.notifyDataChanged();
     }
 
@@ -86,7 +88,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
 
         mNameView = ((TextView) rootView.findViewById(R.id.tvMonsterName));
         mNameView.setText(mPage.getData().getString(BasicInfoPage.NAME_DATA_KEY));
-
+        mOnNameChangedListener.onNameChanged(mPage.getData().getString(BasicInfoPage.NAME_DATA_KEY));
         mTypeView = ((CustomAutoCompleteTextView) rootView.findViewById(R.id.tvMonsterType));
         mTypeView.setText(mPage.getData().getString(BasicInfoPage.TYPE_DATA_KEY));
         mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line);
@@ -105,8 +107,8 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
                 showViewPager();
             }
         });
-        if (mPage.getData().getString(BasicInfoPage.IMAGEURI_DATA_KEY) != null) {
-            bChooseImage.setImageURI(Uri.parse(mPage.getData().getString(BasicInfoPage.IMAGEURI_DATA_KEY)));
+        if (myFile != null) {
+            bChooseImage.setImageURI(myFile);
         }
 
         sizeSpinner = (Spinner) rootView.findViewById(R.id.size_spinner);
@@ -133,7 +135,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // To make it fullscreen, use the 'content' root view as the container
         // for the targetFragment, which is always the root view for the activity
-        transaction.replace(R.id.ContainerFrame, newFragment, "F_IMAGE_PAGER")
+        transaction.add(R.id.ContainerFrame, newFragment, "F_IMAGE_PAGER")
                 .addToBackStack("F_IMAGE_PAGER").commit();
     }
 
@@ -179,6 +181,11 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
                 mPage.getData().putString(BasicInfoPage.NAME_DATA_KEY,
                         (editable != null) ? editable.toString() : null);
                 mOnNameChangedListener.onNameChanged((editable != null) ? editable.toString() : null);
+                if(myFile != null){
+                    mPage.getData().putString(BasicInfoPage.IMAGEURI_DATA_KEY, myFile.toString());
+                }else{
+                    mPage.getData().putString(BasicInfoPage.IMAGEURI_DATA_KEY, "android.resource://com.pentapus.pentapusdmh/drawable/avatar_knight");
+                }
                 mPage.notifyDataChanged();
                 pageDone();
             }
@@ -188,7 +195,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(b){
-                    item = getItemsFromDb("", "monstertype");
+                    item = getItemsFromDb("", "type");
                     // update the adapater
                     mSuggestionAdapter.notifyDataSetChanged();
                     mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, item);
@@ -207,7 +214,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
             @Override
             public void onTextChanged(CharSequence userInput, int start, int before, int count) {
                 // query the database based on the user input
-                item = getItemsFromDb(userInput.toString(), "monstertype");
+                item = getItemsFromDb(userInput.toString(), "type");
 
                 // update the adapater
                 mSuggestionAdapter.notifyDataSetChanged();
@@ -291,12 +298,13 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
                     bChooseImage.post(new Runnable() {
                         @Override
                         public void run() {
-                            bChooseImage.setImageURI(myFile);
                         }
                     });
                 }
             }
         }
+        bChooseImage.setImageURI(myFile);
+
         mPage.getData().putString(BasicInfoPage.IMAGEURI_DATA_KEY, myFile.toString());
         mPage.notifyDataChanged();
         super.onActivityResult(requestCode, resultCode, data);

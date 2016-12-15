@@ -33,7 +33,7 @@ public class MonsterEditWizardModel extends AbstractWizardModel {
                 new ActionPage(this, "Actions"),
                 new ReactionPage(this, "Reactions"),
                 new LegendaryActionPage(this, "Legendary Actions"),
-                new CrPage(this, "CR & Spellcasting")
+                new CrPage(this, "Challenge Rating")
         );
     }
 }

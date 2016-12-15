@@ -54,7 +54,7 @@ public class SpellViewPagerDialogFragment extends Fragment{
     private static int highlightedPos = -1;
 
     private ArrayList<String> selectionList = new ArrayList<>();
-    private HashMap<Integer, Integer> selectedspells = new HashMap<>();
+    private HashMap<String, String> selectedspells = new HashMap<>();
 
 
     public SpellViewPagerDialogFragment() {
@@ -82,7 +82,7 @@ public class SpellViewPagerDialogFragment extends Fragment{
             if(mode == 1){
                 selectionList = getArguments().getStringArrayList("selectionList");
             }else if(mode == 2){
-                selectedspells = (HashMap<Integer, Integer>)getArguments().getSerializable("selectedspells");
+                selectedspells = (HashMap<String, String>)getArguments().getSerializable("selectedspells");
             }
             level = getArguments().getString("level");
             scclass = getArguments().getString("scclass");

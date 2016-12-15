@@ -116,7 +116,7 @@ public class LegendaryActionFragment extends Fragment {
     }
 
     public void onFabClick(int mode, String name, String description, String atkmod, String dmg1, String dmg1type, String dmg2, String dmg2type, boolean autoroll, boolean additional, int traitNumber) {
-        DialogFragment newFragment = AddActionDialogFragment.newInstance(mode, name, description, atkmod, dmg1, dmg1type, dmg2, dmg2type, autoroll, additional, traitNumber);
+        DialogFragment newFragment = AddLegendaryActionDialogFragment.newInstance(mode, name, description, atkmod, dmg1, dmg1type, dmg2, dmg2type, autoroll, additional, traitNumber);
         newFragment.setTargetFragment(this, MSG_FINISH_DIALOG);
         newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDACTION_DIALOG");
     }

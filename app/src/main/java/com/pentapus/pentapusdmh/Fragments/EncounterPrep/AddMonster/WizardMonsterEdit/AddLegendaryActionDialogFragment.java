@@ -20,7 +20,7 @@ import com.pentapus.pentapusdmh.R;
 /**
  * Created by konrad.fellmann on 12.05.2016.
  */
-public class AddActionDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener{
+public class AddLegendaryActionDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener{
 
     Button positiveButton;
     private TextView tvName, tvDesc, tvAtkMod, tvDmg1, tvDmg2;
@@ -31,12 +31,12 @@ public class AddActionDialogFragment extends DialogFragment implements AdapterVi
     boolean autoroll, additional;
 
 
-    public AddActionDialogFragment(){
+    public AddLegendaryActionDialogFragment(){
     }
 
     //mode: 0 = add, 1 = update
-    public static AddActionDialogFragment newInstance(int mode, String name, String description, String atkmod, String dmg1, String dmg1type, String dmg2, String dmg2type, boolean autoroll, boolean additional, int actionNumber) {
-        AddActionDialogFragment f = new AddActionDialogFragment();
+    public static AddLegendaryActionDialogFragment newInstance(int mode, String name, String description, String atkmod, String dmg1, String dmg1type, String dmg2, String dmg2type, boolean autoroll, boolean additional, int actionNumber) {
+        AddLegendaryActionDialogFragment f = new AddLegendaryActionDialogFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
@@ -124,14 +124,14 @@ public class AddActionDialogFragment extends DialogFragment implements AdapterVi
 
 
     private void sendResult(int mode, String name, String description, String atkmod, String dmg1, String dmg1type, String dmg2, String dmg2type, boolean autoroll, boolean additional, int traitNumber) {
-        ((ActionFragment) getTargetFragment()).onDialogResult(
+        ((LegendaryActionFragment) getTargetFragment()).onDialogResult(
                 getTargetRequestCode(), mode, name, description, atkmod, dmg1, dmg1type, dmg2, dmg2type, autoroll, additional, traitNumber);
     }
 
 
     public Dialog buildDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Action " + (actionNumber+1));
+        builder.setTitle("Legendary Action " + (actionNumber+1));
         LayoutInflater inflater = getActivity().getLayoutInflater();
         // Set up the input
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
@@ -200,12 +200,6 @@ public class AddActionDialogFragment extends DialogFragment implements AdapterVi
             }
         });
 
-        if(autoroll){
-            cbAction1Auto.setChecked(true);
-        }else{
-            cbAction1Auto.setChecked(false);
-        }
-
         cbAction1Add = ((CheckBox) view.findViewById(R.id.cbAdd1));
         cbAction1Add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,12 +212,6 @@ public class AddActionDialogFragment extends DialogFragment implements AdapterVi
                 }
             }
         });
-
-        if(additional){
-            cbAction1Add.setChecked(true);
-        }else{
-            cbAction1Add.setChecked(false);
-        }
 
 
         builder.setView(view);

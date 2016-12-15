@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.Fragments.Spells.SpellViewPagerDialogFragment;
+import com.pentapus.pentapusdmh.HelperClasses.Utils;
 import com.pentapus.pentapusdmh.R;
 import com.wizardpager.wizard.ui.PageFragmentCallbacks;
 
@@ -55,7 +56,7 @@ public class TraitsFragment extends Fragment implements
     Fragment targetFragment;
     private List<Spell> spellList = new ArrayList<>();
     ArrayList<String> selectionList = new ArrayList<>();
-    HashMap<Integer, Integer> innateSelectionList = new HashMap<>();
+    HashMap<String, String> innateSelectionList = new HashMap<>();
     private boolean isInnate = false;
     private int[] slots = new int[9];
     String monstername;
@@ -100,6 +101,7 @@ public class TraitsFragment extends Fragment implements
             }
         });
 
+        updateSpellcasting();
         if (mPage.getData().getString(TraitsPage.SCDESCRIPTION_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.SCDESCRIPTION_DATA_KEY).isEmpty()) {
             scDescription = mPage.getData().getString(TraitsPage.SCDESCRIPTION_DATA_KEY);
             tvSpellcasting.setText(scDescription);
@@ -108,7 +110,7 @@ public class TraitsFragment extends Fragment implements
         if (mPage.getData().getStringArrayList(TraitsPage.SCSPELLSKNOWN_DATA_KEY) != null) {
             selectionList = mPage.getData().getStringArrayList(TraitsPage.SCSPELLSKNOWN_DATA_KEY);
             slots = mPage.getData().getIntArray(TraitsPage.SCSLOTS_DATA_KEY);
-            tvSpellsKnown.setText(mPage.getData().getString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY));
+            tvSpellsKnown.setText(Utils.trimTrailingWhitespace(Html.fromHtml(mPage.getData().getString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY))));
             isInnate = false;
         }
 
@@ -174,20 +176,21 @@ public class TraitsFragment extends Fragment implements
             }
         });
 
-        if(mPage.getData().getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY)){
+        if (mPage.getData().getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY)) {
             labelInnateSpellcasting.setText("Innate Spellcasting (Psionics)");
-        }else{
+        } else {
             labelInnateSpellcasting.setText("Innate Spellcasting");
         }
 
+        updateInnateSpellcasting();
         if (mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY).isEmpty()) {
             innateDescription = mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY);
             tvInnateSpellcasting.setText(innateDescription);
             tvInnateSpellsKnown.setVisibility(View.VISIBLE);
         }
         if (mPage.getData().getSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY) != null) {
-            innateSelectionList = (HashMap<Integer, Integer>) mPage.getData().getSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY);
-            tvInnateSpellsKnown.setText(mPage.getData().getString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY));
+            innateSelectionList = (HashMap<String, String>) mPage.getData().getSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY);
+            tvInnateSpellsKnown.setText(Utils.trimTrailingWhitespace(Html.fromHtml(mPage.getData().getString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY))));
         }
 
         labelInnateSpellcasting.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +216,7 @@ public class TraitsFragment extends Fragment implements
         return rootView;
     }
 
-    public void showInnateSpellList(int mode, int message, HashMap<Integer, Integer> selectionList) {
+    public void showInnateSpellList(int mode, int message, HashMap<String, String> selectionList) {
         Fragment fragment = null;
         Class fragmentClass;
         Bundle bundle = new Bundle();
@@ -368,7 +371,6 @@ public class TraitsFragment extends Fragment implements
                 switch (requestCode) {
                     case MSG_SPELLCASTING_DIALOG:
                         mPage.getData().putBoolean(TraitsPage.SC_DATA_KEY, true);
-                        //mPage.getData().putString(TraitsPage.SCDESCRIPTION_DATA_KEY, results.getString(TraitsPage.SCDESCRIPTION_DATA_KEY));
                         mPage.getData().putString(TraitsPage.SClEVEL_DATA_KEY, results.getString(TraitsPage.SClEVEL_DATA_KEY));
                         mPage.getData().putString(TraitsPage.SCABILITY_DATA_KEY, results.getString(TraitsPage.SCABILITY_DATA_KEY));
                         mPage.getData().putString(TraitsPage.SCDC_DATA_KEY, results.getString(TraitsPage.SCDC_DATA_KEY));
@@ -415,6 +417,14 @@ public class TraitsFragment extends Fragment implements
                             scdescription = scdescription + " It has the following " + results.getString(TraitsPage.SCCLASS_DATA_KEY) + " spells prepared:";
                         }
                         mPage.getData().putString(TraitsPage.SCDESCRIPTION_DATA_KEY, scdescription);
+                        isInnate = false;
+                        Bundle spells = new Bundle();
+                        spells.putStringArrayList("selectedspells", selectionList);
+                        if (getLoaderManager().getLoader(0) == null) {
+                            getLoaderManager().initLoader(0, spells, this);
+                        } else {
+                            getLoaderManager().restartLoader(0, spells, this);
+                        }
                         tvSpellcasting.setText(scdescription);
                         tvSpellsKnown.setVisibility(View.VISIBLE);
                         break;
@@ -451,9 +461,9 @@ public class TraitsFragment extends Fragment implements
                         scdescription = scdescription + " It can innately cast the following spells, requiring no material components:";
                         mPage.getData().putString(TraitsPage.INNATEDESCRIPTION_DATA_KEY, scdescription);
                         mPage.getData().putBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY, results.getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY));
-                        if(results.getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY)){
+                        if (results.getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY)) {
                             labelInnateSpellcasting.setText("Innate Spellcasting (Psionics)");
-                        }else{
+                        } else {
                             labelInnateSpellcasting.setText("Innate Spellcasting");
                         }
                         tvInnateSpellcasting.setText(scdescription);
@@ -573,12 +583,12 @@ public class TraitsFragment extends Fragment implements
         //String[] selectionArgs = Arrays.copyOf(tempArray, tempArray.length, String[].class);
         String selection = "";
         ArrayList<String> tempList = new ArrayList<>();
-        HashMap<Integer, Integer> tempMap = new HashMap<>();
+        HashMap<String, String> tempMap = new HashMap<>();
         String[] selectionArgs = new String[1];
         String orderBy = "";
         if (args != null) {
             if (isInnate) {
-                innateSelectionList = (HashMap<Integer, Integer>) args.getSerializable("spellcounter");
+                innateSelectionList = (HashMap<String, String>) args.getSerializable("spellcounter");
                 tempMap = innateSelectionList;
                 if (tempMap != null && tempMap.size() > 0) {
                     Object[] tempArray = tempMap.keySet().toArray();
@@ -694,19 +704,19 @@ public class TraitsFragment extends Fragment implements
         int a = 0, b = 0, c = 0, d = 0;
         boolean bonce = false, btwice = false, bthree = false, batwill = false;
         for (int i = 0; i < spellList.size(); i++) {
-            if (innateSelectionList.get(spellList.get(i).getId()) == 1) {
+            if (Integer.valueOf(innateSelectionList.get(String.valueOf(spellList.get(i).getId()))) == 1) {
                 once.add(a, spellList.get(i).getName());
                 a++;
             }
-            if (innateSelectionList.get(spellList.get(i).getId()) == 2) {
+            if (Integer.valueOf(innateSelectionList.get(String.valueOf(spellList.get(i).getId()))) == 2) {
                 twice.add(b, spellList.get(i).getName());
                 b++;
             }
-            if (innateSelectionList.get(spellList.get(i).getId()) == 3) {
+            if (Integer.valueOf(innateSelectionList.get(String.valueOf(spellList.get(i).getId()))) == 3) {
                 three.add(c, spellList.get(i).getName());
                 c++;
             }
-            if (innateSelectionList.get(spellList.get(i).getId()) >= 4) {
+            if (Integer.valueOf(innateSelectionList.get(String.valueOf(spellList.get(i).getId()))) >= 4) {
                 atwill.add(d, spellList.get(i).getName());
                 d++;
             }
@@ -800,10 +810,12 @@ public class TraitsFragment extends Fragment implements
 
 
         if (spellText != null) {
-            mPage.getData().putString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY, spellText.toString());
-            mPage.getData().putSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY, innateSelectionList);
+            mPage.getData().putString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY, Html.toHtml(spellText));
+        } else {
+            mPage.getData().putString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY, null);
         }
-        tvInnateSpellsKnown.setText(spellText);
+        mPage.getData().putSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY, innateSelectionList);
+        tvInnateSpellsKnown.setText(Utils.trimTrailingWhitespace(spellText));
     }
 
 
@@ -1016,10 +1028,12 @@ public class TraitsFragment extends Fragment implements
             }
         }
         if (spellText != null) {
-            mPage.getData().putString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY, spellText.toString());
-            mPage.getData().putStringArrayList(TraitsPage.SCSPELLSKNOWN_DATA_KEY, selectionList);
+            mPage.getData().putString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY, Html.toHtml(spellText));
+        } else {
+            mPage.getData().putString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY, null);
         }
-        tvSpellsKnown.setText(spellText);
+        mPage.getData().putStringArrayList(TraitsPage.SCSPELLSKNOWN_DATA_KEY, selectionList);
+        tvSpellsKnown.setText(Utils.trimTrailingWhitespace(spellText));
     }
 
     public static void getListViewSize(ListView myListView) {
@@ -1042,4 +1056,81 @@ public class TraitsFragment extends Fragment implements
         // print height of adapter on log
     }
 
+    private void updateSpellcasting() {
+        if (mPage.getData().getBoolean(TraitsPage.SC_DATA_KEY)) {
+            String scdescription = "The " + mPage.getData().getString(TraitsPage.NAME_DATA_KEY) + " is a ";
+
+            if (mPage.getData().getString(TraitsPage.SClEVEL_DATA_KEY).equals("1")) {
+                scdescription = scdescription + mPage.getData().getString(TraitsPage.SClEVEL_DATA_KEY) + "st";
+            } else if (mPage.getData().getString(TraitsPage.SClEVEL_DATA_KEY).equals("2")) {
+                scdescription = scdescription + mPage.getData().getString(TraitsPage.SClEVEL_DATA_KEY) + "nd";
+            } else if (mPage.getData().getString(TraitsPage.SClEVEL_DATA_KEY).equals("3")) {
+                scdescription = scdescription + mPage.getData().getString(TraitsPage.SClEVEL_DATA_KEY) + "rd";
+            } else {
+                scdescription = scdescription + mPage.getData().getString(TraitsPage.SClEVEL_DATA_KEY) + "th";
+            }
+            scdescription = scdescription + " level spellcaster. Its spellcasting ability is " + mPage.getData().getString(TraitsPage.SCABILITY_DATA_KEY);
+            if (mPage.getData().getString(TraitsPage.SCDC_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.SCDC_DATA_KEY).isEmpty()) {
+                scdescription = scdescription + " (spell save DC " + mPage.getData().getString(TraitsPage.SCDC_DATA_KEY);
+                if (mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY).isEmpty()) {
+                    if (Integer.valueOf(mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY)) >= 0) {
+                        scdescription = scdescription + ", +" + mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY) + " to hit with spell attacks).";
+                    } else {
+                        scdescription = scdescription + ", " + mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY) + " to hit with spell attacks).";
+                    }
+                } else {
+                    scdescription = scdescription + ").";
+                }
+            } else {
+                if (mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY).isEmpty()) {
+                    if (Integer.valueOf(mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY)) >= 0) {
+                        scdescription = scdescription + " (+" + mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY) + " to hit with spell attacks).";
+                    } else {
+                        scdescription = scdescription + "(" + mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY) + " to hit with spell attacks).";
+                    }
+                } else {
+                    scdescription = scdescription + ".";
+                }
+            }
+            if (mPage.getData().getString(TraitsPage.SCCLASS_DATA_KEY).toLowerCase().equals("all")) {
+                scdescription = scdescription + " It has the following spells prepared:";
+            } else {
+                scdescription = scdescription + " It has the following " + mPage.getData().getString(TraitsPage.SCCLASS_DATA_KEY) + " spells prepared:";
+            }
+            mPage.getData().putString(TraitsPage.SCDESCRIPTION_DATA_KEY, scdescription);
+        }
+    }
+
+
+    private void updateInnateSpellcasting() {
+        if (mPage.getData().getBoolean(TraitsPage.INNATE_DATA_KEY)) {
+
+            String scdescription = "The " + mPage.getData().getString(TraitsPage.NAME_DATA_KEY) + "'s innate spellcasting ability is " + mPage.getData().getString(TraitsPage.INNATEABILITY_DATA_KEY);
+
+            if (mPage.getData().getString(TraitsPage.INNATEDC_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.INNATEDC_DATA_KEY).isEmpty()) {
+                scdescription = scdescription + " (spell save DC " + mPage.getData().getString(TraitsPage.INNATEDC_DATA_KEY);
+                if (mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY).isEmpty()) {
+                    if (Integer.valueOf(mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY)) >= 0) {
+                        scdescription = scdescription + ", +" + mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY) + " to hit with spell attacks).";
+                    } else {
+                        scdescription = scdescription + ", " + mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY) + " to hit with spell attacks).";
+                    }
+                } else {
+                    scdescription = scdescription + ").";
+                }
+            } else {
+                if (mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY).isEmpty()) {
+                    if (Integer.valueOf(mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY)) >= 0) {
+                        scdescription = scdescription + " (+" + mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY) + " to hit with spell attacks).";
+                    } else {
+                        scdescription = scdescription + "(" + mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY) + " to hit with spell attacks).";
+                    }
+                } else {
+                    scdescription = scdescription + ".";
+                }
+            }
+            scdescription = scdescription + " It can innately cast the following spells, requiring no material components:";
+            mPage.getData().putString(TraitsPage.INNATEDESCRIPTION_DATA_KEY, scdescription);
+        }
+    }
 }

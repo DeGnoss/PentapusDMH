@@ -15,6 +15,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 /**
  * Created by Koni on 17.04.2016.
@@ -59,6 +60,30 @@ public class Utils {
     public static String[] convertStringToArray(String str){
         String[] arr = str.split(strSeparator);
         return arr;
+    }
+
+    public static int[] fromString(String string) {
+        String[] strings = string.replace("[", "").replace("]", "").split(", ");
+        int result[] = new int[strings.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = Integer.parseInt(strings[i]);
+        }
+        return result;
+    }
+
+
+    public static CharSequence trimTrailingWhitespace(CharSequence source) {
+
+        if(source == null)
+            return "";
+
+        int i = source.length();
+
+        // loop back to the first non-whitespace character
+        while(--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+        }
+
+        return source.subSequence(0, i+1);
     }
 
 

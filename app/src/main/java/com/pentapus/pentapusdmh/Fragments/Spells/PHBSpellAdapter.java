@@ -41,7 +41,7 @@ public class PHBSpellAdapter extends RecyclerViewCursorAdapter<PHBSpellAdapter.M
     private int mode;
     private Bundle bundle = new Bundle();
     private ArrayList<String> checkedStatus = new ArrayList<>();
-    private HashMap<Integer, Integer> spellCounter = new HashMap<>();
+    private HashMap<String, String> spellCounter = new HashMap<>();
 
 
     /**
@@ -59,7 +59,7 @@ public class PHBSpellAdapter extends RecyclerViewCursorAdapter<PHBSpellAdapter.M
             if(mode == 1){
                 checkedStatus = bundle.getStringArrayList("selectionList");
             }else if(mode == 2){
-                spellCounter = (HashMap<Integer, Integer>) bundle.getSerializable("selectedspells");
+                spellCounter = (HashMap<String, String>) bundle.getSerializable("selectedspells");
             }
         }
         setHasStableIds(true);
@@ -92,7 +92,7 @@ public class PHBSpellAdapter extends RecyclerViewCursorAdapter<PHBSpellAdapter.M
     }
 
 
-    public HashMap<Integer, Integer> getSpellCounter() {
+    public HashMap<String, String> getSpellCounter() {
         return spellCounter;
     }
 
@@ -240,13 +240,13 @@ public class PHBSpellAdapter extends RecyclerViewCursorAdapter<PHBSpellAdapter.M
                     public void onClick(View v) {
                         cursor.moveToPosition(getAdapterPosition());
                         int numbers = 0;
-                        if(spellCounter != null && spellCounter.containsKey(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))){
-                            numbers = spellCounter.get(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)));
+                        if(spellCounter != null && spellCounter.containsKey(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))))){
+                            numbers = Integer.valueOf(spellCounter.get(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))));
                         }
                         numbers--;
                         if (numbers < 0)
                             numbers = 0;
-                        spellCounter.put(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)), numbers);
+                        spellCounter.put(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))), String.valueOf(numbers));
                         if (numbers > 3) {
                             tvNumber.setText("At will");
                         } else {
@@ -264,13 +264,13 @@ public class PHBSpellAdapter extends RecyclerViewCursorAdapter<PHBSpellAdapter.M
                     public void onClick(View v) {
                         cursor.moveToPosition(getAdapterPosition());
                         int numbers = 0;
-                        if(spellCounter != null && spellCounter.containsKey(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))){
-                            numbers = spellCounter.get(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)));
+                        if(spellCounter != null && spellCounter.containsKey(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))))){
+                            numbers = Integer.valueOf(spellCounter.get(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))));
                         }
                         numbers++;
                         if (numbers > 4)
                             numbers = 4;
-                        spellCounter.put(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)), numbers);
+                        spellCounter.put(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))), String.valueOf(numbers));
                         if (numbers > 3) {
                             tvNumber.setText("At will");
                         } else {
@@ -283,8 +283,8 @@ public class PHBSpellAdapter extends RecyclerViewCursorAdapter<PHBSpellAdapter.M
                     }
                 });
 
-                if (spellCounter != null && spellCounter.containsKey(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))) {
-                    int numbers = spellCounter.get(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)));
+                if (spellCounter != null && (spellCounter.containsKey(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))))) {
+                    int numbers = Integer.valueOf(spellCounter.get(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))));
                     if (numbers > 3) {
                         tvNumber.setText("At will");
                     } else {

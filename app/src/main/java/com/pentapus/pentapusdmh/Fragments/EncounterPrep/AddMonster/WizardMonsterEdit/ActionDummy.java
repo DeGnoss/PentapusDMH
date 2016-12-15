@@ -27,6 +27,27 @@ public class ActionDummy {
         this.additional = additional;
     }
 
+    public ActionDummy(String name, String desc, String atkmod, String dmg1, String dmg1tye, String dmg2, String dmg2type, int autoroll, int additional){
+        this.name = name;
+        this.desc = desc;
+        this.atkmod = atkmod;
+        this.dmg1 = dmg1;
+        this.dmg1Type = dmg1tye;
+        this.dmg2 = dmg2;
+        this.dmg2Type = dmg2type;
+        if(autoroll == 1){
+            this.autoroll = true;
+        }else{
+            this.autoroll = false;
+        }
+
+        if(additional == 1){
+            this.additional = true;
+        }else{
+            this.additional = false;
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -59,7 +80,23 @@ public class ActionDummy {
         return autoroll;
     }
 
+    public int getAutoRoll(){
+        if(isAutoroll()){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
     public boolean isAdditional() {
         return additional;
+    }
+
+    public int getAdditional(){
+        if(isAutoroll()){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 }
