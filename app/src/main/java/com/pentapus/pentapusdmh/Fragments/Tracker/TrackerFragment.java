@@ -18,6 +18,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +36,7 @@ import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.DiceHelper;
 import com.pentapus.pentapusdmh.HelperClasses.UriDeserializer;
 import com.pentapus.pentapusdmh.HelperClasses.UriSerializer;
+import com.pentapus.pentapusdmh.HelperClasses.Utils;
 import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
@@ -42,6 +44,8 @@ import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -332,8 +336,79 @@ public class TrackerFragment extends Fragment implements
                     int atk4autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4AUTOROLL));
                     int atk4additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4ADDITIONAL));
 
+                    String atk5name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5NAME));
+                    String atk5desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DESC));
+                    int atk5mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5MOD));
+                    String atk5dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG1ROLL));
+                    String atk5dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG1TYPE));
+                    String atk5dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG2ROLL));
+                    String atk5dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG2TYPE));
+                    int atk5autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5AUTOROLL));
+                    int atk5additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5ADDITIONAL));
+
+                    String lmultiattack = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LMULTIATTACK));
+
+                    String latk1name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1NAME));
+                    String latk1desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DESC));
+                    int latk1mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1MOD));
+                    String latk1dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG1ROLL));
+                    String latk1dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG1TYPE));
+                    String latk1dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG2ROLL));
+                    String latk1dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG2TYPE));
+                    int latk1autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1AUTOROLL));
+                    int latk1additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1ADDITIONAL));
+
+                    String latk2name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2NAME));
+                    String latk2desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DESC));
+                    int latk2mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2MOD));
+                    String latk2dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG1ROLL));
+                    String latk2dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG1TYPE));
+                    String latk2dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG2ROLL));
+                    String latk2dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG2TYPE));
+                    int latk2autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2AUTOROLL));
+                    int latk2additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2ADDITIONAL));
+
+                    String latk3name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3NAME));
+                    String latk3desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DESC));
+                    int latk3mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3MOD));
+                    String latk3dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG1ROLL));
+                    String latk3dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG1TYPE));
+                    String latk3dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG2ROLL));
+                    String latk3dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG2TYPE));
+                    int latk3autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3AUTOROLL));
+                    int latk3additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3ADDITIONAL));
+
+                    String latk4name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4NAME));
+                    String latk4desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DESC));
+                    int latk4mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4MOD));
+                    String latk4dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG1ROLL));
+                    String latk4dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG1TYPE));
+                    String latk4dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG2ROLL));
+                    String latk4dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG2TYPE));
+                    int latk4autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4AUTOROLL));
+                    int latk4additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4ADDITIONAL));
+
+                    String latk5name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5NAME));
+                    String latk5desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DESC));
+                    int latk5mod = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5MOD));
+                    String latk5dmg1roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG1ROLL));
+                    String latk5dmg1type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG1TYPE));
+                    String latk5dmg2roll = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG2ROLL));
+                    String latk5dmg2type = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG2TYPE));
+                    int latk5autoroll = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5AUTOROLL));
+                    int latk5additional = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5ADDITIONAL));
+
+
                     String reaction1name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1NAME));
                     String reaction1desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1DESC));
+                    String reaction2name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION2NAME));
+                    String reaction2desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION2DESC));
+                    String reaction3name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION3NAME));
+                    String reaction3desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION3DESC));
+                    String reaction4name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION4NAME));
+                    String reaction4desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION4DESC));
+                    String reaction5name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION5NAME));
+                    String reaction5desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION5DESC));
 
                     String ability1name = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1NAME));
                     String ability1desc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1DESC));
@@ -379,6 +454,31 @@ public class TrackerFragment extends Fragment implements
                     String dmgIm = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGIM));
                     String dmgVul = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGVUL));
                     String conIm = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_CONIM));
+
+
+                    boolean spellcasting = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SPELLCASTER)) > 0;
+                    String scdescription = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCDESCRIPTION));
+                    String sclevel = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCLEVEL));
+                    String scability = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCABILITY));
+                    String scmod = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCMOD));
+                    String scdc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCDC));
+                    String scclass = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCCLASS));
+                    String[] tempspellsknown = TextUtils.split(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLS)), ";");
+                    ArrayList<String> scspellsknown = new ArrayList<String>(Arrays.asList(tempspellsknown));
+                    int[] scslots = Utils.fromString(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSLOTS)));
+                    String scspellsstring = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLSSTRING));
+
+                    boolean innate = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INNATE)) > 0;
+                    String indescription = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INDESCRIPTION));
+                    //String indescription = null;
+                    String innateability = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INABILITY));
+                    String innatemod = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INMOD));
+                    String innatedc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INDC));
+                    Gson gson = new Gson();
+                    Type innatespellsknownToken = new TypeToken<HashMap<String, String>>(){}.getType();
+                    HashMap<Integer, Integer> innatespellsknown = gson.fromJson(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INSPELLS)), innatespellsknownToken);
+                    boolean innatepsionics = data.getInt(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INPSIONICS)) > 0;
+                    String inspellstring = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_INSPELLSSTRING));
 
 
 
@@ -452,8 +552,79 @@ public class TrackerFragment extends Fragment implements
                     ci.atk4autoroll = atk4autoroll;
                     ci.atk4additional = atk4additional;
 
+                    ci.atk5name = atk5name;
+                    ci.atk5desc = atk5desc;
+                    ci.atk5mod = atk5mod;
+                    ci.atk5dmg1roll = atk5dmg1roll;
+                    ci.atk5dmg1type = atk5dmg1type;
+                    ci.atk5dmg2roll = atk5dmg2roll;
+                    ci.atk5dmg2type = atk5dmg2type;
+                    ci.atk5autoroll = atk5autoroll;
+                    ci.atk5additional = atk5additional;
+
+                    ci.lmultiattack = lmultiattack;
+
+                    ci.latk1name = latk1name;
+                    ci.latk1desc = latk1desc;
+                    ci.latk1mod = latk1mod;
+                    ci.latk1dmg1roll = latk1dmg1roll;
+                    ci.latk1dmg1type = latk1dmg1type;
+                    ci.latk1dmg2roll = latk1dmg2roll;
+                    ci.latk1dmg2type = latk1dmg2type;
+                    ci.latk1autoroll = latk1autoroll;
+                    ci.latk1additional = latk1additional;
+
+                    ci.latk2name = latk2name;
+                    ci.latk2desc = latk2desc;
+                    ci.latk2mod = latk2mod;
+                    ci.latk2dmg1roll = latk2dmg1roll;
+                    ci.latk2dmg1type = latk2dmg1type;
+                    ci.latk2dmg2roll = latk2dmg2roll;
+                    ci.latk2dmg2type = latk2dmg2type;
+                    ci.latk2autoroll = latk2autoroll;
+                    ci.latk2additional = latk2additional;
+
+                    ci.latk3name = latk3name;
+                    ci.latk3desc = latk3desc;
+                    ci.latk3mod = latk3mod;
+                    ci.latk3dmg1roll = latk3dmg1roll;
+                    ci.latk3dmg1type = latk3dmg1type;
+                    ci.latk3dmg2roll = latk3dmg2roll;
+                    ci.latk3dmg2type = latk3dmg2type;
+                    ci.latk3autoroll = latk3autoroll;
+                    ci.latk3additional = latk3additional;
+
+                    ci.latk4name = latk4name;
+                    ci.latk4desc = latk4desc;
+                    ci.latk4mod = latk4mod;
+                    ci.latk4dmg1roll = latk4dmg1roll;
+                    ci.latk4dmg1type = latk4dmg1type;
+                    ci.latk4dmg2roll = latk4dmg2roll;
+                    ci.latk4dmg2type = latk4dmg2type;
+                    ci.latk4autoroll = latk4autoroll;
+                    ci.latk4additional = latk4additional;
+
+                    ci.latk5name = latk5name;
+                    ci.latk5desc = latk5desc;
+                    ci.latk5mod = latk5mod;
+                    ci.latk5dmg1roll = latk5dmg1roll;
+                    ci.latk5dmg1type = latk5dmg1type;
+                    ci.latk5dmg2roll = latk5dmg2roll;
+                    ci.latk5dmg2type = latk5dmg2type;
+                    ci.latk5autoroll = latk5autoroll;
+                    ci.latk5additional = latk5additional;
+
+
                     ci.reaction1name = reaction1name;
                     ci.reaction1desc = reaction1desc;
+                    ci.reaction2name = reaction2name;
+                    ci.reaction2desc = reaction2desc;
+                    ci.reaction3name = reaction3name;
+                    ci.reaction3desc = reaction3desc;
+                    ci.reaction4name = reaction4name;
+                    ci.reaction4desc = reaction4desc;
+                    ci.reaction5name = reaction5name;
+                    ci.reaction5desc = reaction5desc;
 
                     ci.ability1name = ability1name;
                     ci.ability1desc = ability1desc;
@@ -500,7 +671,24 @@ public class TrackerFragment extends Fragment implements
                     ci.dmgVul = dmgVul;
                     ci.conIm = conIm;
 
-
+                    ci.spellcaster = spellcasting;
+                    ci.innate = innate;
+                    ci.inpsionics = innatepsionics;
+                    ci.scdescription = scdescription;
+                    ci.sclevel = sclevel;
+                    ci.scability = scability;
+                    ci.scmod = scmod;
+                    ci.scdc = scdc;
+                    ci.scclass = scclass;
+                    ci.scspellstring = scspellsstring;
+                    ci.indescription = indescription;
+                    ci.inability = innateability;
+                    ci.inmod = innatemod;
+                    ci.indc = innatedc;
+                    ci.inspellstring = inspellstring;
+                    ci.scslots = scslots;
+                    ci.scspells = scspellsknown;
+                    ci.inspells = innatespellsknown;
 
                     chars.addListItem(ci);
                 }

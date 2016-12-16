@@ -417,6 +417,28 @@
                 android:layout_below="@id/tvLanguages"/>
 
             <TextView
+                android:id="@+id/tvInnate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/line5"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvSpellcasting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvInnate"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
                 android:id="@+id/tvAbility1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -426,7 +448,7 @@
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
                 android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/line5" />
+                android:layout_below="@id/tvSpellcasting" />
 
             <TextView
                 android:id="@+id/tvAbility2"
@@ -477,16 +499,91 @@
                 android:layout_below="@id/tvAbility4" />
 
             <TextView
+                android:id="@+id/tvReactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/ivAvatar"
+                android:layout_below="@id/tvAbility5"
+                android:textColor="#FFFFFFFF"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:selectAllOnFocus="true"
+                android:text="Reactions"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <View
+                android:id="@+id/line6"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tvReactions"
+                android:background="#FFFFFF"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
                 android:id="@+id/tvReaction1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_alignStart="@id/ivAvatar"
+                android:textColor="#FFFFFFFF"
+                android:layout_below="@id/line6"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReaction2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvReaction1"
                 android:textColor="#FFFFFFFF"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReaction3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignStart="@id/ivAvatar"
-                android:layout_below="@id/tvAbility5" />
+                android:layout_below="@id/tvReaction2"
+                android:textColor="#FFFFFFFF"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReaction4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvReaction3"
+                android:textColor="#FFFFFFFF"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tvReaction5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/ivAvatar"
+                android:layout_below="@id/tvReaction4"
+                android:textColor="#FFFFFFFF"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
 
 
 <!--

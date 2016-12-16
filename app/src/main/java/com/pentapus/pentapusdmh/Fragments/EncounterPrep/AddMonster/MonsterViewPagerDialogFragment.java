@@ -106,7 +106,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                         ((MyMonsterTableFragment) pagerAdapter.getRegisteredFragment(0)).getMyMonsterRecyclerView().getAdapter().notifyDataSetChanged();
                         ((MonsterManualTableFragment) pagerAdapter.getRegisteredFragment(1)).dismissActionMode();
                         ((MonsterManualTableFragment) pagerAdapter.getRegisteredFragment(1)).resetSearch();
-                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                         fabMonsterVP.setVisibility(View.VISIBLE);
                         break;
@@ -114,7 +114,7 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                         ((MonsterManualTableFragment) pagerAdapter.getRegisteredFragment(1)).getMyMonsterRecyclerView().getAdapter().notifyDataSetChanged();
                         ((MyMonsterTableFragment) pagerAdapter.getRegisteredFragment(0)).dismissActionMode();
                         //((MonsterManualTableFragment) pagerAdapter.getRegisteredFragment(0)).resetSearch();
-                        imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                         fabMonsterVP.setVisibility(View.GONE);
                         break;
@@ -179,8 +179,8 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                             values.put(DataBaseHandler.KEY_ATK1DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG1TYPE)));
                             values.put(DataBaseHandler.KEY_ATK1DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG2ROLL)));
                             values.put(DataBaseHandler.KEY_ATK1DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1DMG2TYPE)));
-                            values.put(DataBaseHandler.KEY_ATK1AUTOROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1AUTOROLL)));
-                            values.put(DataBaseHandler.KEY_ATK1ADDITIONAL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_ATK1AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_ATK1ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK1ADDITIONAL)));
                             values.put(DataBaseHandler.KEY_ATK2NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2NAME)));
                             values.put(DataBaseHandler.KEY_ATK2DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DESC)));
                             values.put(DataBaseHandler.KEY_ATK2MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2MOD)));
@@ -188,8 +188,8 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                             values.put(DataBaseHandler.KEY_ATK2DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG1TYPE)));
                             values.put(DataBaseHandler.KEY_ATK2DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG2ROLL)));
                             values.put(DataBaseHandler.KEY_ATK2DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2DMG2TYPE)));
-                            values.put(DataBaseHandler.KEY_ATK2AUTOROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2AUTOROLL)));
-                            values.put(DataBaseHandler.KEY_ATK2ADDITIONAL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_ATK2AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_ATK2ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK2ADDITIONAL)));
                             values.put(DataBaseHandler.KEY_ATK3NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3NAME)));
                             values.put(DataBaseHandler.KEY_ATK3DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DESC)));
                             values.put(DataBaseHandler.KEY_ATK3MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3MOD)));
@@ -197,8 +197,8 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                             values.put(DataBaseHandler.KEY_ATK3DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG1TYPE)));
                             values.put(DataBaseHandler.KEY_ATK3DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG2ROLL)));
                             values.put(DataBaseHandler.KEY_ATK3DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3DMG2TYPE)));
-                            values.put(DataBaseHandler.KEY_ATK3AUTOROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3AUTOROLL)));
-                            values.put(DataBaseHandler.KEY_ATK3ADDITIONAL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_ATK3AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_ATK3ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK3ADDITIONAL)));
                             values.put(DataBaseHandler.KEY_ATK4NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4NAME)));
                             values.put(DataBaseHandler.KEY_ATK4DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DESC)));
                             values.put(DataBaseHandler.KEY_ATK4MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4MOD)));
@@ -206,10 +206,73 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                             values.put(DataBaseHandler.KEY_ATK4DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG1TYPE)));
                             values.put(DataBaseHandler.KEY_ATK4DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG2ROLL)));
                             values.put(DataBaseHandler.KEY_ATK4DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4DMG2TYPE)));
-                            values.put(DataBaseHandler.KEY_ATK4AUTOROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4AUTOROLL)));
-                            values.put(DataBaseHandler.KEY_ATK4ADDITIONAL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_ATK4AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_ATK4ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK4ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_ATK5NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5NAME)));
+                            values.put(DataBaseHandler.KEY_ATK5DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DESC)));
+                            values.put(DataBaseHandler.KEY_ATK5MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5MOD)));
+                            values.put(DataBaseHandler.KEY_ATK5DMG1ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG1ROLL)));
+                            values.put(DataBaseHandler.KEY_ATK5DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG1TYPE)));
+                            values.put(DataBaseHandler.KEY_ATK5DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG2ROLL)));
+                            values.put(DataBaseHandler.KEY_ATK5DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5DMG2TYPE)));
+                            values.put(DataBaseHandler.KEY_ATK5AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_ATK5ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ATK5ADDITIONAL)));
                             values.put(DataBaseHandler.KEY_REACTION1NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1NAME)));
                             values.put(DataBaseHandler.KEY_REACTION1DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION1DESC)));
+                            values.put(DataBaseHandler.KEY_REACTION2NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION2NAME)));
+                            values.put(DataBaseHandler.KEY_REACTION2DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION2DESC)));
+                            values.put(DataBaseHandler.KEY_REACTION3NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION3NAME)));
+                            values.put(DataBaseHandler.KEY_REACTION3DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION3DESC)));
+                            values.put(DataBaseHandler.KEY_REACTION4NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION4NAME)));
+                            values.put(DataBaseHandler.KEY_REACTION4DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION4DESC)));
+                            values.put(DataBaseHandler.KEY_REACTION5NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION5NAME)));
+                            values.put(DataBaseHandler.KEY_REACTION5DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_REACTION5DESC)));
+                            values.put(DataBaseHandler.KEY_LMULTIATTACK, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LMULTIATTACK)));
+                            values.put(DataBaseHandler.KEY_LATK1NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1NAME)));
+                            values.put(DataBaseHandler.KEY_LATK1DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DESC)));
+                            values.put(DataBaseHandler.KEY_LATK1MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1MOD)));
+                            values.put(DataBaseHandler.KEY_LATK1DMG1ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG1ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK1DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG1TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK1DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG2ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK1DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1DMG2TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK1AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_LATK1ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK1ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_LATK2NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2NAME)));
+                            values.put(DataBaseHandler.KEY_LATK2DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DESC)));
+                            values.put(DataBaseHandler.KEY_LATK2MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2MOD)));
+                            values.put(DataBaseHandler.KEY_LATK2DMG1ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG1ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK2DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG1TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK2DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG2ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK2DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2DMG2TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK2AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_LATK2ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK2ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_LATK3NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3NAME)));
+                            values.put(DataBaseHandler.KEY_LATK3DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DESC)));
+                            values.put(DataBaseHandler.KEY_LATK3MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3MOD)));
+                            values.put(DataBaseHandler.KEY_LATK3DMG1ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG1ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK3DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG1TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK3DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG2ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK3DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3DMG2TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK3AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_LATK3ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK3ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_LATK4NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4NAME)));
+                            values.put(DataBaseHandler.KEY_LATK4DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DESC)));
+                            values.put(DataBaseHandler.KEY_LATK4MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4MOD)));
+                            values.put(DataBaseHandler.KEY_LATK4DMG1ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG1ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK4DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG1TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK4DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG2ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK4DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4DMG2TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK4AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_LATK4ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK4ADDITIONAL)));
+                            values.put(DataBaseHandler.KEY_LATK5NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5NAME)));
+                            values.put(DataBaseHandler.KEY_LATK5DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DESC)));
+                            values.put(DataBaseHandler.KEY_LATK5MOD, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5MOD)));
+                            values.put(DataBaseHandler.KEY_LATK5DMG1ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG1ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK5DMG1TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG1TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK5DMG2ROLL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG2ROLL)));
+                            values.put(DataBaseHandler.KEY_LATK5DMG2TYPE, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5DMG2TYPE)));
+                            values.put(DataBaseHandler.KEY_LATK5AUTOROLL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5AUTOROLL)));
+                            values.put(DataBaseHandler.KEY_LATK5ADDITIONAL, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_LATK5ADDITIONAL)));
                             values.put(DataBaseHandler.KEY_ABILITY1NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1NAME)));
                             values.put(DataBaseHandler.KEY_ABILITY1DESC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY1DESC)));
                             values.put(DataBaseHandler.KEY_ABILITY2NAME, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ABILITY2NAME)));
@@ -251,6 +314,26 @@ public class MonsterViewPagerDialogFragment extends Fragment {
                             values.put(DataBaseHandler.KEY_DMGIM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGIM)));
                             values.put(DataBaseHandler.KEY_DMGVUL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_DMGVUL)));
                             values.put(DataBaseHandler.KEY_CONIM, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_CONIM)));
+
+                            values.put(DataBaseHandler.KEY_SPELLCASTER, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SPELLCASTER)));
+                            values.put(DataBaseHandler.KEY_SCDESCRIPTION, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCDESCRIPTION)));
+                            values.put(DataBaseHandler.KEY_SCLEVEL, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCLEVEL)));
+                            values.put(DataBaseHandler.KEY_SCABILITY, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCABILITY)));
+                            values.put(DataBaseHandler.KEY_SCMOD, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCMOD)));
+                            values.put(DataBaseHandler.KEY_SCDC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCDC)));
+                            values.put(DataBaseHandler.KEY_SCCLASS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCCLASS)));
+                            values.put(DataBaseHandler.KEY_SCSLOTS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSLOTS)));
+                            values.put(DataBaseHandler.KEY_SCSPELLS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLS)));
+                            values.put(DataBaseHandler.KEY_SCSPELLSSTRING, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLSSTRING)));
+                            values.put(DataBaseHandler.KEY_INNATE, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INNATE)));
+                            values.put(DataBaseHandler.KEY_INDESCRIPTION, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INDESCRIPTION)));
+                            values.put(DataBaseHandler.KEY_INABILITY, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INABILITY)));
+                            values.put(DataBaseHandler.KEY_INMOD, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INMOD)));
+                            values.put(DataBaseHandler.KEY_INDC, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INDC)));
+                            values.put(DataBaseHandler.KEY_INPSIONICS, cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INPSIONICS)));
+                            values.put(DataBaseHandler.KEY_INSPELLS, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INSPELLS)));
+                            values.put(DataBaseHandler.KEY_INSPELLSSTRING, cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INSPELLSSTRING)));
+
                             values.put(DataBaseHandler.KEY_BELONGSTO, encounterId);
                             startInsert(1, null, DbContentProvider.CONTENT_URI_ENCOUNTERPREP, values);
                         }
@@ -316,9 +399,9 @@ public class MonsterViewPagerDialogFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if(monstersToBeAdded.size()>0){
+        if (monstersToBeAdded.size() > 0) {
             menu.findItem(R.id.add_selected).setVisible(true);
-        }else{
+        } else {
             menu.findItem(R.id.add_selected).setVisible(false);
         }
         super.onPrepareOptionsMenu(menu);

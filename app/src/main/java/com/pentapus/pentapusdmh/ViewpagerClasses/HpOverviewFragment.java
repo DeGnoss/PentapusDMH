@@ -39,8 +39,9 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
     private View vFrame;
     private ImageButton bDamage, bHealing, bST;
     private ImageView ivIcon;
-    private TextView tvDamage, tvIdentifier, tvName, tvHpCurrent, tvHpMax, tvAc, tvType, tvStr, tvDex, tvCon, tvInt, tvWis, tvCha, tvSpeed, tvSenses, tvLanguages, tvDmgVul, tvDmgRes, tvDmgIm, tvConIm, tvAbility1, tvAbility2, tvAbility3, tvAbility4, tvAbility5, tvReaction1;
-    private View vLine5;
+    private TextView tvDamage, tvIdentifier, tvName, tvHpCurrent, tvHpMax, tvAc, tvType, tvStr, tvDex, tvCon, tvInt, tvWis, tvCha, tvSpeed, tvSenses, tvLanguages, tvDmgVul, tvDmgRes, tvDmgIm, tvConIm,
+            tvAbility1, tvAbility2, tvAbility3, tvAbility4, tvAbility5, tvReaction1, tvReactions, tvReaction2, tvReaction3, tvReaction4, tvReaction5, tvInnate, tvSpellcasting;
+    private View vLine5, vLine6;
     private int hpDiff;
     private int hpCurrent;
     private int hpMax;
@@ -109,8 +110,14 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         tvAbility3 = (TextView) view.findViewById(R.id.tvAbility3);
         tvAbility4 = (TextView) view.findViewById(R.id.tvAbility4);
         tvAbility5 = (TextView) view.findViewById(R.id.tvAbility5);
+        tvReactions = (TextView) view.findViewById(R.id.tvReactions);
         tvReaction1 = (TextView) view.findViewById(R.id.tvReaction1);
+        tvReaction2 = (TextView) view.findViewById(R.id.tvReaction2);
+        tvReaction3 = (TextView) view.findViewById(R.id.tvReaction3);
+        tvReaction4 = (TextView) view.findViewById(R.id.tvReaction4);
+        tvReaction5 = (TextView) view.findViewById(R.id.tvReaction5);
         vLine5 = view.findViewById(R.id.line5);
+        vLine6 = view.findViewById(R.id.line6);
 
 
 
@@ -203,15 +210,46 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
             tvAbility5.setVisibility(View.GONE);
         }
 
-        //Reaction
-        if(selectedCharacter.getReaction1name() != null && !selectedCharacter.getReaction1name().isEmpty()){
-            reaction1 = Html.fromHtml("<b>" + selectedCharacter.getReaction1name() + "</b>" + ". " + selectedCharacter.getReaction1desc());
+
+        Spanned myReaction1 = null, myReaction2 = null, myReaction3 = null, myReaction4 = null, myReaction5 = null;
+        String tempReaction = selectedCharacter.getReaction1name();
+        if(tempReaction != null && !tempReaction.isEmpty()){
+            myReaction1 = Html.fromHtml("<b>" + tempReaction + "</b>" + ". " + selectedCharacter.getReaction1desc());
+            vLine6.setVisibility(View.VISIBLE);
+            tvReactions.setVisibility(View.VISIBLE);
         }else{
-            tvReaction1.setVisibility(View.GONE);
             if(ability1 == null){
                 vLine5.setVisibility(View.GONE);
             }
+            tvReaction1.setVisibility(View.GONE);
+            vLine6.setVisibility(View.GONE);
+            tvReactions.setVisibility(View.GONE);
         }
+        tempReaction = selectedCharacter.getReaction2name();
+        if(tempReaction != null && !tempReaction.isEmpty()){
+            myReaction2 = Html.fromHtml("<b>" + tempReaction + "</b>" + ". " + selectedCharacter.getReaction2desc());
+        }else{
+            tvReaction2.setVisibility(View.GONE);
+        }
+        tempReaction = selectedCharacter.getReaction3name();
+        if(tempReaction != null && !tempReaction.isEmpty()){
+            myReaction3 = Html.fromHtml("<b>" + tempReaction + "</b>" + ". " + selectedCharacter.getReaction3desc());
+        }else{
+            tvReaction3.setVisibility(View.GONE);
+        }
+        tempReaction = selectedCharacter.getReaction4name();
+        if(tempReaction != null && !tempReaction.isEmpty()){
+            myReaction4 = Html.fromHtml("<b>" + tempReaction + "</b>" + ". " + selectedCharacter.getReaction4desc());
+        }else{
+            tvReaction4.setVisibility(View.GONE);
+        }
+        tempReaction = selectedCharacter.getReaction5name();
+        if(tempReaction != null && !tempReaction.isEmpty()){
+            myReaction5 = Html.fromHtml("<b>" + tempReaction + "</b>" + ". " + selectedCharacter.getReaction5desc());
+        }else{
+            tvReaction5.setVisibility(View.GONE);
+        }
+
 
 
         name = selectedCharacter.getName();
@@ -243,7 +281,11 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         tvAbility3.setText(ability3);
         tvAbility4.setText(ability4);
         tvAbility5.setText(ability5);
-        tvReaction1.setText(reaction1);
+        tvReaction1.setText(myReaction1);
+        tvReaction2.setText(myReaction2);
+        tvReaction3.setText(myReaction3);
+        tvReaction4.setText(myReaction4);
+        tvReaction5.setText(myReaction5);
 
 
         if (type == 1) {

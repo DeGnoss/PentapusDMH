@@ -485,7 +485,7 @@ public class DetailMonsterFragment extends Fragment {
                 vLine6.setVisibility(View.VISIBLE);
                 tvReactions.setVisibility(View.VISIBLE);
             }else{
-                tvAction1.setVisibility(View.GONE);
+                tvReaction1.setVisibility(View.GONE);
                 vLine6.setVisibility(View.GONE);
                 tvReactions.setVisibility(View.GONE);
             }
