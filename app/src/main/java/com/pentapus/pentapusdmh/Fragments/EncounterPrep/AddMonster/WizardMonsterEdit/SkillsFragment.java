@@ -34,7 +34,7 @@ public class SkillsFragment extends Fragment implements AbilitiesFragment.OnWisd
     private String dmgVul, dmgRes, dmgIm, conIm;
     private String acrobatics, animalhandling, arcana, athletics, deception, history, insight, intimidation, investigation, medicine, nature, perception, performance, persuasion, religion, sleightofhand, stealth, survival;
     private String stStr, stDex, stCon, stInt, stWis, stCha;
-    private String darkvision, blindsight, tremorsense, truesight, passivePerception, other;
+    private String passivePerception;
     private String senses, languages;
     private boolean isNotCalculatedFromWisdom;
     private static final int MSG_SHOW_DIALOG = 1000, MSG_SKILL_DIALOG = 1001, MSG_DMGVUL_DIALOG = 1002, MSG_DMGRES_DIALOG = 1003, MSG_DMGIM_DIALOG = 1004, MSG_CONIM_DIALOG = 1005, MSG_SAVINGTHROW_DIALOG = 1006, MSG_SENSES_DIALOG = 1007, MSG_LANGUAGES_DIALOG = 1008;
@@ -310,6 +310,31 @@ public class SkillsFragment extends Fragment implements AbilitiesFragment.OnWisd
             }
         });
 
+        tvLanguages = ((TextView) rootView.findViewById(R.id.tvLanguages));
+        if (languages != null && !languages.isEmpty()) {
+            tvLanguages.setText(languages);
+        }
+        tvLanguages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment newFragment = AddLanguagesDialogFragment.newInstance(languages);
+                newFragment.setTargetFragment(fragment, MSG_LANGUAGES_DIALOG);
+                newFragment.setTargetFragment(fragment, MSG_LANGUAGES_DIALOG);
+                newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDLANGUAGES_DIALOG");
+            }
+        });
+
+        labelLanguages = ((TextView) rootView.findViewById(R.id.labelLanguages));
+        labelLanguages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment newFragment = AddLanguagesDialogFragment.newInstance(languages);
+                newFragment.setTargetFragment(fragment, MSG_LANGUAGES_DIALOG);
+                newFragment.setTargetFragment(fragment, MSG_LANGUAGES_DIALOG);
+                newFragment.show(getActivity().getSupportFragmentManager(), "F_ADDLANGUAGES_DIALOG");
+            }
+        });
+
         return rootView;
     }
 
@@ -524,6 +549,10 @@ public class SkillsFragment extends Fragment implements AbilitiesFragment.OnWisd
                 tvSenses.setText(senses);
                 mPage.getData().putBoolean(SkillsPage.ISCALCULATEDFROMWISDOM_DATA_KEY, isNotCalculatedFromWisdom);
                 mPage.getData().putString(SkillsPage.SENSES_DATA_KEY, senses);
+            case MSG_LANGUAGES_DIALOG:
+                languages = results.getString("languages");
+                tvLanguages.setText(languages);
+                mPage.getData().putString(SkillsPage.LANGUAGES_DATA_KEY, languages);
             default:
                 break;
         }

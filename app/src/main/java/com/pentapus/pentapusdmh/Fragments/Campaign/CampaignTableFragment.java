@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -49,7 +50,7 @@ public class CampaignTableFragment extends Fragment implements
     private ActionMode mActionMode;
 
 
-    // FloatingActionButton fab;
+    private FloatingActionButton fab;
 
     public CampaignTableFragment() {
         // Required empty public constructor
@@ -78,7 +79,13 @@ public class CampaignTableFragment extends Fragment implements
         final View tableView = inflater.inflate(R.layout.fragment_campaign_table, container, false);
         //displayListView(tableView);
         // Inflate the layout for this fragment
-
+        fab = (FloatingActionButton) tableView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
         mCampaignRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewCampaign);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -306,8 +313,8 @@ public class CampaignTableFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.campaignsFragmentTitle);
-        ((MainActivity) getActivity()).setFabVisibility(true);
-        ((MainActivity)getActivity()).setFabIcon(true);
+        //((MainActivity) getActivity()).setFabVisibility(true);
+        //((MainActivity)getActivity()).setFabIcon(true);
         ((MainActivity) getActivity()).enableNavigationDrawer();
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
@@ -388,7 +395,8 @@ public class CampaignTableFragment extends Fragment implements
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu_campaign, menu);
-                ((MainActivity) getActivity()).setFabVisibility(false);
+                //((MainActivity) getActivity()).setFabVisibility(false);
+                fab.setVisibility(View.GONE);
                 return true;
             }
 
@@ -440,7 +448,8 @@ public class CampaignTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 CampaignAdapter.setSelectedPos(-1);
                 mCampaignRecyclerView.getAdapter().notifyItemChanged(position);
-                ((MainActivity) getActivity()).setFabVisibility(true);
+                //((MainActivity) getActivity()).setFabVisibility(true);
+                fab.setVisibility(View.VISIBLE);
                 mActionMode = null;
             }
         });

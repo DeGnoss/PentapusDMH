@@ -174,7 +174,7 @@ public class ImageViewPagerDialogFragment extends Fragment {
 
     @Override
     public void onResume(){
-        ((MainActivity)getActivity()).setFabVisibility(false);
+        //((MainActivity)getActivity()).setFabVisibility(false);
         super.onResume();
     }
 

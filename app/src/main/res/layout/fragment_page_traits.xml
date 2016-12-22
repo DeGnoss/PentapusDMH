@@ -16,44 +16,16 @@
 
             <TextView style="@style/WizardPageTitle" />
 
-            <TextView
-                android:id="@+id/labelSpellcasting"
-                style="@style/WizardFormLabel"
-                android:text="Spellcasting" />
 
 
-            <TextView
-                android:id="@+id/tvSpellcasting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="No (click to change)"
-                android:paddingEnd="12dp"
-                android:paddingStart="12dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-            <TextView
-                android:id="@+id/tvSpellsKnown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:hint="None (click to add)"
-                android:paddingEnd="12dp"
-                android:paddingStart="12dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:visibility="gone" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:id="@+id/labelInnateSpellCasting"
                 style="@style/WizardFormLabel"
-                android:text="Innate Spellcasting" />
+                android:text="Innate Spellcasting"
+                android:visibility="gone"
+                />
 
 
             <TextView
@@ -64,7 +36,9 @@
                 android:hint="No (click to change)"
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:visibility="gone"
+                />
 
 
             <TextView
@@ -79,11 +53,53 @@
                 android:visibility="gone" />
 
             <View
+                android:id="@+id/lineInnate"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/labelSpellcasting"
+                style="@style/WizardFormLabel"
+                android:text="Spellcasting"
+                android:visibility="gone"
+                />
+
+
+            <TextView
+                android:id="@+id/tvSpellcasting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="No (click to change)"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tvSpellsKnown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="None (click to add)"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/lineSpellcasting"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@android:color/darker_gray"
+                android:visibility="gone"/>
 
             <ListView
                 android:id="@+id/list"

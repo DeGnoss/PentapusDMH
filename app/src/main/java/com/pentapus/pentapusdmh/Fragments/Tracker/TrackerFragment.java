@@ -42,6 +42,7 @@ import com.pentapus.pentapusdmh.R;
 import com.pentapus.pentapusdmh.HelperClasses.SharedPrefsHelper;
 import com.pentapus.pentapusdmh.ViewpagerClasses.ViewPagerDialogFragment;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -227,7 +228,7 @@ public class TrackerFragment extends Fragment implements
     public void onResume(){
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadEncounterName(getContext()));
-        ((MainActivity)getActivity()).setFabVisibility(false);
+        //((MainActivity)getActivity()).setFabVisibility(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
         getActivity().invalidateOptionsMenu();
         String trackerList = SharedPrefsHelper.loadTrackerList(getContext());
@@ -463,8 +464,14 @@ public class TrackerFragment extends Fragment implements
                     String scmod = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCMOD));
                     String scdc = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCDC));
                     String scclass = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCCLASS));
-                    String[] tempspellsknown = TextUtils.split(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLS)), ";");
-                    ArrayList<String> scspellsknown = new ArrayList<String>(Arrays.asList(tempspellsknown));
+                    String[] tempspellsknown;
+                    ArrayList<String> scspellsknown = new ArrayList<>();
+                    if(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLS)) != null){
+                        tempspellsknown = TextUtils.split(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLS)), ";");
+                        scspellsknown = new ArrayList<String>(Arrays.asList(tempspellsknown));
+                    }else{
+                        tempspellsknown = null;
+                    }
                     int[] scslots = Utils.fromString(data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSLOTS)));
                     String scspellsstring = data.getString(data.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLSSTRING));
 

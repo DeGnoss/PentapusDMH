@@ -1,7 +1,10 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -14,9 +17,12 @@ import android.support.v4.content.Loader;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -60,6 +66,8 @@ public class TraitsFragment extends Fragment implements
     private boolean isInnate = false;
     private int[] slots = new int[9];
     String monstername;
+    Dialog floatingDialog;
+    View lineInnate, lineSpellcasting;
 
 
     public static TraitsFragment create(String key) {
@@ -93,6 +101,7 @@ public class TraitsFragment extends Fragment implements
 
         labelSpellcasting = (TextView) rootView.findViewById(R.id.labelSpellcasting);
         tvSpellcasting = (TextView) rootView.findViewById(R.id.tvSpellcasting);
+        lineSpellcasting = (View) rootView.findViewById(R.id.lineSpellcasting);
         tvSpellsKnown = (TextView) rootView.findViewById(R.id.tvSpellsKnown);
         tvSpellsKnown.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,12 +114,17 @@ public class TraitsFragment extends Fragment implements
         if (mPage.getData().getString(TraitsPage.SCDESCRIPTION_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.SCDESCRIPTION_DATA_KEY).isEmpty()) {
             scDescription = mPage.getData().getString(TraitsPage.SCDESCRIPTION_DATA_KEY);
             tvSpellcasting.setText(scDescription);
+            lineSpellcasting.setVisibility(View.VISIBLE);
+            labelSpellcasting.setVisibility(View.VISIBLE);
+            tvSpellcasting.setVisibility(View.VISIBLE);
             tvSpellsKnown.setVisibility(View.VISIBLE);
         }
         if (mPage.getData().getStringArrayList(TraitsPage.SCSPELLSKNOWN_DATA_KEY) != null) {
             selectionList = mPage.getData().getStringArrayList(TraitsPage.SCSPELLSKNOWN_DATA_KEY);
             slots = mPage.getData().getIntArray(TraitsPage.SCSLOTS_DATA_KEY);
-            tvSpellsKnown.setText(Utils.trimTrailingWhitespace(Html.fromHtml(mPage.getData().getString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY))));
+            if(mPage.getData().getString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY) != null){
+                tvSpellsKnown.setText(Utils.trimTrailingWhitespace(Html.fromHtml(mPage.getData().getString(TraitsPage.SCSPELLSKNOWNSTRING_DATA_KEY))));
+            }
             isInnate = false;
         }
 
@@ -157,7 +171,8 @@ public class TraitsFragment extends Fragment implements
         fabTraits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onFabClick(0, null, null, listItems.size());
+                showFloatingMenu();
+                //onFabClick(0, null, null, listItems.size());
             }
         });
         if (listItems.size() >= 5) {
@@ -169,6 +184,7 @@ public class TraitsFragment extends Fragment implements
         labelInnateSpellcasting = (TextView) rootView.findViewById(R.id.labelInnateSpellCasting);
         tvInnateSpellcasting = (TextView) rootView.findViewById(R.id.tvInnateSpellcasting);
         tvInnateSpellsKnown = (TextView) rootView.findViewById(R.id.tvInnateSpellsKnown);
+        lineInnate = (View) rootView.findViewById(R.id.lineInnate);
         tvInnateSpellsKnown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,11 +202,16 @@ public class TraitsFragment extends Fragment implements
         if (mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY) != null && !mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY).isEmpty()) {
             innateDescription = mPage.getData().getString(TraitsPage.INNATEDESCRIPTION_DATA_KEY);
             tvInnateSpellcasting.setText(innateDescription);
+            lineInnate.setVisibility(View.VISIBLE);
+            labelInnateSpellcasting.setVisibility(View.VISIBLE);
+            tvInnateSpellcasting.setVisibility(View.VISIBLE);
             tvInnateSpellsKnown.setVisibility(View.VISIBLE);
         }
         if (mPage.getData().getSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY) != null) {
             innateSelectionList = (HashMap<String, String>) mPage.getData().getSerializable(TraitsPage.INNATESPELLSKNOWN_DATA_KEY);
-            tvInnateSpellsKnown.setText(Utils.trimTrailingWhitespace(Html.fromHtml(mPage.getData().getString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY))));
+            if(mPage.getData().getString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY) != null) {
+                tvInnateSpellsKnown.setText(Utils.trimTrailingWhitespace(Html.fromHtml(mPage.getData().getString(TraitsPage.INNATESPELLSKNOWNSTRING_DATA_KEY))));
+            }
         }
 
         labelInnateSpellcasting.setOnClickListener(new View.OnClickListener() {
@@ -426,6 +447,9 @@ public class TraitsFragment extends Fragment implements
                             getLoaderManager().restartLoader(0, spells, this);
                         }
                         tvSpellcasting.setText(scdescription);
+                        lineSpellcasting.setVisibility(View.VISIBLE);
+                        tvSpellcasting.setVisibility(View.VISIBLE);
+                        labelSpellcasting.setVisibility(View.VISIBLE);
                         tvSpellsKnown.setVisibility(View.VISIBLE);
                         break;
                     case MSG_INNATESPELLCASTING_DIALOG:
@@ -467,6 +491,9 @@ public class TraitsFragment extends Fragment implements
                             labelInnateSpellcasting.setText("Innate Spellcasting");
                         }
                         tvInnateSpellcasting.setText(scdescription);
+                        lineInnate.setVisibility(View.VISIBLE);
+                        labelInnateSpellcasting.setVisibility(View.VISIBLE);
+                        tvInnateSpellcasting.setVisibility(View.VISIBLE);
                         tvInnateSpellsKnown.setVisibility(View.VISIBLE);
 
                         break;
@@ -511,6 +538,9 @@ public class TraitsFragment extends Fragment implements
                         mPage.getData().remove(TraitsPage.SCDESCRIPTION_DATA_KEY);
                         tvSpellcasting.setText("");
                         tvSpellsKnown.setVisibility(View.GONE);
+                        lineSpellcasting.setVisibility(View.GONE);
+                        labelSpellcasting.setVisibility(View.GONE);
+                        tvSpellcasting.setVisibility(View.GONE);
                         break;
                     case MSG_INNATESPELLCASTING_DIALOG:
                         mPage.getData().putBoolean(TraitsPage.INNATE_DATA_KEY, false);
@@ -521,6 +551,9 @@ public class TraitsFragment extends Fragment implements
                         mPage.getData().remove(TraitsPage.INNATEDESCRIPTION_DATA_KEY);
                         tvInnateSpellcasting.setText("");
                         tvInnateSpellsKnown.setVisibility(View.GONE);
+                        lineInnate.setVisibility(View.GONE);
+                        labelInnateSpellcasting.setVisibility(View.GONE);
+                        tvInnateSpellcasting.setVisibility(View.GONE);
                         break;
                     default:
                         break;
@@ -1132,5 +1165,75 @@ public class TraitsFragment extends Fragment implements
             scdescription = scdescription + " It can innately cast the following spells, requiring no material components:";
             mPage.getData().putString(TraitsPage.INNATEDESCRIPTION_DATA_KEY, scdescription);
         }
+    }
+
+
+    //@OnClick(R.id.fabEncounter)
+    public void showFloatingMenu() {
+
+        floatingDialog = new Dialog(getContext());
+        // it remove the dialog title
+        floatingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // set the laytout in the dialog
+        floatingDialog.setContentView(R.layout.floating_menu_monster_viewpager_traits_page);
+        // set the background partial transparent
+        ColorDrawable c = new ColorDrawable(Color.BLACK);
+        c.setAlpha(180);
+        floatingDialog.getWindow().setBackgroundDrawable(c);
+        Window window = floatingDialog.getWindow();
+        WindowManager.LayoutParams param = window.getAttributes();
+        // set the layout at right bottom
+        param.gravity = Gravity.BOTTOM | Gravity.END;
+        param.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // it dismiss the dialog when click outside the dialog frame
+        floatingDialog.setCanceledOnTouchOutside(true);
+
+
+        View closeButton = (View) floatingDialog.findViewById(R.id.loc_item_detail_floatmenu_close);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // dismiss the dialog
+                floatingDialog.dismiss();
+            }
+        });
+
+
+        View innateButton = (View) floatingDialog.findViewById(R.id.loc_item_detail_floatmenu_btn_innate);
+        innateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = InnateSpellcastingDialog.newInstance(mPage.getData().getString(TraitsPage.INNATEABILITY_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEMOD_DATA_KEY), mPage.getData().getString(TraitsPage.INNATEDC_DATA_KEY), mPage.getData().getBoolean(TraitsPage.INNATEPSIONICS_DATA_KEY));
+                newFragment.setTargetFragment(targetFragment, MSG_INNATESPELLCASTING_DIALOG);
+                newFragment.setTargetFragment(targetFragment, MSG_INNATESPELLCASTING_DIALOG);
+                newFragment.show(getActivity().getSupportFragmentManager(), "F_INNATESPELLCASTING_DIALOG");
+                floatingDialog.dismiss();
+            }
+        });
+
+
+        View spellcastingButton = (View) floatingDialog.findViewById(R.id.loc_item_detail_floatmenu_btn_spellcasting);
+        spellcastingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = SpellcastingDialog.newInstance(mPage.getData().getString(TraitsPage.SCABILITY_DATA_KEY), mPage.getData().getString(TraitsPage.SClEVEL_DATA_KEY), mPage.getData().getString(TraitsPage.SCMOD_DATA_KEY), mPage.getData().getString(TraitsPage.SCDC_DATA_KEY), mPage.getData().getString(TraitsPage.SCCLASS_DATA_KEY), mPage.getData().getIntArray(TraitsPage.SCSLOTS_DATA_KEY));
+                newFragment.setTargetFragment(targetFragment, MSG_SPELLCASTING_DIALOG);
+                newFragment.setTargetFragment(targetFragment, MSG_SPELLCASTING_DIALOG);
+                newFragment.show(getActivity().getSupportFragmentManager(), "F_SPELLCASTING_DIALOG");
+                floatingDialog.dismiss();
+            }
+        });
+
+        View standardButton = (View) floatingDialog.findViewById(R.id.loc_item_detail_floatmenu_btn_standard);
+        standardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick(0, null, null, listItems.size());
+                floatingDialog.dismiss();
+            }
+        });
+
+        // it show the dialog box
+        floatingDialog.show();
     }
 }

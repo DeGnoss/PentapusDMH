@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +32,9 @@ public class EncounterEditFragment extends Fragment {
     private boolean modeUpdate;
     private int encounterId;
     private int sessionId;
+
+    private FloatingActionButton fab;
+
 
     Button addchar_btn;
     EditText name_tf, info_tf;
@@ -78,6 +82,13 @@ public class EncounterEditFragment extends Fragment {
         final View charEditView = inflater.inflate(R.layout.fragment_encounter_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
+        fab = (FloatingActionButton) charEditView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
 
         //check wheter entry gets updated or added
         if (modeUpdate) {
@@ -152,7 +163,7 @@ public class EncounterEditFragment extends Fragment {
     public void onResume(){
         super.onResume();
         //((MainActivity)getActivity()).setFabVisibility(false);
-        ((MainActivity)getActivity()).setFabIcon(false);
+        //((MainActivity)getActivity()).setFabIcon(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 }

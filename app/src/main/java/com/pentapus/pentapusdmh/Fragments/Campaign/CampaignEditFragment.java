@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +33,7 @@ public class CampaignEditFragment extends Fragment {
     private boolean modeUpdate;
     private int campaignId;
 
+    private FloatingActionButton fab;
     Button addchar_btn;
     EditText name_tf, info_tf;
 
@@ -72,6 +74,13 @@ public class CampaignEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View charEditView = inflater.inflate(R.layout.fragment_campaign_edit, container, false);
+        fab = (FloatingActionButton) charEditView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
 
@@ -151,7 +160,7 @@ public class CampaignEditFragment extends Fragment {
     public void onResume(){
         super.onResume();
         //((MainActivity)getActivity()).setFabVisibility(false);
-        ((MainActivity)getActivity()).setFabIcon(false);
+        //((MainActivity)getActivity()).setFabIcon(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 }

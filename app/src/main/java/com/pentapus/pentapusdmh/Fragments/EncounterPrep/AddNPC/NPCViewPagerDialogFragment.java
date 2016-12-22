@@ -201,7 +201,7 @@ public class NPCViewPagerDialogFragment extends Fragment {
     public void onResume() {
         super.onResume();
         npcsToBeAdded.clear();
-        ((MainActivity) getActivity()).setFabVisibility(false);
+        //((MainActivity) getActivity()).setFabVisibility(false);
         if (navMode) {
             ((MainActivity) getActivity()).enableNavigationDrawer();
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Friends");

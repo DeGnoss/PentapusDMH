@@ -6,184 +6,191 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
 
             <LinearLayout
+                android:id="@+id/llspeed1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/llspeed1"
                 android:layout_alignParentTop="true"
-                android:weightSum="10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/l1"
                     style="@style/WizardFormSkillLabel"
-                    android:layout_weight="6"
                     android:layout_width="0dp"
                     android:layout_marginTop="0dp"
+                    android:layout_weight="6"
                     android:text="Darkvision" />
 
                 <EditText
                     android:id="@+id/tvDarkvision"
-                    android:nextFocusDown="@+id/tvAC2"
-                    android:nextFocusRight="@+id/tvAC2"
-                    android:imeOptions="actionNext"
+                    style="@style/FragmentInfoACType"
                     android:layout_weight="3"
                     android:hint="e.g. 60"
-                    style="@style/FragmentInfoACType" />
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/tvAC2"
+                    android:nextFocusRight="@+id/tvAC2" />
 
                 <TextView
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp"
                     android:text="ft." />
 
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llspeed2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/llspeed2"
                 android:layout_below="@+id/llspeed1"
-                android:weightSum="10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/l2"
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
                     android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="6"
                     android:text="Blindsight" />
 
                 <EditText
                     android:id="@+id/tvBlindsight"
-                    android:nextFocusDown="@+id/tvAC2"
-                    android:nextFocusRight="@+id/tvAC2"
-                    android:imeOptions="actionNext"
+                    style="@style/FragmentInfoACType"
                     android:layout_weight="3"
                     android:hint="e.g. 60"
-                    style="@style/FragmentInfoACType" />
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/tvAC2"
+                    android:nextFocusRight="@+id/tvAC2" />
 
                 <TextView
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp"
                     android:text="ft." />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llspeed3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/llspeed3"
                 android:layout_below="@+id/llspeed2"
-                android:weightSum="10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/l3"
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
                     android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="6"
                     android:text="Tremorsense" />
 
                 <EditText
                     android:id="@+id/tvTremorsense"
-                    android:nextFocusDown="@+id/tvAC2"
-                    android:nextFocusRight="@+id/tvAC2"
-                    android:imeOptions="actionNext"
+                    style="@style/FragmentInfoACType"
                     android:layout_weight="3"
                     android:hint="e.g. 60"
-                    style="@style/FragmentInfoACType" />
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/tvAC2"
+                    android:nextFocusRight="@+id/tvAC2" />
 
                 <TextView
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp"
                     android:text="ft." />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llspeed4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/llspeed4"
                 android:layout_below="@+id/llspeed3"
-                android:weightSum="10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/l4"
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
                     android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="6"
                     android:text="Truesight" />
 
-                <EditText
+                <com.pentapus.pentapusdmh.HelperClasses.MyEditText
                     android:id="@+id/tvTruesight"
-                    android:nextFocusDown="@+id/tvAC2"
-                    android:nextFocusRight="@+id/tvAC2"
-                    android:imeOptions="actionNext"
+                    style="@style/FragmentInfoACType"
                     android:layout_weight="3"
                     android:hint="e.g. 60"
-                    style="@style/FragmentInfoACType" />
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/tvAC2"
+                    android:nextFocusRight="@+id/tvAC2" />
 
                 <TextView
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp"
                     android:text="ft." />
             </LinearLayout>
 
 
             <LinearLayout
+                android:id="@+id/llspeed5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/llspeed5"
                 android:layout_below="@+id/llspeed4"
-                android:weightSum="10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="10">
 
                 <TextView
                     android:id="@+id/l5"
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
-                    android:paddingBottom="10dp"
                     android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="6"
+                    android:paddingBottom="10dp"
                     android:text="passive Perception" />
 
                 <EditText
                     android:id="@+id/tvPassivePerception"
-                    android:nextFocusDown="@+id/tvAC2"
-                    android:nextFocusRight="@+id/tvAC2"
-                    android:imeOptions="actionNext"
+                    style="@style/FragmentInfoACType"
                     android:layout_weight="3"
                     android:hint="e.g. 12"
-                    style="@style/FragmentInfoACType" />
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/tvAC2"
+                    android:nextFocusRight="@+id/tvAC2" />
 
                 <TextView
                     style="@style/WizardFormSkillLabel"
-                    android:layout_marginTop="0dp"
                     android:layout_width="0dp"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp"
                     android:text="" />
             </LinearLayout>
 
@@ -191,17 +198,17 @@
                 android:id="@+id/ctvPassivePerception"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/llspeed5"
+                android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                android:gravity="center_vertical"
                 android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:text="Calculate from Wisdom"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/text_light"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:text="Calculate from Wisdom"
-                android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-                android:layout_below="@+id/llspeed5"
-                android:layout_alignParentStart="true" />
+                android:textStyle="bold" />
 
 
             <TextView
@@ -213,6 +220,7 @@
             <EditText
                 android:id="@+id/tvOther"
                 style="@style/FragmentSensesOther"
+                android:imeOptions="actionDone"
                 android:layout_below="@+id/l6" />
 
         </RelativeLayout>

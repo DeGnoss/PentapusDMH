@@ -34,15 +34,15 @@
         android:layout_above="@+id/loc_item_detail_floatmenu_close">
 
         <RelativeLayout
-            android:id="@+id/loc_item_detail_floatmenu_npc"
+            android:id="@+id/loc_item_detail_floatmenu_innate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/loc_item_detail_floatmenu_monster"
+            android:layout_above="@+id/loc_item_detail_floatmenu_spellcasting"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp">
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/loc_item_detail_floatmenu_btn_npc"
+                android:id="@+id/loc_item_detail_floatmenu_btn_innate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -55,15 +55,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/loc_item_detail_floatmenu_btn_npc"
+                android:layout_toStartOf="@+id/loc_item_detail_floatmenu_btn_innate"
                 android:gravity="end|center_vertical"
-                android:text="Add Friend"
+                android:text="Innate Spellcasting"
                 android:textColor="#fff" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/loc_item_detail_floatmenu_monster"
+            android:id="@+id/loc_item_detail_floatmenu_spellcasting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/loc_item_detail_floatmenu_standard"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/loc_item_detail_floatmenu_btn_spellcasting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_person_add"
+                app:useCompatPadding="true"
+                app:fabSize="mini" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/loc_item_detail_floatmenu_btn_spellcasting"
+                android:gravity="end"
+                android:text="Spellcasting"
+                android:textColor="#fff" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/loc_item_detail_floatmenu_standard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -71,7 +102,7 @@
             android:layout_marginEnd="16dp">
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/loc_item_detail_floatmenu_btn_monster"
+                android:id="@+id/loc_item_detail_floatmenu_btn_standard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -82,13 +113,12 @@
 
 
             <TextView
-                android:id="@+id/demotext2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/loc_item_detail_floatmenu_btn_monster"
+                android:layout_toStartOf="@+id/loc_item_detail_floatmenu_btn_standard"
                 android:gravity="end"
-                android:text="Add Fiend"
+                android:text="Standard Trait"
                 android:textColor="#fff" />
 
 

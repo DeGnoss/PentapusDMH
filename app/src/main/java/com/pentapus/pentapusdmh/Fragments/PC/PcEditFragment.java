@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -62,6 +63,7 @@ public class PcEditFragment extends Fragment {
 
     private Uri myFile;
 
+    private FloatingActionButton fab;
     Button addchar_btn;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf;
     ImageButton bChooseImage;
@@ -116,6 +118,13 @@ public class PcEditFragment extends Fragment {
         maxHp_tf = (EditText) charEditView.findViewById(R.id.etHpMax);
         ac_tf = (EditText) charEditView.findViewById(R.id.etAc);
         bChooseImage = (ImageButton) charEditView.findViewById(R.id.bChooseImage);
+        fab = (FloatingActionButton) charEditView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
 
         name_tf.setText("New player character");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("New player character");
@@ -248,8 +257,8 @@ public class PcEditFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(true);
-        ((MainActivity)getActivity()).setFabIcon(false);
+        //((MainActivity)getActivity()).setFabVisibility(true);
+        //((MainActivity)getActivity()).setFabIcon(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 

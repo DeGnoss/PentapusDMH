@@ -272,8 +272,8 @@ public class MyMonsterEditFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(true);
-        ((MainActivity)getActivity()).setFabIcon(false);
+        //((MainActivity)getActivity()).setFabVisibility(true);
+        //((MainActivity)getActivity()).setFabIcon(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -29,6 +31,8 @@ public class SessionEditFragment extends Fragment {
 
     private boolean modeUpdate;
     private int sessionId;
+    FloatingActionButton fab;
+
 
     Button addchar_btn;
     EditText name_tf, info_tf;
@@ -75,7 +79,13 @@ public class SessionEditFragment extends Fragment {
         final View charEditView = inflater.inflate(R.layout.fragment_session_edit, container, false);
         name_tf = (EditText) charEditView.findViewById(R.id.etName);
         info_tf = (EditText) charEditView.findViewById(R.id.etInfo);
-
+        fab = (FloatingActionButton) charEditView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
 
         if (modeUpdate) {
             loadSessionInfo(name_tf, info_tf, sessionId);
@@ -187,6 +197,6 @@ public class SessionEditFragment extends Fragment {
         super.onResume();
         //((MainActivity)getActivity()).setFabVisibility(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
-        ((MainActivity)getActivity()).setFabIcon(false);
+        //((MainActivity)getActivity()).setFabIcon(false);
     }
 }

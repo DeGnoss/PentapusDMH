@@ -31,6 +31,7 @@
                 <EditText
                     android:id="@+id/tvMonsterName"
                     style="@style/FragmentInfoName"
+                    android:imeOptions="actionNext"
                     android:layout_alignBottom="@+id/bChooseImage"
                     android:layout_toEndOf="@+id/bChooseImage"/>
 
@@ -51,6 +52,7 @@
             <com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView
                 android:id="@+id/tvMonsterType"
                 style="@style/FragmentInfoType"
+                android:imeOptions="actionNext"
                 android:completionThreshold="1"
                 />
 
@@ -61,6 +63,7 @@
             <com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView
                 android:id="@+id/tvMonsterAlignment"
                 style="@style/FragmentInfoAlignment"
+                android:imeOptions="actionDone"
                 android:completionThreshold="1"
                 />
 

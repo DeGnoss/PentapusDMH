@@ -7,46 +7,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <TextView
-                android:id="@+id/l1"
-                style="@style/WizardFormSkillLabel"
-                android:layout_alignParentTop="true"
-                android:text="Hit Points" />
-
-            <LinearLayout
-                android:id="@+id/llAC1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/l1"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <EditText
-                    android:id="@+id/tvHP"
-                    style="@style/FragmentInfoAC"
-                    android:layout_weight="1"
-                    android:hint="e.g. 64"
-                    android:imeOptions="actionNext"
-                    android:nextFocusDown="@+id/tvAC1Type" />
-
-                <Button
-                    android:id="@+id/bHP"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:text="Calculate"
-                    android:layout_weight="1" />
-
-
-            </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
 
             <TextView
                 android:id="@+id/l3"
                 style="@style/WizardFormSkillLabel"
-                android:layout_below="@+id/llAC1"
+                android:layout_alignParentTop="true"
                 android:text="Hit Dice" />
 
 
@@ -73,6 +41,49 @@
 
 
             </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/l1"
+                style="@style/WizardFormSkillLabel"
+                android:layout_below="@+id/llAC2"
+                android:text="Hit Points" />
+
+            <LinearLayout
+                android:id="@+id/llAC1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <EditText
+                    android:id="@+id/tvHP"
+                    style="@style/FragmentInfoAC"
+                    android:layout_weight="1"
+                    android:hint="e.g. 64"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/tvAC1Type" />
+
+                <CheckBox
+                    android:id="@+id/ctvHP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                    android:gravity="center_vertical"
+                    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                    android:paddingEnd="12dp"
+                    android:paddingStart="12dp"
+                    android:text="Calculate automatically"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/text_light"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+
+
 
         </RelativeLayout>
     </ScrollView>

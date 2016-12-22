@@ -401,7 +401,9 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
         values.put(DataBaseHandler.KEY_SCMOD, scmod);
         values.put(DataBaseHandler.KEY_SCDC, scdc);
         values.put(DataBaseHandler.KEY_SCCLASS, scclass);
-        values.put(DataBaseHandler.KEY_SCSLOTS, Arrays.toString(scslots));
+        if(scslots != null){
+            values.put(DataBaseHandler.KEY_SCSLOTS, Arrays.toString(scslots));
+        }
         if(scspells != null){
             values.put(DataBaseHandler.KEY_SCSPELLS, TextUtils.join(";", scspells));
         }else{
@@ -744,8 +746,8 @@ public class MonsterEditWizardFragment extends WizardFragment implements BasicIn
             String scdc = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCDC));
             String scclass = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCCLASS));
             String[] tempspellsknown = TextUtils.split(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLS)), ";");
-            ArrayList<String> scspellsknown = new ArrayList<String>(Arrays.asList(tempspellsknown));
             int[] scslots = Utils.fromString(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSLOTS)));
+            ArrayList<String> scspellsknown = new ArrayList<String>(Arrays.asList(tempspellsknown));
             String scspellsstring = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_SCSPELLSSTRING));
 
             boolean innate = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INNATE)) > 0;

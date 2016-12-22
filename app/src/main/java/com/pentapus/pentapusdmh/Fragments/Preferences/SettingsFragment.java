@@ -51,7 +51,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         addPreferencesFromResource(R.xml.app_preferences);
 
-        ((MainActivity) getActivity()).setFabVisibility(false);
+        //((MainActivity) getActivity()).setFabVisibility(false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Settings");
 
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {

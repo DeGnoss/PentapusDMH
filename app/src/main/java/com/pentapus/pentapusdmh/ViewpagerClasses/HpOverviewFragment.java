@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerFragment;
 import com.pentapus.pentapusdmh.Fragments.Tracker.TrackerInfoCard;
 import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
+import com.pentapus.pentapusdmh.HelperClasses.Utils;
 import com.pentapus.pentapusdmh.NumberPicker.NumberPickerBuilder;
 import com.pentapus.pentapusdmh.NumberPicker.NumberPickerDialogFragment;
 import com.pentapus.pentapusdmh.R;
@@ -105,6 +107,8 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         tvDmgRes = (TextView) view.findViewById(R.id.tvDmgRes);
         tvDmgIm = (TextView) view.findViewById(R.id.tvDmgIm);
         tvConIm = (TextView) view.findViewById(R.id.tvConIm);
+        tvInnate = (TextView) view.findViewById(R.id.tvInnate);
+        tvSpellcasting = (TextView) view.findViewById(R.id.tvSpellcasting);
         tvAbility1 = (TextView) view.findViewById(R.id.tvAbility1);
         tvAbility2 = (TextView) view.findViewById(R.id.tvAbility2);
         tvAbility3 = (TextView) view.findViewById(R.id.tvAbility3);
@@ -182,10 +186,40 @@ public class HpOverviewFragment extends Fragment implements NumberPickerDialogFr
         }
 
 
+        //Innate Spellcasting & Spellcasting
+        Spanned innate = null;
+        String tempInnate = selectedCharacter.getIndescription();
+        String tempInnateSpellsKnown = selectedCharacter.getInspellstring();
+        if(tempInnate != null){
+            innate = Html.fromHtml("<b>Innate Spellcasting. </b>" + tempInnate);
+            if(tempInnateSpellsKnown != null){
+                innate = (Spanned) TextUtils.concat(innate, Html.fromHtml("<br/>" + tempInnateSpellsKnown));
+            }
+            tvInnate.setText(Utils.trimTrailingWhitespace(innate));
+        }else{
+            tvInnate.setVisibility(View.GONE);
+            vLine5.setVisibility(View.GONE);
+        }
+
+        Spanned spellcasting = null;
+        String tempSc = selectedCharacter.getScdescription();
+        String tempScSpellsKnown = selectedCharacter.getScspellstring();
+        if(tempSc != null){
+            spellcasting = Html.fromHtml("<b>Spellcasting. </b>" + tempSc);
+            if(tempScSpellsKnown != null){
+                spellcasting = (Spanned) TextUtils.concat(spellcasting, Html.fromHtml("<br/>" + tempScSpellsKnown));
+            }
+            vLine5.setVisibility(View.VISIBLE);
+            tvSpellcasting.setText(Utils.trimTrailingWhitespace(spellcasting));
+        }else{
+            tvSpellcasting.setVisibility(View.GONE);
+        }
+
 
         //Feats
         if(selectedCharacter.getAbility1name() != null && !selectedCharacter.getAbility1name().isEmpty()){
             ability1 = Html.fromHtml("<b>" + selectedCharacter.getAbility1name() + "</b>" + ". " + selectedCharacter.getAbility1desc());
+            vLine5.setVisibility(View.VISIBLE);
         }else{
             tvAbility1.setVisibility(View.GONE);
         }

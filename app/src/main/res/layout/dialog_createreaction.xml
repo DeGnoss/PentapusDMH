@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:layout_centerInParent="true">
+    android:layout_centerInParent="true"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <TextView
         android:id="@+id/l1"
@@ -24,7 +26,7 @@
     <EditText
         android:id="@+id/tvTrait1Description"
         android:layout_below="@+id/l2"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textCapSentences"
         style="@style/FragmentTraitDescription"
         android:hint="e.g. The erinyes adds 4 to its AC against one melee attack that would hit it. To do so, the erinyes must see the attacker and be wielding a melee weapon."/>
 

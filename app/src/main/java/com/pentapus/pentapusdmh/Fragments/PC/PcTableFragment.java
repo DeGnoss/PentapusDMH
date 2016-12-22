@@ -103,7 +103,13 @@ public class PcTableFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_pc_table, container, false);
         tableView.setBackgroundColor(Color.WHITE);
-
+        fab = (FloatingActionButton) tableView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
         mPCRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewPc);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -132,8 +138,8 @@ public class PcTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(true);
-        ((MainActivity)getActivity()).setFabIcon(true);
+        //((MainActivity)getActivity()).setFabVisibility(true);
+        //((MainActivity)getActivity()).setFabIcon(true);
         ((MainActivity)getActivity()).enableNavigationDrawer();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(campaignName + " Player Characters");
         if (getLoaderManager().getLoader(0) == null) {
@@ -411,7 +417,8 @@ public class PcTableFragment extends Fragment implements
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
-                ((MainActivity)getActivity()).setFabVisibility(false);
+                //((MainActivity)getActivity()).setFabVisibility(false);
+                fab.setVisibility(View.GONE);
                 return true;
             }
 
@@ -476,7 +483,8 @@ public class PcTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 mPCAdapter.setSelectedPos(-1);
                 mPCRecyclerView.getAdapter().notifyItemChanged(position);
-                ((MainActivity)getActivity()).setFabVisibility(true);
+                //((MainActivity)getActivity()).setFabVisibility(true);
+                fab.setVisibility(View.VISIBLE);
                 mActionMode = null;
             }
         });

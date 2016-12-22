@@ -105,7 +105,13 @@ public class EncounterTableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter_table, container, false);
-
+        fab = (FloatingActionButton) tableView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
 
         mEncounterRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -138,8 +144,8 @@ public class EncounterTableFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(sessionName + " Encounters");
-        ((MainActivity)getActivity()).setFabVisibility(true);
-        ((MainActivity)getActivity()).setFabIcon(true);
+        //((MainActivity)getActivity()).setFabVisibility(true);
+        //((MainActivity)getActivity()).setFabIcon(true);
         ((MainActivity)getActivity()).enableNavigationDrawer();
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
@@ -440,8 +446,8 @@ public class EncounterTableFragment extends Fragment implements
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
-//                fab.setVisibility(View.GONE);
-                ((MainActivity) getActivity()).setFabVisibility(false);
+                fab.setVisibility(View.GONE);
+                //((MainActivity) getActivity()).setFabVisibility(false);
                 return true;
             }
 
@@ -506,8 +512,8 @@ public class EncounterTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 EncounterAdapter.setSelectedPos(-1);
                 mEncounterRecyclerView.getAdapter().notifyItemChanged(position);
-                //    fab.setVisibility(View.VISIBLE);
-                ((MainActivity) getActivity()).setFabVisibility(true);
+                fab.setVisibility(View.VISIBLE);
+                //((MainActivity) getActivity()).setFabVisibility(true);
                 mActionMode = null;
             }
         });

@@ -59,7 +59,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pentapus.pentapusdmh.R.drawable.abc_ic_ab_back_mtrl_am_alpha;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private boolean pressedTwice = false;
@@ -96,14 +95,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setNavigationItemSelectedListener(this);
         }
         // tintNavigationViewItems(navigationView);
-
+/*
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onFabClick(v);
             }
-        });
+        });*/
 
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -758,23 +757,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void onFabClick(View view) {
         if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof SessionTableFragment) {
-            ((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).onFabClick();
+            //((SessionTableFragment) getSupportFragmentManager().findFragmentByTag("FT_SESSION")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof SessionEditFragment) {
-            ((SessionEditFragment) getSupportFragmentManager().findFragmentByTag("FE_SESSION")).onFabClick();
+            //((SessionEditFragment) getSupportFragmentManager().findFragmentByTag("FE_SESSION")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof EncounterTableFragment) {
-            ((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
+            //((EncounterTableFragment) getSupportFragmentManager().findFragmentByTag("FT_ENCOUNTER")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof EncounterEditFragment) {
-            ((EncounterEditFragment) getSupportFragmentManager().findFragmentByTag("FE_ENCOUNTER")).onFabClick();
+            //((EncounterEditFragment) getSupportFragmentManager().findFragmentByTag("FE_ENCOUNTER")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof EncounterFragment) {
-            ((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
+            //((EncounterFragment) getSupportFragmentManager().findFragmentByTag("F_ENCOUNTER")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof CampaignTableFragment) {
-            ((CampaignTableFragment) getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN")).onFabClick();
+            //((CampaignTableFragment) getSupportFragmentManager().findFragmentByTag("FT_CAMPAIGN")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof CampaignEditFragment) {
-            ((CampaignEditFragment) getSupportFragmentManager().findFragmentByTag("FE_CAMPAIGN")).onFabClick();
+            //((CampaignEditFragment) getSupportFragmentManager().findFragmentByTag("FE_CAMPAIGN")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof PcTableFragment) {
-            ((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).onFabClick();
+            //((PcTableFragment) getSupportFragmentManager().findFragmentByTag("FT_PC")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof PcEditFragment) {
-            ((PcEditFragment) getSupportFragmentManager().findFragmentByTag("FE_PC")).onFabClick();
+            //((PcEditFragment) getSupportFragmentManager().findFragmentByTag("FE_PC")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof MyMonsterEditFragment) {
             ((MyMonsterEditFragment) getSupportFragmentManager().findFragmentByTag("FE_MYMONSTER")).onFabClick();
         } else if (getSupportFragmentManager().findFragmentById(R.id.ContainerFrame) instanceof MyNPCEditFragment) {
@@ -807,7 +806,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void setToolBarBackButton(boolean isVisible) {
         if (isVisible) {
-            toolbar.setNavigationIcon(abc_ic_ab_back_mtrl_am_alpha);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

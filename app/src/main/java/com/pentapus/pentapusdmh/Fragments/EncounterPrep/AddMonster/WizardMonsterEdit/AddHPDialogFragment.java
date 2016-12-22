@@ -2,8 +2,6 @@ package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonste
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -12,20 +10,14 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView;
 import com.pentapus.pentapusdmh.HelperClasses.HitDiceCalculator;
 import com.pentapus.pentapusdmh.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by konrad.fellmann on 12.05.2016.
@@ -35,17 +27,18 @@ public class AddHPDialogFragment extends DialogFragment{
     Button positiveButton;
     EditText tvhp, tvHdNumber;
     TextView tvHdMod;
-    Button bCalculate;
+    CheckBox cbCalculate;
     String hp, size;
     int conmod, hitdice;
     String[] item;
+    boolean dontCalculateAutomatically;
 
 
     public AddHPDialogFragment() {
     }
 
     //mode: 0 = add, 1 = update
-    public static AddHPDialogFragment newInstance(String hp, int conmod, String size, int hitdice) {
+    public static AddHPDialogFragment newInstance(String hp, int conmod, String size, int hitdice, boolean calculateAutomatically) {
         AddHPDialogFragment f = new AddHPDialogFragment();
 
         // Supply num input as an argument.
@@ -54,6 +47,7 @@ public class AddHPDialogFragment extends DialogFragment{
         args.putInt("conmod", conmod);
         args.putString("size", size);
         args.putInt("hitdice", hitdice);
+        args.putBoolean("dontCalculateAutomatically", calculateAutomatically);
         f.setArguments(args);
 
         return f;
@@ -68,6 +62,7 @@ public class AddHPDialogFragment extends DialogFragment{
             conmod = getArguments().getInt("conmod");
             size = getArguments().getString("size");
             hitdice = getArguments().getInt("hitdice");
+            dontCalculateAutomatically = getArguments().getBoolean("dontCalculateAutomatically");
         }
         setCancelable(true);
     }
@@ -126,19 +121,35 @@ public class AddHPDialogFragment extends DialogFragment{
         tvhp = (EditText) view.findViewById(R.id.tvHP);
         //tvAC1Type = (EditText) view.findViewById(R.id.tvAC1Type);
         tvHdNumber = (EditText) view.findViewById(R.id.tvhdnumber);
-        bCalculate = (Button) view.findViewById(R.id.bHP);
-        bCalculate.setOnClickListener(new View.OnClickListener() {
+        cbCalculate = (CheckBox) view.findViewById(R.id.ctvHP);
+        cbCalculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, conmod));
-                tvhp.setText(hp);
+                if(cbCalculate.isChecked()){
+                    cbCalculate.setChecked(true);
+                    dontCalculateAutomatically = false;
+                    tvhp.setEnabled(false);
+                    hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, conmod));
+                    tvhp.setText(hp);
+                }else{
+                    dontCalculateAutomatically = true;
+                    cbCalculate.setChecked(false);
+                    tvhp.setEnabled(true);
+                    tvhp.setHint("e.g. 64");
+                }
             }
         });
+        if(!dontCalculateAutomatically){
+            cbCalculate.setChecked(true);
+            hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, conmod));
+            tvhp.setText(hp);
+            tvhp.setEnabled(false);
+        }else{
+            cbCalculate.setChecked(false);
+            tvhp.setEnabled(true);
+        }
         if(hitdice != 0){
             tvHdNumber.setText(String.valueOf(hitdice));
-            bCalculate.setEnabled(true);
-        }else{
-            bCalculate.setEnabled(false);
         }
         tvHdMod = (TextView) view.findViewById(R.id.tvhdmod);
         tvHdMod.setText(HitDiceCalculator.calculateHdType(hitdice, size, conmod));
@@ -157,11 +168,15 @@ public class AddHPDialogFragment extends DialogFragment{
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence!= null && !charSequence.toString().isEmpty()){
                     hitdice = Integer.valueOf(charSequence.toString());
-                    bCalculate.setEnabled(true);
+                    //bCalculate.setEnabled(true);
                 }else{
                     hitdice = 0;
                 }
                 tvHdMod.setText(HitDiceCalculator.calculateHdType(hitdice, size, conmod));
+                if(!dontCalculateAutomatically){
+                    hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, conmod));
+                    tvhp.setText(hp);
+                }
             }
 
             @Override
@@ -183,6 +198,7 @@ public class AddHPDialogFragment extends DialogFragment{
                 }
                 results.putString("hp", hp);
                 results.putInt("hitdice", hitdice);
+                results.putBoolean("dontCalculateAutomatically", dontCalculateAutomatically);
                 sendResult(results);
             }
         });
@@ -195,6 +211,7 @@ public class AddHPDialogFragment extends DialogFragment{
         });
 
         AlertDialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         // Create the AlertDialog object and return it
         return dialog;

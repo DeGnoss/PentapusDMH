@@ -28,6 +28,8 @@ public class AbilitiesPage extends Page {
 
     public static final String HP_DATA_KEY = "hp";
     public static final String HITDICE_DATA_KEY = "hitdice";
+    public static final String DONT_CALCULATE_AUTOMATICALLY = "dontCalculateAutomatically";
+
 
     public static final String AC1_DATA_KEY = "ac1";
     public static final String AC1TYPE_DATA_KEY = "ac1type";

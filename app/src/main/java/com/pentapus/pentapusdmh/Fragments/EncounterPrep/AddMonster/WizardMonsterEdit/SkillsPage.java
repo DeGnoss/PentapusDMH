@@ -106,7 +106,7 @@ public class SkillsPage extends Page {
         dest.add(new ReviewItem("Damage Immunities", mData.getString(SkillsPage.DMGIM_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Condition Immunities", mData.getString(SkillsPage.CONIM_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Senses", mData.getString(SkillsPage.SENSES_DATA_KEY), getKey(), -1));
-
+        dest.add(new ReviewItem("Languages", mData.getString(SkillsPage.LANGUAGES_DATA_KEY), getKey(), -1));
 
     }
 

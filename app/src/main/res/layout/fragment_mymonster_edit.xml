@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:paddingBottom="65dp"
+        android:clipToPadding="false"
         android:isScrollContainer="true"
-        android:clipToPadding="false">
+        android:paddingBottom="65dp">
 
 
         <RelativeLayout
@@ -18,266 +19,275 @@
             android:layout_height="match_parent">
 
 
-        <ImageButton
-            android:id="@+id/bChooseImage"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/avatar_knight" />
+            <ImageButton
+                android:id="@+id/bChooseImage"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/avatar_knight" />
 
-        <EditText
-            android:id="@+id/etName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:layout_toEndOf="@id/bChooseImage"
-            android:hint="@string/sName"
-            android:nextFocusForward="@id/etInfo"
-            android:inputType="textCapWords"
-            android:selectAllOnFocus="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_toEndOf="@id/bChooseImage"
+                android:hint="@string/sName"
+                android:inputType="textCapWords"
+                android:nextFocusForward="@id/etInfo"
+                android:selectAllOnFocus="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <EditText
-            android:id="@+id/etInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etName"
-            android:layout_margin="2dp"
-            android:nextFocusForward="@+id/etInit"
-            android:layout_toEndOf="@id/bChooseImage"
-            android:hint="@string/sDetails"
-            android:inputType="textCapWords"
-            android:selectAllOnFocus="true" />
+            <EditText
+                android:id="@+id/etInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etName"
+                android:layout_margin="2dp"
+                android:layout_toEndOf="@id/bChooseImage"
+                android:hint="@string/sDetails"
+                android:inputType="textCapWords"
+                android:nextFocusForward="@+id/etInit"
+                android:selectAllOnFocus="true" />
 
-        <TextView
-            android:id="@+id/tfInit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/etInfo"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Initiative Modifier:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <TextView
+                android:id="@+id/tfInit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/etInfo"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Initiative Modifier:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <EditText
-            android:id="@+id/etInit"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etInfo"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@id/tfInit"
-            android:inputType="numberSigned"
-            android:nextFocusDown="@+id/etHpMax"
-            android:selectAllOnFocus="true" />
+            <EditText
+                android:id="@+id/etInit"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etInfo"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/tfInit"
+                android:inputType="numberSigned"
+                android:nextFocusDown="@+id/etHpMax"
+                android:selectAllOnFocus="true" />
 
-        <TextView
-            android:id="@+id/tfMaxHp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tfInit"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Max Hp:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <TextView
+                android:id="@+id/tfMaxHp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tfInit"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Max Hp:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <EditText
-            android:id="@+id/etHpMax"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tfInit"
-            android:nextFocusDown="@+id/etAc"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@id/tfMaxHp"
-            android:inputType="number"
-            android:selectAllOnFocus="true" />
+            <EditText
+                android:id="@+id/etHpMax"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tfInit"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/tfMaxHp"
+                android:inputType="number"
+                android:nextFocusDown="@+id/etAc"
+                android:selectAllOnFocus="true" />
 
-        <TextView
-            android:id="@+id/tfAC"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfInit"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@id/etHpMax"
-            android:text="AC:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <TextView
+                android:id="@+id/tfAC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfInit"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/etHpMax"
+                android:text="AC:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <EditText
-            android:id="@+id/etAc"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfInit"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@id/tfAC"
-            android:nextFocusDown="@+id/etStrength"
-            android:inputType="number"
-            android:selectAllOnFocus="true" />
+            <EditText
+                android:id="@+id/etAc"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfInit"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/tfAC"
+                android:inputType="number"
+                android:nextFocusDown="@+id/etStrength"
+                android:selectAllOnFocus="true" />
 
-        <TextView
-            android:id="@+id/tfSavingThrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfMaxHp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:text="Saving Throw Modifiers"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-
-        <TextView
-            android:id="@+id/tfStrength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tfSavingThrow"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="20dp"
-            android:text="STR"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <TextView
+                android:id="@+id/tfSavingThrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfMaxHp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp"
+                android:text="Saving Throw Modifiers"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
 
-        <EditText
-            android:id="@+id/etStrength"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfSavingThrow"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:nextFocusDown="@+id/etDex"
-            android:layout_toEndOf="@id/tfStrength"
-            android:hint="0"
-            android:inputType="numberSigned"
-            android:selectAllOnFocus="true" />
-
-        <EditText
-            android:id="@+id/etDex"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/tfSavingThrow"
-            android:layout_marginEnd="60dp"
-            android:nextFocusDown="@+id/etConst"
-            android:layout_marginTop="20dp"
-            android:hint="0"
-            android:inputType="numberSigned"
-            android:selectAllOnFocus="true" />
+            <TextView
+                android:id="@+id/tfStrength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tfSavingThrow"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="20dp"
+                android:text="STR"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
 
-        <TextView
-            android:id="@+id/tfDex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfSavingThrow"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toStartOf="@id/etDex"
-            android:text="DEX"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <EditText
+                android:id="@+id/etStrength"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfSavingThrow"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/tfStrength"
+                android:hint="0"
+                android:inputType="numberSigned"
+                android:nextFocusDown="@+id/etDex"
+                android:selectAllOnFocus="true" />
+
+            <EditText
+                android:id="@+id/etDex"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/tfSavingThrow"
+                android:layout_marginEnd="60dp"
+                android:layout_marginTop="20dp"
+                android:hint="0"
+                android:inputType="numberSigned"
+                android:nextFocusDown="@+id/etConst"
+                android:selectAllOnFocus="true" />
 
 
-
-        <TextView
-            android:id="@+id/tfConst"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tfStrength"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="20dp"
-            android:text="CON"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-        <EditText
-            android:id="@+id/etConst"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfStrength"
-            android:nextFocusDown="@+id/etInt"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_alignEnd="@id/etStrength"
-            android:hint="0"
-            android:inputType="numberSigned"
-            android:selectAllOnFocus="true" />
-
-        <EditText
-            android:id="@+id/etInt"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfStrength"
-            android:nextFocusDown="@+id/etWis"
-            android:layout_marginTop="20dp"
-            android:layout_alignLeft="@id/etDex"
-            android:hint="0"
-            android:inputType="numberSigned"
-            android:selectAllOnFocus="true" />
+            <TextView
+                android:id="@+id/tfDex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfSavingThrow"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toStartOf="@id/etDex"
+                android:text="DEX"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
 
-        <TextView
-            android:id="@+id/tfInt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfStrength"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toStartOf="@id/etInt"
-            android:text="INT"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <TextView
+                android:id="@+id/tfConst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tfStrength"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="20dp"
+                android:text="CON"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <EditText
+                android:id="@+id/etConst"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/etStrength"
+                android:layout_below="@id/tfStrength"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:hint="0"
+                android:inputType="numberSigned"
+                android:nextFocusDown="@+id/etInt"
+                android:selectAllOnFocus="true" />
+
+            <EditText
+                android:id="@+id/etInt"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/etDex"
+                android:layout_below="@id/tfStrength"
+                android:layout_marginTop="20dp"
+                android:hint="0"
+                android:inputType="numberSigned"
+                android:nextFocusDown="@+id/etWis"
+                android:selectAllOnFocus="true" />
 
 
+            <TextView
+                android:id="@+id/tfInt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfStrength"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toStartOf="@id/etInt"
+                android:text="INT"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <TextView
-            android:id="@+id/tfWis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tfConst"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="20dp"
-            android:text="WIS"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <EditText
-            android:id="@+id/etWis"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfConst"
-            android:nextFocusDown="@+id/etChar"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_alignEnd="@id/etStrength"
-            android:hint="0"
-            android:inputType="numberSigned"
-            android:selectAllOnFocus="true" />
+            <TextView
+                android:id="@+id/tfWis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tfConst"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="20dp"
+                android:text="WIS"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <EditText
-            android:id="@+id/etChar"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfConst"
-            android:hint="0"
-            android:inputType="numberSigned"
-            android:layout_alignStart="@id/etDex"
-            android:layout_marginTop="20dp"
-            android:selectAllOnFocus="true" />
+            <EditText
+                android:id="@+id/etWis"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/etStrength"
+                android:layout_below="@id/tfConst"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:hint="0"
+                android:inputType="numberSigned"
+                android:nextFocusDown="@+id/etChar"
+                android:selectAllOnFocus="true" />
 
-        <TextView
-            android:id="@+id/tfChar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tfConst"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:layout_toStartOf="@id/etChar"
-            android:text="CHA"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            <EditText
+                android:id="@+id/etChar"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/etDex"
+                android:layout_below="@id/tfConst"
+                android:layout_marginTop="20dp"
+                android:hint="0"
+                android:inputType="numberSigned"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:id="@+id/tfChar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tfConst"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toStartOf="@id/etChar"
+                android:text="CHA"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                app:elevation="4dp"
+                app:srcCompat="@drawable/ic_done" />
 
 
         </RelativeLayout>

@@ -1,38 +1,23 @@
 package com.pentapus.pentapusdmh.Fragments.EncounterPrep.AddMonster.WizardMonsterEdit;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.pentapus.pentapusdmh.DbClasses.DataBaseHandler;
-import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
-import com.pentapus.pentapusdmh.Fragments.EncounterPrep.ImageViewPagerDialogFragment;
 import com.pentapus.pentapusdmh.HelperClasses.AbilityModifierCalculator;
 import com.pentapus.pentapusdmh.HelperClasses.CustomAutoCompleteTextView;
 import com.pentapus.pentapusdmh.HelperClasses.HitDiceCalculator;
 import com.pentapus.pentapusdmh.R;
 import com.wizardpager.wizard.ui.PageFragmentCallbacks;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -55,6 +40,7 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
     private static final int MSG_AC_DIALOG = 1001, MSG_HP_DIALOG = 1002, MSG_SPEED_DIALOG = 1003;
     AbilitiesFragment fragment;
     OnWisdomChangedListener mOnWisdomChangedListener;
+    private boolean dontCalculateAutomatically;
 
 
     public static AbilitiesFragment create(String key) {
@@ -178,6 +164,8 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
         });
 
 
+        dontCalculateAutomatically = mPage.getData().getBoolean(AbilitiesPage.DONT_CALCULATE_AUTOMATICALLY);
+
         labelHP = ((TextView) rootView.findViewById(R.id.labelHP));
         labelHP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,9 +173,9 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
 
                 DialogFragment newFragment;
                 if(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY) != null && !mPage.getData().getString(AbilitiesPage.CON_DATA_KEY).isEmpty()){
-                    newFragment = AddHPDialogFragment.newInstance(hp, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY))), size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+                    newFragment = AddHPDialogFragment.newInstance(hp, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY))), size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY), dontCalculateAutomatically);
                 }else{
-                    newFragment = AddHPDialogFragment.newInstance(hp, 0, size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+                    newFragment = AddHPDialogFragment.newInstance(hp, 0, size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY), dontCalculateAutomatically);
 
                 }                newFragment.setTargetFragment(fragment, MSG_HP_DIALOG);
                 newFragment.setTargetFragment(fragment, MSG_HP_DIALOG);
@@ -201,9 +189,9 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
             public void onClick(View view) {
                 DialogFragment newFragment;
                 if(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY) != null && !mPage.getData().getString(AbilitiesPage.CON_DATA_KEY).isEmpty()){
-                    newFragment = AddHPDialogFragment.newInstance(hp, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY))), size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+                    newFragment = AddHPDialogFragment.newInstance(hp, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY))), size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY), dontCalculateAutomatically);
                 }else{
-                    newFragment = AddHPDialogFragment.newInstance(hp, 0, size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY));
+                    newFragment = AddHPDialogFragment.newInstance(hp, 0, size, mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY), dontCalculateAutomatically);
 
                 }
                 newFragment.setTargetFragment(fragment, MSG_HP_DIALOG);
@@ -213,7 +201,7 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
         });
 
         size = mPage.getData().getString(AbilitiesPage.SIZE_DATA_KEY);
-        hp = String.valueOf(mPage.getData().getInt(AbilitiesPage.HP_DATA_KEY));
+        hp = mPage.getData().getString(AbilitiesPage.HP_DATA_KEY);
         hitdice = mPage.getData().getInt(AbilitiesPage.HITDICE_DATA_KEY);
         String hpString;
         if (hp != null && !hp.isEmpty() && !Objects.equals(hp, "0") && size != null) {
@@ -327,9 +315,11 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
                 mPage.getData().putString(AbilitiesPage.CON_DATA_KEY,
                         (editable != null) ? editable.toString() : null);
                 String hpString;
-                if (editable != null && !editable.toString().isEmpty() && size != null) {
+                if (editable != null && !editable.toString().isEmpty() && size != null && !dontCalculateAutomatically) {
                     hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf((editable != null) ? editable.toString() : null))));
-                } else {
+                }else if(dontCalculateAutomatically){
+                    hp = mPage.getData().getString(AbilitiesPage.HP_DATA_KEY);
+                }else {
                     hp = "0";
                 }
                 mPage.getData().putString(AbilitiesPage.HP_DATA_KEY, hp);
@@ -465,6 +455,9 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
                 hitdice = results.getInt(AbilitiesPage.HITDICE_DATA_KEY);
                 mPage.getData().putInt(AbilitiesPage.HITDICE_DATA_KEY,
                         hitdice);
+                dontCalculateAutomatically = results.getBoolean(AbilitiesPage.DONT_CALCULATE_AUTOMATICALLY);
+                mPage.getData().putBoolean(AbilitiesPage.DONT_CALCULATE_AUTOMATICALLY,
+                        dontCalculateAutomatically);
                 String hpString;
                 if (hp != null && !hp.isEmpty() && !hp.equals("0")) {
                     if(hitdice == 0){
@@ -498,13 +491,6 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
         pageDone();
         // In a future update to the support library, this should override setUserVisibleHint
         // instead of setMenuVisibility.
-        if (mStrView != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            if (!menuVisible) {
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-            }
-        }
     }
 
     @Override
@@ -513,7 +499,11 @@ public class AbilitiesFragment extends Fragment implements BasicInfoFragment.OnS
         mPage.getData().putString("size", size);
         String hpString;
         if(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY) != null && !mPage.getData().getString(AbilitiesPage.CON_DATA_KEY).isEmpty()){
-            hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))));
+            if(!dontCalculateAutomatically){
+                hp = String.valueOf(HitDiceCalculator.calculateAverageHp(hitdice, size, AbilityModifierCalculator.calculateMod(Integer.valueOf(mPage.getData().getString(AbilitiesPage.CON_DATA_KEY)))));
+            }else{
+                hp = mPage.getData().getString(AbilitiesPage.HP_DATA_KEY);
+            }
             if (!hp.isEmpty() && !Objects.equals(hp, "0")) {
                 if(hitdice == 0){
                     hpString = hp;

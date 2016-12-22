@@ -131,7 +131,7 @@ public class DetailPCFragment extends Fragment {
     public void onResume(){
         super.onResume();
         getActivity().invalidateOptionsMenu();
-        ((MainActivity)getActivity()).setFabVisibility(false);
+        //((MainActivity)getActivity()).setFabVisibility(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 

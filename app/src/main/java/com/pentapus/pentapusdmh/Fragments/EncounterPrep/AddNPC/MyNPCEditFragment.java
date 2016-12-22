@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -65,6 +66,7 @@ public class MyNPCEditFragment extends Fragment {
     private int encounterId;
     private int px;
 
+    private FloatingActionButton fab;
     ImageButton bChooseImage;
     EditText name_tf, info_tf, init_tf, maxHp_tf, ac_tf, etStrength, etDex, etConst, etInt, etWis, etChar;
 
@@ -125,6 +127,14 @@ public class MyNPCEditFragment extends Fragment {
         etWis = (EditText) charEditView.findViewById(R.id.etWis);
         etChar = (EditText) charEditView.findViewById(R.id.etChar);
         bChooseImage = (ImageButton) charEditView.findViewById(R.id.bChooseImage);
+
+        fab = (FloatingActionButton) charEditView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
 
 
         name_tf.setText("New Friend");
@@ -303,8 +313,8 @@ public class MyNPCEditFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(true);
-        ((MainActivity)getActivity()).setFabIcon(false);
+        //((MainActivity)getActivity()).setFabVisibility(true);
+        //((MainActivity)getActivity()).setFabIcon(false);
         ((MainActivity)getActivity()).disableNavigationDrawer();
     }
 

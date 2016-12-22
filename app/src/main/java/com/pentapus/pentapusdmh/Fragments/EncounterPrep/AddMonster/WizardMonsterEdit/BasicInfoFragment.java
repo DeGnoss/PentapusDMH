@@ -97,7 +97,7 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         mAlignmentView = ((CustomAutoCompleteTextView) rootView.findViewById(R.id.tvMonsterAlignment));
         mAlignmentView.setText(mPage.getData().getString(BasicInfoPage.ALIGNMENT_DATA_KEY));
         mSuggestionAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line);
-        mTypeView.setAdapter(mSuggestionAdapter);
+        mAlignmentView.setAdapter(mSuggestionAdapter);
 
         bChooseImage = (ImageButton) rootView.findViewById(R.id.bChooseImage);
         bChooseImage.setOnClickListener(new View.OnClickListener() {
@@ -194,6 +194,9 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
         mTypeView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                if (view.getWindowVisibility() != View.VISIBLE) {
+                    return;
+                }
                 if(b){
                     item = getItemsFromDb("", "type");
                     // update the adapater
@@ -234,6 +237,9 @@ public class BasicInfoFragment extends Fragment implements AdapterView.OnItemSel
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(b){
+                    if (view.getWindowVisibility() != View.VISIBLE) {
+                        return;
+                    }
                     item = getItemsFromDb("", "alignment");
 
                     // update the adapater

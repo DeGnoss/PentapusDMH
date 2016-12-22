@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -64,6 +65,8 @@ public class EncounterFragment extends Fragment implements
     private static final String CHARACTER_ID = "characterId";
     private static final String MONSTER_ID = "monsterId";
     private static final String NPC_ID = "npcId";
+    private FloatingActionButton fab;
+
 
     private ActionMode mActionMode;
 
@@ -124,7 +127,13 @@ public class EncounterFragment extends Fragment implements
                              Bundle savedInstanceState) {
         final View tableView = inflater.inflate(R.layout.fragment_encounter, container, false);
         //setExitTransition(new Slide(Gravity.LEFT));
-
+        fab = (FloatingActionButton) tableView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
         //getLoaderManager().initLoader(0, null, this);
         //getLoaderManager().initLoader(1, null, this);
         mRecyclerView = (RecyclerView) tableView.findViewById(R.id.recyclerViewEncounter);
@@ -213,8 +222,8 @@ public class EncounterFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(encounterName + " Preparation");
-        ((MainActivity)getActivity()).setFabVisibility(true);
-        ((MainActivity)getActivity()).setFabIcon(true);
+        //((MainActivity)getActivity()).setFabVisibility(true);
+        //((MainActivity)getActivity()).setFabIcon(true);
         ((MainActivity)getActivity()).enableNavigationDrawer();
         if (getLoaderManager().getLoader(0) == null) {
             getLoaderManager().initLoader(0, null, this);
@@ -594,7 +603,8 @@ public class EncounterFragment extends Fragment implements
                     String title = "Selected: " + String.valueOf(position);
                     mode.setTitle(title);
                     MenuInflater inflater = mode.getMenuInflater();
-                    ((MainActivity) getActivity()).setFabVisibility(false);
+                    //((MainActivity) getActivity()).setFabVisibility(false);
+                    fab.setVisibility(View.GONE);
                     inflater.inflate(R.menu.context_menu, menu);
                     return true;
                 }
@@ -723,7 +733,8 @@ public class EncounterFragment extends Fragment implements
                 @Override
                 public void onDestroyActionMode(ActionMode mode) {
                     //TODO: make it work with notifyItemChanged()
-                    ((MainActivity) getActivity()).setFabVisibility(true);
+                    //((MainActivity) getActivity()).setFabVisibility(true);
+                    fab.setVisibility(View.VISIBLE);
                     int oldpos = CursorRecyclerViewAdapter.selectedPos;
                     CursorRecyclerViewAdapter.selectedPos = -1;
                     mergeAdapter.notifyItemChanged(oldpos);

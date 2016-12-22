@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import com.pentapus.pentapusdmh.DbClasses.DbContentProvider;
 import com.pentapus.pentapusdmh.HelperClasses.RippleForegroundListener;
 import com.pentapus.pentapusdmh.R;
 
+import java.util.HashMap;
+
 
 /**
  * Created by Koni on 14/4/16.
@@ -29,6 +32,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
     Context mContext;
     private boolean isNavMode;
     private int selectedPos;
+    private HashMap<String, String> monsterCounter = new HashMap<>();
 
     /**
      * Constructor.
@@ -142,37 +146,7 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
             buttonMinus = (ImageButton) v.findViewById(R.id.buttonMinus);
             buttonPlus = (ImageButton) v.findViewById(R.id.buttonPlus);
             tvNumber = (TextView) v.findViewById(R.id.tvNumber);
-            if (isNavMode) {
-                buttonMinus.setVisibility(View.GONE);
-                buttonPlus.setVisibility(View.GONE);
-                tvNumber.setVisibility(View.GONE);
-            } else {
-                tvNumber.setText(String.valueOf(numbers));
 
-                buttonMinus.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        numbers--;
-                        if (numbers < 0)
-                            numbers = 0;
-                        tvNumber.setText(String.valueOf(numbers));
-                        onItemRemove(getAdapterPosition());
-                        onMenuRefresh();
-                    }
-                });
-
-                buttonPlus.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        numbers++;
-                        if (numbers > 99)
-                            numbers = 99;
-                        tvNumber.setText(String.valueOf(numbers));
-                        onItemAdd(getAdapterPosition());
-                        onMenuRefresh();
-                    }
-                });
-            }
 
             clicker.setOnTouchListener(rippleForegroundListener);
 
@@ -193,13 +167,62 @@ public class MyMonsterAdapter extends RecyclerViewCursorAdapter<MyMonsterAdapter
         }
 
         @Override
-        public void bindCursor(Cursor cursor) {
+        public void bindCursor(final Cursor cursor) {
             type = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_IDENTIFIER));
             vIndicatorLine.setBackgroundColor(Color.parseColor("#F44336"));
             ivIcon.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ICON))));
             vName.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_NAME)));
             //vInfo.setText(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_INFO)));
             itemView.setActivated(getAdapterPosition() == getSelectedPos());
+
+            if (isNavMode) {
+                buttonMinus.setVisibility(View.GONE);
+                buttonPlus.setVisibility(View.GONE);
+                tvNumber.setVisibility(View.GONE);
+            } else {
+                buttonMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cursor.moveToPosition(getAdapterPosition());
+                        int numbers = 0;
+                        if(monsterCounter != null && monsterCounter.containsKey(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))))){
+                            numbers = Integer.valueOf(monsterCounter.get(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))));
+                        }
+                        numbers--;
+                        if (numbers < 0)
+                            numbers = 0;
+                        monsterCounter.put(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))), String.valueOf(numbers));
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemRemove(getAdapterPosition());
+                        onMenuRefresh();
+                    }
+                });
+
+                buttonPlus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cursor.moveToPosition(getAdapterPosition());
+                        int numbers = 0;
+                        if(monsterCounter != null && monsterCounter.containsKey(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))))){
+                            numbers = Integer.valueOf(monsterCounter.get(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))));
+                        }
+                        numbers++;
+                        if (numbers > 99)
+                            numbers = 99;
+                        monsterCounter.put(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID))), String.valueOf(numbers));
+                        tvNumber.setText(String.valueOf(numbers));
+                        onItemAdd(getAdapterPosition());
+                        onMenuRefresh();
+                    }
+                });
+
+                if (monsterCounter != null && (monsterCounter.containsKey(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))))) {
+                    int numbers = Integer.valueOf(monsterCounter.get(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHandler.KEY_ROWID)))));
+                    tvNumber.setText(String.valueOf(numbers));
+                }else{
+                    tvNumber.setText("0");
+                }
+            }
         }
 
 

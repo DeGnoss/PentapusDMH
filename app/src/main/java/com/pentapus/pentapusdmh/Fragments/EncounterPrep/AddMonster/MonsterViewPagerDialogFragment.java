@@ -26,6 +26,7 @@ import com.pentapus.pentapusdmh.MainActivity;
 import com.pentapus.pentapusdmh.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,7 +49,6 @@ public class MonsterViewPagerDialogFragment extends Fragment {
 
     private String encounterName;
     private static List<Uri> monstersToBeAdded;
-
 
     public MonsterViewPagerDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -386,8 +386,9 @@ public class MonsterViewPagerDialogFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        monstersToBeAdded.clear();
-        ((MainActivity) getActivity()).setFabVisibility(false);
+        //monsterCounter.clear();
+        //monstersToBeAdded.clear();
+        //((MainActivity) getActivity()).setFabVisibility(false);
         if (navMode) {
             ((MainActivity) getActivity()).enableNavigationDrawer();
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Fiends");

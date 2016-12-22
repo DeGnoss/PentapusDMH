@@ -5,10 +5,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_campaign"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:foreground="?selectableItemBackground"
-    app:cardElevation="0dp"
-    android:stateListAnimator="@drawable/elevation_selector">
+    android:stateListAnimator="@drawable/elevation_selector"
+    app:cardElevation="0dp">
 
 
     <RelativeLayout
@@ -26,6 +26,8 @@
             android:layout_alignParentStart="true"
             android:layout_gravity="start"
             android:layout_marginStart="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <TextView
@@ -36,6 +38,8 @@
             android:layout_centerVertical="true"
             android:layout_gravity="end"
             android:layout_marginStart="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
     </RelativeLayout>
@@ -54,11 +58,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:text="Deleted"
-            android:visibility="gone"
             android:layout_gravity="end"
             android:layout_marginStart="20dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Deleted"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/undo_button_campaign"
@@ -66,17 +72,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:textStyle="bold"
-            android:text="Undo"
-            android:visibility="gone"
             android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Undo"
             android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
 
     </RelativeLayout>
-
 
 
 </android.support.v7.widget.CardView>

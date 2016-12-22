@@ -262,7 +262,7 @@ public class MonsterManualTableFragment extends Fragment implements
         fragment = new DetailMonsterFragment();
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.ContainerFrame, fragment, "F_DETAIL_MONSTER")
+                .add(R.id.ContainerFrame, fragment, "F_DETAIL_MONSTER")
                 .addToBackStack("F_DETAIL_MONSTER")
                 .commit();
     }

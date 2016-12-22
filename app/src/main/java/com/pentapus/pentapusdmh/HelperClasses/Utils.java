@@ -4,7 +4,11 @@ import android.content.Context;
 import android.graphics.Point;
 import android.net.Uri;
 import android.view.Display;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -63,12 +67,16 @@ public class Utils {
     }
 
     public static int[] fromString(String string) {
-        String[] strings = string.replace("[", "").replace("]", "").split(", ");
-        int result[] = new int[strings.length];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = Integer.parseInt(strings[i]);
+        if(string != null){
+            String[] strings = string.replace("[", "").replace("]", "").split(", ");
+            int result[] = new int[strings.length];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = Integer.parseInt(strings[i]);
+            }
+            return result;
+        }else{
+            return null;
         }
-        return result;
     }
 
 
@@ -84,6 +92,45 @@ public class Utils {
         }
 
         return source.subSequence(0, i+1);
+    }
+
+    public static CharSequence trimLeadingWhitespace(CharSequence source) {
+
+        if(source == null || source.length() <= 1)
+            return "";
+
+        int i = 0;
+
+        // loop back to the first non-whitespace character
+        while(Character.isWhitespace(source.charAt(i)) && i++ <= source.length()) {
+        }
+
+        return source.subSequence(i, source.length());
+    }
+
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            if (listItem instanceof ViewGroup) {
+                listItem.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            }
+
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 
 

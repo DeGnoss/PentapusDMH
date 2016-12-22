@@ -57,7 +57,7 @@ public class SessionTableFragment extends Fragment implements
     private static final String SESSION_NAME = "sessionName";
 
 
-    FloatingActionButton fab;
+    private FloatingActionButton fab;
     private int campaignId;
     private SessionAdapter mSessionAdapter;
     private RecyclerView mSessionRecyclerView;
@@ -90,6 +90,13 @@ public class SessionTableFragment extends Fragment implements
                              Bundle savedInstanceState) {
         campaignId = SharedPrefsHelper.loadCampaignId(getContext());
         final View tableView = inflater.inflate(R.layout.fragment_session_table, container, false);
+        fab = (FloatingActionButton) tableView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFabClick();
+            }
+        });
         if (campaignId <= 0) {
             new AlertDialog.Builder(getContext()).setTitle("No Campaign Found")
                     .setCancelable(false)
@@ -136,8 +143,9 @@ public class SessionTableFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity)getActivity()).setFabVisibility(true);
-        ((MainActivity)getActivity()).setFabIcon(true);
+        //((MainActivity)getActivity()).setFabVisibility(true);
+        //((MainActivity)getActivity()).setFabIcon(true);
+        fab.setVisibility(View.VISIBLE);
         ((MainActivity)getActivity()).enableNavigationDrawer();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(SharedPrefsHelper.loadCampaignName(getContext()) + " Sessions");
         if (getLoaderManager().getLoader(0) == null) {
@@ -435,7 +443,8 @@ public class SessionTableFragment extends Fragment implements
                 mode.setTitle(title);
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.context_menu, menu);
-                ((MainActivity)getActivity()).setFabVisibility(false);
+                //((MainActivity)getActivity()).setFabVisibility(false);
+                fab.setVisibility(View.GONE);
                 return true;
             }
 
@@ -504,7 +513,8 @@ public class SessionTableFragment extends Fragment implements
             public void onDestroyActionMode(ActionMode mode) {
                 SessionAdapter.setSelectedPos(-1);
                 mSessionRecyclerView.getAdapter().notifyItemChanged(position);
-                ((MainActivity)getActivity()).setFabVisibility(true);
+                //((MainActivity)getActivity()).setFabVisibility(true);
+                fab.setVisibility(View.VISIBLE);
                 mActionMode = null;
             }
         });
@@ -516,9 +526,6 @@ public class SessionTableFragment extends Fragment implements
         getActivity().invalidateOptionsMenu();
     }
 
-    public FloatingActionButton getFab(){
-        return fab;
-    }
 
     public void loadNPCTable(Bundle bundle){
         Fragment fragment = null;
@@ -531,7 +538,7 @@ public class SessionTableFragment extends Fragment implements
         }
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
-        fragment.setEnterTransition(new Slide(Gravity.TOP));
+        //fragment.setEnterTransition(new Slide(Gravity.TOP));
         Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.ContainerFrame);
         fragmentManager.beginTransaction()
                 .add(R.id.ContainerFrame, fragment, "FT_PC")
